@@ -311,7 +311,6 @@ def and_opperation(list_of_NifImage_obj):
 
 # TO REVIEW
 def mask_opperation(Nifti_file_collection):
-    print("a")
     (lx, ly, lz) = max_shape(Nifti_file_collection)
     file_Nifti_clusterised = np.zeros(shape=(lx, ly, lz), dtype='f')
     mask = Nifti_file_collection[0]
@@ -319,7 +318,6 @@ def mask_opperation(Nifti_file_collection):
     list_voxels = extract(mask)
     data = data.get_copy_img_data()
     mask = mask.get_copy_img_data()
-    print("b")
     for voxels in list_voxels:
         x = voxels[0]
         y = voxels[1]
