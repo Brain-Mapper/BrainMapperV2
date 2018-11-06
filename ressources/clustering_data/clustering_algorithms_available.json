@@ -1,0 +1,96 @@
+{
+  "KMeans" : { "algo_info": "Calculates K clusters represented by a central point that is the mean of all the points in a given cluster",
+      "algo_usecase" : "General-purpose, even cluster size, flat geometry, not too many clusters. Metric is Euclidean Dist.",
+      "param_list" : {
+        "init": {
+          "param_info" : "A way to initialise the centers : randomly or kmeans++ (see scikit-learn documentation on kmeans)",
+          "type" : ["random","k-means++"],
+          "default" : "random"
+        },
+        "n_clusters" : {
+          "param_info" : "The number of clusters the user wishes to obtain",
+          "type" : "int",
+          "default" : "3"
+        },
+        "n_init" : {
+          "param_info" : "Number of time the k-means algorithm will be run with different centroid seeds. The final results will be the best output of n_init consecutive runs in terms of inertia",
+          "type" : "int",
+          "default" : "10"
+        },
+        "max_iter" : {
+          "param_info": "Maximum number of iterations of the k-means algorithm for a single run",
+          "type" : "int",
+          "default": "300"
+        },
+        "random_state" : {
+          "param_info" : "random_state is an optional parameter to specify the seed used by the random number generator",
+          "type" : "int",
+          "default" : "0"
+        }
+      }
+    },
+
+  "KMedoids" : { "algo_info": "KMedoids clustering uses the median value of all the points in a given cluster instead of the mean",
+      "algo_usecase" : "General-purpose, even cluster size, flat geometry, not too many clusters.",
+      "param_list" : {
+        "init": {
+          "param_info" : "A way to initialise the centers : randomly or kmeans++ (see Arthur, D. and Vassilvitskii, S. k-means++: the advantages of careful seeding. ACM-SIAM symposiumon Discrete algorithms. 2007)",
+          "type" : ["random","k-means++"],
+          "default" : "k-means++"
+        },
+        "n_clusters" : {
+          "param_info" : "The number of clusters the user wishes to obtain",
+          "type" : "int",
+          "default" : "3"
+        },
+        "metric" : {
+          "param_info" : "Metric used to compute the distance between points. Can be 'euclidean', or 'manhattan'",
+          "type" : ["euclidean","manhattan"],
+          "default" : "euclidean"
+        }
+      }
+    },
+
+  "AgglomerativeClustering" : { "algo_info" : "Recursively merges the pair of clusters that minimally increases a given linkage distance (see scikit-learn).",
+    "algo_usecase" : "Many clusters, possibly connectivity constraints + \nLarge n_samples and n_clusters",
+    "param_list" : {
+      "n_clusters" : {
+          "param_info" : "The number of clusters the user wishes to obtain",
+          "type" : "int",
+          "default" : "2"
+      },
+      "affinity" : {
+          "param_info" : "Metric used to compute the linkage. Can be 'euclidean', 'l1', 'l2', 'manhattan' or 'cosine'\nIf linkage is 'ward', only 'euclidean' is accepted.",
+          "type" : ["euclidean", "l1", "l2","manhattan", "cosine"],
+          "default" : "euclidean"
+      },
+      "linkage" : {
+        "param_info": "Which linkage criterion to use : the linkage criterion determines which distance to use between sets of observation.\nThe algorithm will merge the pairs of cluster that minimize this criterion.\n- 'ward' minimizes the variance of the clusters being merged.\n- average uses the average of the distances of each observation of the two sets.\n- complete or maximum linkage uses the maximum distances between all observations of the two sets.",
+        "type": ["ward", "complete", "average"],
+        "default": "ward"
+      }
+    }
+  },
+  "DBSCAN" : { "algo_info": "Density-Based Spatial Clustering of Applications with Noise. Finds core samples of high density and expands clusters from them. Good for data which contains clusters of similar density.",
+      "algo_usecase" : "Non-flat geometry, uneven cluster sizes, very large number of samples, medium number of clusters.",
+      "param_list" : {
+        "eps" : {
+          "param_info" : "The maximum distance between two samples for them to be considered as in the same neighborhood",
+          "type" : "float",
+          "default" : "0.3"
+        },
+        "min_samples" : {
+          "param_info" : "The number of samples (or total weight) in a neighborhood for a point to be considered as a core point. This includes the point itself",
+          "type" : "int",
+          "default" : "10"
+        },
+        "metric" : {
+          "param_info" : "Metric used to compute the distance between points. Can be 'euclidean', or 'manhattan'",
+          "type" : ["euclidean","manhattan"],
+          "default" : "euclidean"
+        }
+      }
+    }
+
+
+}

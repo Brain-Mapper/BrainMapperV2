@@ -310,41 +310,49 @@ def and_opperation(list_of_NifImage_obj):
 
 
 # TO REVIEW
-def mask_opperation(mask, file, arguments):
-    if arguments == 'Error':
-        return -1
-    (lx, ly, lz) = max_shape([mask, file])
+def mask_opperation(Nifti_file_collection):
+    print("a")
+    (lx, ly, lz) = max_shape(Nifti_file_collection)
     file_Nifti_clusterised = np.zeros(shape=(lx, ly, lz), dtype='f')
-    list_voxels = Extract_voxels_from_Nifti_file(mask)
-    img = load_nifti(file)
-    data = get_data(img)
+    mask = Nifti_file_collection[0]
+    data = Nifti_file_collection[1]
+    list_voxels = extract(mask)
+    data = data.get_copy_img_data()
+    mask = mask.get_copy_img_data()
+    print("b")
     for voxels in list_voxels:
         x = voxels[0]
         y = voxels[1]
         z = voxels[2]
-        file_Nifti_clusterised[x][y][z] = data[x][y][z]
+        if data[int(x)][int(y)][int(z)] != 0: 
+            print("point")
+            file_Nifti_clusterised[int(x)][int(y)][int(z)] = data[int(x)][int(y)][int(z)]
     print('Mask opperation process is successfull !')
-    output = "[Algorithm] > Mask\n[Input] > Mask : " + extract_name_without_path(
-        [mask]) + " File : " + extract_name_without_path(
-        [file]) + "\n[Arguments] > None\n[Output] > One Nifti file with dimensions : {" + str(lx) + ", " + str(
+    output = "[Algorithm] > Mask\n[Input] > Mask and file: " + extract_name_without_path(
+        Nifti_file_collection) + "\n[Arguments] > None\n[Output] > One Nifti file with dimensions : {" + str(lx) + ", " + str(
         ly) + ", " + str(lz) + "}"
+    print("c")
     return ([file_Nifti_clusterised], output)
 
 
 # TO REVIEW
 def linear_combination_opperation(Nifti_file_collection, coef):
+    #print(type(coef))
+   # print(int(coef[0]))
     (lx, ly, lz) = max_shape(Nifti_file_collection)
     file_Nifti_clusterised = np.zeros(shape=(lx, ly, lz), dtype='f')
     i = 0
     for file in Nifti_file_collection:
-        img = load_nifti(file)
-        data = get_data(img)
-        list_voxels = Extract_voxels_from_Nifti_file(file)
+        #img = load_nifti(file)
+        data = file.get_copy_img_data()
+        list_voxels = extract(file)
+        #print(len(list_voxels))
         for voxels in list_voxels:
             x = voxels[0]
             y = voxels[1]
             z = voxels[2]
-            file_Nifti_clusterised[x][y][z] = file_Nifti_clusterised[x][y][z] + data[x][y][z] * float(coef[i])
+            #print(int(coef[i]))
+            file_Nifti_clusterised[int(x)][int(y)][int(z)] = file_Nifti_clusterised[int(x)][int(y)][int(z)] + data[int(x)][int(y)][int(z)] * int(coef[i])
         i = i + 1
     print('Linear combination process is successfull !')
     output = "[Algorithm] > Linear combination\n[Input] > Nifti(s) file(s) : " + extract_name_without_path(

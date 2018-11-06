@@ -217,6 +217,7 @@ def compute_sample_silhouettes(labels):
 
 
 def run_calculation(selectedAlgorithm, nifti_collection, arguments):
+    def run_calculation(selectedAlgorithm, nifti_collection, arguments):
     if selectedAlgorithm == "Addition":
         file_result, output = calcul.addition_opperation(nifti_collection)
     if selectedAlgorithm == "Boolean Intersection":
@@ -228,10 +229,7 @@ def run_calculation(selectedAlgorithm, nifti_collection, arguments):
     if selectedAlgorithm == "Linear combination":
         file_result, output = calcul.linear_combination_opperation(nifti_collection, arguments)
     if selectedAlgorithm == "Mask":
-        if len(nifti_collection) == 2:
-            file_result, output = calcul.mask_opperation(nifti_collection[0], nifti_collection[1], 'Succes')
-        else:
-            file_result, output = calcul.mask_opperation(nifti_collection[0], nifti_collection[1], 'Error')
+            file_result, output = calcul.mask_opperation(nifti_collection)
     if selectedAlgorithm == "Mean":
         file_result, output = calcul.mean_opperation(nifti_collection)
     if selectedAlgorithm == "Normalization":
@@ -254,12 +252,7 @@ def run_calculation(selectedAlgorithm, nifti_collection, arguments):
         if max == "":
             max = "100000.0"
         file_result, output = calcul.threshold_opperation(nifti_collection, [min, max])
-    if selectedAlgorithm == "Multiplication":
-        file_result, output = calcul.multiplication_opperation(nifti_collection, arguments)
-    if selectedAlgorithm == "Division":
-        file_result, output = calcul.division_opperation(nifti_collection, arguments)
     return file_result, output
-
 
 def get_selected_from_name(name):
     """
