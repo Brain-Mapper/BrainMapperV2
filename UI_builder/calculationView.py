@@ -415,6 +415,10 @@ class CalculationView(QtGui.QWidget):
         options.setStyleSheet("background-color: #FFCC33;")
         layout.addRow(options)
 
+        layout.addWidget(QLabel("intensity of each nifti file separated by semicolon (;) :"))
+        self.paramLinear = QLineEdit("1;4")
+        layout.addWidget(self.paramLinear)
+
         descrip = QLabel("Description")
         descrip.setStyleSheet("background-color: #FFCC33;")
         layout.addRow(descrip)
