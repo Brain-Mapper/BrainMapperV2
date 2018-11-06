@@ -218,41 +218,41 @@ def compute_sample_silhouettes(labels):
 
 def run_calculation(selectedAlgorithm, nifti_collection, arguments):
     def run_calculation(selectedAlgorithm, nifti_collection, arguments):
-    if selectedAlgorithm == "Addition":
-        file_result, output = calcul.addition_opperation(nifti_collection)
-    if selectedAlgorithm == "Boolean Intersection":
-        file_result, output = calcul.and_opperation(nifti_collection)
-    if selectedAlgorithm == "Boolean Union":
-        file_result, output = calcul.or_opperation(nifti_collection)
-    if selectedAlgorithm == "Centroide":
-        file_result, output = calcul.baricentre_opperation(nifti_collection, arguments)
-    if selectedAlgorithm == "Linear combination":
-        file_result, output = calcul.linear_combination_opperation(nifti_collection, arguments)
-    if selectedAlgorithm == "Mask":
-            file_result, output = calcul.mask_opperation(nifti_collection)
-    if selectedAlgorithm == "Mean":
-        file_result, output = calcul.mean_opperation(nifti_collection)
-    if selectedAlgorithm == "Normalization":
-        file_result, output = calcul.normalization_opperation(nifti_collection)
-    if selectedAlgorithm == "Entropy":
-        file_result, output = calcul.entropie_opperation(nifti_collection)
-    if selectedAlgorithm == "Erosion":
-        file_result, output = calcul.erosion_opperation(nifti_collection, arguments)
-    if selectedAlgorithm == "Dilation":
-        file_result, output = calcul.dilation_opperation(nifti_collection, arguments)
-    if selectedAlgorithm == "Opening":
-        file_result, output = calcul.opening_opperation(nifti_collection, arguments)
-    if selectedAlgorithm == "Closing":
-        file_result, output = calcul.closing_opperation(nifti_collection, arguments)
-    if selectedAlgorithm == "Threshold":
-        min = arguments[0]
-        max = arguments[1]
-        if min == "":
-            min = "-100000.0"
-        if max == "":
-            max = "100000.0"
-        file_result, output = calcul.threshold_opperation(nifti_collection, [min, max])
-    return file_result, output
+        if selectedAlgorithm == "Addition":
+            file_result, output = calcul.addition_opperation(nifti_collection)
+        if selectedAlgorithm == "Boolean Intersection":
+            file_result, output = calcul.and_opperation(nifti_collection)
+        if selectedAlgorithm == "Boolean Union":
+            file_result, output = calcul.or_opperation(nifti_collection)
+        if selectedAlgorithm == "Centroide":
+            file_result, output = calcul.baricentre_opperation(nifti_collection, arguments)
+        if selectedAlgorithm == "Linear combination":
+            file_result, output = calcul.linear_combination_opperation(nifti_collection, arguments)
+        if selectedAlgorithm == "Mask":
+                file_result, output = calcul.mask_opperation(nifti_collection)
+        if selectedAlgorithm == "Mean":
+            file_result, output = calcul.mean_opperation(nifti_collection)
+        if selectedAlgorithm == "Normalization":
+            file_result, output = calcul.normalization_opperation(nifti_collection)
+        if selectedAlgorithm == "Entropy":
+            file_result, output = calcul.entropie_opperation(nifti_collection)
+        if selectedAlgorithm == "Erosion":
+            file_result, output = calcul.erosion_opperation(nifti_collection, arguments)
+        if selectedAlgorithm == "Dilation":
+            file_result, output = calcul.dilation_opperation(nifti_collection, arguments)
+        if selectedAlgorithm == "Opening":
+            file_result, output = calcul.opening_opperation(nifti_collection, arguments)
+        if selectedAlgorithm == "Closing":
+            file_result, output = calcul.closing_opperation(nifti_collection, arguments)
+        if selectedAlgorithm == "Threshold":
+            min = arguments[0]
+            max = arguments[1]
+            if min == "":
+                min = "-100000.0"
+            if max == "":
+                max = "100000.0"
+            file_result, output = calcul.threshold_opperation(nifti_collection, [min, max])
+        return file_result, output
 
 def get_selected_from_name(name):
     """

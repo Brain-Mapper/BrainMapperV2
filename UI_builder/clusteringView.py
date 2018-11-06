@@ -29,7 +29,7 @@ from clustering_components.clustering_results import ClusteringDataTable, Cluste
 from clustering_components.clustering_paramspace import ParameterAndScriptStack
 from clustering_components.clustering_topbar import *
 
-import resources
+import UI_builder.resources
 
 
 class ClusteringView(QtGui.QWidget):

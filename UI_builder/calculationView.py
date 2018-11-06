@@ -19,7 +19,7 @@ from os import path
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from BrainMapper import *
 
-import resources
+import UI_builder.resources
 import time
 
 
@@ -747,7 +747,7 @@ class CalculationView(QtGui.QWidget):
                 except:
                     QtGui.QMessageBox.warning(self, "Error",
                                               "Impossible to execute "+algorithm+" algorithm. This algorithm can only takes 2 File : The mask and the one which will be applied the mask. Please verify that you have select just 2 file in your collection.")
-                                      
+
         if algorithm=="Linear combination":
             value=self.paramLinear.text()
             arguments=value.split(';')
@@ -760,7 +760,7 @@ class CalculationView(QtGui.QWidget):
                 try:
                     print("c")
                     algorithm_result, output = run_calculation(algorithm, nifti_selected, arguments)
-                    self.console.setText(">>> \n"+output)                
+                    self.console.setText(">>> \n"+output)
                     self.popUpSaveFileResultCalculation(algorithm,algorithm_result)
                 except:
                     QtGui.QMessageBox.warning(self, "Error",

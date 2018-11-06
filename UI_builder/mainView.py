@@ -23,9 +23,9 @@ from datetime import *
 import sys
 from os import path
 
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+sys.path.append(path.dirname(path.dirname(path.dirname(path.abspath(__file__)))))
 from BrainMapper import *
-import resources
+import UI_builder.resources
 import ourLib.ExcelExport.excelExport as ee
 import time
 from ourLib.dataExtraction.image_recreation import *

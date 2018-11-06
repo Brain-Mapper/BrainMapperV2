@@ -26,7 +26,7 @@ from BrainMapper import *
 import pyqtgraph as pg
 import pyqtgraph.opengl as gl
 
-import resources
+import UI_builder.resources
 import re
 
 class ImageBar(QtGui.QWidget):
@@ -89,8 +89,8 @@ class ImageBar(QtGui.QWidget):
         self.parent().parent().parent().parent().img_show=self.im.filename
         self.parent().parent().parent().parent().parent().parent().parent().parent().parent().updateVizuView(self.im)
         self.parent().parent().parent().parent().redo(get_current_coll())
-                
-        
+
+
 class InfosBar(QtGui.QWidget):
     # -- The InfosBar class will display all info for the current collection
     def __init__(self, parent = None):
@@ -103,15 +103,15 @@ class InfosBar(QtGui.QWidget):
         mainwind_h = rec.height()
         mainwind_w = rec.width()
         self.setMaximumSize(QSize(mainwind_w, mainwind_h))
-        
+
         self.scroll = QtGui.QScrollArea()
         self.scroll.setWidget(self.group)
         self.scroll.setWidgetResizable(True)
         self.scroll.setFixedHeight(mainwind_h*0.5)
-        
+
         self.hbox=QtGui.QHBoxLayout()
         self.hbox.addWidget(self.scroll)
-        
+
 
     def redo(self,coll):
     # -- This redo will reload all the info for the current collection and create an ImageBar for each image in the collection
@@ -168,7 +168,7 @@ class InfosBar(QtGui.QWidget):
             self.group_buttons.setLayout(self.buttons)
             self.vbox.addWidget(self.group_buttons)
             self.group.setLayout(self.vbox)
-            
+
             self.scroll.setWidget(self.group)
             self.scroll.setWidgetResizable(True)
             self.scroll.setFixedHeight(self.parent().frameGeometry().height()*0.9)
@@ -196,7 +196,7 @@ class InfosBar(QtGui.QWidget):
             except:
                 err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. Maybe you tried to open a non-NIfTI file")
                 # print (sys.exc_info()[0])
-        
+
 
     def save(self):
     # -- This save will save the changes made by the user (remove all the images selected in toRM)
@@ -229,17 +229,17 @@ class InfosBar(QtGui.QWidget):
                     err = QtGui.QMessageBox.critical(self, "Error", "The new name you entered is not valid (empty, invalid caracter or already exists)")
             except :
                 err = QtGui.QMessageBox.critical(self, "Error", "The name you entered is not valid ("+str(sys.exc_info()[0])+")")
-            
+
     def del_col(self,coll):
-    # -- This del_col will delete the current collection 
+    # -- This del_col will delete the current collection
         choice = QtGui.QMessageBox.question(self, 'Delete Collection',
                                                 "Are you sure you want to delete this collection?",
                                                 QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
         if choice == QtGui.QMessageBox.Yes:
             delete_current_coll()
             self.redo(None)
-            self.parent().parent().parent().parent().parent().showMain.emit() #We show the main when a collection is deleted 
-            
+            self.parent().parent().parent().parent().parent().showMain.emit() #We show the main when a collection is deleted
+
 
 class CollectionAccessButton(QtGui.QPushButton):
     # -- The CollectionAccessButton class is a QPushButton that call showInfos from the EditCollectionsView it knows
@@ -295,7 +295,7 @@ class EditCollectionsView(QtGui.QWidget):
 
     def initEditCollectionsView(self):
     # -- This init creates all the objects we need
-    
+
         global splitter1, containerVbox, splitter2
         # - Horizontal box for go back home button
         buttonsBox = QtGui.QHBoxLayout()
@@ -317,7 +317,7 @@ class EditCollectionsView(QtGui.QWidget):
         scroll = QtGui.QScrollArea()
         scroll.setWidget(splitter1)
         scroll.setWidgetResizable(True)
-        
+
         self.infos = InfosBar()
         splitter1.addWidget(self.infos)
         splitter1.addWidget(topleft)
@@ -337,7 +337,7 @@ class EditCollectionsView(QtGui.QWidget):
         self.setLayout(containerVbox)
 
     def fill_coll(self):
-    # -- Remove the right CollectionsAccessBar and replace it with a column fill with all the collections selected 
+    # -- Remove the right CollectionsAccessBar and replace it with a column fill with all the collections selected
         old = splitter1.widget(1)
         containerVbox.removeWidget(old)
         old.setParent(None)
@@ -402,4 +402,3 @@ class EditCollectionsView(QtGui.QWidget):
         v = gl.GLVolumeItem(d2, sliceDensity=1, smooth=False, glOptions='translucent')
         v.translate(-d2.shape[0]/2, -d2.shape[1]/2, -150)
         bottom.addItem(v)
-
