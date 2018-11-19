@@ -128,6 +128,7 @@ def multiplication_opperation(list_of_NifImage_obj,coefficent):
     :param data: Nifti Image object and a real number
     :return: Nifti Image Object resulting from the multiplication
     """
+    print("enter in mult")
     (lx, ly, lz) = max_shape(list_of_NifImage_obj)
     file_Nifti_clusterised = np.zeros(shape=(lx, ly, lz), dtype='f')
     for file in list_of_NifImage_obj:

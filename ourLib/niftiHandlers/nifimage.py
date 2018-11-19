@@ -113,7 +113,8 @@ class NifImage(object):
         :param finite_values: FALSE if NaN and inf values in data array must be kept,TRUE if NaN and inf are to be replaced by 0
         :return: array
         """
-        img_data = np.array(copy.deepcopy(self.nib_image.get_data()))
+        #img_data = np.array(copy.deepcopy(self.nib_image.get_data()))
+        img_data = np.array(copy.deepcopy(self.nib_image.get_fdata()))
 
         # Some nifti images have NaN and inf as data values...
         if finite_values:

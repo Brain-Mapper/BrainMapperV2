@@ -867,8 +867,10 @@ class CalculationView(QtGui.QWidget):
             try:
                 try:
                     mult_coef = float(self.paramMultiplication.text())
+                    print(mult_coef)
                 except:
                     mult_coef = 1
+                    print("fail mult coef")
                 algorithm_result, output = run_calculation(algorithm, nifti_selected, mult_coef)
                 self.console.setText(">>> \n"+output)
                 self.popUpSaveFileResultCalculation(algorithm,algorithm_result)

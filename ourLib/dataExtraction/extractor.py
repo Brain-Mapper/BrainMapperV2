@@ -112,7 +112,7 @@ def extract_from_collection(a_nifti_imgcoll_obj):
 
     # For each NifImage istance in the collection, extract data and stack results
     img_list = a_nifti_imgcoll_obj.get_img_list()
-    
+
     for nifimg in img_list.items():
         collection_usable_data.add_extracted_data_entry(nifimg[1], extract(nifimg[1]))
 
@@ -176,4 +176,3 @@ def extract_from_collection_list_using_centroids(a_nifti_imgcoll_list):
         centroids_usable_data.add_usable_data_collection(extract_from_collection_as_centroid(imgcoll))
 
     return centroids_usable_data
-
