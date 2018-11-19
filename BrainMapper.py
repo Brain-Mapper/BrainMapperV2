@@ -252,6 +252,10 @@ def run_calculation(selectedAlgorithm, nifti_collection, arguments):
         if max == "":
             max = "100000.0"
         file_result, output = calcul.threshold_opperation(nifti_collection, [min, max])
+    if selectedAlgorithm == "Multiplication":
+        file_result, output = calcul.multiplication_opperation(nifti_collection, arguments)
+    if selectedAlgorithm == "Division":
+        file_result, output = calcul.division_opperation(nifti_collection, arguments)
     return file_result, output
 
 def get_selected_from_name(name):
