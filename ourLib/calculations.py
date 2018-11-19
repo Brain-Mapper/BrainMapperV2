@@ -322,7 +322,7 @@ def mask_opperation(Nifti_file_collection):
         x = voxels[0]
         y = voxels[1]
         z = voxels[2]
-        if data[int(x)][int(y)][int(z)] != 0: 
+        if data[int(x)][int(y)][int(z)] != 0:
             print("point")
             file_Nifti_clusterised[int(x)][int(y)][int(z)] = data[int(x)][int(y)][int(z)]
     print('Mask opperation process is successfull !')
@@ -336,15 +336,17 @@ def mask_opperation(Nifti_file_collection):
 # TO REVIEW
 def linear_combination_opperation(Nifti_file_collection, coef):
     #print(type(coef))
-   # print(int(coef[0]))
+    print(int(coef[0]))
     (lx, ly, lz) = max_shape(Nifti_file_collection)
     file_Nifti_clusterised = np.zeros(shape=(lx, ly, lz), dtype='f')
     i = 0
+    print('d')
     for file in Nifti_file_collection:
         #img = load_nifti(file)
         data = file.get_copy_img_data()
         list_voxels = extract(file)
         #print(len(list_voxels))
+        print("e")
         for voxels in list_voxels:
             x = voxels[0]
             y = voxels[1]
