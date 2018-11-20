@@ -1,5 +1,4 @@
 build/
-test/
 __pycache__/
 clustering_components/__pycache__/
 ourLib/__pycache__/
