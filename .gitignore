@@ -3,3 +3,5 @@ __pycache__/
 clustering_components/__pycache__/
 ourLib/__pycache__/
 UI_builder/__pycache__/
+*.pyc
+.idea
