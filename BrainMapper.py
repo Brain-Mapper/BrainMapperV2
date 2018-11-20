@@ -226,7 +226,6 @@ def run_calculation(selectedAlgorithm, nifti_collection, arguments):
     if selectedAlgorithm == "Centroide":
         file_result, output = calcul.baricentre_opperation(nifti_collection, arguments)
     if selectedAlgorithm == "Linear combination":
-        print("bm")
         file_result, output = calcul.linear_combination_opperation(nifti_collection, arguments)
     if selectedAlgorithm == "Mask":
             file_result, output = calcul.mask_opperation(nifti_collection)
