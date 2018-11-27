@@ -116,12 +116,17 @@ def simple_import(csv_file_path, template_mni_path, currentSet):
                 print(template_data.header["sform_code"])
                 #print(recreate_data.shape)
 
+                """
                 # TODO fix propre
                 for point in point_dict[key]:
                     deltas = recreate_affine[:3, 3]
                     x_y_z = [point[0], point[1], point[2]]
                     x_y_z = x_y_z - deltas
                     recreate_data[int(x_y_z[0]), int(x_y_z[1]), int(x_y_z[2])] = point[3]
+                """
+
+                for point in point_dict[key]:
+                    recreate_data[point[0], point[1], point[2]] = point[3]
 
                 recreate_image = Nifti1Image(recreate_data, recreate_affine)
                 #recreate_image = Nifti1Image(recreate_data, None)
