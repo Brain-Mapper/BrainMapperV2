@@ -29,7 +29,6 @@ if __package__ is None:
 else:
     from ..dataExtraction.usable_data import UsableDataCollection, UsableDataSet
 
-
 def extract(a_nifti_img_obj):
     """
     Extract data from a NIfTI file representation as an array of arrays
@@ -65,8 +64,18 @@ def extract(a_nifti_img_obj):
     lx, ly, lz = img_data.shape  # length of the three image axis
     c = 0  # counter for array construction
 
-    for x in range(1, lx):
+    # Putting in mni coordinates
+    # TODO rendre ça plus propre
 
+    M = a_nifti_img_obj.get_affine_matrix()[:3, :3]
+    abc = a_nifti_img_obj.get_affine_matrix()[:3, 3]
+
+    def f(i, j, k):
+        """ Return X,Y,Z coordinates in MNI for i, j, k"""
+        return M.dot([i, j, k]) + abc
+
+
+    for x in range(1, lx):
         # If there is at least one value NOT EQUAL to zero, the other dimensions are worth exploring
         if img_data[x].sum() > 0:
             for y in range(1, ly):
@@ -74,7 +83,8 @@ def extract(a_nifti_img_obj):
                     for z in range(1, lz):
                         voxel_intensity = img_data[x][y][z]
                         if voxel_intensity > 0:
-                            usable_data[c] = [x, y, z, voxel_intensity]
+                            x_y_z = f(x,y,z)
+                            usable_data[c] = [x_y_z[0], x_y_z[1], x_y_z[2], voxel_intensity]
                             c = c + 1
 
     del img_data  # deleting safe copy of image data saves a lot of memory !

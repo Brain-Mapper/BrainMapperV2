@@ -19,34 +19,56 @@ from sklearn.neighbors import DistanceMetric
 from sklearn.metrics import silhouette_score, silhouette_samples, calinski_harabaz_score, euclidean_distances
 from sklearn.utils.extmath import row_norms, stable_cumsum
 from scipy.spatial import distance
+import pandas as pd
 import numpy as np
 import random
 import math
 
+from .plotting import plot_3d_clusters
+
+
+def format_to_dataframe(X) -> pd.DataFrame:
+    # TODO format the code so that we don't have to use this function
+    X = pd.DataFrame(X, columns=['X', 'Y', 'Z', 'Intensity'])
+    # Drop the column of intensity
+    X = X.drop(columns=['Intensity'])
+    return X
+
 
 def perform_kmeans(param_dict, X):
-    kmeans = KMeans(n_clusters=int(param_dict["n_clusters"]), random_state=int(param_dict["random_state"]),
-                    init=param_dict["init"],
-                    n_init=int(param_dict["n_init"]), max_iter=int(param_dict["max_iter"])).fit(X)
-    return kmeans.labels_, kmeans.cluster_centers_
+    X = format_to_dataframe(X)
+    clustering = KMeans(n_clusters=int(param_dict["n_clusters"]), random_state=int(param_dict["random_state"]),
+                        init=param_dict["init"],
+                        n_init=int(param_dict["n_init"]), max_iter=int(param_dict["max_iter"])).fit(X)
+    # TODO Put this functionality on a button
+    plot_3d_clusters(X, clustering.labels_, "K means")
+    return clustering.labels_, clustering.cluster_centers_
 
 
-def perform_agglomerative_clustering(param_dict, X) :
-    agglo_clust = AgglomerativeClustering(n_clusters=int(param_dict["n_clusters"]), affinity=param_dict["affinity"],
-                                          linkage=param_dict["linkage"]).fit(X)
-    return agglo_clust.labels_, agglo_clust.cluster_centers_
+def perform_agglomerative_clustering(param_dict, X):
+    X = format_to_dataframe(X)
+    clustering = AgglomerativeClustering(n_clusters=int(param_dict["n_clusters"]), affinity=param_dict["affinity"],
+                                         linkage=param_dict["linkage"]).fit(X)
+    # TODO Put this functionality on a button
+    plot_3d_clusters(X, clustering.labels_, "Agglomerative clustering")
+    return clustering.labels_, []
 
 
 def perform_DBSCAN(param_dict, X):
-    dbscan = DBSCAN(eps=float(param_dict["eps"]), min_samples=int(param_dict["min_samples"]), metric=param_dict["metric"]).fit(X)
+    # TODO Add this function to the JSON
+    X = format_to_dataframe(X)
+    dbscan = DBSCAN(eps=float(param_dict["eps"]), min_samples=int(param_dict["min_samples"]),
+                    metric=param_dict["metric"]).fit(X)
     return dbscan.labels_
 
 
 def perform_kmedoids(param_dict, X):
-    distances_matrix_pairwise = compute_distances(X, param_dict['metric'])
-    medoids_result = kmedoids_cluster(str(param_dict["init"]), X, distances_matrix_pairwise, int(param_dict["n_clusters"]))
-
-    return medoids_result
+    X = format_to_dataframe(X)
+    distances_matrix_pairwise = compute_distances(X.values, param_dict['metric'])
+    clustering_labels = kmedoids_cluster(str(param_dict["init"]), X.values, distances_matrix_pairwise,
+                                         int(param_dict["n_clusters"]))
+    plot_3d_clusters(X, clustering_labels[0], "KMedoids")
+    return clustering_labels
 
 
 # ------------------------------------- K Medoids implementation ------------------------------------------
@@ -82,7 +104,7 @@ def kmedoids_cluster(init_mode, data_matrix, distances, k=3):
     c = 0
     for index in curr_medoids_index:
         curr_medoids[c] = np.array(data_matrix[index])
-        c = c+1
+        c = c + 1
 
     old_medoids_index = np.array([-1] * k)
     new_medoids_index = np.array([-1] * k)
@@ -105,7 +127,7 @@ def kmedoids_cluster(init_mode, data_matrix, distances, k=3):
     for cluster_index in clusters:
         clust_i, = np.where(curr_medoids_index == cluster_index)
         clusters_labels.append(int(clust_i))
-        c = c+1
+        c = c + 1
 
     return clusters_labels, curr_medoids
 
@@ -132,8 +154,8 @@ def init_clusters(init_mode, data_matrix, k):
         n_local_trials = 2 + int(np.log(k))
 
         # Pick first center randomly
-        center_id = random.randint(0, m-1)
-        centers_index[0]=center_id
+        center_id = random.randint(0, m - 1)
+        centers_index[0] = center_id
         centers[0] = data_matrix[center_id]
 
         # Initialize list of closest distances and calculate current potential
@@ -207,6 +229,7 @@ def compute_new_medoid(cluster, distances):
     costs = cluster_distances.sum(axis=1)
     return costs.argmin(axis=0, fill_value=10e9)
 
+
 # --------------------------------------------------------------------------------------------------------
 
 
@@ -270,7 +293,8 @@ def compute_s(i, x, centroids, labels, cluster_number):
 
 def compute_Rij(i, j, x, centroids, labels, cluster_number):
     dist = distance.euclidean(centroids[i], centroids[j])
-    Rij = (compute_s(i, x, centroids, labels, cluster_number) + compute_s(j, x, centroids, labels, cluster_number)) / dist
+    Rij = (compute_s(i, x, centroids, labels, cluster_number) + compute_s(j, x, centroids, labels,
+                                                                          cluster_number)) / dist
     return Rij
 
 
@@ -282,13 +306,3 @@ def compute_R(i, x, centroids, labels, cluster_number):
                 Ri = compute_Rij(i, j, x, centroids, labels, cluster_number)
                 list_R.append(Ri)
     return max(list_R)
-
-
-
-
-
-
-
-
-
-
