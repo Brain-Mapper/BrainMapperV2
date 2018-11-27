@@ -66,8 +66,10 @@ def extract(a_nifti_img_obj):
 
     # Putting in mni coordinates
     # TODO rendre ça plus propre
+
     M = a_nifti_img_obj.get_affine_matrix()[:3, :3]
     abc = a_nifti_img_obj.get_affine_matrix()[:3, 3]
+
     def f(i, j, k):
         """ Return X,Y,Z coordinates in MNI for i, j, k"""
         return M.dot([i, j, k]) + abc
