@@ -17,6 +17,7 @@ import csv
 import nibabel as nib
 import numpy as np
 from ourLib.niftiHandlers.imagecollection import ImageCollection
+from nibabel import Nifti1Image,load
 
 
 def export_control(name, path):
@@ -49,6 +50,7 @@ def export_control(name, path):
             print ('Please enter a valid directory path')
             return False
 
+
 def simple_export(name, path, a_usable_dataset):
 
     if export_control(name, path):
@@ -69,6 +71,9 @@ def simple_export(name, path, a_usable_dataset):
         f = open(file_path, 'w')
         f.write(",".join(header) + "\n")
 
+        # Deltas used to repe
+        deltas = load('ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii').affine[:3, 3]
+
         for udcoll in a_usable_dataset.get_usable_data_list():
 
             extracted_data_dictionary = udcoll.get_extracted_data_dict()
@@ -87,12 +92,15 @@ def simple_export(name, path, a_usable_dataset):
                     new_line[4] = u'Null'  # TODO
                     new_line[5] = u'Null'  # TODO can be set if save somewhere the directory workspace
 
-                    new_line[6] = str(data_array[data_rows, 0])  # X coordinate
-                    new_line[7] = str(data_array[data_rows, 1])  # Y coordinate
-                    new_line[8] = str(data_array[data_rows, 2])  # Z coordinate
+                    #TODO I removed the deltas here, check if this is correct
+                    new_line[6] = str(data_array[data_rows, 0] )  # X coordinate
+                    new_line[7] = str(data_array[data_rows, 1] )  # Y coordinate
+                    new_line[8] = str(data_array[data_rows, 2] )  # Z coordinate
                     new_line[9] = str(data_array[data_rows, 3])  # Intensity
 
                     f.write(",".join(new_line) + "\n")
+
+
         f.close()
 
 def clustering_export(name, path, a_usable_dataset, label):
@@ -113,6 +121,9 @@ def clustering_export(name, path, a_usable_dataset, label):
         f.write(",".join(header) + "\n")
         row_cont = 0
 
+        # Deltas used to repe
+        deltas = load('ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii').affine[:3, 3]
+
         for udcoll in a_usable_dataset.get_usable_data_list():
 
             extracted_data_dictionary = udcoll.get_extracted_data_dict()
@@ -127,9 +138,9 @@ def clustering_export(name, path, a_usable_dataset, label):
 
                     new_line[1] = f_name  # file name
 
-                    new_line[2] = str(data_array[data_rows, 0])  # X coordinate
-                    new_line[3] = str(data_array[data_rows, 1])  # Y coordinate
-                    new_line[4] = str(data_array[data_rows, 2])  # Z coordinate
+                    new_line[2] = str(data_array[data_rows, 0] - deltas[0])  # X coordinate
+                    new_line[3] = str(data_array[data_rows, 1] - deltas[1])  # Y coordinate
+                    new_line[4] = str(data_array[data_rows, 2] - deltas[2])  # Z coordinate
                     new_line[5] = str(data_array[data_rows, 3])  # Intensity
                     new_line[6] = str(label[row_cont])
                     row_cont = row_cont + 1

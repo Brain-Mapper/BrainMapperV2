@@ -1,4 +1,3 @@
-
 # NAME
 #
 #        clusteringView
@@ -13,23 +12,19 @@
 # 5 january 2018 - Added functions to fill table with extracted data
 # 13 fev 2018 - Add histogram view (@Graziella-Husson)
 
-from PyQt4 import QtGui
-from PyQt4.Qt import pyqtSignal, QFileDialog
-from PyQt4.QtCore import Qt, QRect
-
-from BrainMapper import *
-import ourLib.ExcelExport.excelExport as ee
-import os
-
 import numpy as np
+import pyqtgraph as pg
 import pyqtgraph.opengl as gl
+from PyQt4.Qt import QFileDialog
+from PyQt4.QtCore import Qt, QRect
+# Imports for the plotting
+from nilearn import plotting
 
+import ourLib.ExcelExport.excelExport as ee
+from clustering_components.clustering_paramspace import ParameterAndScriptStack
 # View components' import
 from clustering_components.clustering_results import ClusteringDataTable, ClusteringGraphs, ClusteringResultsPopUp
-from clustering_components.clustering_paramspace import ParameterAndScriptStack
 from clustering_components.clustering_topbar import *
-
-import UI_builder.resources
 
 
 class ClusteringView(QtGui.QWidget):
@@ -65,7 +60,7 @@ class ClusteringView(QtGui.QWidget):
         # - Horizontal box for a displayer of selected method
         selectedMBox = QtGui.QHBoxLayout()
         label = QtGui.QLabel('Clustering method : ')
-        self.clust_chooser = ClusteringChooser() # Our custom widget for clustering algorithm selection
+        self.clust_chooser = ClusteringChooser()  # Our custom widget for clustering algorithm selection
 
         selectedMBox.addWidget(label)
         selectedMBox.addWidget(self.clust_chooser)
@@ -74,14 +69,15 @@ class ClusteringView(QtGui.QWidget):
         self.param_script_stack = ParameterAndScriptStack(title_style, self.clust_chooser)
 
         # - Horizontal box for go back home button
-        buttonsBox= QtGui.QHBoxLayout()
+        buttonsBox = QtGui.QHBoxLayout()
         buttonsBox.addStretch(1)
 
         runClusteringButton = QtGui.QPushButton('Run')
         runClusteringButton.setStyleSheet("background-color: #b4ecb4;")
         runClusteringButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/play.png'))
         runClusteringButton.setStatusTip("Run selected clustering")
-        runClusteringButton.clicked.connect(lambda: self.runSelectedClust(self.clust_chooser.get_selected_method_name(), self.param_script_stack.get_user_params()))
+        runClusteringButton.clicked.connect(lambda: self.runSelectedClust(self.clust_chooser.get_selected_method_name(),
+                                                                          self.param_script_stack.get_user_params()))
 
         detailsButton = QtGui.QPushButton('Results Details')
         detailsButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/powerpoint.png'))
@@ -92,7 +88,7 @@ class ClusteringView(QtGui.QWidget):
         goHomeButton = QtGui.QPushButton('Go back')
         goHomeButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/home-2.png'))
         goHomeButton.setStatusTip("Return to main page")
-        goHomeButton.clicked.connect(self.go_back)# When go back home button is clicked, change central views
+        goHomeButton.clicked.connect(self.go_back)  # When go back home button is clicked, change central views
 
         exportButton = QtGui.QPushButton('Export')
         exportButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/libreoffice.png'))
@@ -110,10 +106,9 @@ class ClusteringView(QtGui.QWidget):
         buttonsBox.addWidget(saveButton)
         buttonsBox.addWidget(goHomeButton)
 
-        topBox=QtGui.QHBoxLayout()
+        topBox = QtGui.QHBoxLayout()
         topBox.addLayout(selectedMBox)
         topBox.addLayout(buttonsBox)
-
 
         # -------------- Clustering Widget -----------------------
         clustWidget = QtGui.QWidget()
@@ -122,7 +117,7 @@ class ClusteringView(QtGui.QWidget):
         clust_res_splitter = QtGui.QSplitter(Qt.Vertical)
 
         # === A table widget ===
-        table_clust=QtGui.QWidget()
+        table_clust = QtGui.QWidget()
 
         # Horizontal box for table display
         tableBox = QtGui.QVBoxLayout()
@@ -143,7 +138,7 @@ class ClusteringView(QtGui.QWidget):
         clust_res_splitter.addWidget(table_clust)
         clust_res_splitter.addWidget(self.resultsGraphs)
 
-        hbox=QtGui.QHBoxLayout()
+        hbox = QtGui.QHBoxLayout()
         hbox.addWidget(clust_res_splitter)
         clustWidget.setLayout(hbox)
 
@@ -168,6 +163,7 @@ class ClusteringView(QtGui.QWidget):
 
     def runSelectedClust(self, selectedMethod, param_dict):
         clustering_results = run_clustering(selectedMethod, param_dict)
+        print("Param dict : {}".format(param_dict.keys()));
         self.label = clustering_results[0]
         self.centroids = clustering_results[1]
         self.table_displayer.fill_clust_labels(self.label)
@@ -186,7 +182,8 @@ class ClusteringView(QtGui.QWidget):
     def save(self):
         if self.label is not None:
             makeClusterResultSet(self.table_displayer.clustering_usable_dataset, self.label)
-            QtGui.QMessageBox.information(self, "Results saved!", "A set has been created in the clustering results tab at home page.")
+            QtGui.QMessageBox.information(self, "Results saved!",
+                                          "A set has been created in the clustering results tab at home page.")
 
         else:
             QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")
@@ -212,12 +209,22 @@ class ClusteringView(QtGui.QWidget):
         self.resultsGraphs.clear_graph2()
         plt = self.resultsGraphs.graph2.addPlot()
 
+        print("add_silhouette -> Distinct elements in label : {} ".format(set(labels)))
         sample_silhouettes = compute_sample_silhouettes(labels)
 
-        # make interesting distribution of values
-        vals = np.hstack([sample_silhouettes])
-        plt.plot(vals, fillLevel=0, brush=(0, 245, 0, 150))
+        # Dict of the form {label:[list of silhouettes]}
+        labels_dict = {}
 
+        for sample in zip(sample_silhouettes, labels):
+            labels_dict[sample[1]] = labels_dict[sample[1]] + [sample[0]] if sample[1] in labels_dict.keys() else [
+                sample[0]]
+
+        graph_offset = 0  # used to indicate the end of the last graph, so bar graphs don't overlap
+        for label in labels_dict.keys():
+            y = sorted(labels_dict[label])
+            x = np.arange(len(y))
+            plt.addItem(pg.BarGraphItem(x=x + graph_offset, height=y, width=1, brush=pg.intColor(label)))
+            graph_offset += x.max()
 
     def add_3D(self, clustering_usable_dataset, label):
         old = self.resultsGraphs.grid.itemAt(1).widget()
@@ -247,5 +254,31 @@ class ClusteringView(QtGui.QWidget):
             self.results_popup.update_details(method_name, user_params, self.centroids, clustering_validation_indexes(self.label,
                                                                                                       self.centroids,
                                                                                                       float(len(set(self.label)))))
-
         self.results_popup.show()
+
+
+# def plot_3d_clusters(X: pd.DataFrame, y: list, title: str = "Result of the clustering"):
+    # Matplotlib
+    # Plot a figure
+    # fig = plt.figure()
+    # ax = plt.axes(projection='3d')
+    # ax.scatter3D(X['X'].values, X['Y'].values, X['Z'].values, c=y, cmap='Set1')
+    # plt.show
+
+    # On the brain view
+    # color_dict = {0: 'red', 1: 'cyan', 2: 'magenta'}
+    # colors_list = []
+    # points_list = []
+    # for i in range(len(y)):
+    #     points_list.append((X['X'][i], X['Y'][i], X['Z'][i]))
+    #     colors_list.append(color_dict[y[i]])
+    # view = plotting.view_markers(points_list, colors_list, marker_size=10)
+    # view.open_in_browser()
+
+    # 'Vue en coupe"
+    # color_dict = {0: 'red', 1: 'cyan', 2: 'magenta'}
+    # display = plotting.plot_anat()
+    # for i in range(len(y)):
+    #     point = [(X['X'][i], X['Y'][i], X['Z'][i])]
+    #     display.add_markers(point, marker_color=color_dict[y[i]])
+    # plotting.show()
