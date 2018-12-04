@@ -219,9 +219,11 @@ class ClusteringResultsPopUp(QtGui.QWidget):
             "-----------------------------------------------------------------------------\n\n")
         self.info_panel.insertPlainText("Validation Indexes\n-----------------------------------------------------------------------------\n")
 
-        self.info_panel.insertPlainText("Mean Silhouette : \t\t "+str(validation_values[0])+"\n\n")
+        self.info_panel.insertPlainText("Mean Silhouette : \t\t "+str(validation_values[0])+"\n")
+        self.info_panel.insertPlainText("This mean is between -1 and 1 and the best value is around 1." +"\n\n")
         self.info_panel.insertPlainText("Calzinski-Habaraz score: \t " + str(validation_values[1]) + "\n\n")
         self.info_panel.insertPlainText("Davies-Bouldin index: \t\t " + str(validation_values[2]) + "\n\n")
+        self.info_panel.insertPlainText("Calzinski-Habaraz score and Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the indice, better is the number of clusters.\n\n")
 
 
     def export_as_textfile(self):

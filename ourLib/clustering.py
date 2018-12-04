@@ -16,7 +16,7 @@
 
 from sklearn.cluster import KMeans, AgglomerativeClustering, DBSCAN
 from sklearn.neighbors import DistanceMetric
-from sklearn.metrics import silhouette_score, silhouette_samples, calinski_harabaz_score, euclidean_distances
+from sklearn.metrics import silhouette_score, silhouette_samples, calinski_harabaz_score, euclidean_distances,davies_bouldin_score
 from sklearn.utils.extmath import row_norms, stable_cumsum
 from scipy.spatial import distance
 import pandas as pd
@@ -59,7 +59,7 @@ def perform_DBSCAN(param_dict, X):
     X = format_to_dataframe(X)
     dbscan = DBSCAN(eps=float(param_dict["eps"]), min_samples=int(param_dict["min_samples"]),
                     metric=param_dict["metric"]).fit(X)
-    return dbscan.labels_
+    return dbscan.labels_, []
 
 
 def perform_kmedoids(param_dict, X):
@@ -266,20 +266,15 @@ def compute_calinski_habaraz(X, predicted_labels):
     return calinski_harabaz_score(X, labels=predicted_labels)
 
 
-def compute_db(X, centroids, labels, cluster_number):
+def compute_db(X,predicted_labels):
+#X, centroids, labels, cluster_number):
     """
-    Compute the Davies-Bouldin index for a given clustering result
-    :param x: The data matrix
-    :param centroids: The list of centroids
-    :param labels: The list of assigned cluster labels
-    :param cluster_number: The number of clusters
+    Compute the Davies-Bouldin score for a given clustering result
+    :param X: The data matrix : a list of n_features-dimensional data (each row corresponds to a single data point)
+    :param predicted_labels:
     :return:
     """
-    sum1 = 0.0
-    for i in range(cluster_number):
-        sum1 += compute_R(i, X, centroids, labels, cluster_number)
-    DB = float(sum1) / float(cluster_number)
-    return DB
+    return davies_bouldin_score(X,labels=predicted_labels)
 
 
 def compute_s(i, x, centroids, labels, cluster_number):

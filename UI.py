@@ -325,6 +325,7 @@ def main():
 
     ex = UI()
     sys.exit(app.exec_())
+    os.system("pause")
 
 
 if __name__ == '__main__':
