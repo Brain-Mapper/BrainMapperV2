@@ -1,7 +1,4 @@
 build/
-clustering_components/__pycache__/
-ourLib/__pycache__/
-UI_builder/__pycache__/
 __pycache__/
 *.py[cod]
 *$py.class
