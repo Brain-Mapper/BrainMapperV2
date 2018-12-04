@@ -24,8 +24,6 @@ import numpy as np
 import random
 import math
 
-from .plotting import plot_3d_clusters
-
 
 def format_to_dataframe(X) -> pd.DataFrame:
     # TODO format the code so that we don't have to use this function
@@ -40,8 +38,6 @@ def perform_kmeans(param_dict, X):
     clustering = KMeans(n_clusters=int(param_dict["n_clusters"]), random_state=int(param_dict["random_state"]),
                         init=param_dict["init"],
                         n_init=int(param_dict["n_init"]), max_iter=int(param_dict["max_iter"])).fit(X)
-    # TODO Put this functionality on a button
-    plot_3d_clusters(X, clustering.labels_, "K means")
     return clustering.labels_, clustering.cluster_centers_
 
 
@@ -50,7 +46,6 @@ def perform_agglomerative_clustering(param_dict, X):
     clustering = AgglomerativeClustering(n_clusters=int(param_dict["n_clusters"]), affinity=param_dict["affinity"],
                                          linkage=param_dict["linkage"]).fit(X)
     # TODO Put this functionality on a button
-    plot_3d_clusters(X, clustering.labels_, "Agglomerative clustering")
     return clustering.labels_, []
 
 
@@ -67,7 +62,6 @@ def perform_kmedoids(param_dict, X):
     distances_matrix_pairwise = compute_distances(X.values, param_dict['metric'])
     clustering_labels = kmedoids_cluster(str(param_dict["init"]), X.values, distances_matrix_pairwise,
                                          int(param_dict["n_clusters"]))
-    plot_3d_clusters(X, clustering_labels[0], "KMedoids")
     return clustering_labels
 
 

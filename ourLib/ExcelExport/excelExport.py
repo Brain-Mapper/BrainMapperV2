@@ -92,9 +92,10 @@ def simple_export(name, path, a_usable_dataset):
                     new_line[4] = u'Null'  # TODO
                     new_line[5] = u'Null'  # TODO can be set if save somewhere the directory workspace
 
-                    new_line[6] = str(data_array[data_rows, 0] - deltas[0])  # X coordinate
-                    new_line[7] = str(data_array[data_rows, 1] - deltas[1])  # Y coordinate
-                    new_line[8] = str(data_array[data_rows, 2] - deltas[2])  # Z coordinate
+                    #TODO I removed the deltas here, check if this is correct
+                    new_line[6] = str(data_array[data_rows, 0] )  # X coordinate
+                    new_line[7] = str(data_array[data_rows, 1] )  # Y coordinate
+                    new_line[8] = str(data_array[data_rows, 2] )  # Z coordinate
                     new_line[9] = str(data_array[data_rows, 3])  # Intensity
 
                     f.write(",".join(new_line) + "\n")

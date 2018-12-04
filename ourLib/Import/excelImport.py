@@ -17,6 +17,7 @@ importlib.reload(sys)
 #sys.setdefaultencoding('utf8') pas besoin ??
 from nibabel import Nifti1Image,load
 from numpy import zeros
+import numpy as np
 from csv import reader as csv_reader
 import time
 from ourLib.niftiHandlers.imagecollection import ImageCollection
@@ -71,23 +72,20 @@ def simple_import(csv_file_path, template_mni_path, currentSet):
     ]
 
     try:
-        #dialect = csv_Sniffer().sniff(file.read(1024))
-        #file.seek(0)
-
         reader = csv_reader(file)
 
         row = next(reader)
-        print(row)
+        #print(row)
 
+        template_data = load(template_mni_path)
+        template_affine = template_data.affine
+        #template_data.set_qform(template_affine, code='mni')
+        template_shape = template_data.shape
+        
         # part for a simple import
         if row == simple_header:
-            print('yes')
+            print('Simple import')
             point_dict = dict()
-
-            template_data = load(template_mni_path)
-            template_affine = template_data.affine
-            #template_data.set_qform(template_affine, code='mni')
-            template_shape = template_data.shape
 
             coll = ImageCollection("default", currentSet)
             # We want an unique name for each collection
@@ -109,41 +107,21 @@ def simple_import(csv_file_path, template_mni_path, currentSet):
             for key in point_dict.keys():
                 recreate_affine = template_affine
                 recreate_data = zeros(template_shape)
-
-                print(type(recreate_affine))
-                print(recreate_affine.shape)
-                print(template_data.header.get_sform())
-                print(template_data.header["sform_code"])
-                #print(recreate_data.shape)
-
-                """
-                # TODO fix propre
+                
                 for point in point_dict[key]:
-                    deltas = recreate_affine[:3, 3]
-                    x_y_z = [point[0], point[1], point[2]]
-                    x_y_z = x_y_z - deltas
+                    x_y_z = mni_to_voxel(point, recreate_affine)
                     recreate_data[int(x_y_z[0]), int(x_y_z[1]), int(x_y_z[2])] = point[3]
-                """
-
-                for point in point_dict[key]:
-                    recreate_data[point[0], point[1], point[2]] = point[3]
 
                 recreate_image = Nifti1Image(recreate_data, recreate_affine)
-                #recreate_image = Nifti1Image(recreate_data, None)
-                #ni_image = NifImage(unicode(str(key)) + ".csv", recreate_image)
                 ni_image = NifImage(str(key) + ".csv", recreate_image)
-
+                
                 # put nifti images into a imageCollection
                 coll.add(ni_image)
 
         # pat for clustering import
         elif row == clustering_header:
-            print('yes')
+            print('Clustering import')
             point_dict = dict()
-
-            template_data = load(template_mni_path)
-            template_affine = template_data.affine
-            template_shape = template_data.shape
 
             coll = ImageCollection("default", currentSet)
             # We want an unique name for each collection
@@ -185,6 +163,18 @@ def simple_import(csv_file_path, template_mni_path, currentSet):
 
         file.close()
     return coll
+
+
+def mni_to_voxel(points:list, affine) -> list:
+    """
+    data : [x,y,z]
+    affine : affine matrix
+    -> return [x_in_voxel, y_in_voxel, z_in_voxel]
+    """
+    deltas = affine[:3, 3]
+    x_y_z = [points[0], points[1], points[2]]
+    x_y_z = x_y_z - deltas
+    return x_y_z
 
 #
 # def excel_import(excel_file_path, template_mni_path, currentSet):

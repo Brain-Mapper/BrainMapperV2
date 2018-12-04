@@ -19,7 +19,7 @@ from ourLib.niftiHandlers.set import Set
 from ourLib.dataExtraction import extractor as xt
 from ourLib.dataExtraction.usable_data import UsableDataSet as uds
 from ourLib.dataExtraction.image_recreation import image_recreation
-from ourLib import clustering as clust
+from ourLib import clustering
 from ourLib import calculations as calcul
 from ourLib.Import import excelImport as imp
 from ourLib.Import import workspaceImport as ws
@@ -172,16 +172,16 @@ def run_clustering(selectedClusteringMethod, params_dict):
     clusterizable_dataset = currentUsableDataset.export_as_clusterizable()
 
     if selectedClusteringMethod == 'KMeans':
-        results = clust.perform_kmeans(params_dict, clusterizable_dataset)
+        results = clustering.perform_kmeans(params_dict, clusterizable_dataset)
 
     elif selectedClusteringMethod == 'KMedoids':
-        results = clust.perform_kmedoids(params_dict, clusterizable_dataset)
+        results = clustering.perform_kmedoids(params_dict, clusterizable_dataset)
 
     elif selectedClusteringMethod == 'AgglomerativeClustering':
-        results = clust.perform_agglomerative_clustering(params_dict, clusterizable_dataset)
+        results = clustering.perform_agglomerative_clustering(params_dict, clusterizable_dataset)
 
     elif selectedClusteringMethod == 'DBSCAN':
-        results = clust.perform_DBSCAN(params_dict, clusterizable_dataset)
+        results = clustering.perform_DBSCAN(params_dict, clusterizable_dataset)
     else:
         print('clustering method not recognised')
         results = ['']
@@ -198,19 +198,19 @@ def clustering_validation_indexes(labels, centroids, cluster_num):
     validation_indexes = []
 
     # Mean silhouette
-    validation_indexes.append(clust.compute_mean_silhouette(X=clustering_datamatrix, predicted_labels=labels))
+    validation_indexes.append(clustering.compute_mean_silhouette(X=clustering_datamatrix, predicted_labels=labels))
     # Calinski-Habaraz index
-    validation_indexes.append(clust.compute_calinski_habaraz(X=clustering_datamatrix, predicted_labels=labels))
+    validation_indexes.append(clustering.compute_calinski_habaraz(X=clustering_datamatrix, predicted_labels=labels))
     # Davies-Bouldin index
     validation_indexes.append(
-        clust.compute_db(X=clustering_datamatrix, centroids=centroids, labels=labels, cluster_number=cluster_num))
+        clustering.compute_db(X=clustering_datamatrix, centroids=centroids, labels=labels, cluster_number=cluster_num))
 
     return validation_indexes
 
 
 def compute_sample_silhouettes(labels):
     clustering_datamatrix = currentUsableDataset.export_as_clusterizable()
-    return clust.compute_samples_silhouette(X=clustering_datamatrix, predicted_labels=labels)
+    return clustering.compute_samples_silhouette(X=clustering_datamatrix, predicted_labels=labels)
 
 
 # ------------------------ CLUSTERING FUNCTIONS END HERE ---------------------------------------------------------
