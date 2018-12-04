@@ -17,6 +17,8 @@ path = sys.path
 #("C:\Users\thoma\Desktop\LOG\brainMapper/UI/resources.py","C:\Users\thoma\Desktop\LOG\brainMapper\build\exe.win-amd64-2.7\lib\resources.py")
 includefiles = ["UI.bat",'./ressources']
 includes = ["os","sys","time","csv","nibabel","numpy","scipy","sklearn","sip","atexit","OpenGL","PyQt4","pyqtgraph",
+"matplotlib","nilearn","tkinter",
+"mpl_toolkits",
 "PyQt4.QtCore", "PyQt4.QtGui",
 "pyqtgraph.opengl", "pyqtgraph.graphicsItems","pyqtgraph.debug",
 "numpy.core._methods", "numpy.lib.format",
@@ -28,7 +30,7 @@ includes = ["os","sys","time","csv","nibabel","numpy","scipy","sklearn","sip","a
 "OpenGL.arrays._buffers","OpenGL.arrays._strings","OpenGL.arrays.buffers",
 "OpenGL.arrays.ctypesarrays","OpenGL.arrays.ctypesparameters","OpenGL.arrays.ctypespointers","OpenGL.arrays.lists",
 "OpenGL.arrays.nones","OpenGL.arrays.numbers","OpenGL.arrays.numpybuffers","OpenGL.arrays.numpymodule",
-"OpenGL.arrays.strings"]
+"matplotlib.backends.backend_tkagg"]
 #conflit de nom entre scipy.spatial.ckdtree dans les lib et dans le build
 
 
@@ -54,6 +56,7 @@ else:
 binpathincludes = []
 if sys.platform == "linux2":
     binpathincludes += ["/usr/lib"]
+    binpathincludes += ["~/.local/lib"]
  
 # niveau d'optimisation pour la compilation en bytecodes
 optimize = 0

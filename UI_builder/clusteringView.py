@@ -188,17 +188,18 @@ class ClusteringView(QtGui.QWidget):
         else:
             QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")
 
-    def add_hist(self, param_dict, label):
+    # TODO remove param_dict
+    def add_hist(self, param_dict, labels):
 
-        k = float(param_dict["n_clusters"])
+        k = float(len(set(labels)))
         self.resultsGraphs.clear_graph1()
         plt = self.resultsGraphs.graph1.addPlot()
 
         # make interesting distribution of values
-        vals = np.hstack([label])
+        vals = np.hstack([labels])
 
         # compute standard histogram
-        y, x = np.histogram(vals, bins=np.linspace(0, k, k + 1))
+        y, x = np.histogram(vals, bins=np.arange(k))
 
         # Using stepMode=True causes the plot to draw two lines for each sample.
         # notice that len(x) == len(y)+1
@@ -250,11 +251,9 @@ class ClusteringView(QtGui.QWidget):
         self.results_popup.setGeometry(QRect(100, 100, 500, 300))
 
         if self.label is not None:
-            self.results_popup.update_details(method_name, user_params, self.centroids,
-                                              clustering_validation_indexes(self.label,
-                                                                            self.centroids,
-                                                                            int(user_params["n_clusters"])))
-
+            self.results_popup.update_details(method_name, user_params, self.centroids, clustering_validation_indexes(self.label,
+                                                                                                      self.centroids,
+                                                                                                      float(len(set(self.label)))))
         self.results_popup.show()
 
 
