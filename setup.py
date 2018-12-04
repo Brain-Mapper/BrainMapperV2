@@ -96,8 +96,8 @@ cible_1 = Executable(
     base=base,
     )
 
-setup(  name = "BrainMapper",
-        version = "0.1",
-        description = "Executable version of BrainMapper",
-        options = {'build_exe': options}, 
-        executables = [cible_1])
+setup(name = "BrainMapper",
+      version = "0.1",
+      description = "Executable version of BrainMapper",
+      options = {'build_exe': options},
+      executables = [cible_1], requires=['matplotlib'])
