@@ -202,8 +202,8 @@ def clustering_validation_indexes(labels, centroids, cluster_num):
     # Calinski-Habaraz index
     validation_indexes.append(clustering.compute_calinski_habaraz(X=clustering_datamatrix, predicted_labels=labels))
     # Davies-Bouldin index
-    validation_indexes.append(
-        clustering.compute_db(X=clustering_datamatrix, centroids=centroids, labels=labels, cluster_number=cluster_num))
+    validation_indexes.append(clustering.compute_db(X=clustering_datamatrix, centroids=centroids, labels=labels))
+
 
     return validation_indexes
 
