@@ -25,19 +25,20 @@ def plot_silhouette(labels, colors = None):
 
     graph_offset = 1  # used to indicate the end of the last graph, so bar graphs don't overlap
     number_of_clusters = len(labels_dict.keys())
-    color = get_color(sorted(labels_dict.keys()))
+    colors = get_color(sorted(labels_dict.keys()))
 
 
     plt.figure()
     plt.xlim([np.min(sample_silhouettes), 1])
     plt.ylim([0,len(sample_silhouettes) + 1 + len(set(labels))]) # There is len(sample_silhouettes) and 1+len(set(labels)) blanks  
     for label in sorted(labels_dict.keys()):
+        color=colors[label]
         y = sorted(labels_dict[label]+[np.min(labels_dict[label])]) # [np.min(labels_dict[label])] is here beacuse of step='pre' (we need 2 y to create a bar)
         plt.fill_betweenx(np.arange(graph_offset, graph_offset + len(y)),
                              0, y,
                              facecolor=color, edgecolor=color, alpha=0.7, step="pre")
         # plt.scatter(np.arange(graph_offset, graph_offset + len(y)),y, facecolor=color)
-        plt.text(0.95, graph_offset + int(0.5 * len(y)), str(label), color=color[label])
+        plt.text(0.95, graph_offset + int(0.5 * len(y)), str(label), color=color)
         graph_offset += len(y)
     plt.title("The silhouette plot for the various clusters.")
     plt.xlabel("The silhouette coefficient values")
@@ -85,7 +86,7 @@ def get_color(distinct_labels: list) -> dict:
     number_of_clusters = len(distinct_labels)
     color_dict = {}
     for label in distinct_labels:
-        color_dict[0] = cm.magma(float(label) / float(number_of_clusters))
+        color_dict[label] = cm.magma(float(label) / float(number_of_clusters))
     return color_dict
 
 # if __name__ == "__main__":
