@@ -18,13 +18,15 @@ import pyqtgraph.opengl as gl
 from PyQt4.Qt import QFileDialog
 from PyQt4.QtCore import Qt, QRect
 # Imports for the plotting
-from nilearn import plotting
+
 
 import ourLib.ExcelExport.excelExport as ee
 from clustering_components.clustering_paramspace import ParameterAndScriptStack
 # View components' import
 from clustering_components.clustering_results import ClusteringDataTable, ClusteringGraphs, ClusteringResultsPopUp
 from clustering_components.clustering_topbar import *
+import clustering_components.clustering_plot as clustering_plot
+
 
 
 class ClusteringView(QtGui.QWidget):
@@ -163,7 +165,7 @@ class ClusteringView(QtGui.QWidget):
 
     def runSelectedClust(self, selectedMethod, param_dict):
         clustering_results = run_clustering(selectedMethod, param_dict)
-        print("Param dict : {}".format(param_dict.keys()));
+        print("runSelectedCLud -> Param dict : {}".format(param_dict.keys()));
         self.label = clustering_results[0]
         self.centroids = clustering_results[1]
         self.table_displayer.fill_clust_labels(self.label)
@@ -224,9 +226,11 @@ class ClusteringView(QtGui.QWidget):
             y = sorted(labels_dict[label])
             x = np.arange(len(y))
             plt.addItem(pg.BarGraphItem(x=x + graph_offset, height=y, width=1, brush=pg.intColor(label)))
-            graph_offset += x.max()
-
-        self.plot_silhouette(labels)
+            graph_offset += x.max() + 1
+        
+        # A garder
+        clustering_plot.plot_silhouette(labels)
+        clustering_plot.plot_3d_clusters(labels)
 
     def add_3D(self, clustering_usable_dataset, label):
         old = self.resultsGraphs.grid.itemAt(1).widget()
@@ -257,67 +261,4 @@ class ClusteringView(QtGui.QWidget):
                                                                                                       self.centroids,
                                                                                                       float(len(set(self.label)))))
         self.results_popup.show()
-
-    # --- Graph plotting ---
-
-    # def plot_3d_clusters(X: pd.DataFrame, y: list, title: str = "Result of the clustering"):
-    # Matplotlib
-    # Plot a figure
-    # fig = plt.figure()
-    # ax = plt.axes(projection='3d')
-    # ax.scatter3D(X['X'].values, X['Y'].values, X['Z'].values, c=y, cmap='Set1')
-    # plt.show
-
-    # On the brain view
-    # color_dict = {0: 'red', 1: 'cyan', 2: 'magenta'}
-    # colors_list = []
-    # points_list = []
-    # for i in range(len(y)):
-    #     points_list.append((X['X'][i], X['Y'][i], X['Z'][i]))
-    #     colors_list.append(color_dict[y[i]])
-    # view = plotting.view_markers(points_list, colors_list, marker_size=10)
-    # view.open_in_browser()
-
-    # 'Vue en coupe"
-    # color_dict = {0: 'red', 1: 'cyan', 2: 'magenta'}
-    # display = plotting.plot_anat()
-    # for i in range(len(y)):
-    #     point = [(X['X'][i], X['Y'][i], X['Z'][i])]
-    #     display.add_markers(point, marker_color=color_dict[y[i]])
-    # plotting.show()
-
-    def plot_silhouette(self, labels):
-        import matplotlib.pyplot as plt
-        import matplotlib.cm as cm
-
-        # print("add_silhouette -> Distinct elements in label : {} ".format(set(labels)))
-        sample_silhouettes = compute_sample_silhouettes(labels)
-        average = np.mean(sample_silhouettes)
-
-        # Dict of the form {label:[list of silhouettes]}
-        labels_dict = {}
-
-        for sample in zip(sample_silhouettes, labels):
-            if sample[1] >= 0:
-                labels_dict[sample[1]] = labels_dict[sample[1]] + [sample[0]] if sample[1] in labels_dict.keys() else [
-                    sample[0]]
-
-        graph_offset = 0  # used to indicate the end of the last graph, so bar graphs don't overlap
-        number_of_clusters = len(labels_dict.keys())
-
-        plt.figure()
-        plt.xlim([sample_silhouettes.min(), 1])
-        plt.ylim([0,len(sample_silhouettes)])
-        for label in sorted(labels_dict.keys()):
-            color = cm.nipy_spectral(float(label) / float(number_of_clusters))
-            y = sorted(labels_dict[label])
-            plt.fill_betweenx(np.arange(graph_offset, graph_offset + len(y)),
-                              0, y,
-                              facecolor=color, edgecolor=color, alpha=0.7)
-            plt.text(-0.05, graph_offset + 0.5 * len(y), str(label))
-            graph_offset += len(y)
-        plt.title("The silhouette plot for the various clusters.")
-        plt.xlabel("The silhouette coefficient values")
-        plt.ylabel("Cluster label")
-        plt.yticks([])
-        plt.show()
+    
