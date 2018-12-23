@@ -18,13 +18,15 @@ import pyqtgraph.opengl as gl
 from PyQt4.Qt import QFileDialog
 from PyQt4.QtCore import Qt, QRect
 # Imports for the plotting
-from nilearn import plotting
+
 
 import ourLib.ExcelExport.excelExport as ee
 from clustering_components.clustering_paramspace import ParameterAndScriptStack
 # View components' import
 from clustering_components.clustering_results import ClusteringDataTable, ClusteringGraphs, ClusteringResultsPopUp
 from clustering_components.clustering_topbar import *
+import clustering_components.clustering_plot as clustering_plot
+
 
 
 class ClusteringView(QtGui.QWidget):
@@ -163,13 +165,17 @@ class ClusteringView(QtGui.QWidget):
 
     def runSelectedClust(self, selectedMethod, param_dict):
         clustering_results = run_clustering(selectedMethod, param_dict)
-        print("Param dict : {}".format(param_dict.keys()));
+        print("runSelectedCLud -> Param dict : {}".format(param_dict.keys()));
         self.label = clustering_results[0]
         self.centroids = clustering_results[1]
         self.table_displayer.fill_clust_labels(self.label)
         self.add_hist(param_dict, self.label)
         self.add_silhouette(self.label)
-        # self.add_3D(self.table_displayer.clustering_usable_dataset, self.label)
+
+        # Plot the differents figures for test
+        clustering_plot.plot_silhouette(self.label)
+        # clustering_plot.plot_3d_clusters(self.label)
+        # clustering_plot.plot_cross_section(self.label)
 
     def export(self):
         if self.label is not None:
@@ -224,7 +230,7 @@ class ClusteringView(QtGui.QWidget):
             y = sorted(labels_dict[label])
             x = np.arange(len(y))
             plt.addItem(pg.BarGraphItem(x=x + graph_offset, height=y, width=1, brush=pg.intColor(label)))
-            graph_offset += x.max()
+            graph_offset += x.max() + 1
 
     def add_3D(self, clustering_usable_dataset, label):
         old = self.resultsGraphs.grid.itemAt(1).widget()
@@ -255,30 +261,4 @@ class ClusteringView(QtGui.QWidget):
                                                                                                       self.centroids,
                                                                                                       float(len(set(self.label)))))
         self.results_popup.show()
-
-
-# def plot_3d_clusters(X: pd.DataFrame, y: list, title: str = "Result of the clustering"):
-    # Matplotlib
-    # Plot a figure
-    # fig = plt.figure()
-    # ax = plt.axes(projection='3d')
-    # ax.scatter3D(X['X'].values, X['Y'].values, X['Z'].values, c=y, cmap='Set1')
-    # plt.show
-
-    # On the brain view
-    # color_dict = {0: 'red', 1: 'cyan', 2: 'magenta'}
-    # colors_list = []
-    # points_list = []
-    # for i in range(len(y)):
-    #     points_list.append((X['X'][i], X['Y'][i], X['Z'][i]))
-    #     colors_list.append(color_dict[y[i]])
-    # view = plotting.view_markers(points_list, colors_list, marker_size=10)
-    # view.open_in_browser()
-
-    # 'Vue en coupe"
-    # color_dict = {0: 'red', 1: 'cyan', 2: 'magenta'}
-    # display = plotting.plot_anat()
-    # for i in range(len(y)):
-    #     point = [(X['X'][i], X['Y'][i], X['Z'][i])]
-    #     display.add_markers(point, marker_color=color_dict[y[i]])
-    # plotting.show()
+    
