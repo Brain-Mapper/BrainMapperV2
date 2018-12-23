@@ -19,8 +19,6 @@ import pyqtgraph.opengl as gl
 
 from .clustering_plot import get_color
 from matplotlib import cm
-from matplotlib.cm import ScalarMappable
-from matplotlib.colors import Colormap
 
 import os
 
