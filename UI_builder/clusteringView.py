@@ -171,7 +171,11 @@ class ClusteringView(QtGui.QWidget):
         self.table_displayer.fill_clust_labels(self.label)
         self.add_hist(param_dict, self.label)
         self.add_silhouette(self.label)
-        # self.add_3D(self.table_displayer.clustering_usable_dataset, self.label)
+
+        # Plot the differents figures for test
+        # clustering_plot.plot_silhouette(self.label)
+        # clustering_plot.plot_3d_clusters(self.label)
+        # clustering_plot.plot_cross_section(self.label)
 
     def export(self):
         if self.label is not None:
@@ -227,10 +231,6 @@ class ClusteringView(QtGui.QWidget):
             x = np.arange(len(y))
             plt.addItem(pg.BarGraphItem(x=x + graph_offset, height=y, width=1, brush=pg.intColor(label)))
             graph_offset += x.max() + 1
-        
-        # A garder
-        clustering_plot.plot_silhouette(labels)
-        clustering_plot.plot_3d_clusters(labels)
 
     def add_3D(self, clustering_usable_dataset, label):
         old = self.resultsGraphs.grid.itemAt(1).widget()

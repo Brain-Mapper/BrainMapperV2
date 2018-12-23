@@ -8,10 +8,7 @@ import numpy as np
 import pandas as pd
 from nilearn import plotting
 
-
 def plot_silhouette(labels, colors = None):
-    # sampl
-    # e_silhouettes = compute_sample_silhouettes(labels)
     sample_silhouettes = compute_sample_silhouettes(labels)
     average = np.mean(sample_silhouettes)
 
@@ -48,7 +45,29 @@ def plot_silhouette(labels, colors = None):
 
 
 def plot_3d_clusters(labels: list, colors = None):
-    # TODO mieux gérer les données en interne
+    points_list, colors_list = get_points_list_colors_list(labels)
+    # TODO Tweak of mark_size ? For now 5 but we need to automatize the size choice
+    view = plotting.view_markers(points_list, colors_list, marker_size=5)
+    view.open_in_browser()
+
+def plot_cross_section(labels: list, colors = None):
+    # TODO choose the coordinates of the cut
+    points_list, colors_list = get_points_list_colors_list(labels)
+    display = plotting.plot_anat()
+    for point,color in zip(points_list, colors_list):
+        display.add_markers([point], marker_color=[color])
+    plotting.show()
+
+def get_points_list_colors_list(labels : list) -> (list, list):
+    """ Obtains the points list and colors list from labels.
+    It is used in the function that are based on nilearn plotting.
+    
+    Arguments:
+        labels {list} -- labels resulting of a clustering
+    
+    Returns:
+        points list, colors list
+    """
     X = get_current_usableDataset().export_as_clusterizable()
     X = pd.DataFrame(X, columns=['X','Y','Z','Intensity'])
 
@@ -56,22 +75,10 @@ def plot_3d_clusters(labels: list, colors = None):
     colors_list = []
     points_list = []
     for i in range(len(labels)):
-        points_list.append((X['X'][i], X['Y'][i], X['Z'][i]))
+        points_list.append([X['X'][i], X['Y'][i], X['Z'][i]])
         colors_list.append(color_dict[labels[i]])
-    view = plotting.view_markers(points_list, colors_list, marker_size=10)
-    view.open_in_browser()
+    return points_list, colors_list
 
-def plot_cross_section(labels: list, colors = None):
-    # TODO mieux gérer les données en interne
-    X = get_current_usableDataset().export_as_clusterizable()
-    X = pd.DataFrame(X, columns=['X','Y','Z','Intensity'])
-
-    color_dict = get_color(sorted(set(labels)))
-    display = plotting.plot_anat()
-    for i in range(len(y)):
-        point = [(X['X'][i], X['Y'][i], X['Z'][i])]
-        display.add_markers(point, marker_color=color_dict[y[i]])
-    plotting.show()
 
 def get_color(distinct_labels: list) -> dict:
     """ Get a dict to homogeinize the colors
