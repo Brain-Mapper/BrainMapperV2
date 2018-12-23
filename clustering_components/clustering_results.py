@@ -18,6 +18,9 @@ import pyqtgraph as pg
 import pyqtgraph.opengl as gl
 
 from .clustering_plot import get_color
+from matplotlib import cm
+from matplotlib.cm import ScalarMappable
+from matplotlib.colors import Colormap
 
 import os
 
@@ -73,7 +76,6 @@ class ClusteringDataTable(QtGui.QTableWidget):
         :param assigned_labels_array:
         :return:
         """
-
         # # The following function is only needed here !
         # def generate_random_hex_dict(n):
         #     import random   #local import (reduced scope)
@@ -88,15 +90,14 @@ class ClusteringDataTable(QtGui.QTableWidget):
         # # Generate one random pastel color for each cluster
         # colors = generate_random_hex_dict(len(assigned_labels_array))
 
-        colors = get_color(assigned_labels_array)
+        colors = get_color(sorted(set(assigned_labels_array)), True)
 
         row_count = 0
         for label in assigned_labels_array:
-            # TODO
             item = QtGui.QTableWidgetItem(str(label))
             item.setTextAlignment(Qt.AlignCenter)
-            item.setBackground(QtGui.QColor(colors[label][0]*255,colors[label][1]*255,colors[label][2]*255))
-
+            color = colors[label]  
+            item.setBackground(QtGui.QColor(colors[label][0],colors[label][1],colors[label][2], 150))
             self.setItem(row_count, 6, item)
             row_count = row_count + 1
 

@@ -84,12 +84,14 @@ def get_points_list_colors_list(labels : list) -> (list, list):
         colors_list.append(color_dict[labels[i]])
     return points_list, colors_list
 
+    
 
-def get_color(distinct_labels: list) -> dict:
+
+def get_color(distinct_labels: list, in_int: bool = False) -> dict:
     """ Get a dict to homogeinize the colors
     
     Arguments:
-        distinct_labels {list} -- [sorted list of the]
+        distinct_labels {list} -- [sorted list of the labels]
     
     Returns:
         dict -- [key = label: value = color]
@@ -98,7 +100,7 @@ def get_color(distinct_labels: list) -> dict:
     number_of_clusters = len(distinct_labels)
     color_dict = {}
     for label in distinct_labels:
-        color_dict[label] = cm.magma(float(label) / float(number_of_clusters))
+        color_dict[label] = cm.magma(float(label) / float(number_of_clusters), bytes=in_int)
     return color_dict
 
 # if __name__ == "__main__":
