@@ -88,13 +88,13 @@ def get_points_list_colors_list(labels : list) -> (list, list):
 
 
 def get_color(distinct_labels: list, in_int: bool = False) -> dict:
-    """ Get a dict to homogeinize the colors
+    """ Get a dict to homogeinize the color
     
     Arguments:
-        distinct_labels {list} -- [sorted list of the labels]
-    
+        distinct_labels {list} -- [**sorted** list of the **distinct** labels]
+        in_int {bool} -- set to True if you want rgba in int [0,255] else default to False and rgba in float [0,1]
     Returns:
-        dict -- [key = label: value = color]
+        dict -- [key = label: value = color in rgba]
     """
 
     number_of_clusters = len(distinct_labels)
