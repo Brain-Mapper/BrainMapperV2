@@ -17,6 +17,8 @@ from PyQt4.QtCore import Qt
 import pyqtgraph as pg
 import pyqtgraph.opengl as gl
 
+from .clustering_plot import get_color
+
 import os
 
 
@@ -72,25 +74,28 @@ class ClusteringDataTable(QtGui.QTableWidget):
         :return:
         """
 
-        # The following function is only needed here !
-        def generate_random_hex_dict(n):
-            import random   #local import (reduced scope)
-            ra = lambda: random.randint(0, 255)
-            hex_dict = dict()
-            for i in range(0, n):
-                # Mixing with white to have pastel colors
-                hex_string = '#%02X%02X%02X' % (int((ra()+255)/2), int((ra()+255)/2), int((ra()+255)/2))
-                hex_dict[str(i)] = hex_string
-            return hex_dict
+        # # The following function is only needed here !
+        # def generate_random_hex_dict(n):
+        #     import random   #local import (reduced scope)
+        #     ra = lambda: random.randint(0, 255)
+        #     hex_dict = dict()
+        #     for i in range(0, n):
+        #         # Mixing with white to have pastel colors
+        #         hex_string = '#%02X%02X%02X' % (int((ra()+255)/2), int((ra()+255)/2), int((ra()+255)/2))
+        #         hex_dict[str(i)] = hex_string
+        #     return hex_dict
 
-        # Generate one random pastel color for each cluster
-        colors = generate_random_hex_dict(len(assigned_labels_array))
+        # # Generate one random pastel color for each cluster
+        # colors = generate_random_hex_dict(len(assigned_labels_array))
+
+        colors = get_color(assigned_labels_array)
 
         row_count = 0
         for label in assigned_labels_array:
+            # TODO
             item = QtGui.QTableWidgetItem(str(label))
             item.setTextAlignment(Qt.AlignCenter)
-            item.setBackground(QtGui.QColor(colors[str(label)]))
+            item.setBackground(QtGui.QColor(colors[label][0]*255,colors[label][1]*255,colors[label][2]*255))
 
             self.setItem(row_count, 6, item)
             row_count = row_count + 1

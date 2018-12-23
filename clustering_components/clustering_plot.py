@@ -27,7 +27,8 @@ def plot_silhouette(labels, colors = None):
 
     plt.figure()
     plt.xlim([np.min(sample_silhouettes), 1])
-    plt.ylim([0,len(sample_silhouettes) + 1 + len(set(labels))]) # There is len(sample_silhouettes) and 1+len(set(labels)) blanks  
+    plt.ylim([0,len(sample_silhouettes) + 1 + len(set(labels))]) # There is len(sample_silhouettes) and 1+len(set(labels)) blanks
+    # Add the bars  
     for label in sorted(labels_dict.keys()):
         color=colors[label]
         y = sorted(labels_dict[label]+[np.min(labels_dict[label])]) # [np.min(labels_dict[label])] is here beacuse of step='pre' (we need 2 y to create a bar)
@@ -37,9 +38,13 @@ def plot_silhouette(labels, colors = None):
         # plt.scatter(np.arange(graph_offset, graph_offset + len(y)),y, facecolor=color)
         plt.text(0.95, graph_offset + int(0.5 * len(y)), str(label), color=color)
         graph_offset += len(y)
+    # Add the average silhouette
+    plt.axvline(x=average, ymin=0, ymax=graph_offset, color='red', linestyle='--', label='average = {:.2f}'.format(average))
+
     plt.title("The silhouette plot for the various clusters.")
     plt.xlabel("The silhouette coefficient values")
-    plt.ylabel("Cluster label",labelpad=0.10)
+    plt.legend()
+    #plt.ylabel("Cluster label",labelpad=0.10)
     plt.yticks([])
     plt.show()
 
