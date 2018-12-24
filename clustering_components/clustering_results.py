@@ -122,6 +122,7 @@ class ClusteringGraphs(QtGui.QWidget):
 
         self.graph1 = pg.GraphicsWindow()
         self.graph1.resize(300, 200)
+        self.graph1.setBackground('w')
         self.graph1.setStatusTip("Show an histogram representing the number of points in each cluster.")
 
         hist_box.addWidget(hist_title)
@@ -135,6 +136,7 @@ class ClusteringGraphs(QtGui.QWidget):
         sil_title.setStyleSheet("background-color : #99cccc; font-size: 14px;")
 
         self.graph2 = pg.GraphicsWindow()
+        self.graph2.setBackground('w')
         self.graph2.resize(300, 200)
         self.graph2.setStatusTip("Show the silhouette of the clustering results")
 
