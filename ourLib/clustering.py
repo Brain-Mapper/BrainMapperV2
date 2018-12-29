@@ -23,6 +23,7 @@ import pandas as pd
 import numpy as np
 import random
 import math
+import skfuzzy as fuzz
 
 from .plotting import plot_3d_clusters
 
@@ -70,6 +71,12 @@ def perform_kmedoids(param_dict, X):
     plot_3d_clusters(X, clustering_labels[0], "KMedoids")
     return clustering_labels
 
+def perform_FuzzyCMeans(param_dict,X):
+    X = format_to_dataframe(X)
+    cntr, u, u0, d, jm, p, fpc = fuzz.cluster.cmeans(X, int(param_dict["n_clusters"]), 2, error=0.005, maxiter=1000, init=None)
+    #TODO : param à revoir
+    #TODO : plot
+    return u,cntr
 
 # ------------------------------------- K Medoids implementation ------------------------------------------
 

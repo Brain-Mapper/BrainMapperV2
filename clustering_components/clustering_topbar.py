@@ -1,15 +1,11 @@
 # NAME
 #
-#        clusteringView
+#        clustering_topbar
 #
 # DESCRIPTION
 #
-#       'clusteringView' contains the Qwidget for the clustering view
+#       'clustering_topbar' contains the dropdown list that allows the user to choose the clustering algorithm
 #
-# HISTORY
-#
-# 2 january 2018 - Initial design and coding. (@vz-chameleon, Valentina Z.)
-# 15 january 2018 - Creating a Clustering Method chooser (@vz-chameleon, Valentina Z.)
 
 from PyQt4 import QtGui
 from PyQt4.Qt import pyqtSignal
@@ -54,12 +50,15 @@ class ClusteringChooser(QtGui.QToolButton):
         Agglomerative_choice.setStatusTip('Apply Agglomerative Clustering algorithm to dataset')
         Agglomerative_choice.triggered.connect(lambda: self.updateLabel("AgglomerativeClustering", self.showClustParamsWidget))
 
-        # I have some problems with DBSCAN
-        #
         DBSCAN_choice = QtGui.QAction('&DBSCAN', self)
         DBSCAN_choice.setStatusTip('Apply DBSCAN algorithm to dataset')
         DBSCAN_choice.triggered.connect(
             lambda: self.updateLabel("DBSCAN", self.showClustParamsWidget))
+
+        #Début Fuzzy
+        Fuzzy_choice = QtGui.QAction('&FuzzyCMeans', self)
+        Fuzzy_choice.setStatusTip('Apply Fuzzy C Means Clustering algorithm to dataset')
+        Fuzzy_choice.triggered.connect(lambda: self.updateLabel("FuzzyCMeans", self.showClustParamsWidget))
 
         user_script_choice = QtGui.QAction('&Custom user script', self)
         user_script_choice.setStatusTip('Make a custom clustering script')
@@ -69,6 +68,7 @@ class ClusteringChooser(QtGui.QToolButton):
         self.clustering_algo_menu.addAction(Kmedoids_choice)
         self.clustering_algo_menu.addAction(Agglomerative_choice)
         self.clustering_algo_menu.addAction(DBSCAN_choice)
+        self.clustering_algo_menu.addAction(Fuzzy_choice)
         self.clustering_algo_menu.addAction(user_script_choice)
 
         self.setMenu(self.clustering_algo_menu)

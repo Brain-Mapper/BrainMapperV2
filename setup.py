@@ -6,6 +6,11 @@ import sys
 from cx_Freeze import setup, Executable
 from os import path
 
+import cx_Freeze.hooks
+def hack(finder, module):
+    return
+cx_Freeze.hooks.load_matplotlib = hack
+
 # GUI applications require a different base on Windows (the default is for a
 # console application).
 
@@ -17,7 +22,7 @@ path = sys.path
 #("C:\Users\thoma\Desktop\LOG\brainMapper/UI/resources.py","C:\Users\thoma\Desktop\LOG\brainMapper\build\exe.win-amd64-2.7\lib\resources.py")
 includefiles = ["UI.bat",'./ressources']
 includes = ["os","sys","time","csv","nibabel","numpy","scipy","sklearn","sip","atexit","OpenGL","PyQt4","pyqtgraph",
-"matplotlib","nilearn","tkinter",
+"matplotlib","nilearn","tkinter", "pandas", "tkinter.filedialog",
 "mpl_toolkits",
 "PyQt4.QtCore", "PyQt4.QtGui",
 "pyqtgraph.opengl", "pyqtgraph.graphicsItems","pyqtgraph.debug",
@@ -49,6 +54,7 @@ if sys.platform == "win32":
   includefiles+=["mkl_intel_thread.dll"]
 elif sys.platform == "linux2":
   includes+= ["OpenGL.platform.glx"]
+  includefiles+=[(matplotlib.get_data_path(), "mpl-data")]
 else:
   includes+= ["OpenGL.platform.darwin"]
 

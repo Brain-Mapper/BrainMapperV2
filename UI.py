@@ -12,6 +12,8 @@ from UI_builder.editCollectionsView import EditCollectionsView
 from UI_builder.exportView import ExportView
 from UI_builder.calculationView import CalculationView
 
+from multiprocessing import freeze_support
+
 if __name__ == '__main__':
     if __package__ is None:
         import sys
@@ -309,7 +311,6 @@ class UI(QtGui.QMainWindow):
 
 def main():
     app = QtGui.QApplication(sys.argv)
-
     # INIT APP STYLE ACCORDING TO OS
 
     if sys.platform.startswith('linux'):
@@ -322,12 +323,12 @@ def main():
         app.setStyle(QStyleFactory.create("Windows"))
     else:
         app.setStyle(QStyleFactory.create("GTK+"))
-
     ex = UI()
     sys.exit(app.exec_())
     os.system("pause")
 
 
 if __name__ == '__main__':
+    freeze_support()
     main()
     os.system("pause")

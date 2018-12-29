@@ -90,7 +90,8 @@
           "default" : "euclidean"
         }
       }
-    }
+    },
+    "TODO" : "Add fuzzy CMeans"
 
 
 }

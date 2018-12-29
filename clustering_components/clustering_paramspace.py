@@ -1,15 +1,11 @@
 # NAME
 #
-#        clusteringView
+#        clustering_paramspace
 #
 # DESCRIPTION
 #
-#       'clusteringView' contains the Qwidget for the clustering view
+#       'clustering_paramspace' contains the QTwidget that allows the user to select the parameters for the clustering
 #
-# HISTORY
-#
-# 2 january 2018 - Initial design and coding. (@vz-chameleon, Valentina Z.)
-# 26 january 2018 - Adding algorithm parameters display
 
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt, QSize

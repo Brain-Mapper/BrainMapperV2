@@ -1,15 +1,12 @@
 # NAME
 #
-#        clustering_datatable
+#        clustering_results
 #
 # DESCRIPTION
 #
-#       'clustering_datatable' contains the custom QTableWdget for the clustering data table
+#       'clustering_results' contains the custom QTableWdget for the clustering data table, the plots and the results window
 #
-# HISTORY
-#
-# 2 january 2018 - Initial design and coding. (@vz-chameleon, Valentina Z.)
-# 5 january 2018 - Added functions to fill table with extracted data
+
 
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
@@ -221,9 +218,9 @@ class ClusteringResultsPopUp(QtGui.QWidget):
 
         self.info_panel.insertPlainText("Mean Silhouette : \t\t "+str(validation_values[0])+"\n")
         self.info_panel.insertPlainText("This mean is between -1 and 1 and the best value is around 1." +"\n\n")
-        self.info_panel.insertPlainText("Calzinski-Habaraz score: \t " + str(validation_values[1]) + "\n\n")
+        self.info_panel.insertPlainText("Calinski-Habaraz score: \t " + str(validation_values[1]) + "\n\n")
         self.info_panel.insertPlainText("Davies-Bouldin index: \t\t " + str(validation_values[2]) + "\n\n")
-        self.info_panel.insertPlainText("Calzinski-Habaraz score and Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the indice, better is the number of clusters.\n\n")
+        self.info_panel.insertPlainText("Calinski-Habaraz score and Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the indice, better is the number of clusters.\n\n")
 
 
     def export_as_textfile(self):
