@@ -173,9 +173,9 @@ class ClusteringView(QtGui.QWidget):
         self.add_silhouette(self.label)
 
         # Plot the differents figures for test
-        # clustering_plot.plot_silhouette(self.label)
-        # clustering_plot.plot_3d_clusters(self.label)
-        # clustering_plot.plot_cross_section(self.label)
+        clustering_plot.plot_silhouette(self.label)
+        clustering_plot.plot_3d_clusters(self.label)
+        clustering_plot.plot_cross_section(self.label)
 
     def export(self):
         if self.label is not None:
