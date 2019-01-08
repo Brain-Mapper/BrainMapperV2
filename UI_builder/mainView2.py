@@ -229,6 +229,7 @@ class MainView2(QtGui.QWidget):
         self.widget_5.raise_()
 
         self.pushButton_4.clicked.connect(self.extract_and_cluster)
+        self.pushButton.clicked.connect(self.edit_pannel)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -378,6 +379,7 @@ class MainView2(QtGui.QWidget):
         #     self.showEdit.emit()
         # else:
         #     QtGui.QMessageBox.information(self, "Selection empty", "There's no data to edit.")
+        self.showEdit.emit()
         print()
 
     def show_set(self, new_set):

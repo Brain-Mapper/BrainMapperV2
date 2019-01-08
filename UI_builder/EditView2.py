@@ -5,9 +5,22 @@
 # Created by: PyQt4 UI code generator 4.11.4
 #
 # WARNING! All changes made in this file will be lost!
+from PyQt4 import QtGui
+from PyQt4.Qt import *
+from PyQt4.QtCore import pyqtSignal,QCoreApplication
+from PyQt4 import QtCore
+from PyQt4.QtCore import pyqtSignal
 
-from PyQt4 import QtCore, QtGui
+import sys
+from os import path
+sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
+from BrainMapper import *
 
+import pyqtgraph as pg
+import pyqtgraph.opengl as gl
+
+import UI_builder.resources
+import re
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -22,7 +35,15 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_Form(object):
+class EditView2(QtGui.QWidget):
+
+    showMain = pyqtSignal()
+
+    def __init__(self):
+        super(EditView2, self).__init__()
+
+        self.setupUi(self)
+
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
         Form.resize(1024, 731)
@@ -169,4 +190,3 @@ class Ui_Form(object):
         self.pushButton_5.setText(_translate("Form", "Delete ", None))
         self.pushButton_6.setText(_translate("Form", "Add new", None))
         self.pushButton_7.setText(_translate("Form", "Change name", None))
-
