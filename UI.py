@@ -9,6 +9,7 @@ from UI_builder import resources
 from UI_builder.mainView2 import MainView2
 from UI_builder.ClusteringView2 import ClusteringView2
 from UI_builder.editCollectionsView import EditCollectionsView
+from UI_builder.EditView2 import EditView2
 from UI_builder.exportView import ExportView
 from UI_builder.calculationView import CalculationView
 
@@ -101,7 +102,7 @@ class HomePage(QWidget):
         self.mainview = MainView2()
         self.clustering = ClusteringView2()
         self.calculation = CalculationView()
-        self.edit_colls = EditCollectionsView()
+        self.edit_colls = EditView2()
         self.export = ExportView()
         # -- Add them to stack widget
         self.stack.addWidget(self.mainview)
@@ -144,7 +145,7 @@ class HomePage(QWidget):
         self.stack.setCurrentWidget(self.clustering)
 
     def updateEditView(self):
-        self.edit_colls.fill_coll()
+        #self.edit_colls.fill_coll()
         self.stack.setCurrentWidget(self.edit_colls)
 
     def updateMain(self):
