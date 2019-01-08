@@ -92,7 +92,7 @@
       }
     },
     "FuzzyCMeans" : {
-        "algo_info" : "TODO info",
+        "algo_info" : "Fuzzy CMeans creates K clusters represented by a central point that is the mean of all the points in a given cluster and each points belongs more or less to the cluster. A point can belong to one or many cluster(s).",
         "algo_usecase" : "TODO usecase",
         "param_list" : {
             "n_clusters" : {
@@ -101,17 +101,17 @@
                 "default" : 3
             },
             "m" : {
-                "param_info" : "Array exponentiation applied to the membership function u_old at each iteration, where U_new = u_old ** m.",
+                "param_info" : "m is the weighting exponent. It controls the relative weights placed on each of the squared errors. The best value is between 1,5 and 3.",
                 "type" : "float",
                 "default" : 2
             },
             "error" : {
-                "param_info" : "TODO" ,
+                "param_info" : "stopping criterion. The algorithm stops if the norm of (u[p]-u[p-1] < error)" ,
                 "type" : "float",
                 "default" : 0.005
             },
             "maxiter" : {
-                "param_info" : "TODO",
+                "param_info" : "maxiter is the maximum number of iterations allowed",
                 "type" : "int",
                 "default" : 1000
             },
