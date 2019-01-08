@@ -7,17 +7,6 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
-from PyQt4.Qt import *
-from PyQt4.QtCore import pyqtSignal
-
-from datetime import *
-import sys
-from os import path
-
-sys.path.append(path.dirname(path.dirname(path.dirname(path.abspath(__file__)))))
-from BrainMapper import *
-import UI_builder.resources
-import time
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -33,18 +22,10 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class ClusteringView2(QtGui.QWidget):
-
-    showMain = pyqtSignal()
-
-    def __init__(self):
-        super(ClusteringView2, self).__init__()
-
-        self.setupUi(self)
-
+class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
-        Form.resize(1024, 731)
+        Form.resize(1120, 731)
         self.widget = QtGui.QWidget(Form)
         self.widget.setGeometry(QtCore.QRect(10, 20, 371, 701))
         self.widget.setStyleSheet(_fromUtf8("background-color: rgb(209, 209, 209);"))
@@ -68,10 +49,12 @@ class ClusteringView2(QtGui.QWidget):
         self.comboBox_2.addItem(_fromUtf8(""))
         self.widget_5 = QtGui.QWidget(self.widget)
         self.widget_5.setGeometry(QtCore.QRect(10, 170, 341, 251))
+        self.widget_5.setMinimumSize(QtCore.QSize(341, 251))
         self.widget_5.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
         self.widget_5.setObjectName(_fromUtf8("widget_5"))
         self.widget_6 = QtGui.QWidget(self.widget)
         self.widget_6.setGeometry(QtCore.QRect(10, 440, 341, 251))
+        self.widget_6.setMinimumSize(QtCore.QSize(341, 0))
         self.widget_6.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
         self.widget_6.setObjectName(_fromUtf8("widget_6"))
         self.plainTextEdit = QtGui.QPlainTextEdit(self.widget)
@@ -82,17 +65,17 @@ class ClusteringView2(QtGui.QWidget):
         self.plainTextEdit.setReadOnly(True)
         self.plainTextEdit.setObjectName(_fromUtf8("plainTextEdit"))
         self.widget_2 = QtGui.QWidget(Form)
-        self.widget_2.setGeometry(QtCore.QRect(400, 20, 611, 311))
+        self.widget_2.setGeometry(QtCore.QRect(400, 20, 711, 311))
         self.widget_2.setStyleSheet(_fromUtf8("background-color: rgb(209, 209, 209);"))
         self.widget_2.setObjectName(_fromUtf8("widget_2"))
         self.tableWidget = QtGui.QTableWidget(self.widget_2)
-        self.tableWidget.setGeometry(QtCore.QRect(-5, 0, 621, 311))
+        self.tableWidget.setGeometry(QtCore.QRect(-5, 0, 721, 311))
         self.tableWidget.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.tableWidget.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
         self.tableWidget.setGridStyle(QtCore.Qt.SolidLine)
         self.tableWidget.setRowCount(5)
-        self.tableWidget.setObjectName(_fromUtf8("tableWidget"))
         self.tableWidget.setColumnCount(7)
+        self.tableWidget.setObjectName(_fromUtf8("tableWidget"))
         item = QtGui.QTableWidgetItem()
         item.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter|QtCore.Qt.AlignCenter)
         font = QtGui.QFont()
@@ -120,11 +103,11 @@ class ClusteringView2(QtGui.QWidget):
         self.tableWidget.setHorizontalHeaderItem(6, item)
         self.tableWidget.horizontalHeader().setVisible(True)
         self.widget_3 = QtGui.QWidget(Form)
-        self.widget_3.setGeometry(QtCore.QRect(400, 450, 611, 271))
+        self.widget_3.setGeometry(QtCore.QRect(400, 450, 711, 271))
         self.widget_3.setStyleSheet(_fromUtf8("background-color: rgb(209, 209, 209);"))
         self.widget_3.setObjectName(_fromUtf8("widget_3"))
         self.widget_4 = QtGui.QWidget(Form)
-        self.widget_4.setGeometry(QtCore.QRect(400, 360, 611, 61))
+        self.widget_4.setGeometry(QtCore.QRect(400, 360, 711, 61))
         self.widget_4.setStyleSheet(_fromUtf8(""))
         self.widget_4.setObjectName(_fromUtf8("widget_4"))
         self.pushButton = QtGui.QPushButton(self.widget_4)
@@ -157,7 +140,7 @@ class ClusteringView2(QtGui.QWidget):
         self.pushButton_4.setStyleSheet(_fromUtf8("background-color: rgb(209, 209, 209);"))
         self.pushButton_4.setObjectName(_fromUtf8("pushButton_4"))
         self.pushButton_5 = QtGui.QPushButton(self.widget_4)
-        self.pushButton_5.setGeometry(QtCore.QRect(510, 10, 93, 41))
+        self.pushButton_5.setGeometry(QtCore.QRect(610, 10, 93, 41))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.pushButton_5.setFont(font)
@@ -221,3 +204,4 @@ class ClusteringView2(QtGui.QWidget):
         self.comboBox.setItemText(1, _translate("Form", "3D view", None))
         self.comboBox.setItemText(2, _translate("Form", "Repartition", None))
         self.comboBox.setItemText(3, _translate("Form", "Graphic", None))
+
