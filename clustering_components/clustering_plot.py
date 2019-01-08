@@ -7,6 +7,8 @@ from BrainMapper import compute_sample_silhouettes, get_current_usableDataset
 import numpy as np
 import pandas as pd
 from nilearn import plotting
+import numpy as np
+from scipy.cluster.hierarchy import dendrogram
 
 def plot_silhouette(labels, colors = None):
     sample_silhouettes = compute_sample_silhouettes(labels)
@@ -62,6 +64,29 @@ def plot_cross_section(labels: list, colors = None):
     for point,color in zip(points_list, colors_list):
         display.add_markers([point], marker_color=[color])
     plotting.show()
+
+def plot_dendrogram(model, **kwargs):
+    """ Plot a dendogram of a hierarchical agglomerative clustering
+    
+    Arguments:
+        model -- result of an agglomerative clustering
+    """
+
+    # Children of hierarchical clustering
+    children = model.children_
+
+    # Distances between each pair of children
+    # Since we don't have this information, we can use a uniform one for plotting
+    distance = np.arange(children.shape[0])
+
+    # The number of observations contained in each cluster level
+    no_of_observations = np.arange(2, children.shape[0]+2)
+
+    # Create linkage matrix and then plot the dendrogram
+    linkage_matrix = np.column_stack([children, distance, no_of_observations]).astype(float)
+
+    # Plot the corresponding dendrogram
+    dendrogram(linkage_matrix, **kwargs)
 
 def get_points_list_colors_list(labels : list) -> (list, list):
     """ Obtains the points list and colors list from labels.
