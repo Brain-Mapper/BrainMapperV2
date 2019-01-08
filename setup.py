@@ -17,10 +17,18 @@ cx_Freeze.hooks.load_matplotlib = hack
 path = sys.path
 #print(path)
 
+# Debug for Aurélien
+
+import os.path
+PYTHON_INSTALL_DIR = os.path.dirname(os.path.dirname(os.__file__))
+os.environ['TCL_LIBRARY'] = os.path.join(PYTHON_INSTALL_DIR, 'tcl', 'tcl8.6')
+os.environ['TK_LIBRARY'] = os.path.join(PYTHON_INSTALL_DIR, 'tcl', 'tk8.6')
+
 # Dependencies are automatically detected, but it might need fine tuning.
 #'./UI/mainView.py'
 #("C:\Users\thoma\Desktop\LOG\brainMapper/UI/resources.py","C:\Users\thoma\Desktop\LOG\brainMapper\build\exe.win-amd64-2.7\lib\resources.py")
-includefiles = ["UI.bat",'./ressources']
+includefiles = ["UI.bat",'./ressources',os.path.join(PYTHON_INSTALL_DIR, 'DLLs', 'tk86t.dll'),
+            os.path.join(PYTHON_INSTALL_DIR, 'DLLs', 'tcl86t.dll'),]
 includes = ["os","sys","time","csv","nibabel","numpy","scipy","sklearn","sip","atexit","OpenGL","PyQt4","pyqtgraph",
 "matplotlib","nilearn","tkinter", "pandas", "tkinter.filedialog",
 "mpl_toolkits",
@@ -99,7 +107,6 @@ icone = None
 if sys.platform == "win32":
     icone = "icone.ico"
 
-
 cible_1 = Executable(
     script="UI.py",
     base=base,
@@ -109,4 +116,4 @@ setup(name = "BrainMapper",
       version = "0.1",
       description = "Executable version of BrainMapper",
       options = {'build_exe': options},
-      executables = [cible_1], requires=['matplotlib'])
+      executables = [cible_1])

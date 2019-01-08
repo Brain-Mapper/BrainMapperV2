@@ -174,8 +174,8 @@ class ClusteringView(QtGui.QWidget):
 
         # Plot the differents figures for test
         clustering_plot.plot_silhouette(self.label)
-        # clustering_plot.plot_3d_clusters(self.label)
-        # clustering_plot.plot_cross_section(self.label)
+        clustering_plot.plot_3d_clusters(self.label)
+        clustering_plot.plot_cross_section(self.label)
 
     def export(self):
         if self.label is not None:
@@ -197,7 +197,6 @@ class ClusteringView(QtGui.QWidget):
     # TODO remove param_dict
     def add_hist(self, param_dict, labels):
 
-        k = float(len(set(labels)))
         self.resultsGraphs.clear_graph1()
         plt = self.resultsGraphs.graph1.addPlot()
 
@@ -205,31 +204,39 @@ class ClusteringView(QtGui.QWidget):
         vals = np.hstack([labels])
 
         # compute standard histogram
+        k = float(len(set(labels)))+1
         y, x = np.histogram(vals, bins=np.arange(k))
+
+        # print("add_hist -> x :", x)
+        # print("add_hist -> y :", y)
+        colors = clustering_plot.get_color(sorted(set(labels)), True)
 
         # Using stepMode=True causes the plot to draw two lines for each sample.
         # notice that len(x) == len(y)+1
-        plt.plot(x, y, stepMode=True, fillLevel=0, brush=(0, 0, 255, 150))
+        for i in range(len(y)):
+            plt.plot(x[i:i+2], [y[i]], stepMode=True, fillLevel=0, brush=colors[int(x[i])])
 
     def add_silhouette(self, labels):
         self.resultsGraphs.clear_graph2()
         plt = self.resultsGraphs.graph2.addPlot()
 
-        print("add_silhouette -> Distinct elements in label : {} ".format(set(labels)))
+        # print("add_silhouette -> Distinct elements in label : {} ".format(set(labels)))
         sample_silhouettes = compute_sample_silhouettes(labels)
 
         # Dict of the form {label:[list of silhouettes]}
         labels_dict = {}
-
         for sample in zip(sample_silhouettes, labels):
             labels_dict[sample[1]] = labels_dict[sample[1]] + [sample[0]] if sample[1] in labels_dict.keys() else [
                 sample[0]]
 
+        colors = clustering_plot.get_color(sorted(set(labels)), True)
+
         graph_offset = 0  # used to indicate the end of the last graph, so bar graphs don't overlap
-        for label in labels_dict.keys():
+        for label in sorted(labels_dict.keys()):
             y = sorted(labels_dict[label])
+            y.reverse()
             x = np.arange(len(y))
-            plt.addItem(pg.BarGraphItem(x=x + graph_offset, height=y, width=1, brush=pg.intColor(label)))
+            plt.addItem(pg.BarGraphItem(x=x + graph_offset, height=y, width=1, brush=colors[label], pen=colors[label], symbolPen=None))
             graph_offset += x.max() + 1
 
     def add_3D(self, clustering_usable_dataset, label):
