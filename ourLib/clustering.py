@@ -57,7 +57,6 @@ def perform_agglomerative_clustering(param_dict, X):
 
 
 def perform_DBSCAN(param_dict, X):
-    # TODO Add this function to the JSON
     X = format_to_dataframe(X)
     dbscan = DBSCAN(eps=float(param_dict["eps"]), min_samples=int(param_dict["min_samples"]),
                     metric=param_dict["metric"]).fit(X)
@@ -103,8 +102,8 @@ def perform_FuzzyCMeans(param_dict,X):
 
     return {
         "labels" : labels,
+        "centers" : cntr,
         "u" : u,
-        "cntr" : cntr,
     }
 
 # ------------------------------------- K Medoids implementation ------------------------------------------
