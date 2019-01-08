@@ -5,10 +5,10 @@
 # Created by: PyQt4 UI code generator 4.11.4
 #
 # WARNING! All changes made in this file will be lost!
-
-from PyQt4 import QtCore, QtGui
+from PyQt4 import QtGui
 from PyQt4.Qt import *
 from PyQt4.QtCore import pyqtSignal,QCoreApplication
+from PyQt4 import QtCore
 from PyQt4.QtCore import pyqtSignal
 
 import sys
@@ -21,8 +21,6 @@ import pyqtgraph.opengl as gl
 
 import UI_builder.resources
 import re
-
-
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -45,7 +43,6 @@ class EditView2(QtGui.QWidget):
         super(EditView2, self).__init__()
 
         self.setupUi(self)
-
 
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
@@ -195,4 +192,3 @@ class EditView2(QtGui.QWidget):
         self.pushButton_5.setText(_translate("Form", "Delete ", None))
         self.pushButton_6.setText(_translate("Form", "Add new", None))
         self.pushButton_7.setText(_translate("Form", "Change name", None))
-
