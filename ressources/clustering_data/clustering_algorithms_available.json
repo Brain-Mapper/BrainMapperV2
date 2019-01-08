@@ -93,13 +93,8 @@
     },
     "FuzzyCMeans" : {
         "algo_info" : "Fuzzy CMeans creates K clusters represented by a central point that is the mean of all the points in a given cluster and each points belongs more or less to the cluster. A point can belong to one or many cluster(s).",
-        "algo_usecase" : "TODO usecase",
+        "algo_usecase" : "Borders between clusters are fuzzy",
         "param_list" : {
-            "n_clusters" : {
-                "param_info" : "The number of 7 the user wishes to obtain",
-                "type" : "int",
-                "default" : 3
-            },
             "m" : {
                 "param_info" : "m is the weighting exponent. It controls the relative weights placed on each of the squared errors. The best value is between 1,5 and 3.",
                 "type" : "float",
@@ -119,6 +114,10 @@
                 "param_info" : "Random seed for the initialisation",
                 "type" : "int",
                 "default" : 0
+            },"n_clusters" : {
+                "param_info" : "The number of 7 the user wishes to obtain",
+                "type" : "int",
+                "default" : 3
             }
         }
     }
