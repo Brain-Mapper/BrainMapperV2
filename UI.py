@@ -6,7 +6,7 @@ from functools import partial
 
 from UI_builder import resources
 
-from UI_builder.mainView import MainView
+from UI_builder.mainView2 import MainView2
 from UI_builder.clusteringView import ClusteringView
 from UI_builder.editCollectionsView import EditCollectionsView
 from UI_builder.exportView import ExportView
@@ -98,7 +98,7 @@ class HomePage(QWidget):
         layout.addWidget(self.stack)  # stack in the vertical layout
 
         # Here are the custom widgets we will put on the stack
-        self.mainview = MainView()
+        self.mainview = MainView2()
         self.clustering = ClusteringView()
         self.calculation = CalculationView()
         self.edit_colls = EditCollectionsView()
