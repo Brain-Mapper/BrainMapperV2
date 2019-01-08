@@ -228,6 +228,8 @@ class MainView2(QtGui.QWidget):
         self.label_3.raise_()
         self.widget_5.raise_()
 
+        self.pushButton_4.clicked.connect(self.extract_and_cluster)
+
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
@@ -359,6 +361,7 @@ class MainView2(QtGui.QWidget):
         #
         # else:
         #     QtGui.QMessageBox.information(self, "Selection empty", "There's no data to extract and clusterize.")
+        self.showClust.emit()
         print()
 
     def calcul(self):

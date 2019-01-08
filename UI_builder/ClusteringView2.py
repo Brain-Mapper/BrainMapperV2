@@ -7,6 +7,17 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
+from PyQt4.Qt import *
+from PyQt4.QtCore import pyqtSignal
+
+from datetime import *
+import sys
+from os import path
+
+sys.path.append(path.dirname(path.dirname(path.dirname(path.abspath(__file__)))))
+from BrainMapper import *
+import UI_builder.resources
+import time
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -22,7 +33,15 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_Form(object):
+class ClusteringView2(QtGui.QWidget):
+
+    showMain = pyqtSignal()
+
+    def __init__(self):
+        super(ClusteringView2, self).__init__()
+
+        self.setupUi(self)
+
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
         Form.resize(1024, 731)
@@ -202,4 +221,3 @@ class Ui_Form(object):
         self.comboBox.setItemText(1, _translate("Form", "3D view", None))
         self.comboBox.setItemText(2, _translate("Form", "Repartition", None))
         self.comboBox.setItemText(3, _translate("Form", "Graphic", None))
-

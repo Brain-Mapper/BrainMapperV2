@@ -7,7 +7,7 @@ from functools import partial
 from UI_builder import resources
 
 from UI_builder.mainView2 import MainView2
-from UI_builder.clusteringView import ClusteringView
+from UI_builder.ClusteringView2 import ClusteringView2
 from UI_builder.editCollectionsView import EditCollectionsView
 from UI_builder.exportView import ExportView
 from UI_builder.calculationView import CalculationView
@@ -99,7 +99,7 @@ class HomePage(QWidget):
 
         # Here are the custom widgets we will put on the stack
         self.mainview = MainView2()
-        self.clustering = ClusteringView()
+        self.clustering = ClusteringView2()
         self.calculation = CalculationView()
         self.edit_colls = EditCollectionsView()
         self.export = ExportView()
@@ -139,7 +139,8 @@ class HomePage(QWidget):
         self.stack.setCurrentWidget(self.mainview)
 
     def updateClusteringView(self):
-        self.clustering.fill_table(get_current_usableDataset())
+        # TODO
+        # self.clustering.fill_table(get_current_usableDataset())
         self.stack.setCurrentWidget(self.clustering)
 
     def updateEditView(self):
