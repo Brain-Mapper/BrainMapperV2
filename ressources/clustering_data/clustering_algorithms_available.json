@@ -91,7 +91,35 @@
         }
       }
     },
-    "TODO" : "Add fuzzy CMeans"
-
-
+    "FuzzyCMeans" : {
+        "algo_info" : "TODO info",
+        "algo_usecase" : "TODO usecase",
+        "param_list" : {
+            "n_clusters" : {
+                "param_info" : "The number of 7 the user wishes to obtain",
+                "type" : "int",
+                "default" : 3
+            },
+            "m" : {
+                "param_info" : "Array exponentiation applied to the membership function u_old at each iteration, where U_new = u_old ** m.",
+                "type" : "float",
+                "default" : 2
+            },
+            "error" : {
+                "param_info" : "TODO" ,
+                "type" : "float",
+                "default" : 0.005
+            },
+            "maxiter" : {
+                "param_info" : "TODO",
+                "type" : "int",
+                "default" : 1000
+            },
+            "seed" : {
+                "param_info" : "Random seed for the initialisation",
+                "type" : "int",
+                "default" : 0
+            }
+        }
+    }
 }

@@ -39,7 +39,11 @@ def perform_kmeans(param_dict, X):
     clustering = KMeans(n_clusters=int(param_dict["n_clusters"]), random_state=int(param_dict["random_state"]),
                         init=param_dict["init"],
                         n_init=int(param_dict["n_init"]), max_iter=int(param_dict["max_iter"])).fit(X)
-    return clustering.labels_, clustering.cluster_centers_
+    return {
+        "labels": clustering.labels_,
+        "centers": clustering.cluster_centers_
+    }
+    #return clustering.labels_, clustering.cluster_centers_
 
 
 def perform_agglomerative_clustering(param_dict, X):
@@ -47,30 +51,60 @@ def perform_agglomerative_clustering(param_dict, X):
     clustering = AgglomerativeClustering(n_clusters=int(param_dict["n_clusters"]), affinity=param_dict["affinity"],
                                          linkage=param_dict["linkage"]).fit(X)
     # TODO Put this functionality on a button
-    return clustering.labels_, []
+    return {
+        "labels" : clustering.labels_,
+    }
 
 
 def perform_DBSCAN(param_dict, X):
-    # TODO Add this function to the JSON
     X = format_to_dataframe(X)
     dbscan = DBSCAN(eps=float(param_dict["eps"]), min_samples=int(param_dict["min_samples"]),
                     metric=param_dict["metric"]).fit(X)
-    return dbscan.labels_, []
+    return {
+        "labels" : dbscan.labels_,
+    } 
 
 
 def perform_kmedoids(param_dict, X):
     X = format_to_dataframe(X)
     distances_matrix_pairwise = compute_distances(X.values, param_dict['metric'])
-    clustering_labels = kmedoids_cluster(str(param_dict["init"]), X.values, distances_matrix_pairwise,
+    clustering_labels, clustering_medoids = kmedoids_cluster(str(param_dict["init"]), X.values, distances_matrix_pairwise,
                                          int(param_dict["n_clusters"]))
-    return clustering_labels
+    return {
+        "labels" : clustering_labels,
+        "centers" : clustering_medoids,
+    }
 
 def perform_FuzzyCMeans(param_dict,X):
     X = format_to_dataframe(X)
-    cntr, u, u0, d, jm, p, fpc = fuzz.cluster.cmeans(X, int(param_dict["n_clusters"]), 2, error=0.005, maxiter=1000, init=None)
-    #TODO : param à revoir
-    #TODO : plot
-    return u,cntr
+    print("perform_FuzzyCMeans -> n_clusters : {}".format(int(param_dict["n_clusters"])))
+    pts = np.vstack(([X["X"].values, X["Y"].values, X["Z"].values]))
+    cntr, u, u0, d, jm, p, fpc = fuzz.cluster.cmeans(pts, int(param_dict["n_clusters"]), int(param_dict["m"]), error=float(param_dict["error"]),
+     maxiter=int(param_dict["maxiter"]), seed=int(param_dict["seed"]))
+
+    # print("cntr : ",cntr)
+    # print("cntr_len : ",len(cntr))
+    # print("cntr1_len : ", len(cntr[0]))
+    # print("u : ",u[0])
+    # print("len_u :", len(u))
+    # print("len1_u :", len(u[0]))
+
+    # Create a labels list for viewing purposes
+    labels = []
+    for col in range(len(u[0])):
+        line_max = 0
+        belong_max = 0
+        for line in range(len(u)):
+            if u[line][col] > belong_max:
+                belong_max = u[line][col]
+                line_max = line
+        labels.append(line_max)
+
+    return {
+        "labels" : labels,
+        "centers" : cntr,
+        "u" : u,
+    }
 
 # ------------------------------------- K Medoids implementation ------------------------------------------
 

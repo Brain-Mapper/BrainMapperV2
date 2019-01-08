@@ -181,10 +181,10 @@ def run_clustering(selectedClusteringMethod, params_dict):
         results = clustering.perform_agglomerative_clustering(params_dict, clusterizable_dataset)
 
     elif selectedClusteringMethod == 'DBSCAN':
-        results = clust.perform_DBSCAN(params_dict, clusterizable_dataset)
+        results = clustering.perform_DBSCAN(params_dict, clusterizable_dataset)
     #Fuzzy CMeans
-    #elif selectedClusteringMethod == 'FuzzyCMeans':
-    #    results = clust.perform_FuzzyCMeans(param_dict, clusterizable_dataset)
+    elif selectedClusteringMethod == 'FuzzyCMeans':
+        results = clustering.perform_FuzzyCMeans(params_dict, clusterizable_dataset)
     else:
         print('clustering method not recognised')
         results = ['']

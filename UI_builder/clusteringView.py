@@ -166,8 +166,8 @@ class ClusteringView(QtGui.QWidget):
     def runSelectedClust(self, selectedMethod, param_dict):
         clustering_results = run_clustering(selectedMethod, param_dict)
         print("runSelectedCLud -> Param dict : {}".format(param_dict.keys()));
-        self.label = clustering_results[0]
-        self.centroids = clustering_results[1]
+        self.label = clustering_results["labels"]
+        self.centroids = clustering_results["centers"] if "centers" in clustering_results.keys() else None
         self.table_displayer.fill_clust_labels(self.label)
         self.add_hist(param_dict, self.label)
         self.add_silhouette(self.label)
