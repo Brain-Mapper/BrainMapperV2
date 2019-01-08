@@ -91,7 +91,7 @@ class ClusteringDataTable(QtGui.QTableWidget):
         for label in assigned_labels_array:
             item = QtGui.QTableWidgetItem(str(label))
             item.setTextAlignment(Qt.AlignCenter)
-            color = colors[label]  
+            color = colors[label]
             item.setBackground(QtGui.QColor(colors[label][0],colors[label][1],colors[label][2], 150))
             self.setItem(row_count, 6, item)
             row_count = row_count + 1
@@ -226,7 +226,7 @@ class ClusteringResultsPopUp(QtGui.QWidget):
         self.info_panel.insertPlainText("This mean is between -1 and 1 and the best value is around 1." +"\n\n")
         self.info_panel.insertPlainText("Calinski-Habaraz score: \t " + str(validation_values[1]) + "\n\n")
         self.info_panel.insertPlainText("Davies-Bouldin index: \t\t " + str(validation_values[2]) + "\n\n")
-        self.info_panel.insertPlainText("Calinski-Habaraz score and Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the indice, better is the number of clusters.\n\n")
+        self.info_panel.insertPlainText("Calinski-Habaraz score is the relation between the sum of distances squared intergroup and the sum of distances squared intragroup. Whereas, Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the Davies-Bouldin index and bigger is the Calinski-Habaraz score, better is the number of clusters.\n\n")
 
 
     def export_as_textfile(self):

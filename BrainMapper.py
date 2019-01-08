@@ -183,8 +183,8 @@ def run_clustering(selectedClusteringMethod, params_dict):
     elif selectedClusteringMethod == 'DBSCAN':
         results = clust.perform_DBSCAN(params_dict, clusterizable_dataset)
     #Fuzzy CMeans
-    elif selectedClusteringMethod == 'FuzzyCMeans':
-        results = clust.perform_FuzzyCMeans(param_dict, clusterizable_dataset)
+    #elif selectedClusteringMethod == 'FuzzyCMeans':
+    #    results = clust.perform_FuzzyCMeans(param_dict, clusterizable_dataset)
     else:
         print('clustering method not recognised')
         results = ['']
@@ -205,7 +205,7 @@ def clustering_validation_indexes(labels, centroids, cluster_num):
     # Calinski-Habaraz index
     validation_indexes.append(clustering.compute_calinski_habaraz(X=clustering_datamatrix, predicted_labels=labels))
     # Davies-Bouldin index
-    validation_indexes.append(clustering.compute_db(X=clustering_datamatrix, centroids=centroids, labels=labels))
+    validation_indexes.append(clustering.compute_db(X=clustering_datamatrix, predicted_labels=labels))
 
 
     return validation_indexes
