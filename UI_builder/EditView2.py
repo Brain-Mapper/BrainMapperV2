@@ -41,6 +41,12 @@ class EditView2(QtGui.QWidget):
 
     showMain = pyqtSignal()
 
+    def __init__(self):
+        super(EditView2, self).__init__()
+
+        self.setupUi(self)
+
+
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
         Form.resize(1024, 731)
@@ -57,6 +63,7 @@ class EditView2(QtGui.QWidget):
         self.widget_3.setGeometry(QtCore.QRect(10, 10, 591, 481))
         self.widget_3.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
         self.widget_3.setObjectName(_fromUtf8("widget_3"))
+
         self.scrollArea = QtGui.QScrollArea(self.widget_3)
         self.scrollArea.setGeometry(QtCore.QRect(10, 110, 571, 361))
         self.scrollArea.setWidgetResizable(True)
@@ -65,6 +72,7 @@ class EditView2(QtGui.QWidget):
         self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 569, 359))
         self.scrollAreaWidgetContents.setObjectName(_fromUtf8("scrollAreaWidgetContents"))
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+
         self.label_6 = QtGui.QLabel(self.widget_3)
         self.label_6.setGeometry(QtCore.QRect(140, 80, 291, 16))
         font = QtGui.QFont()
@@ -108,8 +116,8 @@ class EditView2(QtGui.QWidget):
         self.widget_4.setGeometry(QtCore.QRect(10, 510, 591, 80))
         self.widget_4.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
         self.widget_4.setInputMethodHints(QtCore.Qt.ImhNone)
-        self.widget_4.setProperty("Visible", False)
         self.widget_4.setObjectName(_fromUtf8("widget_4"))
+        #self.widget_4.hide()
         self.pushButton = QtGui.QPushButton(self.widget_4)
         self.pushButton.setGeometry(QtCore.QRect(480, 20, 93, 41))
         font = QtGui.QFont()
