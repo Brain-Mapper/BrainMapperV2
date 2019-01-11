@@ -7,6 +7,8 @@ from BrainMapper import compute_sample_silhouettes, get_current_usableDataset
 import numpy as np
 import pandas as pd
 from nilearn import plotting
+import numpy as np
+from scipy.cluster.hierarchy import dendrogram
 
 def plot_silhouette(labels, colors = None):
     sample_silhouettes, labels = compute_sample_silhouettes(labels)
@@ -80,6 +82,57 @@ def plot_cross_section(labels: list, colors = None):
         display.add_markers([point], marker_color=[color])
     plotting.show()
 
+def plot_dendrogram(model):
+    """ Plot a dendogram of a hierarchical agglomerative clustering
+    
+    Arguments:
+        model -- result of an agglomerative clustering
+    """
+
+    # Children of hierarchical clustering
+    children = model.children_
+    labels=list(model.labels_)
+    # print("plot_dendrogram --> children : ", children)
+
+    # Distances between each pair of children
+    # Since we don't have this information, we can use a uniform one for plotting
+    distance = np.arange(children.shape[0])
+
+    # The number of observations contained in each cluster level
+    no_of_observations = np.arange(2, children.shape[0]+2)
+
+    # Create linkage matrix and then plot the dendrogram
+    linkage_matrix = np.column_stack([children, distance, no_of_observations]).astype(float)
+
+    # Plot the corresponding dendrogram
+    colors = get_color(set(labels), in_int=True)
+    colors[-1] = (83, 135, 2)
+    number_of_clusters = len(set(labels))
+
+    for i in range(0,linkage_matrix.shape[0]-number_of_clusters+1):
+        labels.append(labels[int(linkage_matrix[i][0])])
+    for i in range(0,number_of_clusters-1):
+        labels.append(-1)
+
+    lis = []
+
+    def link_color_func(k):
+        color = colors[labels[k]]
+        string = '#'
+        lis.append(k)
+        for c in color :
+            cl = format(c, 'x')
+            if len(cl)==1:
+                cl = "0" + cl
+            string = string + cl
+        return string
+
+    plt.figure()
+    dendrogram(linkage_matrix, link_color_func=link_color_func)
+    plt.title('Dendrogram')
+    plt.ylabel('Distance')
+    plt.show()
+    
 def get_points_list_colors_list(labels : list, in_int: bool = False) -> (list, list):
     """ Obtains the points list and colors list from labels.
     It is used in the function that are based on nilearn plotting.
@@ -100,9 +153,6 @@ def get_points_list_colors_list(labels : list, in_int: bool = False) -> (list, l
         points_list.append([X['X'][i], X['Y'][i], X['Z'][i]])
         colors_list.append(color_dict[labels[i]])
     return points_list, colors_list
-
-
-
 
 def get_color(distinct_labels: list, in_int: bool = False) -> dict:
     """ Get a dict to homogeinize the color

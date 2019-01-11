@@ -184,6 +184,9 @@ class ClusteringView(QtGui.QWidget):
         if (selectedMethod == 'FuzzyCMeans'):
             print("coucou runSelectedClust")
             clustering_plot.plot_3d_fuzzy(self.label, self.belong)
+        if "hac" in clustering_results.keys():
+            clustering_plot.plot_dendrogram(clustering_results["hac"])
+
 
     def export(self):
         if self.label is not None:
