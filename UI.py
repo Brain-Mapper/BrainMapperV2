@@ -8,6 +8,7 @@ from UI_builder import resources
 
 from UI_builder.mainView2 import MainView2
 from UI_builder.ClusteringView2 import ClusteringView2
+from UI_builder.clusteringView import ClusteringView
 from UI_builder.editCollectionsView import EditCollectionsView
 from UI_builder.EditView2 import EditView2
 from UI_builder.exportView import ExportView
@@ -100,9 +101,11 @@ class HomePage(QWidget):
 
         # Here are the custom widgets we will put on the stack
         self.mainview = MainView2()
-        self.clustering = ClusteringView2()
+        #self.clustering = ClusteringView2()
+        self.clustering = ClusteringView()
         self.calculation = CalculationView()
-        self.edit_colls = EditView2()
+        # self.edit_colls = EditView2()
+        self.edit_colls = EditCollectionsView()
         self.export = ExportView()
         # -- Add them to stack widget
         self.stack.addWidget(self.mainview)
@@ -183,9 +186,11 @@ class UI(QtGui.QMainWindow):
 
         # WINDOW PARAMETERS
         rec = QApplication.desktop().availableGeometry()
+        print(rec)
         screenHeight = rec.height()
         screenWidth = rec.width()
-        self.setGeometry(300, 200, screenWidth / 1.5, screenHeight / 1.4)
+        #self.setGeometry(300, 200, screenWidth / 1.5, screenHeight / 1.4)
+        self.setGeometry(300, 200, 500,200)
         self.setWindowTitle('BrainMapper')
         self.setWindowIcon(QtGui.QIcon(':ressources/logo.png'))
 
