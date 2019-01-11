@@ -417,11 +417,6 @@ class MainView2(QtGui.QWidget):
         print()
 
 
-
-
-
-
-
     def retranslateUi(self, Form):
         Form.setWindowTitle(_translate("Form", "Form", None))
         self.label.setText(_translate("Form", "List of sets", None))
