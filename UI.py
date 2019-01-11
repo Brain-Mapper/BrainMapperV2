@@ -101,11 +101,11 @@ class HomePage(QWidget):
 
         # Here are the custom widgets we will put on the stack
         self.mainview = MainView2()
-        #self.clustering = ClusteringView2()
-        self.clustering = ClusteringView()
+        self.clustering = ClusteringView2()
+        #self.clustering = ClusteringView()
         self.calculation = CalculationView()
-        # self.edit_colls = EditView2()
-        self.edit_colls = EditCollectionsView()
+        self.edit_colls = EditView2()
+        #self.edit_colls = EditCollectionsView()
         self.export = ExportView()
         # -- Add them to stack widget
         self.stack.addWidget(self.mainview)
