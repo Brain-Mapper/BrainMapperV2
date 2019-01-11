@@ -179,8 +179,8 @@ class ClusteringView(QtGui.QWidget):
 
         # Plot the differents figures for test
         clustering_plot.plot_silhouette(self.label)
-        clustering_plot.plot_3d_clusters(self.label)
-        clustering_plot.plot_cross_section(self.label)
+        # clustering_plot.plot_3d_clusters(self.label)
+        # clustering_plot.plot_cross_section(self.label)
         if (selectedMethod == 'FuzzyCMeans'):
             print("coucou runSelectedClust")
             clustering_plot.plot_3d_fuzzy(self.label, self.belong)

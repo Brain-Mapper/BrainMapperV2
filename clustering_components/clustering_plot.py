@@ -9,7 +9,7 @@ import pandas as pd
 from nilearn import plotting
 
 def plot_silhouette(labels, colors = None):
-    sample_silhouettes = compute_sample_silhouettes(labels)
+    sample_silhouettes, labels = compute_sample_silhouettes(labels)
     average = np.mean(sample_silhouettes)
 
     # Dict of the form {label:[list of silhouettes]}
@@ -97,13 +97,8 @@ def get_points_list_colors_list(labels : list, in_int: bool = False) -> (list, l
     colors_list = []
     points_list = []
     for i in range(len(labels)):
-        #if labels[i] == -1 :
-        #    points_list.append([X['X'][i], X['Y'][i], X['Z'][i]])
-        #    red_color = (250/255,5/255,5/255,1)
-        #    colors_list.append(red_color)
-        #else :
-            points_list.append([X['X'][i], X['Y'][i], X['Z'][i]])
-            colors_list.append(color_dict[labels[i]])
+        points_list.append([X['X'][i], X['Y'][i], X['Z'][i]])
+        colors_list.append(color_dict[labels[i]])
     return points_list, colors_list
 
 

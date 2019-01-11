@@ -214,9 +214,10 @@ class ClusteringResultsPopUp(QtGui.QWidget):
         self.info_panel.insertPlainText(
             "Cluster centroids\n-----------------------------------------------------------------------------\n")
         count = 0
-        for c in centroids:
-            self.info_panel.insertPlainText("Cluster "+str(count)+": \t\t" + str(c)+"\n")
-            count = count+1
+        if centroids is not None :
+            for c in centroids:
+                self.info_panel.insertPlainText("Cluster "+str(count)+": \t\t" + str(c)+"\n")
+                count = count+1
 
         self.info_panel.insertPlainText(
             "-----------------------------------------------------------------------------\n\n")
