@@ -174,8 +174,8 @@ class ClusteringView(QtGui.QWidget):
         #print("runSelectedClust clustering_results", clustering_results)
         if (selectedMethod == 'FuzzyCMeans'):
             self.belong = clustering_results["belong"]
-        self.add_hist(param_dict, self.label)
-        self.add_silhouette(self.label)
+        #self.add_hist(param_dict, self.label)
+        #self.add_silhouette(self.label)
 
         # Plot the differents figures for test
         clustering_plot.plot_silhouette(self.label)

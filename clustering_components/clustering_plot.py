@@ -49,10 +49,10 @@ def plot_silhouette(labels, colors = None):
     plt.show()
 
 def plot_3d_fuzzy(labels: list, belong):
-    print("plot_3d_fuzzy -> labels", labels)
-    print("plot_3d_fuzzy -> belong", belong)
+    #print("plot_3d_fuzzy -> labels", labels)
+    #print("plot_3d_fuzzy -> belong", belong)
     points_list, colors_list = get_points_list_colors_list(labels)
-    print("plot_3d_fuzzy -> colors", colors_list)
+    #print("plot_3d_fuzzy -> colors", colors_list)
     colors_bis = []
     for i in range (len(colors_list)):
         #print("plot_3d_fuzzy -> colors[i] AVANT", colors_list[i])
@@ -97,8 +97,13 @@ def get_points_list_colors_list(labels : list, in_int: bool = False) -> (list, l
     colors_list = []
     points_list = []
     for i in range(len(labels)):
-        points_list.append([X['X'][i], X['Y'][i], X['Z'][i]])
-        colors_list.append(color_dict[labels[i]])
+        #if labels[i] == -1 :
+        #    points_list.append([X['X'][i], X['Y'][i], X['Z'][i]])
+        #    red_color = (250/255,5/255,5/255,1)
+        #    colors_list.append(red_color)
+        #else :
+            points_list.append([X['X'][i], X['Y'][i], X['Z'][i]])
+            colors_list.append(color_dict[labels[i]])
     return points_list, colors_list
 
 
@@ -116,8 +121,16 @@ def get_color(distinct_labels: list, in_int: bool = False) -> dict:
 
     number_of_clusters = len(distinct_labels)
     color_dict = {}
+    if -1 in distinct_labels :
+        number_of_clusters = number_of_clusters - 1
+        if in_int == False :
+            color_dict[-1] = (1,0,0,1)
+        else :
+            color_dict[-1] = (255,0,0,1)
+        distinct_labels.remove(-1)
     for label in distinct_labels:
         color_dict[label] = cm.magma(float(label) / float(number_of_clusters), bytes=in_int)
+    print("color_dict", color_dict)
     return color_dict
 
 # if __name__ == "__main__":

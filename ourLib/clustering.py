@@ -62,6 +62,8 @@ def perform_DBSCAN(param_dict, X):
                     metric=param_dict["metric"]).fit(X)
     return {
         "labels" : dbscan.labels_,
+        #"core_sample_indices" : dbscan.core_sample_indices_,
+        #"components" : dbscan.components_,
     }
 
 
