@@ -30,7 +30,7 @@ def plot_silhouette(labels, colors = None):
     plt.figure()
     plt.xlim([np.min(sample_silhouettes), 1])
     plt.ylim([0,len(sample_silhouettes) + 1 + len(set(labels))]) # There is len(sample_silhouettes) and 1+len(set(labels)) blanks
-    # Add the bars  
+    # Add the bars
     for label in sorted(labels_dict.keys()):
         color=colors[label]
         y = sorted(labels_dict[label]+[np.min(labels_dict[label])]) # [np.min(labels_dict[label])] is here beacuse of step='pre' (we need 2 y to create a bar)
@@ -50,8 +50,25 @@ def plot_silhouette(labels, colors = None):
     plt.yticks([])
     plt.show()
 
+def plot_3d_fuzzy(labels: list, belong):
+    #print("plot_3d_fuzzy -> labels", labels)
+    #print("plot_3d_fuzzy -> belong", belong)
+    points_list, colors_list = get_points_list_colors_list(labels)
+    #print("plot_3d_fuzzy -> colors", colors_list)
+    colors_bis = []
+    for i in range (len(colors_list)):
+        #print("plot_3d_fuzzy -> colors[i] AVANT", colors_list[i])
+        colors_bis_0 = colors_list[i][0] * belong[i]
+        colors_bis_1 = colors_list[i][1] * belong[i]
+        colors_bis_2 = colors_list[i][2] * belong[i]
+        colors_bis_3 = colors_list[i][3]
+        colors_bis.append((colors_bis_0, colors_bis_1, colors_bis_2, colors_bis_3))
+        #print("plot_3d_fuzzy -> colors[i] APRES", colors_bis[i])
+    view = plotting.view_markers(points_list, colors_bis, marker_size=5)
+    view.open_in_browser()
 
 def plot_3d_clusters(labels: list, colors = None):
+    print("plot_3d_clusters")
     points_list, colors_list = get_points_list_colors_list(labels)
     # TODO Tweak of mark_size ? For now 5 but we need to automatize the size choice
     view = plotting.view_markers(points_list, colors_list, marker_size=5)
@@ -115,34 +132,36 @@ def plot_dendrogram(model):
     plt.title('Dendrogram')
     plt.ylabel('Distance')
     plt.show()
-
-def get_points_list_colors_list(labels : list) -> (list, list):
+    
+def get_points_list_colors_list(labels : list, in_int: bool = False) -> (list, list):
     """ Obtains the points list and colors list from labels.
     It is used in the function that are based on nilearn plotting.
-    
+
     Arguments:
         labels {list} -- labels resulting of a clustering
-    
+
     Returns:
         points list, colors list
     """
     X = get_current_usableDataset().export_as_clusterizable()
     X = pd.DataFrame(X, columns=['X','Y','Z','Intensity'])
 
-    color_dict = get_color(sorted(set(labels)))
+    color_dict = get_color(sorted(set(labels)), in_int = in_int)
     colors_list = []
     points_list = []
     for i in range(len(labels)):
-        points_list.append([X['X'][i], X['Y'][i], X['Z'][i]])
-        colors_list.append(color_dict[labels[i]])
+        #if labels[i] == -1 :
+        #    points_list.append([X['X'][i], X['Y'][i], X['Z'][i]])
+        #    red_color = (250/255,5/255,5/255,1)
+        #    colors_list.append(red_color)
+        #else :
+            points_list.append([X['X'][i], X['Y'][i], X['Z'][i]])
+            colors_list.append(color_dict[labels[i]])
     return points_list, colors_list
-
-    
-
 
 def get_color(distinct_labels: list, in_int: bool = False) -> dict:
     """ Get a dict to homogeinize the color
-    
+
     Arguments:
         distinct_labels {list} -- [**sorted** list of the **distinct** labels]
         in_int {bool} -- set to True if you want rgba in int [0,255] else default to False and rgba in float [0,1]
@@ -152,8 +171,16 @@ def get_color(distinct_labels: list, in_int: bool = False) -> dict:
 
     number_of_clusters = len(distinct_labels)
     color_dict = {}
+    if -1 in distinct_labels :
+        number_of_clusters = number_of_clusters - 1
+        if in_int == False :
+            color_dict[-1] = (1,0,0,1)
+        else :
+            color_dict[-1] = (255,0,0,1)
+        distinct_labels.remove(-1)
     for label in distinct_labels:
         color_dict[label] = cm.magma(float(label) / float(number_of_clusters), bytes=in_int)
+    print("color_dict", color_dict)
     return color_dict
 
 # if __name__ == "__main__":
@@ -163,4 +190,3 @@ def get_color(distinct_labels: list, in_int: bool = False) -> dict:
 # eatures=3, cluster_std=1.0, shuffle=True)
 #     clustering = KMeans(n_clusters= 3).fit(X)
 #     plot_silhouette(X, clustering.labels_)
-

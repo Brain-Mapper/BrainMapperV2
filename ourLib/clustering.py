@@ -63,7 +63,9 @@ def perform_DBSCAN(param_dict, X):
                     metric=param_dict["metric"]).fit(X)
     return {
         "labels" : dbscan.labels_,
-    } 
+        #"core_sample_indices" : dbscan.core_sample_indices_,
+        #"components" : dbscan.components_,
+    }
 
 
 def perform_kmedoids(param_dict, X):
@@ -92,6 +94,7 @@ def perform_FuzzyCMeans(param_dict,X):
 
     # Create a labels list for viewing purposes
     labels = []
+    belong = []
     for col in range(len(u[0])):
         line_max = 0
         belong_max = 0
@@ -100,9 +103,11 @@ def perform_FuzzyCMeans(param_dict,X):
                 belong_max = u[line][col]
                 line_max = line
         labels.append(line_max)
+        belong.append(belong_max)
 
     return {
         "labels" : labels,
+        "belong" : belong,
         "centers" : cntr,
         "u" : u,
     }

@@ -165,19 +165,28 @@ class ClusteringView(QtGui.QWidget):
 
     def runSelectedClust(self, selectedMethod, param_dict):
         clustering_results = run_clustering(selectedMethod, param_dict)
-        print("runSelectedCLud -> Param dict : {}".format(param_dict.keys()));
+        #print("runSelectedCLud -> Param dict : {}".format(param_dict.keys()));
         self.label = clustering_results["labels"]
         self.centroids = clustering_results["centers"] if "centers" in clustering_results.keys() else None
         self.table_displayer.fill_clust_labels(self.label)
-        self.add_hist(param_dict, self.label)
-        self.add_silhouette(self.label)
+        #print("runSelectedClust param_dict.keys", param_dict.keys())
+        #print("runSelectedClust selectedMethod", selectedMethod)
+        #print("runSelectedClust clustering_results", clustering_results)
+        if (selectedMethod == 'FuzzyCMeans'):
+            self.belong = clustering_results["belong"]
+        #self.add_hist(param_dict, self.label)
+        #self.add_silhouette(self.label)
 
         # Plot the differents figures for test
-        #clustering_plot.plot_silhouette(self.label)
-        #clustering_plot.plot_3d_clusters(self.label)
-        #clustering_plot.plot_cross_section(self.label)
+        clustering_plot.plot_silhouette(self.label)
+        clustering_plot.plot_3d_clusters(self.label)
+        clustering_plot.plot_cross_section(self.label)
+        if (selectedMethod == 'FuzzyCMeans'):
+            print("coucou runSelectedClust")
+            clustering_plot.plot_3d_fuzzy(self.label, self.belong)
         if "hac" in clustering_results.keys():
             clustering_plot.plot_dendrogram(clustering_results["hac"])
+
 
     def export(self):
         if self.label is not None:
@@ -270,4 +279,3 @@ class ClusteringView(QtGui.QWidget):
                                                                                                       self.centroids,
                                                                                                       float(len(set(self.label)))))
         self.results_popup.show()
-    

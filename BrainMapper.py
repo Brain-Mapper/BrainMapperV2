@@ -182,6 +182,7 @@ def run_clustering(selectedClusteringMethod, params_dict):
 
     elif selectedClusteringMethod == 'DBSCAN':
         results = clustering.perform_DBSCAN(params_dict, clusterizable_dataset)
+        #print("run_clustering -> results",results)
     #Fuzzy CMeans
     elif selectedClusteringMethod == 'FuzzyCMeans':
         results = clustering.perform_FuzzyCMeans(params_dict, clusterizable_dataset)
