@@ -177,7 +177,7 @@ class ClusteringView(QtGui.QWidget):
         #clustering_plot.plot_3d_clusters(self.label)
         #clustering_plot.plot_cross_section(self.label)
         if "hac" in clustering_results.keys():
-            clustering_plot.dendrogram(clustering_results["hac"], labels=clustering_results["hac"].labels_)
+            clustering_plot.plot_dendrogram(clustering_results["hac"])
 
     def export(self):
         if self.label is not None:

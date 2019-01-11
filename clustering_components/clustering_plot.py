@@ -65,7 +65,7 @@ def plot_cross_section(labels: list, colors = None):
         display.add_markers([point], marker_color=[color])
     plotting.show()
 
-def plot_dendrogram(model, **kwargs):
+def plot_dendrogram(model):
     """ Plot a dendogram of a hierarchical agglomerative clustering
     
     Arguments:
@@ -74,6 +74,8 @@ def plot_dendrogram(model, **kwargs):
 
     # Children of hierarchical clustering
     children = model.children_
+    labels=list(model.labels_)
+    # print("plot_dendrogram --> children : ", children)
 
     # Distances between each pair of children
     # Since we don't have this information, we can use a uniform one for plotting
@@ -86,7 +88,33 @@ def plot_dendrogram(model, **kwargs):
     linkage_matrix = np.column_stack([children, distance, no_of_observations]).astype(float)
 
     # Plot the corresponding dendrogram
-    dendrogram(linkage_matrix, **kwargs)
+    colors = get_color(set(labels), in_int=True)
+    colors[-1] = (83, 135, 2)
+    number_of_clusters = len(set(labels))
+
+    for i in range(0,linkage_matrix.shape[0]-number_of_clusters+1):
+        labels.append(labels[int(linkage_matrix[i][0])])
+    for i in range(0,number_of_clusters-1):
+        labels.append(-1)
+
+    lis = []
+
+    def link_color_func(k):
+        color = colors[labels[k]]
+        string = '#'
+        lis.append(k)
+        for c in color :
+            cl = format(c, 'x')
+            if len(cl)==1:
+                cl = "0" + cl
+            string = string + cl
+        return string
+
+    plt.figure()
+    dendrogram(linkage_matrix, link_color_func=link_color_func)
+    plt.title('Dendrogram')
+    plt.ylabel('Distance')
+    plt.show()
 
 def get_points_list_colors_list(labels : list) -> (list, list):
     """ Obtains the points list and colors list from labels.
