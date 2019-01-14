@@ -178,14 +178,14 @@ class ClusteringView(QtGui.QWidget):
         #self.add_silhouette(self.label)
 
         # Plot the differents figures for test
-        clustering_plot.plot_silhouette(self.label)
-        clustering_plot.plot_3d_clusters(self.label)
-        clustering_plot.plot_cross_section(self.label)
-        if (selectedMethod == 'FuzzyCMeans'):
-            print("coucou runSelectedClust")
-            clustering_plot.plot_3d_fuzzy(self.label, self.belong)
-        if "hac" in clustering_results.keys():
-            clustering_plot.plot_dendrogram(clustering_results["hac"])
+        # clustering_plot.plot_silhouette(self.label)
+        clustering_plot.plot_3d_clusters(self.label, centroids=self.centroids)
+        # clustering_plot.plot_cross_section(self.label)
+        # if (selectedMethod == 'FuzzyCMeans'):
+        #     print("coucou runSelectedClust")
+        #     clustering_plot.plot_3d_fuzzy(self.label, self.belong, self.centroids)
+        # if "hac" in clustering_results.keys():
+        #     clustering_plot.plot_dendrogram(clustering_results["hac"])
 
 
     def export(self):
