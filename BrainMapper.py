@@ -6,10 +6,10 @@
 #       The module 'BrainMapper' is the controller of our application : it links the user interface and the library
 #       that handles NIfTIs
 #
-# HISTORY
+# AUTHORS
 #
-# 28 november 2017 - Initial design and coding. (@Graziella-Husson, Graziella Husson)
-# 12 february 2018 - Added documentation (@vz-chameleon, Valentina Zelaya)
+#       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
+#       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
 
 from ourLib.niftiHandlers.nifimage import NifImage
@@ -59,8 +59,12 @@ currentClusteringMethod = None
 def open_nifti(path):
     """
     Opens a NIfTI file from path
-    :param path: A string of the file path
-    :return: NifImage instance
+
+    Arguments :
+        path{string} -- the file path
+
+    Return:
+        NifImage instance
     """
     image = NifImage.from_file(path)
     return image
@@ -69,8 +73,12 @@ def open_nifti(path):
 def do_image_collection(files):
     """
     Create an image collection from a list of file paths
-    :param files: list of strings (file paths)
-    :return: ImageCollection instance
+
+    Arguments :
+        files{list} -- file paths
+
+    Return :
+        ImageCollection instance
     """
     coll = ImageCollection("default", currentSet)
     # We want an unique name for each collection
@@ -81,8 +89,6 @@ def do_image_collection(files):
     for file in files:
         # For french language, encode to latin1 -> to be able to take files with special characters of french in their file path
         filename = file#.toLatin1().data()
-
-
         image = open_nifti(filename)
         coll.add(image)
     add_coll(coll)  # We add the collection create to selected by default
@@ -93,8 +99,9 @@ def do_image_collection(files):
 def add_coll(coll):
     """
     Add a collection to the selected collection list [global variable 'selected']
-    :param coll: ImageCollection instance
-    :return: Nothing
+
+    Arguments :
+        coll -- ImageCollection instance
     """
     found = False
     for i in selected:
@@ -107,8 +114,9 @@ def add_coll(coll):
 def rm_coll(coll):
     """
     Remove a collection from the selected collection list [global variable 'selected']
-    :param coll: ImageCollection instance
-    :return: Nothing
+
+    Arguments :
+        coll -- ImageCollection instance
     """
     found = False
     for i in selected:
@@ -121,12 +129,20 @@ def rm_coll(coll):
 def get_selected():
     """
     Return the selected collections (useful for all views that use data)
-    :return: global variable 'selected'
+
+    Return :
+        global variable 'selected'
     """
     return selected
 
 
 def get_selected_images_number():
+    """
+    Get the number of selected images
+
+    Return :
+        img_num{int}
+    """
     img_num = 0
     for imgc in selected:
         img_num = img_num + imgc.get_image_total_num()
@@ -137,7 +153,7 @@ def extract_data_from_selected():
     """
     Extract the interesting data from the selected image collections using extractor's module functions.
     Put this data in the global variable 'currentUsableDataSet'
-    :return: Nothing. Global var 'currentUsableDataset' is modified
+    Global var 'currentUsableDataset' is modified
     """
     global currentUsableDataset
     currentUsableDataset = xt.extract_from_collection_list(selected)
@@ -148,7 +164,7 @@ def extract_data_as_centroids_from_selected():
       Extract the interesting data from the selected image collections using extractor's module functions
       and only centroids as points from each file. (one centroid per file)
       Put this data in the global variable 'currentUsableDataSet'
-      :return: Nothing. Global var 'currentUsableDataset' is modified
+      Global var 'currentUsableDataset' is modified
     """
     global currentUsableDataset
     currentUsableDataset = xt.extract_from_collection_list_using_centroids(selected)
@@ -157,7 +173,9 @@ def extract_data_as_centroids_from_selected():
 def get_current_usableDataset():
     """
     Retrieve the UsableDataSet instance obtained by extracting data before clustering
-    :return: a UsableDataSet instance
+
+    Return:
+        a UsableDataSet instance
     """
     return currentUsableDataset
 
@@ -165,9 +183,13 @@ def get_current_usableDataset():
 def run_clustering(selectedClusteringMethod, params_dict):
     """
     A function to run a type of clustering algorithm, triggered by run button from interface
-    :param selectedClusteringMethod: a sring that is the name of the user selected clustering method
-    :param params_dict: a dictionnary containing all necessary parameters for clustering and values given by the user
-    :return: a list of clustering labels (to which cluster does one individual belong to)
+
+    Arguments :
+        selectedClusteringMethod{string} -- the name of the user selected clustering method
+        params_dict -- a dictionnary containing all necessary parameters for clustering and values given by the user
+
+    Return :
+        a list of clustering labels (to which cluster does one individual belong to)
     """
     clusterizable_dataset = currentUsableDataset.export_as_clusterizable()
 
@@ -182,10 +204,10 @@ def run_clustering(selectedClusteringMethod, params_dict):
 
     elif selectedClusteringMethod == 'DBSCAN':
         results = clustering.perform_DBSCAN(params_dict, clusterizable_dataset)
-        #print("run_clustering -> results",results)
-    #Fuzzy CMeans
+
     elif selectedClusteringMethod == 'FuzzyCMeans':
         results = clustering.perform_FuzzyCMeans(params_dict, clusterizable_dataset)
+
     else:
         print('clustering method not recognised')
         results = ['']
@@ -197,8 +219,18 @@ def run_clustering(selectedClusteringMethod, params_dict):
 
 
 def clustering_validation_indexes(labels, centroids, cluster_num):
-    clustering_datamatrix = currentUsableDataset.export_as_clusterizable()
+    """
+    Calculate the mean silhouette, the calinski harabaz score and the davies bouldin score
 
+    Arguments :
+        labels{list} -- clustering label
+        centroids{list} -- centroids points for each cluster
+        cluster_num{int} -- number of clusters
+
+    Return :
+        validation_indexes{list}
+    """
+    clustering_datamatrix = currentUsableDataset.export_as_clusterizable()
     validation_indexes = []
 
     # Mean silhouette
@@ -208,11 +240,16 @@ def clustering_validation_indexes(labels, centroids, cluster_num):
     # Davies-Bouldin index
     validation_indexes.append(clustering.compute_db(X=clustering_datamatrix, predicted_labels=labels))
 
-
     return validation_indexes
 
 
 def compute_sample_silhouettes(labels):
+    """
+    Calculate the silhouette value for each point
+
+    Arguments :
+        labels{list} -- clustering label
+    """
     clustering_datamatrix = currentUsableDataset.export_as_clusterizable()
     return clustering.compute_samples_silhouette(X=clustering_datamatrix, predicted_labels=labels)
 
@@ -221,6 +258,18 @@ def compute_sample_silhouettes(labels):
 
 
 def run_calculation(selectedAlgorithm, nifti_collection, arguments):
+    """
+    Method to choose the operation
+
+    Arguments :
+        selectedAlgorithm -- operation selected
+        nifti_collection -- collection selected
+        arguments -- arguments for the operation
+
+    Return :
+        file_result
+        output
+    """
     if selectedAlgorithm == "Addition":
         file_result, output = calcul.addition_opperation(nifti_collection)
     if selectedAlgorithm == "Boolean Intersection":
@@ -264,8 +313,12 @@ def run_calculation(selectedAlgorithm, nifti_collection, arguments):
 def get_selected_from_name(name):
     """
     Returns the selected collection named "name" in the selected image collections list
-    :param name: The collection that we look for (unique ID)
-    :return: ImageCollection
+
+    Arguments :
+        name{string} -- The collection that we look for (unique ID)
+
+    Return :
+        ImageCollection
     """
     for x in selected:
         if (name == x.name):
@@ -274,7 +327,10 @@ def get_selected_from_name(name):
 
 def get_toRM():
     """
-    :return: Returns list of images to remove (useful for edit view -> save changes)
+    Method to obtain the images to remove
+
+    Return:
+        list of images to remove (useful for edit view -> save changes)
     """
     return toRM
 
@@ -282,8 +338,9 @@ def get_toRM():
 def add_toRM(im):
     """
     Add an image to remove in the list toRM (useful for all views that use data)
-    :param im: NifImage instance
-    :return: Nothing
+
+    Arguments:
+        im -- NifImage instance
     """
     toRM.append(im)
 
@@ -291,8 +348,9 @@ def add_toRM(im):
 def rm_toRM(im):
     """
     Remove an image to remove from the list toRM (useful for all views that use data)
-    :param im: NifImage instance
-    :return: Nothing
+
+    Arguements :
+        im -- NifImage instance
     """
     toRM.remove(im)
 
@@ -300,7 +358,6 @@ def rm_toRM(im):
 def reset_toRM():
     """
     Reset the list toRM (usefull for all views that use data and allow the list to be used somewhere else)
-    :return: Nothing
     """
     del toRM[:]
 
@@ -308,8 +365,9 @@ def reset_toRM():
 def set_current_coll(coll):
     """
     Set the current collection [global variable] (usefull to show the collection selected in edit view)
-    :param coll: ImageCollection instance
-    :return: nothing
+
+    Arguments :
+        coll -- ImageCollection instance
     """
     global current_collec
     current_collec = coll
@@ -318,7 +376,9 @@ def set_current_coll(coll):
 def get_current_coll():
     """
     Get the current collection [global variable]
-    :return: Global variable current_collec
+
+    Return:
+        Global variable current_collec
     """
     global current_collec
     return current_collec
@@ -327,8 +387,9 @@ def get_current_coll():
 def set_current_coll_name(name):
     """
     Set the current collection's name (useful to rename the collection selected in edit view)
-    :param name: A string that will be the new name of the collection
-    :return: Nothing
+
+    Arguments :
+        name{string} -- the new name of the collection
     """
     cur = get_current_coll()
     cur.set_name(name)
@@ -337,8 +398,12 @@ def set_current_coll_name(name):
 def exists_selected(name):
     """
     Returns True if the collection's name "name" is already used by an other one in selected collections list (global var 'selected')
-    :param name: The collections' name to be tested
-    :return: Boolean
+
+    Arguments :
+        name{string} -- The collections' name to be tested
+
+    Return :
+        Boolean
     """
     for i in selected:
         if (i.name == name):
@@ -349,8 +414,12 @@ def exists_selected(name):
 def exists_coll_in_sets(name):
     """
     Returns True if the collection's name "name" is already used in one of the sets we have
-    :param name: The collections' name to be tested
-    :return: Boolean
+
+    Arguments :
+        name{string} -- The collections' name
+
+    Return :
+        Boolean
     """
     sets = get_all_sets()
     for s in sets:
@@ -364,9 +433,10 @@ def exists_coll_in_sets(name):
 def add_image_coll(coll, files):
     """
     Add all images from a file paths list in a given collection
-    :param coll: ImageCollection instance
-    :param files: A list of file path's = Images to add
-    :return: Nothing (modifies given collection)
+
+    Arguments :
+        coll -- ImageCollection instance
+        files{list} -- A list of file path's = Images to add
     """
     for file in files:
         coll.add_from_file(str(file))
@@ -375,7 +445,6 @@ def add_image_coll(coll, files):
 def delete_current_coll():
     """
     Delete the current collection from its set and from the app
-    :return: Nothing
     """
     coll = get_current_coll()
     this_set = coll.getSetName()
@@ -384,13 +453,11 @@ def delete_current_coll():
     add_toRM(coll)  # We use toRM this time with a collection (toRM is rested just after used)
     set_current_coll(None)  # The current collection become None
     this_set.remove_collection(coll.name)
-    # print this_set.number_of_collection()  # To verify if the collection is well deleted from the data and not only from UI
 
 
 def save_modifs():
     """
     Apply the changes the user made in the edit view (use toRM to know the images to remove from the current collection)
-    :return: Nothing
     """
     global current_collec
     for i in toRM:
@@ -401,8 +468,12 @@ def save_modifs():
 def exists_set(name):
     """
     Return True if the set's name "name" is already used by another set
-    :param name: The tested set's name
-    :return: Boolean
+
+    Arguments :
+        name{string} -- The tested set's name
+
+    Return :
+        Boolean
     """
     for i in sets:
         if (i.name == name):
@@ -413,8 +484,12 @@ def exists_set(name):
 def newSet(name):
     """
     Creates a new set a the name "name" and add it into the set list. Also change the current set with the new one
-    :param name: The new set's name
-    :return: Set instance
+
+    Arguments :
+        name{string} -- The new set's name
+
+    Return :
+        Set instance
     """
     global currentSet
     new_set = Set(name)
@@ -426,8 +501,9 @@ def newSet(name):
 def set_current_set(new_set):
     """
     Set the current set with new_set
-    :param new_set: The set to which we have to set the current set
-    :return: Nothing (changes global 'currentSet')
+
+    Arguments :
+        new_set -- The set to which we have to set the current set
     """
     global currentSet
     currentSet = new_set
@@ -436,8 +512,12 @@ def set_current_set(new_set):
 def creation_date(path_to_file):
     """
     Return the creation date for the file located at path_to_file
-    :param path_to_file: string of file path
-    :return: Date
+
+    Arguments :
+        path_to_file{strig} -- file path
+
+    Return :
+        Date
     """
     filename, file_extension = os.path.splitext(path_to_file)
     if file_extension == ".csv":
@@ -457,8 +537,9 @@ def creation_date(path_to_file):
 def add_set(my_set):
     """
     Add my_set to the sets list
-    :param my_set: Set Instance to add
-    :return: Nothing
+
+    Arguments :
+        my_set -- Set Instance to add
     """
     sets.append(my_set)
 
@@ -466,8 +547,9 @@ def add_set(my_set):
 def rm_set(my_set):
     """
     Remove my_set from the sets list
-    :param my_set: Set instance to remove
-    :return: Nothing
+
+    Arguments :
+        my_set -- Set instance to remove
     """
     sets.remove(my_set)
 
@@ -475,7 +557,9 @@ def rm_set(my_set):
 def get_current_vizu():
     """
     Return the currentVisualisation (variable currentVizu)
-    :return:
+
+    Return :
+        currentVizu
     """
     global currentVizu
     return currentVizu
@@ -484,8 +568,9 @@ def get_current_vizu():
 def set_current_vizu(collView):
     """
     Set the current vizu with the vizu collView
-    :param collView:
-    :return:
+
+    Arguments :
+        collView
     """
     global currentVizu
     currentVizu = collView
@@ -494,7 +579,6 @@ def set_current_vizu(collView):
 def get_current_set():
     """
     Return the current set [global var 'currentSet']
-    :return:
     """
     global currentSet
     return currentSet
@@ -502,14 +586,16 @@ def get_current_set():
 
 def get_all_sets():
     """
-    :return: Return all the sets that exists in the app [global var 'sets']
+    Return:
+        Return all the sets that exists in the app [global var 'sets']
     """
     return sets
 
 
 def getSetByName(name):
     """
-    :return: the set that have the name 'name' in sets list. If it doesn't exist, return None
+    Return:
+        the set that have the name 'name' in sets list. If it doesn't exist, return None
     """
     for i in sets:
         if i.get_name() == name:
@@ -520,8 +606,9 @@ def getSetByName(name):
 def setColNameInSet(name):
     """
     Rename the current collection with the name "name". Even in its set and in selected
-    :param name: new name for collection
-    :return:
+
+    Arguments :
+        name{string} -- new name for collection
     """
     old = get_current_coll()
     rm_coll(old)
@@ -535,8 +622,9 @@ def setColNameInSet(name):
 def set_selected_clustering_method(method_name):
     """
     Set the currently selected clustering method
-    :param method_name: A string (the clustering method name)
-    :return: Nothing (sets global current clustering method)
+
+    Arguments :
+        method_name{string} -- the clustering method name
     """
     global currentClusteringMethod
     currentClusteringMethod = method_name
@@ -545,7 +633,6 @@ def set_selected_clustering_method(method_name):
 def get_selected_clustering_info():
     """
     Get the selected clustering method information from method dictionnary (loaded from json file)
-    :return:
     """
     if currentClusteringMethod is not None:
         return app_clustering_available[currentClusteringMethod]
@@ -556,9 +643,10 @@ def get_selected_clustering_info():
 def makeClusterResultSet(a_usable_dataset, label):
     """
     Make results from clustering as sets and image collections
-    :param a_usable_dataset: The data of the set, a UsableDataSet instance
-    :param label: cluster label
-    :return:
+
+    Arguments :
+        a_usable_dataset -- The data of the set, a UsableDataSet instance
+        label -- cluster label
     """
     new_set = uds.extract_set_images_by_cluster(a_usable_dataset, label,
                                                 'ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii')
@@ -568,7 +656,8 @@ def makeClusterResultSet(a_usable_dataset, label):
 
 def getClusterResultSets():
     """
-    :return: Global variable clustering sets, containing the clustering results as a set
+    Return :
+        Global variable clustering sets, containing the clustering results as a set
     """
     return clusteringsets
 
@@ -576,8 +665,9 @@ def getClusterResultSets():
 def rmClusterResultSets(s):
     """
     Remove a set from clustering results set
-    :param s: The set to remove
-    :return: Nothing
+
+    Arguments :
+        s: The set to remove
     """
     clusteringsets.remove(s)
 
@@ -586,6 +676,16 @@ def rmClusterResultSets(s):
 
 
 def simple_import(csv_file_path, template_mni_path):
+    """
+    Import a file
+
+    Arguments :
+        csv_file_path{string} -- path for the csv file
+        template_mni_path{string} -- path for the mni file
+
+    Return :
+        coll -- the collection
+    """
     coll = imp.simple_import(csv_file_path, template_mni_path, currentSet)
     add_coll(coll)
     currentSet.add_collection(coll)
@@ -593,17 +693,29 @@ def simple_import(csv_file_path, template_mni_path):
 
 
 def makePoints(clustering_usable_dataset, label):
+    """
+    Arguments :
+        clustering_usable_dataset -- data
+        label -- clustering label
+
+    Return :
+        extract points
+    """
     return uds.extract_points(clustering_usable_dataset, label)
 
 
 def makeCalculResultSet(res_set):
+    """
+    Method to make calculs on set
+    """
     add_set(res_set)
     calculsets.append(res_set)
 
 
 def getCalculResultSets():
     """
-    :return: Global variable calculation sets, containing the calculation results as a set
+    Return:
+        Global variable calculation sets, containing the calculation results as a set
     """
     return calculsets
 
@@ -611,8 +723,9 @@ def getCalculResultSets():
 def rmCalculResultSets(s):
     """
     Remove a set from calculation results set
-    :param s: The set to remove
-    :return: Nothing
+
+    Arguments :
+        s: The set to remove
     """
     calculsets.remove(s)
 
@@ -620,7 +733,6 @@ def rmCalculResultSets(s):
 def rmAllCalculResultSets():
     """
     Remove all sets from calculation results set
-    :return: Nothing
     """
     for i in getCalculResultSets():
         calculsets.remove(i)
@@ -629,10 +741,22 @@ def rmAllCalculResultSets():
 
 
 def general_workspace_import(folder_path):
+    """
+    Recursively importation
+
+    Arguments :
+        folder_path{string} -- path
+    """
     ws.recursive_import(folder_path, currentSet, 0)
 
 
 def general_workspace_import_control(folder_path):
+    """
+    Control the importation
+
+    Arguments :
+        folder_path{string} -- path
+    """
     sets_name = []
     for set in sets:
         sets_name.append(set.get_name())
@@ -641,12 +765,25 @@ def general_workspace_import_control(folder_path):
 
 
 def general_workspace_save(folder_path):
+    """
+    General save of the workspace
+
+    Arguments :
+        folder_path{string} -- path
+    """
     for set in sets:
         if set.getParent() is None:
             recursive_workspace_save(folder_path, set)
 
 
 def recursive_workspace_save(folder_path, usable_set):
+    """
+    Save recursively workspace
+
+    Arguments :
+        folder_path{string} -- path
+        usable_set : set
+    """
     name = usable_set.get_name()
     new_folder_set_path = os.path.join(folder_path, name)
 
@@ -669,8 +806,9 @@ def recursive_workspace_save(folder_path, usable_set):
 def add_workspace_set(my_set):
     """
     Add my_set to the workspace sets list
-    :param my_set: Set Instance to add
-    :return: Nothing
+
+    Arguments :
+        my_set -- Set Instance to add
     """
     workspace_sets.append(my_set)
 
@@ -678,7 +816,6 @@ def add_workspace_set(my_set):
 def rm_all_workspace_set():
     """
     Remove all sets from the workspace sets list
-    :return: Nothing
     """
     global workspace_sets
     workspace_sets = []
@@ -687,12 +824,16 @@ def rm_all_workspace_set():
 def rm_workspace_set(my_set):
     """
     Remove all sets from the workspace sets list
-    :param my_set: Set Instance to remove
-    :return: Nothing
+
+    Arguments :
+        my_set -- Set Instance to remove
     """
     global workspace_sets
     workspace_sets.remove(my_set)
 
 
 def get_workspace_set():
+    """
+    Get the workspace set
+    """
     return workspace_sets

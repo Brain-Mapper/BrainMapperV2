@@ -6,12 +6,11 @@
 #       The module 'clustering' contains methods for clustering on
 #       nifti image collections extracted data
 #
-# HISTORY
+# AUTHORS
 #
-# 6 january 2018 - Initial design and coding. (@vz-chameleon, Valentina Z.)
-# 16 january 2018 - Added functions for k-medoids clustering (@vz-chameleon, Valentina Z.)
-# 12 february 2018 - Finished K-Medoids and added DBSCAN (@vz-chameleon, Valentina Z.)
-# 18 february 2018 - Added silhouette and Calinski-Habaraz score (@vz-chameleon, Valentina Z.)
+#       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
+#       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
+
 
 
 from sklearn.cluster import KMeans, AgglomerativeClustering, DBSCAN
@@ -84,13 +83,6 @@ def perform_FuzzyCMeans(param_dict,X):
     pts = np.vstack(([X["X"].values, X["Y"].values, X["Z"].values]))
     cntr, u, u0, d, jm, p, fpc = fuzz.cluster.cmeans(pts, int(param_dict["n_clusters"]), int(param_dict["m"]), error=float(param_dict["error"]),
      maxiter=int(param_dict["maxiter"]), seed=int(param_dict["seed"]))
-
-    # print("cntr : ",cntr)
-    # print("cntr_len : ",len(cntr))
-    # print("cntr1_len : ", len(cntr[0]))
-    # print("u : ",u[0])
-    # print("len_u :", len(u))
-    # print("len1_u :", len(u[0]))
 
     # Create a labels list for viewing purposes
     labels = []
@@ -283,7 +275,8 @@ def compute_mean_silhouette(X, predicted_labels, metric='euclidean'):
     :param metric: metric used, euclidean distance by default
     :return: float between -1 and +1
     """
-    return silhouette_score(X, labels=predicted_labels, metric=metric)
+    X_filtered,predicted_labels = filter(X,predicted_labels)
+    return silhouette_score(X_filtered, labels=predicted_labels, metric=metric)
 
 
 def compute_samples_silhouette(X, predicted_labels, metric='euclidean'):
@@ -294,7 +287,8 @@ def compute_samples_silhouette(X, predicted_labels, metric='euclidean'):
     :param metric: metric used, euclidean by default
     :return: an array (size n_samples) of floats between -1 and +1
     """
-    return silhouette_samples(X, labels=predicted_labels, metric=metric)
+    X_filtered,predicted_labels = filter(X,predicted_labels)
+    return silhouette_samples(X_filtered, labels=predicted_labels, metric=metric), predicted_labels
 
 
 def compute_calinski_habaraz(X, predicted_labels):
@@ -304,7 +298,8 @@ def compute_calinski_habaraz(X, predicted_labels):
     :param predicted_labels:
     :return:
     """
-    return calinski_harabaz_score(X, labels=predicted_labels)
+    X_filtered,predicted_labels = filter(X,predicted_labels)
+    return calinski_harabaz_score(X_filtered, labels=predicted_labels)
 
 
 def compute_db(X,predicted_labels):
@@ -315,7 +310,9 @@ def compute_db(X,predicted_labels):
     :param predicted_labels:
     :return:
     """
-    return davies_bouldin_score(X,labels=predicted_labels)
+
+    X_filtered, predicted_labels = filter(X,predicted_labels)
+    return davies_bouldin_score(X_filtered,labels=predicted_labels)
 
 
 def compute_s(i, x, centroids, labels, cluster_number):
@@ -342,3 +339,11 @@ def compute_R(i, x, centroids, labels, cluster_number):
                 Ri = compute_Rij(i, j, x, centroids, labels, cluster_number)
                 list_R.append(Ri)
     return max(list_R)
+
+
+def filter(X, predicted_labels):
+    predicted_labels = list(predicted_labels)
+    index_to_keep = [True if i != -1 else False for i in predicted_labels]
+    for i in range(predicted_labels.count(-1)):
+        predicted_labels.remove(-1)
+    return X[index_to_keep], predicted_labels

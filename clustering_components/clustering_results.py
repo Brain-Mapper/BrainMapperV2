@@ -6,7 +6,10 @@
 #
 #       'clustering_results' contains the custom QTableWdget for the clustering data table, the plots and the results window
 #
-
+# AUTHORS
+#
+#       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
+#       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
@@ -41,8 +44,9 @@ class ClusteringDataTable(QtGui.QTableWidget):
     def fill_with_extracted_data(self, a_usable_dataset_instance):
         """
         Fills this custom table with the data of a UsableDataSet obtained after data extraction
-        :param a_usable_dataset_instance: see UsableData for more details
-        :return: Nothing
+
+        Arguments :
+            a_usable_dataset_instance -- see UsableData for more details
         """
         self.clustering_usable_dataset = a_usable_dataset_instance
         self.setRowCount(a_usable_dataset_instance.get_row_num())
@@ -68,8 +72,9 @@ class ClusteringDataTable(QtGui.QTableWidget):
     def fill_clust_labels(self, assigned_labels_array):
         """
         Fill the 'Assigned cluster' column once we have the clustering labels result
-        :param assigned_labels_array:
-        :return:
+
+        Arguments :
+            assigned_labels_array -- clustering labels
         """
         # # The following function is only needed here !
         # def generate_random_hex_dict(n):
@@ -214,9 +219,10 @@ class ClusteringResultsPopUp(QtGui.QWidget):
         self.info_panel.insertPlainText(
             "Cluster centroids\n-----------------------------------------------------------------------------\n")
         count = 0
-        for c in centroids:
-            self.info_panel.insertPlainText("Cluster "+str(count)+": \t\t" + str(c)+"\n")
-            count = count+1
+        if centroids is not None :
+            for c in centroids:
+                self.info_panel.insertPlainText("Cluster "+str(count)+": \t\t" + str(c)+"\n")
+                count = count+1
 
         self.info_panel.insertPlainText(
             "-----------------------------------------------------------------------------\n\n")

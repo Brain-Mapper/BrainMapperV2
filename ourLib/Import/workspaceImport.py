@@ -6,11 +6,10 @@
 #       The module 'workspaceImport.py' contains all the functions import from workspace
 #
 #
-# HISTORY
+# AUTHORS
 #
-# 12 feb 2018 - Initial coding. (@yoshcraft, Raphael A.)
-# 14 feb 2018 - Add recursive_import_control function (@yoshcraft, Raphael A.)
-
+#       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
+#       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
 from ourLib.niftiHandlers.nifimage import NifImage
 from ourLib.niftiHandlers.set import Set
@@ -81,6 +80,3 @@ def recursive_import_control(folder_path, sets):
                     return "The file " + item + " is outside of an imageCollection."
             else:
                 return "The file " + item + " is outside of an imageCollection."
-
-
-

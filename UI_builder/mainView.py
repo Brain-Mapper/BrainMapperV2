@@ -6,13 +6,10 @@
 #
 #       'mainView' contains the Qwidget for the  main page's view
 #
-# HISTORY
+# AUTHORS
 #
-# 2 january 201- Initial design and coding. (@vz-chameleon, Valentina Z.)
-# 14 january 2018 - Began the interface (@Graziella-Husson)
-# 15-16 january 2018 - Redo all the interface (@Graziella-Husson)
-# 30 january 2018 - Added tabs to interface for results of calculation and clustering (@Graziella-Husson)
-# 13 february 2018 - Change of the way of exporting a to CSV (@yoshcraft, Raphael A.)
+#       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
+#       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
 from PyQt4 import QtGui
 from PyQt4.Qt import *

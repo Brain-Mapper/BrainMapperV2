@@ -5,9 +5,10 @@
 #
 #		 'calculationView' contains the Qwidget for the calculation view
 #
-# HISTORY
+# AUTHORS
 #
-# 15 january 2018 - Initial design and coding. (@maximeCluchague, Maxime C.)
+#       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
+#       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
 from PyQt4 import QtGui
 from PyQt4.Qt import *
