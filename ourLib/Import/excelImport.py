@@ -76,7 +76,6 @@ def simple_import(csv_file_path, template_mni_path, currentSet):
         reader = csv_reader(file)
 
         row = next(reader)
-        #print(row)
 
         template_data = load(template_mni_path)
         template_affine = template_data.affine
@@ -147,7 +146,8 @@ def simple_import(csv_file_path, template_mni_path, currentSet):
                         recreate_data = zeros(template_shape)
 
                         for point in point_dict[key]:
-                            recreate_data[point[0], point[1], point[2]] = point[3]
+                            x_y_z = mni_to_voxel(point, recreate_affine)
+                            recreate_data[int(x_y_z[0]), int(x_y_z[1]), int(x_y_z[2])] = point[3]
 
                         recreate_image = Nifti1Image(recreate_data, recreate_affine)
                         #recreate_image = Nifti1Image(recreate_data)
@@ -155,7 +155,6 @@ def simple_import(csv_file_path, template_mni_path, currentSet):
 
                         # put nifti images into a imageCollection
                         coll.add(ni_image)
-
 
         else:
             print('Please use a valid csv file')
