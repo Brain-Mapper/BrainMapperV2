@@ -180,6 +180,21 @@ def get_current_usableDataset():
     return currentUsableDataset
 
 
+CLUSTERING_METHODS = {
+    'KMeans' : clustering.perform_kmeans,
+    'KMedoids' : clustering.perform_kmedoids,
+    'AgglomerativeClustering' : clustering.perform_agglomerative_clustering,
+    'DBSCAN' : clustering.perform_DBSCAN,
+    'FuzzyCMeans': clustering.perform_FuzzyCMeans,
+}
+
+SCORING_METHODS = {
+    'DB' : clustering.compute_db,
+    'HC' : clustering.compute_calinski_habaraz,
+    'MS' : clustering.compute_mean_silhouette,
+    'FPC' : None
+}
+
 def run_clustering(selectedClusteringMethod, params_dict):
     """
     A function to run a type of clustering algorithm, triggered by run button from interface
@@ -192,30 +207,24 @@ def run_clustering(selectedClusteringMethod, params_dict):
         a list of clustering labels (to which cluster does one individual belong to)
     """
     clusterizable_dataset = currentUsableDataset.export_as_clusterizable()
-
-    if selectedClusteringMethod == 'KMeans':
-        results = clustering.perform_kmeans(params_dict, clusterizable_dataset)
-
-    elif selectedClusteringMethod == 'KMedoids':
-        results = clustering.perform_kmedoids(params_dict, clusterizable_dataset)
-
-    elif selectedClusteringMethod == 'AgglomerativeClustering':
-        results = clustering.perform_agglomerative_clustering(params_dict, clusterizable_dataset)
-
-    elif selectedClusteringMethod == 'DBSCAN':
-        results = clustering.perform_DBSCAN(params_dict, clusterizable_dataset)
-
-    elif selectedClusteringMethod == 'FuzzyCMeans':
-        results = clustering.perform_FuzzyCMeans(params_dict, clusterizable_dataset)
-
+    
+    if selectedClusteringMethod in CLUSTERING_METHODS.keys():
+        range_of_cluster = read_n(params_dict["n_clusters"])
+        if len(range_of_cluster) == 1:
+            # normal use
+            final_results = CLUSTERING_METHODS[selectedClusteringMethod](params_dict, clusterizable_dataset)
+        else :
+            # search of the best clustering result
+            for i in range(range_of_cluster[0], range_of_cluster[1]+1):
+                params_dict["n_clusters"] = i
+                result = CLUSTERING_METHODS[selectedClusteringMethod](params_dict, clusterizable_dataset)
     else:
         print('clustering method not recognised')
-        results = ['']
+        final_results = ['']
 
     del clusterizable_dataset  # Deleting exported data : saves memory !!
-    # gc.collect()  # Call the garbage collector
 
-    return results
+    return final_results
 
 
 def clustering_validation_indexes(labels, centroids, cluster_num):
