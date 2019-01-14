@@ -45,6 +45,13 @@ class ClusteringView2(QtGui.QWidget):
 
         self.setupUi(self)
 
+    def go_back(self):
+        # -- When the user wants to return to the main view, we reinit the cluster view
+        #self.resultsGraphs.graph1.clear()
+        #self.resultsGraphs.graph2.clear()
+
+        self.showMain.emit()
+
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
         Form.resize(1000, 650)
@@ -208,6 +215,7 @@ class ClusteringView2(QtGui.QWidget):
         self.pushButton_5.setObjectName(_fromUtf8("pushButton_5"))
         self.horizontalLayout_2.addWidget(self.pushButton_5)
         self.pushButton_6 = QtGui.QPushButton(self.widget_4)
+        self.pushButton_6.clicked.connect(self.go_back)
         self.pushButton_6.setObjectName(_fromUtf8("pushButton_6"))
         self.horizontalLayout_2.addWidget(self.pushButton_6)
         self.verticalLayout_2.addWidget(self.widget_4)
