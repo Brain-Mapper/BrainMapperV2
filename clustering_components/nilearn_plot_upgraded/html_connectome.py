@@ -8,9 +8,8 @@ from .js_plotting_utils import (add_js_lib, HTMLDocument, mesh_to_plotly,
                                 encode, colorscale, get_html_template,
                                 to_color_strings)
 
-SYMBOLS = ["circle", "square", "diamond", "cross", "x", "triangle-up", "triangle-down", "triangle-left", "triangle-right", "triangle-ne", "triangle-se", "triangle-sw", "triangle-nw", "pentagon", "hexagon", "hexagon2", "octagon", "star", "hexagram", "star-triangle-up", "star-triangle-down",
-           "star-square", "star-diamond", "diamond-tall", "diamond-wide", "hourglass", "bowtie", "circle-x", "square-cross", "square-x", "diamond-cross",  "diamond-x",  "cross-thin", "x-thin", "asterisk", "hash", "y-up", "y-down", "y-left", "y-right", "line-ew", "line-ns", "line-ne",  "line-nw"]
-
+SYMBOLS = ["circle", "square", "diamond", "cross", "x", "hexagon", "hexagon2", "octagon", "star", "hexagram", "star-triangle-up", "star-triangle-down", "star-square", "star-diamond", "diamond-tall", "diamond-wide",  "pentagon", "hourglass", "bowtie", "circle-x", "square-cross", "square-x", "diamond-cross",  "diamond-x",  "cross-thin", "x-thin", "asterisk", "hash", "y-up", "y-down", "y-left", "y-right", "line-ew", "line-ns", "line-ne",  "line-nw"]
+# "triangle-up", "triangle-down", "triangle-left", "triangle-right", "triangle-ne", "triangle-se", "triangle-sw", "triangle-nw",
 
 class ConnectomeView(HTMLDocument):
     pass
@@ -200,4 +199,4 @@ def view_markers(coords, colors, labels, marker_size=5.,  centers=None, centers_
         _add_centers(connectome_info, centers, centers_colors)
     connectome_info["marker_size"] = marker_size
     connectome_info["center_size"] = 2*marker_size
-    return _make_connectome_html(connectome_info)
+    return _make_connectome_html(connectome_info, False)

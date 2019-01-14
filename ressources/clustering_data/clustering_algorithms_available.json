@@ -15,7 +15,7 @@
         "score" : {
           "param_info" : "The score choose to calculate the best number of clusters",
           "type" : ["Calinski-Harabasz", "Davies-Bouldin", "Mean silhouette"],
-          "default" : "Mean silhouette",
+          "default" : "Mean silhouette"
         },
         "n_init" : {
           "param_info" : "Number of time the k-means algorithm will be run with different centroid seeds. The final results will be the best output of n_init consecutive runs in terms of inertia",
@@ -51,7 +51,7 @@
         "score" : {
           "param_info" : "The score choose to calculate the best number of clusters",
           "type" : ["Calinski-Harabasz", "Davies-Bouldin", "Mean silhouette"],
-          "default" : "Mean silhouette",
+          "default" : "Mean silhouette"
         },
         "metric" : {
           "param_info" : "Metric used to compute the distance between points. Can be 'euclidean', or 'manhattan'",
@@ -72,7 +72,7 @@
       "score" : {
         "param_info" : "The score choose to calculate the best number of clusters",
         "type" : ["Calinski-Harabasz", "Davies-Bouldin", "Mean silhouette"],
-        "default" : "Mean silhouette",
+        "default" : "Mean silhouette"
       },
       "affinity" : {
           "param_info" : "Metric used to compute the linkage. Can be 'euclidean', 'l1', 'l2', 'manhattan' or 'cosine'\nIf linkage is 'ward', only 'euclidean' is accepted.",
@@ -136,8 +136,8 @@
             },
             "score" : {
               "param_info" : "The score choose to calculate the best number of clusters",
-              "type" : ["Calinski-Harabasz", "Davies-Bouldin", "Mean silhouette"],
-              "default" : "Mean silhouette",
+              "type" : ["Calinski-Harabasz", "Davies-Bouldin", "Mean silhouette","Fuzzy partition coefficient"],
+              "default" : "Mean silhouette"
             }
         }
     }

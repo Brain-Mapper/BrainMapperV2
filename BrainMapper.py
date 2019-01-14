@@ -189,11 +189,25 @@ CLUSTERING_METHODS = {
 }
 
 SCORING_METHODS = {
-    'DB' : clustering.compute_db,
-    'HC' : clustering.compute_calinski_habaraz,
-    'MS' : clustering.compute_mean_silhouette,
-    'FPC' : None
+    'Davies-Bouldin' : (clustering.compute_db, 1000, lambda old,new : new<old),
+    'Calinski-Harabasz' : (clustering.compute_calinski_habaraz, 0, lambda old,new : new>old),
+    'Mean silhouette' : (clustering.compute_mean_silhouette, -1, lambda old,new : new>old),
+    'Fuzzy partition coefficient' : None
 }
+
+def read_n(n_clusters):
+    """
+    Method to return the interval of clusters numbers to test
+
+    Arguments :
+        n_clusters{string} -- string of number of clusters
+    """
+    interval = n_clusters.replace(' ','')
+    interval = interval.split('-')
+    for i in range(len(interval)):
+        interval[i] = int(interval[i])
+    return interval
+
 
 def run_clustering(selectedClusteringMethod, params_dict):
     """
@@ -215,9 +229,18 @@ def run_clustering(selectedClusteringMethod, params_dict):
             final_results = CLUSTERING_METHODS[selectedClusteringMethod](params_dict, clusterizable_dataset)
         else :
             # search of the best clustering result
-            for i in range(range_of_cluster[0], range_of_cluster[1]+1):
-                params_dict["n_clusters"] = i
-                result = CLUSTERING_METHODS[selectedClusteringMethod](params_dict, clusterizable_dataset)
+            if SCORING_METHODS[params_dict["score"]] is not None: 
+                method = SCORING_METHODS[params_dict["score"]]
+                final_results = None
+                best_score = method[1]
+                for i in range(range_of_cluster[0], range_of_cluster[1]+1):
+                    params_dict["n_clusters"] = i
+                    result = CLUSTERING_METHODS[selectedClusteringMethod](params_dict, clusterizable_dataset)
+                    score = method[0](X=clusterizable_dataset, predicted_labels=result["labels"])
+                    if method[2](best_score, score):
+                        best_score = score
+                        final_results = result
+                
     else:
         print('clustering method not recognised')
         final_results = ['']
@@ -265,19 +288,6 @@ def compute_sample_silhouettes(labels):
 
 # ------------------------ CLUSTERING FUNCTIONS END HERE ---------------------------------------------------------
 
-def read_n(param_dict,n_clusters):
-    """
-    Method to return the interval of clusters numbers to test
-
-    Arguments :
-        param_dict -- parameters
-        n_clusters{string} -- string of number of clusters
-    """
-    interval = n_clusters.replace(' ','')
-    interval = interval.split('-')
-    for i in range(len(interval))
-        interval[i] = int(interval[i])
-    return interval
 
 def run_calculation(selectedAlgorithm, nifti_collection, arguments):
     """
