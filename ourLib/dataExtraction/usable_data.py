@@ -10,11 +10,10 @@
 #       UsableDataColleciton instances
 #       These objects simplified all calculations on a given patient for example.
 #
-# HISTORY
+# AUTHORS
 #
-# 18 december 2017 - Initial design and coding. (@vz-chameleon, Valentina Z.)
-# 26 december 2017 - Restructuring for further complexity handling (@vz-chameleon, Valentina Z.)
-# 12 feb 2018 - Adding method to make a set from a UsableDataSet (@Graziella-Husson)
+#       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
+#       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
 import numpy as np
 from numpy import zeros
@@ -138,13 +137,13 @@ class UsableDataSet(object):
         setName = setName[1]
         setName = "Clust" + setName[:-1]
         new_set.set_name(setName)
-        found = False        
+        found = False
         colls = []
         point_dict = dict()
         template_data = load(template_mni_path)
         template_affine = template_data.affine
         template_shape = template_data.shape
-        
+
         for udcoll in self.get_usable_data_list():
             extracted_data_dictionary = udcoll.get_extracted_data_dict()
             row_cont = 0
@@ -181,13 +180,13 @@ class UsableDataSet(object):
                 if(str(key) == c.name):
                     # put nifti images into a imageCollection
                     c.add(ni_image)
-            
+
         for i in colls:
             new_name = str(i).split("0x")
             new_name = new_name[1]
             new_name = str(i.name)+"_"+ new_name[:-1]
             i.set_name(new_name)
-            new_set.add_collection(i) 
+            new_set.add_collection(i)
         return new_set
 
     def extract_points(self, label):

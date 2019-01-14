@@ -6,12 +6,11 @@
 #
 #       'editCollectionsView' contains the custom QWidget for the edition of image collections view
 #
-# HISTORY
+# AUTHORS
 #
-# 3 january 2018- Initial design and coding. (@vz-chameleon, Valentina Z.)
-# 13 january 2018 - Began the interface (@Graziella-Husson)
-# 13-15 january 2018 - finished the interface (@Graziella-Husson)
-# 16-17 january 2018 - added a vizualisation with pyqtgraph (@Graziella-Husson)
+#       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
+#       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
+
 
 from PyQt4 import QtGui
 from PyQt4.Qt import *

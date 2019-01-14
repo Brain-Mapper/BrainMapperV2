@@ -8,10 +8,10 @@
 #       It will allow us to store image data and other information as in-memory representations
 #       of the users' NIfTI files
 #
-# HISTORY
+# AUTHORS
 #
-# 28 december 2017 - Initial design and coding. (@yoshcraft, Raphael A.)
-# 8 january 2018 - Creation of the generate_from_folder class method. (@yoshcraft, Raphael A.)
+#       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
+#       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
 # Lib dependency imports
 from ourLib.niftiHandlers.imagecollection import ImageCollection
@@ -25,7 +25,11 @@ class Set(object):
     def __init__(self, name):
         """
         Constructor of the Set Class.
-        :param name: name (String) of the Set.
+
+        Arguments :
+            name{string} -- name of the Set.
+
+
         The Set contains two dictionary. The Goal of this representation is to make a folder/file like.
         subset_dict is a dictionary of Set, like list of folders.
         collection_dict is a dictionary of ImageCollection, like list of files.
@@ -39,8 +43,10 @@ class Set(object):
     def add_empty_subset(self, name):
         """
         Method to create a empty subset into the Set.
-        :param name : name (String) of the new subset.
-        control if the name doesn't exist in subset_dict.
+        Control if the name doesn't exist in subset_dict.
+
+        Arguments :
+            name{string} -- name of the new subset.
         """
         if name not in self.subset_dict.keys():
             self.subset_dict[name] = Set(name)
@@ -50,8 +56,11 @@ class Set(object):
     def add_empty_collection(self, name, set_name):
         """
         Method to create a empty image collection into the Set.
-        :param name: name of the new ImageCollection.
         control if the name doesn't exist in collection_dict.
+
+        Arguments :
+            name{string} -- name of the new ImageCollection
+            set_name{string} -- name of the set_name
         """
         if name not in self.collection_dict.keys():
             self.collection_dict[name] = ImageCollection(name, set_name)
@@ -61,8 +70,10 @@ class Set(object):
     def add_subset(self, subset):
         """
         Method to add an existing Set.
-        :param subset: objet from the Set Class.
         control if the subset name doesn't exist in subset_dict.
+
+        Arguments :
+            subset -- objet from the Set Class.
         """
         if subset.get_name not in self.subset_dict.keys():
             self.subset_dict[subset.get_name()] = subset
@@ -72,8 +83,10 @@ class Set(object):
     def add_collection(self, collection):
         """
         Method to add an existing ImageCollection.
-        :param collection: object from the ImageCollection Class.
         control if the collection name doesn't exist in collection_dict.
+
+        Arguments :
+            collection -- object from the ImageCollection Class.
         """
         if collection.get_name() not in self.collection_dict.keys():
             self.collection_dict[collection.get_name()] = collection
@@ -83,7 +96,9 @@ class Set(object):
     def batch_add_subset(self, subsets_array):
         """
         Method to add several Set at the same time using the add_subset method.
-        :param subsets_array: array of Set to add into subset_dict.
+
+        Arguments :
+            subsets_array -- array of Set to add into subset_dict.
         """
         for subset in subsets_array:
             self.add_subset(subset)
@@ -91,7 +106,9 @@ class Set(object):
     def batch_add_collection(self, collection_array):
         """
         Method to add several ImageColection at the same time using the add_collection method.
-        :param collection_array: array of ImageColletion to add into collection_dict.
+
+        Arguments :
+            collection_array -- array of ImageColletion to add into collection_dict.
         """
         for collection in collection_array:
             self.add_collection(collection)
@@ -99,21 +116,27 @@ class Set(object):
     def remove_subset(self, name):
         """
         Method to remove a subset from subset_dict.
-        :param name: name set to remove.
+
+        Arguments :
+            name{string} -- name set to remove.
         """
         del self.subset_dict[name]
 
     def remove_collection(self, name):
         """
         Method to remove a collection from collection_dict.
-        :param name: Set of the set to remove.
+
+        Arguments :
+            name{string} -- Set of the set to remove.
         """
         del self.collection_dict[name]
 
     def batch_remove_subset(self,subsets_array):
         """
         Method to remove several subset using remove subset_method.
-        :param subsets_array: array of Set to remove from subset_dict.
+
+        Arguments :
+            subsets_array -- array of Set to remove from subset_dict.
         """
         for subset in subsets_array:
             self.remove_subset(subset)
@@ -121,7 +144,9 @@ class Set(object):
     def batch_remove_collection(self,collection_array):
         """
         Method to remove several subset using remove collection_method.
-        :param collection_array: array of ImageCollection to remove from collection_dict.
+
+        Arguments :
+            collection_array -- array of ImageCollection to remove from collection_dict.
         """
         for collection in collection_array:
             self.remove_collection(collection)
@@ -129,14 +154,18 @@ class Set(object):
     def get_name(self):
         """
         Getter for the name parameter.
-        :return: name
+
+        Return :
+            name
         """
         return self.name
 
     def get_all_nifti_set(self):
         """
         Function to make a list of all the nifti image from collection-dict.
-        :return: list of all the niftiImage of the Set. Don't take the nifti image of the subset.
+
+        Return :
+            list of all the niftiImage of the Set. Don't take the nifti image of the subset.
         """
         all_collection = list()
         for collection in self.collection_dict.values():
@@ -146,7 +175,9 @@ class Set(object):
     def get_all_nifti_set_and_subset(self):
         """
         Function to make a list of all the nifti image of the Set.
-        :return: list of all the nifti image of the Set and all its subset.
+
+        Return :
+            list of all the nifti image of the Set and all its subset.
         """
         all_collection = self.get_all_nifti_set()
         for subset in self.subset_dict.values():
@@ -156,14 +187,18 @@ class Set(object):
     def number_of_subset(self):
         """
         Function to have the number of subset.
-        :return: the number of subset.
+
+        Return :
+            the number of subset.
         """
         return len(self.subset_dict.keys())
 
     def number_of_collection(self):
         """
         Function to have the number of collection.
-        :return: the number of collection.
+
+        Return :
+            the number of collection.
         """
         return len(self.collection_dict.keys())
 
@@ -172,7 +207,9 @@ class Set(object):
     def generate_from_folder(cls, set,  folder_path):
         """
         Method to build the all structure from a folder.
-        :param folder_path: folder witch contains the needed data.
+
+        Arguments :
+            folder_path{string} -- folder witch contains the needed data.
         """
         list = os.listdir(folder_path)
         for item in list:

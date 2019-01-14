@@ -6,6 +6,10 @@
 #
 #       'clustering_paramspace' contains the QTwidget that allows the user to select the parameters for the clustering
 #
+# AUTHORS
+#
+#       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
+#       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt, QSize
@@ -38,12 +42,18 @@ class ParametersBox(QtGui.QGroupBox):
         self.setLayout(self.vbox)
 
     def save_user_params(self):
+        """
+        Save user parameters
+        """
         for i in reversed(range(self.vbox.count())):
             if self.vbox.itemAt(i).widget() is not None :
                 (param_name, param_value) = self.vbox.itemAt(i).widget().get_name_value_pair()
                 self.user_params[param_name] = param_value
 
     def get_user_params(self):
+        """
+        Obtains user parameters
+        """
         self.save_user_params()
         if self.user_params is not None :
             return self.user_params
@@ -160,10 +170,10 @@ class ClusteringParameters(QtGui.QWidget):
     def update_clustering_info_and_params(self, selected_clustering_name):
         """
         Update the algorithm description and parameters based on the selected algorithm
-        :param selected_clustering_name: The selected clustering method's name
-        :return:
-        """
 
+        Arguments :
+            selected_clustering_name{string} -- The selected clustering method's name
+        """
         # Call controller to get the currently selected parameters' dictionary
         method_dict = get_selected_clustering_info()
 
@@ -213,6 +223,9 @@ class ClusteringParameters(QtGui.QWidget):
             self.container_box.addWidget(self.param_box)
 
     def export_user_params(self):
+        """
+        Parameters exported
+        """
         if self.param_box is not None:
             return self.param_box.get_user_params()
         else: return None
@@ -257,9 +270,15 @@ class ParameterAndScriptStack(QtGui.QWidget):
         self.setMaximumSize(QSize(mainwind_w / 3, mainwind_h))
 
     def update_clustering_parameters(self):
+        """
+        Update clustering parameters
+        """
         self.clust_params_widget.update_clustering_info_and_params(self.clusteringChooser.get_selected_method_name())
         self.stack.setCurrentWidget(self.clust_params_widget)
 
     def get_user_params(self) :
+        """
+        Obtain clustering parameters
+        """
         if self.stack.currentWidget() is not self.script_env_widget:
             return self.stack.currentWidget().export_user_params()

@@ -7,9 +7,10 @@
 #       open, create and save a single NIfTI file
 #       It will allow us to have a folder representation of the NIfTI files
 #
-# HISTORY
+# AUTHORS
 #
-# 12 december 2017 - Initial design and coding. (Valentina Zelaya, @vz-chameleon)
+#       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
+#       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
 
 # System imports
@@ -37,11 +38,15 @@ class NifImage(object):
     @classmethod
     def from_file(cls, one_filename):
         """
-           Create a new NifImage from file path
-           Nibabel chooses automatically to create a Spatial Image of class NIfTI1 or NIfTI2
-           :param one_filename: the path to the .nii file to store
-           :return: a NifImage instance
-           """
+        Create a new NifImage from file path
+        Nibabel chooses automatically to create a Spatial Image of class NIfTI1 or NIfTI2
+
+        Arguments :
+            one_filename -- the path to the .nii file to store
+
+        Return :
+           a NifImage instance
+        """
         return cls(one_filename, nib.load(one_filename))
 
     @classmethod
@@ -49,12 +54,15 @@ class NifImage(object):
         """
         Create a new NifImage from a data array
         Default format is NIfTI1
-        :param new_filename: the new image's filename (for future saving)
-        :param image_data_array: the new image's data
-        :param affine: the affine transformation matrix (real world -> MNI)
-        :param nifti_format: the NIfTI file format required (1 or 2, other values raise error)
 
-        :return: a NifImage instance
+        Arguments :
+            new_filename -- the new image's filename (for future saving)
+            image_data_array -- the new image's data
+            affine -- the affine transformation matrix (real world -> MNI)
+            nifti_format -- the NIfTI file format required (1 or 2, other values raise error)
+
+        Return :
+            a NifImage instance
         """
         if nifti_format == 2:
             nib_nifti_class = nib.Nifti2Image
@@ -68,12 +76,14 @@ class NifImage(object):
     @classmethod
     def like(cls, new_filename, ref_img, image_data_array, same_header=False):
         """
-        :param new_filename: the new image's filename (for future saving)
-        :param ref_img: a NifImage instance that will serve as reference
-        :param image_data_array: the new image's data
-        :param same_header: TRUE if we must use the same header as the ref_img's, FALSE if not (default)
+        Arguments :
+            new_filename -- the new image's filename (for future saving)
+            ref_img -- a NifImage instance that will serve as reference
+            image_data_array -- the new image's data
+            same_header -- TRUE if we must use the same header as the ref_img's, FALSE if not (default)
 
-        :return: a new NifImage instance
+        Return:
+            a new NifImage instance
         """
         affine = ref_img.get_affine_matrix()
 
@@ -94,7 +104,9 @@ class NifImage(object):
         Return the NIfTI images' affine
         An affine is the matrix that allows to pass from real world coordinates to
         the image coordinates (here, to MNI coordinates)
-        :return: array
+
+        Return :
+            array
         """
         return self.nib_image.affine
 
@@ -111,8 +123,12 @@ class NifImage(object):
         """
         Get the image data safely by using copy.deepcopy() so that if we modify
         the data, it won't affect the original image
-        :param finite_values: FALSE if NaN and inf values in data array must be kept,TRUE if NaN and inf are to be replaced by 0
-        :return: array
+
+        Arguments :
+            finite_values -- FALSE if NaN and inf values in data array must be kept,TRUE if NaN and inf are to be replaced by 0
+
+        Return :
+            array
         """
         #img_data = np.array(copy.deepcopy(self.nib_image.get_data()))
         img_data = np.array(copy.deepcopy(self.nib_image.get_fdata()))
@@ -128,7 +144,7 @@ class NifImage(object):
         info = ""
         try:
             info = "Location : %s\nSpatial Image : %s\n(\n shape=%s,\n affine=%s\n)" % \
-                   (self.filename,
+                   (selfparam .filename,
                     self.nib_image.__class__.__name__,
                     repr(self.nib_image.shape),
                     repr(self.nib_image.affine))

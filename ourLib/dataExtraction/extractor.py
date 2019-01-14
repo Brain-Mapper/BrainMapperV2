@@ -9,13 +9,10 @@
 #           lines = nb_interesting_voxels
 #           columns = X, Y, Z, Intensity
 #
-# HISTORY
+# AUTHORS
 #
-# 8 december 2017 - Initial design and coding. (@vz-chameleon, Valentina Z.)
-# 11 december 2017 - First attempts at masking  (@vz-chameleon, Valentina Z.)
-# 18 december 2017 - Added Maxime's functions for data extraction (@maximeCluchague via @vz-chameleon)
-# 5 january 2018 - Adding another data extraction function, depending on numpy (@vz-chameleon)
-# 12 february 2018 - Added functions to extract data using centroids
+#       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
+#       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
 # Lib dependency imports
 import numpy as np

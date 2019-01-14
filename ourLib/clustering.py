@@ -6,12 +6,11 @@
 #       The module 'clustering' contains methods for clustering on
 #       nifti image collections extracted data
 #
-# HISTORY
+# AUTHORS
 #
-# 6 january 2018 - Initial design and coding. (@vz-chameleon, Valentina Z.)
-# 16 january 2018 - Added functions for k-medoids clustering (@vz-chameleon, Valentina Z.)
-# 12 february 2018 - Finished K-Medoids and added DBSCAN (@vz-chameleon, Valentina Z.)
-# 18 february 2018 - Added silhouette and Calinski-Habaraz score (@vz-chameleon, Valentina Z.)
+#       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
+#       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
+
 
 
 from sklearn.cluster import KMeans, AgglomerativeClustering, DBSCAN

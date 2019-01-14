@@ -6,10 +6,11 @@
 #       The module 'excelExport.py' contains all the functions export the data to the CSV format.
 #
 #
-# HISTORY
+# AUTHORS
 #
-# 12 feb 2018 - Initial coding. (@yoshcraft, Raphael A.)
-#
+#       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
+#       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
+
 import sys
 import importlib
 
@@ -81,7 +82,7 @@ def simple_import(csv_file_path, template_mni_path, currentSet):
         template_affine = template_data.affine
         #template_data.set_qform(template_affine, code='mni')
         template_shape = template_data.shape
-        
+
         # part for a simple import
         if row == simple_header:
             print('Simple import')
@@ -107,14 +108,14 @@ def simple_import(csv_file_path, template_mni_path, currentSet):
             for key in point_dict.keys():
                 recreate_affine = template_affine
                 recreate_data = zeros(template_shape)
-                
+
                 for point in point_dict[key]:
                     x_y_z = mni_to_voxel(point, recreate_affine)
                     recreate_data[int(x_y_z[0]), int(x_y_z[1]), int(x_y_z[2])] = point[3]
 
                 recreate_image = Nifti1Image(recreate_data, recreate_affine)
                 ni_image = NifImage(str(key) + ".csv", recreate_image)
-                
+
                 # put nifti images into a imageCollection
                 coll.add(ni_image)
 

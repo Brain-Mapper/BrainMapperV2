@@ -1,3 +1,16 @@
+# NAME
+#
+#        UI_checkpoint
+#
+# DESCRIPTION
+#
+#       'UI_checkpoint' contains the HomePage, the Help and the UI classes
+#
+# AUTHORS
+#
+#       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
+#       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
+
 import os
 from PyQt4 import QtGui, QtCore
 from PyQt4.Qt import *
@@ -266,7 +279,6 @@ class UI(QtGui.QMainWindow):
         if (file != ""):
             test = general_workspace_import_control(folder_path)
             temp = []
-            # print test
             if test is None:
                 general_workspace_import(folder_path)
                 for key in get_workspace_set():

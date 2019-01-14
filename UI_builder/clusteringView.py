@@ -6,11 +6,10 @@
 #
 #       'clusteringView' contains the Qwidget for the clustering view
 #
-# HISTORY
+# AUTHORS
 #
-# 2 january 2018 - Initial design and coding. (@vz-chameleon, Valentina Z.)
-# 5 january 2018 - Added functions to fill table with extracted data
-# 13 fev 2018 - Add histogram view (@Graziella-Husson)
+#       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
+#       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
 import numpy as np
 import pyqtgraph as pg
@@ -164,14 +163,18 @@ class ClusteringView(QtGui.QWidget):
         self.table_displayer.fill_with_extracted_data(usable_dataset_instance)
 
     def runSelectedClust(self, selectedMethod, param_dict):
+        """
+        Method to show plots depends on which clustering has been selected
+
+        Arguments :
+            self
+            selectedMethod{string} -- clustering method selected
+            param_dict{} -- parameters
+        """
         clustering_results = run_clustering(selectedMethod, param_dict)
-        #print("runSelectedCLud -> Param dict : {}".format(param_dict.keys()));
         self.label = clustering_results["labels"]
         self.centroids = clustering_results["centers"] if "centers" in clustering_results.keys() else None
         self.table_displayer.fill_clust_labels(self.label)
-        #print("runSelectedClust param_dict.keys", param_dict.keys())
-        #print("runSelectedClust selectedMethod", selectedMethod)
-        #print("runSelectedClust clustering_results", clustering_results)
         if (selectedMethod == 'FuzzyCMeans'):
             self.belong = clustering_results["belong"]
         #self.add_hist(param_dict, self.label)
@@ -179,22 +182,25 @@ class ClusteringView(QtGui.QWidget):
 
         # Plot the differents figures for test
         clustering_plot.plot_silhouette(self.label)
-        # clustering_plot.plot_3d_clusters(self.label)
-        # clustering_plot.plot_cross_section(self.label)
+        clustering_plot.plot_3d_clusters(self.label)
+        clustering_plot.plot_cross_section(self.label)
         if (selectedMethod == 'FuzzyCMeans'):
-            print("coucou runSelectedClust")
             clustering_plot.plot_3d_fuzzy(self.label, self.belong)
         if "hac" in clustering_results.keys():
             clustering_plot.plot_dendrogram(clustering_results["hac"])
 
 
     def export(self):
+        """
+        Method to export cluster dataset
+        """
         if self.label is not None:
             (f_path, f_name) = os.path.split(str(QFileDialog.getSaveFileName(self, "Browse Directory")))
 
             ee.clustering_export(f_name, f_path, self.table_displayer.clustering_usable_dataset, self.label)
         else:
             QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")
+
 
     def save(self):
         if self.label is not None:
@@ -204,6 +210,7 @@ class ClusteringView(QtGui.QWidget):
 
         else:
             QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")
+
 
     # TODO remove param_dict
     def add_hist(self, param_dict, labels):
@@ -218,8 +225,6 @@ class ClusteringView(QtGui.QWidget):
         k = float(len(set(labels)))+1
         y, x = np.histogram(vals, bins=np.arange(k))
 
-        # print("add_hist -> x :", x)
-        # print("add_hist -> y :", y)
         colors = clustering_plot.get_color(sorted(set(labels)), True)
 
         # Using stepMode=True causes the plot to draw two lines for each sample.
@@ -230,8 +235,6 @@ class ClusteringView(QtGui.QWidget):
     def add_silhouette(self, labels):
         self.resultsGraphs.clear_graph2()
         plt = self.resultsGraphs.graph2.addPlot()
-
-        # print("add_silhouette -> Distinct elements in label : {} ".format(set(labels)))
         sample_silhouettes = compute_sample_silhouettes(labels)
 
         # Dict of the form {label:[list of silhouettes]}
@@ -265,7 +268,9 @@ class ClusteringView(QtGui.QWidget):
         self.resultsGraphs.graph2.addItem(sp1)
 
     def go_back(self):
-        # -- When the user wants to return to the main view, we reinit the cluster view
+        """
+        Method used when the user wants to return to the main view, we reinit the cluster view
+        """
         self.resultsGraphs.graph1.clear()
         self.resultsGraphs.graph2.clear()
 

@@ -6,6 +6,10 @@
 #
 #       'clustering_topbar' contains the dropdown list that allows the user to choose the clustering algorithm
 #
+# AUTHORS
+#
+#       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
+#       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
 from PyQt4 import QtGui
 from PyQt4.Qt import pyqtSignal
@@ -74,10 +78,23 @@ class ClusteringChooser(QtGui.QToolButton):
         self.setMenu(self.clustering_algo_menu)
 
     def updateLabel(self, selected_clustering, signal_to_emit):
+        """
+        Updating the clustering labels
+
+        Arguments :
+            selected_clustering{string} -- clustering method selected
+            signal_to_emit
+        """
         self.currently_selected = selected_clustering
         self.setText(selected_clustering)
         set_selected_clustering_method(selected_clustering)
         signal_to_emit.emit()
 
     def get_selected_method_name(self):
+        """
+        Get the selected clustering method
+
+        Return :
+            Name
+        """
         return self.currently_selected

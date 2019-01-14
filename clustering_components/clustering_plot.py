@@ -1,6 +1,16 @@
-"""
-Here are made all the plotting functions
-"""
+# NAME
+#
+#        clustering_plot
+#
+# DESCRIPTION
+#
+#       'clustering_plot' contains all the plotting functions
+#
+# AUTHORS
+#
+#       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
+#       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
+
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from BrainMapper import compute_sample_silhouettes, get_current_usableDataset
@@ -10,7 +20,15 @@ from nilearn import plotting
 import numpy as np
 from scipy.cluster.hierarchy import dendrogram
 
+
 def plot_silhouette(labels, colors = None):
+    """
+    Method to make the silhouette plot
+
+    Arguments :
+        labels{list} -- list of labels after clustering
+        colors -- clustering colors
+    """
     sample_silhouettes, labels = compute_sample_silhouettes(labels)
     average = np.mean(sample_silhouettes)
 
@@ -25,7 +43,6 @@ def plot_silhouette(labels, colors = None):
     graph_offset = 1  # used to indicate the end of the last graph, so bar graphs don't overlap
     number_of_clusters = len(labels_dict.keys())
     colors = get_color(sorted(labels_dict.keys()))
-
 
     plt.figure()
     plt.xlim([np.min(sample_silhouettes), 1])
@@ -50,31 +67,49 @@ def plot_silhouette(labels, colors = None):
     plt.yticks([])
     plt.show()
 
+
 def plot_3d_fuzzy(labels: list, belong):
-    #print("plot_3d_fuzzy -> labels", labels)
-    #print("plot_3d_fuzzy -> belong", belong)
+    """
+    Method to make the 3d plot used for FuzzyCMeans clustering
+
+    Arguments :
+        labels{list} -- list of labels after clustering
+        belong{list} -- list of affiliations of each point to a cluster
+    """
     points_list, colors_list = get_points_list_colors_list(labels)
-    #print("plot_3d_fuzzy -> colors", colors_list)
     colors_bis = []
     for i in range (len(colors_list)):
-        #print("plot_3d_fuzzy -> colors[i] AVANT", colors_list[i])
         colors_bis_0 = colors_list[i][0] * belong[i]
         colors_bis_1 = colors_list[i][1] * belong[i]
         colors_bis_2 = colors_list[i][2] * belong[i]
         colors_bis_3 = colors_list[i][3]
         colors_bis.append((colors_bis_0, colors_bis_1, colors_bis_2, colors_bis_3))
-        #print("plot_3d_fuzzy -> colors[i] APRES", colors_bis[i])
     view = plotting.view_markers(points_list, colors_bis, marker_size=5)
     view.open_in_browser()
 
+
 def plot_3d_clusters(labels: list, colors = None):
-    print("plot_3d_clusters")
+    """
+    Method to make the 3d plot used for FuzzyCMeans clustering
+
+    Arguments :
+        labels{list} -- list of labels after clustering
+        colors -- clustering colors
+    """
     points_list, colors_list = get_points_list_colors_list(labels)
     # TODO Tweak of mark_size ? For now 5 but we need to automatize the size choice
     view = plotting.view_markers(points_list, colors_list, marker_size=5)
     view.open_in_browser()
 
+
 def plot_cross_section(labels: list, colors = None):
+    """
+    Method to make three cross-section of the brain
+
+    Arguments :
+        labels{list} -- list of labels after clustering
+        colors -- clustering colors
+    """
     # TODO choose the coordinates of the cut
     points_list, colors_list = get_points_list_colors_list(labels)
     display = plotting.plot_anat()
@@ -82,9 +117,11 @@ def plot_cross_section(labels: list, colors = None):
         display.add_markers([point], marker_color=[color])
     plotting.show()
 
+
 def plot_dendrogram(model):
-    """ Plot a dendogram of a hierarchical agglomerative clustering
-    
+    """
+    Method to make a dendogram of a hierarchical agglomerative clustering
+
     Arguments:
         model -- result of an agglomerative clustering
     """
@@ -92,7 +129,6 @@ def plot_dendrogram(model):
     # Children of hierarchical clustering
     children = model.children_
     labels=list(model.labels_)
-    # print("plot_dendrogram --> children : ", children)
 
     # Distances between each pair of children
     # Since we don't have this information, we can use a uniform one for plotting
@@ -132,9 +168,11 @@ def plot_dendrogram(model):
     plt.title('Dendrogram')
     plt.ylabel('Distance')
     plt.show()
-    
+
+
 def get_points_list_colors_list(labels : list, in_int: bool = False) -> (list, list):
-    """ Obtains the points list and colors list from labels.
+    """
+    Obtains the points list and colors list from labels.
     It is used in the function that are based on nilearn plotting.
 
     Arguments:
@@ -154,8 +192,10 @@ def get_points_list_colors_list(labels : list, in_int: bool = False) -> (list, l
         colors_list.append(color_dict[labels[i]])
     return points_list, colors_list
 
+
 def get_color(distinct_labels: list, in_int: bool = False) -> dict:
-    """ Get a dict to homogeinize the color
+    """
+    Get a dict to homogeinize the color
 
     Arguments:
         distinct_labels {list} -- [**sorted** list of the **distinct** labels]
@@ -177,11 +217,3 @@ def get_color(distinct_labels: list, in_int: bool = False) -> dict:
         color_dict[label] = cm.magma(float(label) / float(number_of_clusters), bytes=in_int)
     print("color_dict", color_dict)
     return color_dict
-
-# if __name__ == "__main__":
-#     from sklearn.datasets import make_blobs
-#     from sklearn.cluster import KMeans
-#     X,y = make_blobs(n_samples=100, n_f
-# eatures=3, cluster_std=1.0, shuffle=True)
-#     clustering = KMeans(n_clusters= 3).fit(X)
-#     plot_silhouette(X, clustering.labels_)
