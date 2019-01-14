@@ -44,6 +44,14 @@ class EditView2(QtGui.QWidget):
 
         self.setupUi(self)
 
+    def go_back(self):
+        # -- When the user wants to return to the main view, we reinit the cluster view
+        #self.resultsGraphs.graph1.clear()
+        #self.resultsGraphs.graph2.clear()
+
+        self.showMain.emit()
+
+
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
         Form.resize(1000, 650)
@@ -191,6 +199,7 @@ class EditView2(QtGui.QWidget):
         self.horizontalLayout.addWidget(self.pushButton_9)
         self.pushButton_8 = QtGui.QPushButton(Form)
         self.pushButton_8.setObjectName(_fromUtf8("pushButton_8"))
+        self.pushButton_8.clicked.connect(self.go_back)
         self.horizontalLayout.addWidget(self.pushButton_8)
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.horizontalLayout_2.addLayout(self.verticalLayout)
