@@ -174,7 +174,10 @@ class ClusteringView(QtGui.QWidget):
         clustering_results = run_clustering(selectedMethod, param_dict)
         self.label = clustering_results["labels"]
         self.centroids = clustering_results["centers"] if "centers" in clustering_results.keys() else None
+        self.n_selected = clustering_results["n_selected"]
         self.table_displayer.fill_clust_labels(self.label)
+        self.n = clustering_results["n"]
+        self.scores = clustering_results["scores"]
         if (selectedMethod == 'FuzzyCMeans'):
             self.belong = clustering_results["belong"]
         #self.add_hist(param_dict, self.label)
@@ -284,5 +287,5 @@ class ClusteringView(QtGui.QWidget):
         if self.label is not None:
             self.results_popup.update_details(method_name, user_params, self.centroids, clustering_validation_indexes(self.label,
                                                                                                       self.centroids,
-                                                                                                      float(len(set(self.label)))))
+                                                                                                      float(len(set(self.label)))), self.n_selected, self.n, self.scores)
         self.results_popup.show()
