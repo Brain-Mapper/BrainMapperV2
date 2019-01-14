@@ -37,22 +37,18 @@ except AttributeError:
 
 class SetButton(QtGui.QWidget):
 
-   #styler = "SetButton {background-color: white; border-bottom: 1px solid black;} " \
-      # "SetButton:hover {background-color : #ccff99;}"
-
    def __init__(self, my_set, parent=None):
        # -- Will create all objects we need
        super(SetButton, self).__init__( parent=parent)
 
        self.my_set = my_set
-       self.setB = QtGui.QLabel(my_set.name)
-       self.setB.setStatusTip("Select this set and show the collections inside")
-       #self.setB.clicked.connect(self.current_set)
-       #self.setB.setStyleSheet(self.styler)
-       self.setB.setToolTip(my_set.name)
 
        hbox = QtGui.QHBoxLayout()
-       hbox.addWidget(self.setB)
+
+       self.check = QtGui.QCheckBox()
+       self.check.setText(my_set.name)
+       self.check.stateChanged.connect(self.state_changed)
+       hbox.addWidget(self.check)
 
        SSButton = QtGui.QPushButton()
        SSButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/up-arrow.png'))
@@ -68,10 +64,14 @@ class SetButton(QtGui.QWidget):
        NameButton.setFixedSize(QSize(20, 20))
        hbox.addWidget(NameButton)
 
-
-
        self.setLayout(hbox)
-       #self.setFixedSize(QSize(250, 100))
+
+   def state_changed(self):
+        if self.check.isChecked():
+            print("CHECKED!")
+        else:
+            print("UNCHECKED!")
+
 
 
 class MainView2(QtGui.QWidget):
