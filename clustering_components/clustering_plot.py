@@ -17,6 +17,7 @@ from BrainMapper import compute_sample_silhouettes, get_current_usableDataset
 import numpy as np
 import pandas as pd
 from nilearn import plotting
+from .nilearn_plot_upgraded import view_markers 
 import numpy as np
 from scipy.cluster.hierarchy import dendrogram
 
@@ -67,8 +68,7 @@ def plot_silhouette(labels, colors = None):
     plt.yticks([])
     plt.show()
 
-
-def plot_3d_fuzzy(labels: list, belong):
+def plot_3d_fuzzy(labels: list, belong, centroids: list):
     """
     Method to make the 3d plot used for FuzzyCMeans clustering
 
@@ -76,6 +76,7 @@ def plot_3d_fuzzy(labels: list, belong):
         labels{list} -- list of labels after clustering
         belong{list} -- list of affiliations of each point to a cluster
     """
+
     points_list, colors_list = get_points_list_colors_list(labels)
     colors_bis = []
     for i in range (len(colors_list)):
@@ -84,11 +85,15 @@ def plot_3d_fuzzy(labels: list, belong):
         colors_bis_2 = colors_list[i][2] * belong[i]
         colors_bis_3 = colors_list[i][3]
         colors_bis.append((colors_bis_0, colors_bis_1, colors_bis_2, colors_bis_3))
-    view = plotting.view_markers(points_list, colors_bis, marker_size=5)
+        #print("plot_3d_fuzzy -> colors[i] APRES", colors_bis[i])
+
+    color_dict = get_color(sorted(set(labels)))
+    centroids_colors = [color_dict[i] for i in sorted(set(labels))]
+
+    view = view_markers(points_list, labels=labels, colors=colors_bis, marker_size=5, centers= centroids, centers_colors=centroids_colors)
     view.open_in_browser()
 
-
-def plot_3d_clusters(labels: list, colors = None):
+def plot_3d_clusters(labels: list, centroids:list = None, marker_size=5.):
     """
     Method to make the 3d plot used for FuzzyCMeans clustering
 
@@ -96,19 +101,24 @@ def plot_3d_clusters(labels: list, colors = None):
         labels{list} -- list of labels after clustering
         colors -- clustering colors
     """
+
     points_list, colors_list = get_points_list_colors_list(labels)
-    # TODO Tweak of mark_size ? For now 5 but we need to automatize the size choice
-    view = plotting.view_markers(points_list, colors_list, marker_size=5)
+    
+    centroids_colors = None
+    if centroids is not None:
+        # To print the centers we need the list of centers and the color of each cluster
+        color_dict = get_color(sorted(set(labels)))
+        centroids_colors = [color_dict[i] for i in sorted(set(labels))]
+        
+    view = view_markers(points_list, labels=labels, colors=colors_list, marker_size=marker_size, centers = centroids, centers_colors=centroids_colors)
     view.open_in_browser()
 
-
-def plot_cross_section(labels: list, colors = None):
+def plot_cross_section(labels: list):
     """
     Method to make three cross-section of the brain
 
     Arguments :
         labels{list} -- list of labels after clustering
-        colors -- clustering colors
     """
     # TODO choose the coordinates of the cut
     points_list, colors_list = get_points_list_colors_list(labels)
