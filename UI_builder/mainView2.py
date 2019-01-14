@@ -35,6 +35,45 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
+class SetButton(QtGui.QWidget):
+
+   #styler = "SetButton {background-color: white; border-bottom: 1px solid black;} " \
+      # "SetButton:hover {background-color : #ccff99;}"
+
+   def __init__(self, my_set, parent=None):
+       # -- Will create all objects we need
+       super(SetButton, self).__init__( parent=parent)
+
+       self.my_set = my_set
+       self.setB = QtGui.QLabel(my_set.name)
+       self.setB.setStatusTip("Select this set and show the collections inside")
+       #self.setB.clicked.connect(self.current_set)
+       #self.setB.setStyleSheet(self.styler)
+       self.setB.setToolTip(my_set.name)
+
+       hbox = QtGui.QHBoxLayout()
+       hbox.addWidget(self.setB)
+
+       SSButton = QtGui.QPushButton()
+       SSButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/up-arrow.png'))
+       #SSButton.clicked.connect(self.addSubet)
+       #SSButton.setStatusTip("Add sub set")
+       SSButton.setFixedSize(QSize(20, 20))
+       hbox.addWidget(SSButton)
+
+       NameButton = QtGui.QPushButton()
+       NameButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/writing.png'))
+       #NameButton.clicked.connect(self.changeName)
+       NameButton.setStatusTip("Change Set Name")
+       NameButton.setFixedSize(QSize(20, 20))
+       hbox.addWidget(NameButton)
+
+
+
+       self.setLayout(hbox)
+       #self.setFixedSize(QSize(250, 100))
+
+
 class MainView2(QtGui.QWidget):
 
     showClust = pyqtSignal()
@@ -85,6 +124,7 @@ class MainView2(QtGui.QWidget):
         font.setWeight(50)
         self.treeWidget.headerItem().setFont(0, font)
         self.treeWidget.headerItem().setBackground(0, QtGui.QColor(0, 0, 0, 0))
+
         item_0 = QtGui.QTreeWidgetItem(self.treeWidget)
         font = QtGui.QFont()
         font.setBold(True)
@@ -98,6 +138,7 @@ class MainView2(QtGui.QWidget):
         item_0.setForeground(0, brush)
         item_0.setCheckState(0, QtCore.Qt.Unchecked)
         item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
+
         item_0 = QtGui.QTreeWidgetItem(self.treeWidget)
         font = QtGui.QFont()
         font.setBold(True)
@@ -108,6 +149,7 @@ class MainView2(QtGui.QWidget):
         item_0.setForeground(0, brush)
         item_0.setCheckState(0, QtCore.Qt.Unchecked)
         item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
+
         item_0 = QtGui.QTreeWidgetItem(self.treeWidget)
         font = QtGui.QFont()
         font.setBold(True)
@@ -118,10 +160,14 @@ class MainView2(QtGui.QWidget):
         item_0.setForeground(0, brush)
         item_0.setCheckState(0, QtCore.Qt.Unchecked)
         item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
+
+
         self.treeWidget.header().setVisible(False)
         self.treeWidget.header().setHighlightSections(False)
         self.verticalLayout_list_of_sets.addWidget(self.treeWidget)
         self.horizontalLayout.addWidget(self.widget_list_of_sets)
+
+        ################# image collections ###################################""
         self.widget_image_collections = QtGui.QWidget(Form)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
@@ -161,6 +207,12 @@ class MainView2(QtGui.QWidget):
         self.verticalLayout_image_collections_show.setMargin(0)
         self.verticalLayout_image_collections_show.setObjectName(_fromUtf8("verticalLayout_image_collections_show"))
         self.verticalLayout_image_collections.addWidget(self.widget_image_collections_show)
+
+        self.checkBox_collection = QtGui.QCheckBox(self.widget_image_collections_show)
+        self.checkBox_collection.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
+        self.checkBox_collection.setObjectName(_fromUtf8("checkBox_collection"))
+        self.verticalLayout_image_collections_show.addWidget(self.checkBox_collection)
+
         self.label_image_collections.raise_()
         self.widget_image_collections_show.raise_()
         self.checkBox.raise_()
@@ -220,6 +272,18 @@ class MainView2(QtGui.QWidget):
         self.horizontalLayout.addLayout(self.verticalLayout_selected)
         self.widget_image_collections.raise_()
         self.widget_list_of_sets.raise_()
+
+        default_name = datetime.fromtimestamp(int(round(time.time()))).strftime('--%m-%d %H-%M')
+        my_set = newSet(default_name[2:])
+        set_current_set(my_set)
+
+        item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(0))
+        item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
+        self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(0), 0, SetButton(my_set,self.treeWidget))
+
+        item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(0).child(0))
+        item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
+        self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(0).child(0), 0, SetButton(my_set,self.treeWidget))
 
 
         self.pushButton_clustering.clicked.connect(self.extract_and_cluster)
@@ -429,6 +493,7 @@ class MainView2(QtGui.QWidget):
         self.treeWidget.setSortingEnabled(__sortingEnabled)
         self.label_image_collections.setText(_translate("Form", "Image collections", None))
         self.checkBox.setText(_translate("Form", "Select all", None))
+        self.checkBox_collection.setText(_translate("Form", "collection1", None))
         self.label_selected.setText(_translate("Form", "Selected ", None))
         self.pushButton_edit.setText(_translate("Form", "Edit", None))
         self.pushButton_export.setText(_translate("Form", "Export data", None))
