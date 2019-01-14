@@ -118,23 +118,23 @@ class SetButton(QtGui.QWidget):
       self.setLayout(hbox)
 
     def state_changed(self):
-       dict=self.my_set.get_all_nifti_set()
-       if self.check.isChecked():
-           print("CHECKED!")
-           print(dict not in selected)
-           for d in dict:
-               if d not in selected:
-                   selected.append(d)
-           print(selected)
-       else:
-           for d in dict:
-               selected.remove(d)
-           print("UNCHECKED!")
-           print(selected)
-       for i in reversed(range(self.destination.count())):
-           self.destination.itemAt(i).widget().setParent(None)
-       for coll in selected:
-               self.destination.addWidget(CollButton(coll))
+        dict=self.my_set.get_all_nifti_set()
+        if self.check.isChecked():
+            print("CHECKED!")
+            print(dict not in selected)
+            for d in dict:
+                if d not in selected:
+                    selected.append(d)
+            print(selected)
+        else:
+            for d in dict:
+                selected.remove(d)
+            print("UNCHECKED!")
+            print(selected)
+        for i in reversed(range(self.destination.count())):
+            self.destination.itemAt(i).widget().setParent(None)
+        for coll in selected:
+                self.destination.addWidget(CollButton(coll))
 
     def changeName(self):
         # -- This changeName will change the name of the set selected.
