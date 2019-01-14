@@ -103,14 +103,14 @@ class SetButton(QtGui.QWidget):
 
       SSButton = QtGui.QPushButton()
       SSButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/up-arrow.png'))
-      #SSButton.clicked.connect(self.addSubet)
-      #SSButton.setStatusTip("Add sub set")
+      SSButton.clicked.connect(self.addSubet)
+      SSButton.setStatusTip("Add sub set")
       SSButton.setFixedSize(QSize(20, 20))
       hbox.addWidget(SSButton)
 
       NameButton = QtGui.QPushButton()
       NameButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/writing.png'))
-      #NameButton.clicked.connect(self.changeName)
+      NameButton.clicked.connect(self.changeName)
       NameButton.setStatusTip("Change Set Name")
       NameButton.setFixedSize(QSize(20, 20))
       hbox.addWidget(NameButton)
@@ -118,16 +118,23 @@ class SetButton(QtGui.QWidget):
       self.setLayout(hbox)
 
     def state_changed(self):
-        dict=self.my_set.get_all_nifti_set()
-        if self.check.isChecked():
-            print("CHECKED!")
-            print(selected)
-            for coll in selected:
-                self.destination.addWidget(CollButton(coll))
-        else:
-            selected.remove(dict)
-            print("UNCHECKED!")
-        print(selected)
+       dict=self.my_set.get_all_nifti_set()
+       if self.check.isChecked():
+           print("CHECKED!")
+           print(dict not in selected)
+           for d in dict:
+               if d not in selected:
+                   selected.append(d)
+           print(selected)
+       else:
+           for d in dict:
+               selected.remove(d)
+           print("UNCHECKED!")
+           print(selected)
+       for i in reversed(range(self.destination.count())):
+           self.destination.itemAt(i).widget().setParent(None)
+       for coll in selected:
+               self.destination.addWidget(CollButton(coll))
 
     def changeName(self):
         # -- This changeName will change the name of the set selected.
@@ -148,12 +155,11 @@ class SetButton(QtGui.QWidget):
                         self.my_set.getParent().add_subset(self.my_set)
                     else:
                         self.my_set.set_name(str(text))
-                    size = self.setB.size()
-                    self.setB.setText(str(text))
+                    self.check.setText(str(text))
+                    print()
                     rec = QApplication.desktop().availableGeometry()
                     mainwind_h = rec.height()
                     mainwind_w = rec.width()
-                    self.setB.setMaximumSize(size)
                     add_set(self.my_set)
                     self.parent().parent().parent().parent().parent().parent().update()
                 else:
@@ -325,7 +331,7 @@ class MainView2(QtGui.QWidget):
         self.widget_image_collections_show.setSizePolicy(sizePolicy)
         self.widget_image_collections_show.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
         self.widget_image_collections_show.setObjectName(_fromUtf8("widget_image_collections_show"))
-        self.verticalLayout_image_collections_show = QtGui.QVBoxLayout(self.widget_image_collections_show)
+        self.verticalLayout_image_collections_show = QtGui.QFormLayout(self.widget_image_collections_show)
         self.verticalLayout_image_collections_show.setMargin(0)
         self.verticalLayout_image_collections_show.setObjectName(_fromUtf8("verticalLayout_image_collections_show"))
         self.verticalLayout_image_collections.addWidget(self.widget_image_collections_show)
