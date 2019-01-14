@@ -35,44 +35,166 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
+class CollButton(QtGui.QCheckBox):
+    # -- The CollButton class is a QCheckBox that show all collection info
+
+    def __init__(self, coll, parent=None):
+        super(CollButton, self).__init__(parent=parent)
+        self.coll = coll
+        self.toggle()
+        self.stateChanged.connect(self.selectColl)
+
+        list = self.coll.get_img_list()
+
+        try:
+            dates = []
+            for l in list:
+                dates.append(creation_date(str(l)))
+            date = max(dates)
+            d = datetime.fromtimestamp(int(round(date))).strftime('%Y-%m-%d')
+        except:
+            d = datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d')
+        label = "Name : " + str(self.coll.name) + "\nNIfTI : " + str(len(list)) + "\nLast modified : " + str(d)
+        self.setText(label)
+        self.setStyleSheet(
+            "CollButton {background-color : #eee; spacing: 5px;border: 2px solid #99cccc;border-radius: 8px;padding: 1px 18px 1px 3px;max-width: 225%;}; CollButton::indicator {width: 13px; height: 13px;};")
+
+    def selectColl(self):
+        # -- This selectColl will add or delete the collection from the selected ones
+        if (self.isChecked()):
+            add_coll(self.coll)
+        else:
+            rm_coll(self.coll)
+
+    def update(self):
+        # -- This update will update the information of the collection if they have changed in the edit collection view
+        list = self.coll.get_img_list()
+        try:
+            if list:
+                dates = []
+                for l in list:
+                    dates.append(creation_date(str(l)))
+                date = max(dates)
+                d = datetime.fromtimestamp(int(round(date))).strftime('%Y-%m-%d')
+            else:
+                d = datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d')
+        except:
+            d = datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d')
+        self.setText("Name : " + str(self.coll.name) + "\nNIfTI : " + str(len(list)) + "\nLast modified : " + str(d))
+
 class SetButton(QtGui.QWidget):
 
-   def __init__(self, my_set, parent=None):
-       # -- Will create all objects we need
-       super(SetButton, self).__init__( parent=parent)
+    #styler = "SetButton {background-color: white; border-bottom: 1px solid black;} " \
+      # "SetButton:hover {background-color : #ccff99;}"
 
-       self.my_set = my_set
+    def __init__(self, my_set, destination, parent=None):
+      # -- Will create all objects we need
+      super(SetButton, self).__init__( parent=parent)
 
-       hbox = QtGui.QHBoxLayout()
+      self.my_set = my_set
+      self.destination=destination
 
-       self.check = QtGui.QCheckBox()
-       self.check.setText(my_set.name)
-       self.check.stateChanged.connect(self.state_changed)
-       hbox.addWidget(self.check)
+      hbox = QtGui.QHBoxLayout()
 
-       SSButton = QtGui.QPushButton()
-       SSButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/up-arrow.png'))
-       #SSButton.clicked.connect(self.addSubet)
-       #SSButton.setStatusTip("Add sub set")
-       SSButton.setFixedSize(QSize(20, 20))
-       hbox.addWidget(SSButton)
+      self.check = QtGui.QCheckBox()
+      self.check.setText(my_set.name)
+      self.check.stateChanged.connect(self.state_changed)
+      hbox.addWidget(self.check)
 
-       NameButton = QtGui.QPushButton()
-       NameButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/writing.png'))
-       #NameButton.clicked.connect(self.changeName)
-       NameButton.setStatusTip("Change Set Name")
-       NameButton.setFixedSize(QSize(20, 20))
-       hbox.addWidget(NameButton)
+      SSButton = QtGui.QPushButton()
+      SSButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/up-arrow.png'))
+      #SSButton.clicked.connect(self.addSubet)
+      #SSButton.setStatusTip("Add sub set")
+      SSButton.setFixedSize(QSize(20, 20))
+      hbox.addWidget(SSButton)
 
-       self.setLayout(hbox)
+      NameButton = QtGui.QPushButton()
+      NameButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/writing.png'))
+      #NameButton.clicked.connect(self.changeName)
+      NameButton.setStatusTip("Change Set Name")
+      NameButton.setFixedSize(QSize(20, 20))
+      hbox.addWidget(NameButton)
 
-   def state_changed(self):
+      self.setLayout(hbox)
+
+    def state_changed(self):
+        dict=self.my_set.get_all_nifti_set()
         if self.check.isChecked():
             print("CHECKED!")
+            print(selected)
+            for coll in selected:
+                self.destination.addWidget(CollButton(coll))
         else:
+            selected.remove(dict)
             print("UNCHECKED!")
+        print(selected)
 
+    def changeName(self):
+        # -- This changeName will change the name of the set selected.
+        text, ok = QInputDialog.getText(self, 'Rename a set',
+                                        "Enter a new name for your set currently named " + str(self.my_set.name) + ":")
+        if (str(text) != ""):
+            try:
+                new_ok = True
+                not_ok = ['^', '[', '<', '>', ':', ';', ',', '?', '"', '*', '|', '/', ']', '+', '$']
+                for i in not_ok:
+                    if i in str(text):
+                        new_ok = False
+                if new_ok and not exists_set(str(text)):
+                    rm_set(self.my_set)
+                    if (self.my_set.getParent() != None):  # if its a subset
+                        self.my_set.getParent().remove_subset(self.my_set.get_name())
+                        self.my_set.set_name(str(text))
+                        self.my_set.getParent().add_subset(self.my_set)
+                    else:
+                        self.my_set.set_name(str(text))
+                    size = self.setB.size()
+                    self.setB.setText(str(text))
+                    rec = QApplication.desktop().availableGeometry()
+                    mainwind_h = rec.height()
+                    mainwind_w = rec.width()
+                    self.setB.setMaximumSize(size)
+                    add_set(self.my_set)
+                    self.parent().parent().parent().parent().parent().parent().update()
+                else:
+                    err = QtGui.QMessageBox.critical(self, "Error",
+                                                     "The name you entered is not valid (empty, invalid caracter or already exists)")
+            except:
+                err = QtGui.QMessageBox.critical(self, "Error",
+                                                 "The name you entered is not valid (" + str(sys.exc_info()[0]) + ")")
 
+    def current_set(self):
+        # -- This current_set will vizualize the set and the collections inside when pressed
+        set_current_set(self.my_set)
+        set_current_vizu(self.vizu)
+        self.parent().parent().parent().parent().parent().parent().parent().parent().parent().updateVizu(self.vizu)
+        self.parent().parent().parent().parent().parent().parent().parent().parent().parent().upCollLabel()
+
+    def addSubet(self):
+        # -- This addSubet will add a subset to the set selected.
+        text, ok = QInputDialog.getText(self, 'Create a Sub Set',
+                                        "Enter a name for your sub set of set named " + str(self.my_set.name) + ":")
+        if (str(text) != ""):
+            try:
+                new_ok = True
+                not_ok = ['^', '[', '<', '>', ':', ';', ',', '?', '"', '*', '|', '/', ']', '+', '$']
+                for i in not_ok:
+                    if i in str(text):
+                        new_ok = False
+                if new_ok and not exists_set(str(text)):
+                    self.my_set.add_empty_subset(str(text))
+                    self.SSList.addItem(str(text))
+                    print("coucou")
+                    ssSet = self.my_set.get_sub_set(str(text))
+                    print("coucou2")
+                    self.my_set.get_sub_set(str(text)).setParent(self.my_set)
+                    add_set(ssSet)
+                    set_current_set(ssSet)
+                    self.parent().parent().parent().parent().parent().parent().parent().add(ssSet)
+                else :
+                    err = QtGui.QMessageBox.critical(self, "Error", "The name you entered is not valid (empty, invalid caracter or already exists)")
+            except :
+                err = QtGui.QMessageBox.critical(self, "Error", "The name you entered is not valid ("+str(sys.exc_info()[0])+")")
 
 class MainView2(QtGui.QWidget):
 
@@ -276,14 +398,15 @@ class MainView2(QtGui.QWidget):
         default_name = datetime.fromtimestamp(int(round(time.time()))).strftime('--%m-%d %H-%M')
         my_set = newSet(default_name[2:])
         set_current_set(my_set)
+        print(get_current_set().get_name())
 
         item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(0))
         item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
-        self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(0), 0, SetButton(my_set,self.treeWidget))
+        self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(0), 0, SetButton(my_set,self.verticalLayout_image_collections_show,self.treeWidget))
 
-        item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(0).child(0))
-        item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
-        self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(0).child(0), 0, SetButton(my_set,self.treeWidget))
+        # item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(0).child(0))
+        # item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
+        # self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(0).child(0), 0, SetButton(my_set,self.treeWidget))
 
 
         self.pushButton_clustering.clicked.connect(self.extract_and_cluster)
@@ -291,7 +414,6 @@ class MainView2(QtGui.QWidget):
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
-
 
     def show_coll(self, coll):
         # -- This show_coll will add a collection to the current vizu

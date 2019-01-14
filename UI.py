@@ -186,7 +186,6 @@ class UI(QtGui.QMainWindow):
 
         # WINDOW PARAMETERS
         rec = QApplication.desktop().availableGeometry()
-        print(rec)
         screenHeight = rec.height()
         screenWidth = rec.width()
         #self.setGeometry(300, 200, screenWidth / 1.5, screenHeight / 1.4)
@@ -249,12 +248,12 @@ class UI(QtGui.QMainWindow):
         # -- We create a collection with the list of images the user selected and give it to the main view and the edit view
         file = QFileDialog.getOpenFileNames()
         if (file != ""):
-            # try:
-            collec = do_image_collection(file)
-            homepage.mainview.show_coll(collec)
-            homepage.edit_colls.fill_coll()
-            # except:
-            #    err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. Maybe you tried to open a non-NIfTI file")
+            try:
+                collec = do_image_collection(file)
+                #homepage.mainview.show_coll(collec)
+                #homepage.edit_colls.fill_coll()
+            except:
+                err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. Maybe you tried to open a non-NIfTI file")
 
         # -- We create a collection with the list of images the user selected and give it to the main view and the edit view
 
@@ -264,8 +263,8 @@ class UI(QtGui.QMainWindow):
             # try:
             collec = simple_import(file, os.path.join(os.path.dirname(__file__),
                                                       'ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii'))
-            homepage.mainview.show_coll(collec)
-            homepage.edit_colls.fill_coll()
+            #homepage.mainview.show_coll(collec)
+            #homepage.edit_colls.fill_coll() #rapport a editview2
             # except:
             #     err = QtGui.QMessageBox.critical(self, "Error",
             #                                      "An error has occured. Maybe you tried to open a non-CSV file")
