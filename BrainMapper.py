@@ -265,6 +265,19 @@ def compute_sample_silhouettes(labels):
 
 # ------------------------ CLUSTERING FUNCTIONS END HERE ---------------------------------------------------------
 
+def read_n(param_dict,n_clusters):
+    """
+    Method to return the interval of clusters numbers to test
+
+    Arguments :
+        param_dict -- parameters
+        n_clusters{string} -- string of number of clusters
+    """
+    interval = n_clusters.replace(' ','')
+    interval = interval.split('-')
+    for i in range(len(interval))
+        interval[i] = int(interval[i])
+    return interval
 
 def run_calculation(selectedAlgorithm, nifti_collection, arguments):
     """
