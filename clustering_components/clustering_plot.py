@@ -111,6 +111,7 @@ def plot_3d_clusters(labels: list, centroids:list = None, marker_size=5.):
         centroids_colors = [color_dict[i] for i in sorted(set(labels))]
         
     view = view_markers(points_list, labels=labels, colors=colors_list, marker_size=marker_size, centers = centroids, centers_colors=centroids_colors)
+    #view.save_as_html("Affichage.html")
     view.open_in_browser()
 
 def plot_cross_section(labels: list):
