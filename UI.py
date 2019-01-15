@@ -249,9 +249,9 @@ class UI(QtGui.QMainWindow):
         file = QFileDialog.getOpenFileNames()
         if (file != ""):
             try:
-                collec = do_image_collection(file)
+                collec = do_image_collection(file) 
                 #homepage.mainview.show_coll(collec)
-                #homepage.edit_colls.fill_coll()
+                #homepage.edit_colls.fill_coll() #rapport a editview2
             except:
                 err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. Maybe you tried to open a non-NIfTI file")
 
@@ -271,21 +271,20 @@ class UI(QtGui.QMainWindow):
 
     def fromWorkspace(self):
         folder_path = str(QFileDialog.getExistingDirectory())
-        if (file != ""):
-            test = general_workspace_import_control(folder_path)
-            temp = []
-            # print test
-            if test is None:
-                general_workspace_import(folder_path)
-                for key in get_workspace_set():
-                    if not key in temp :
-                        homepage.mainview.show_set(key)
-                        temp.append(key)
-                        for i in key.get_all_subsets_subsubsets():
-                            temp.append(i)
-                rm_all_workspace_set()
-            else:
-                err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. " + test)
+        test = general_workspace_import_control(folder_path)
+        temp = []
+        # print test
+        if test is None:
+            general_workspace_import(folder_path)
+            for key in get_workspace_set():
+                if not key in temp :
+                    homepage.mainview.show_set(key)
+                    temp.append(key)
+                    for i in key.get_all_subsets_subsubsets():
+                        temp.append(i)
+            rm_all_workspace_set()
+        else:
+            err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. " + test)
 
     def workspaceSave(self):
         folder_path = str(QFileDialog.getExistingDirectory())

@@ -412,7 +412,7 @@ class MainView2(QtGui.QWidget):
         self.verticalLayout_selected_view.addWidget(self.label_selected)
         self.widget_selected_view = QtGui.QWidget(self.widget_selected)
 
-        self.verticalLayout_widget_selected_view = QtGui.QVBoxLayout(self.widget_selected_view)
+        self.verticalLayout_widget_selected_view = QtGui.QFormLayout(self.widget_selected_view)
         self.verticalLayout_widget_selected_view.setMargin(0)
         self.verticalLayout_widget_selected_view.setObjectName(_fromUtf8("verticalLayout_widget_selected_view"))
         self.verticalLayout_selected_view.addWidget(self.widget_selected_view)
@@ -449,7 +449,7 @@ class MainView2(QtGui.QWidget):
 
         default_name = datetime.fromtimestamp(int(round(time.time()))).strftime('--%m-%d %H-%M')
 
-        my_set = newSet(default_name[2:])
+        my_set = newSet(default_name[2:],0)
         #set_current_set(my_set)
         print(get_current_set().get_name())
 
