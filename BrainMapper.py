@@ -24,6 +24,8 @@ from ourLib import calculations as calcul
 from ourLib.Import import excelImport as imp
 from ourLib.Import import workspaceImport as ws
 
+from sys import maxsize as MAX
+
 import os
 import platform
 import gc
@@ -188,11 +190,16 @@ CLUSTERING_METHODS = {
     'FuzzyCMeans': clustering.perform_FuzzyCMeans,
 }
 
+# Scoring methods dict [ name of indic : 
+#       (function to calculate the indice ,
+#       worst score possible,
+#       function to determine if a score is better thant the other one
+#   )]
 SCORING_METHODS = {
-    'Davies-Bouldin' : (clustering.compute_db, 1000, lambda old,new : new<old),
+    'Davies-Bouldin' : (clustering.compute_db, MAX, lambda old,new : new<old),
     'Calinski-Harabasz' : (clustering.compute_calinski_habaraz, 0, lambda old,new : new>old),
     'Mean silhouette' : (clustering.compute_mean_silhouette, -1, lambda old,new : new>old),
-    'Fuzzy partition coefficient' : None
+    'Fuzzy partition coefficient' : None,
 }
 
 def read_n(n_clusters):
@@ -229,12 +236,13 @@ def run_clustering(selectedClusteringMethod, params_dict):
             final_results = CLUSTERING_METHODS[selectedClusteringMethod](params_dict, clusterizable_dataset)
         else :
             # search of the best clustering result
+            final_results = None
+            n_results = []
+            scores_results = []
+            
             if SCORING_METHODS[params_dict["score"]] is not None:
                 method = SCORING_METHODS[params_dict["score"]]
-                final_results = None
                 best_score = method[1]
-                n_results = []
-                scores_results = []
                 for i in range(range_of_cluster[0], range_of_cluster[1]+1):
                     params_dict["n_clusters"] = i
                     result = CLUSTERING_METHODS[selectedClusteringMethod](params_dict, clusterizable_dataset)
@@ -242,6 +250,19 @@ def run_clustering(selectedClusteringMethod, params_dict):
                     n_results.append(i)
                     scores_results.append(score)
                     if method[2](best_score, score):
+                        best_score = score
+                        final_results = result
+                        final_results["n_selected"] = i
+            else:
+                # Fuzzy partition coefficient
+                for i in range(range_of_cluster[0], range_of_cluster[1]+1):
+                    best_score = 0
+                    params_dict["n_clusters"] = i
+                    result = CLUSTERING_METHODS[selectedClusteringMethod](params_dict, clusterizable_dataset)
+                    score = result["fpc"]
+                    n_results.append(i)
+                    scores_results.append(score)
+                    if score > best_score :
                         best_score = score
                         final_results = result
                         final_results["n_selected"] = i
