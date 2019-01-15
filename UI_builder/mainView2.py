@@ -115,6 +115,8 @@ class SetButton(QtGui.QWidget):
       self.selected_zone=selected_zone
       self.treeWidget = parent
 
+      print(self.my_set.name)
+
 
       hbox = QtGui.QHBoxLayout()
 
@@ -130,6 +132,13 @@ class SetButton(QtGui.QWidget):
       SSButton.setFixedSize(QSize(20, 20))
       hbox.addWidget(SSButton)
 
+      SupprButton = QtGui.QPushButton()
+      SupprButton.setText("-")
+      SupprButton.clicked.connect(self.deleteSet)
+      SupprButton.setStatusTip("Delete this set or subset")
+      SupprButton.setFixedSize(QSize(20, 20))
+      hbox.addWidget(SupprButton)
+
       NameButton = QtGui.QPushButton()
       NameButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/writing.png'))
       NameButton.clicked.connect(self.changeName)
@@ -137,12 +146,7 @@ class SetButton(QtGui.QWidget):
       NameButton.setFixedSize(QSize(20, 20))
       hbox.addWidget(NameButton)
 
-      SupprButton = QtGui.QPushButton()
-      SupprButton.setText("-")
-      SupprButton.clicked.connect(self.deleteSet)
-      SupprButton.setStatusTip("Delete this set or subset")
-      SupprButton.setFixedSize(QSize(20, 20))
-      hbox.addWidget(SupprButton)
+
 
       self.setLayout(hbox)
 
@@ -250,27 +254,31 @@ class SetButton(QtGui.QWidget):
                 err = QtGui.QMessageBox.critical(self, "Error", "The name you entered is not valid ("+str(sys.exc_info()[0])+")")
 
     def deleteSet(self):
-        position = self.my_set.getPosition()
-        p = self.treeWidget.topLevelItem(position[0])
-        position.pop(0)
-        for i in range(len(position)-1):
-            p = p.child(position[i])
-        p.removeChild(p.child(position[-1]))
+        choice = QtGui.QMessageBox.question(self, 'Delete', "Are you sure to delete this set and all its sub-sets ?",QtGui.QMessageBox.Yes |QtGui.QMessageBox.No)
+        if choice == QtGui.QMessageBox.Yes:
+            position = self.my_set.getPosition()
+            p = self.treeWidget.topLevelItem(position[0])
+            position.pop(0)
+            for i in range(len(position)-1):
+                p = p.child(position[i])
+            p.removeChild(p.child(position[-1]))
 
-        print(selected)
-        for d in self.my_set.get_all_nifti_set_and_subset():
-            selected.remove(d)
-        print(selected)
-        for i in reversed(range(self.image_zone.count())):
-            self.image_zone.itemAt(i).widget().setParent(None)
-        for coll in selected:
-                self.image_zone.addWidget(CollButton(coll,self.selected_zone))
+            print(selected)
+            for d in self.my_set.get_all_nifti_set_and_subset():
+                selected.remove(d)
+            print(selected)
+            for i in reversed(range(self.image_zone.count())):
+                self.image_zone.itemAt(i).widget().setParent(None)
+            for coll in selected:
+                    self.image_zone.addWidget(CollButton(coll,self.selected_zone))
 
-        if self.my_set.getParent()!=None:
-            self.my_set.getParent().remove_subset(self.my_set.name)
-            for set in self.my_set.getParent().getAllSubSets():
-                if set!=self and set.position>self.my_set.position:
-                    set.position-=1
+            if self.my_set.getParent()!=None:
+                self.my_set.getParent().remove_subset(self.my_set.name)
+                for set in self.my_set.getParent().getAllSubSets():
+                    if set!=self and set.position>self.my_set.position:
+                        set.position-=1
+            else:
+                globalSets.remove(self.my_set)
 
 
 
@@ -326,18 +334,26 @@ class MainView2(QtGui.QWidget):
         self.treeWidget.headerItem().setBackground(0, QtGui.QColor(0, 0, 0, 0))
 
         item_0 = QtGui.QTreeWidgetItem(self.treeWidget)
+        item = QWidget()
+        itemLayout = QtGui.QHBoxLayout(item)
+        itemLayout.setContentsMargins(3, 9, 9, 3)
+        check = QtGui.QCheckBox()
+        check.setText("Imported")
         font = QtGui.QFont()
         font.setBold(True)
         font.setWeight(75)
-        item_0.setFont(0, font)
-        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
-        brush.setStyle(QtCore.Qt.NoBrush)
-        item_0.setBackground(0, brush)
-        brush = QtGui.QBrush(QtGui.QColor(82, 99, 141))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        item_0.setForeground(0, brush)
-        item_0.setCheckState(0, QtCore.Qt.Unchecked)
-        item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
+        check.setFont(font)
+        check.setStyleSheet("color: rgb(82, 99, 141)")
+        #check.stateChanged.connect(self.state_changed)
+        itemLayout.addWidget(check)
+        addButton = QtGui.QPushButton()
+        addButton.setText("+")
+        addButton.clicked.connect(self.createSet)
+        addButton.setStatusTip("Add sub set")
+        addButton.setFixedSize(QSize(20, 20))
+        itemLayout.addWidget(addButton)
+        self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0), 0, item)
+
 
         item_0 = QtGui.QTreeWidgetItem(self.treeWidget)
         font = QtGui.QFont()
@@ -489,6 +505,7 @@ class MainView2(QtGui.QWidget):
         item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(0))
         item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
         self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(0), 0, SetButton(my_set,self.verticalLayout_image_collections_show,self.verticalLayout_widget_selected_view,self.treeWidget))
+        globalSets.append(my_set)
 
 
         # item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(0).child(0))
@@ -501,6 +518,32 @@ class MainView2(QtGui.QWidget):
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
+
+
+    def createSet(self):
+        text, ok = QInputDialog.getText(self, 'Create a set',
+                                        "Enter a new name for your new set :" )
+        #default_name = datetime.fromtimestamp(int(round(time.time()))).strftime('--%m-%d %H-%M-%S')
+        if ok :
+            new_ok = True
+            not_ok = ['^', '[', '<', '>', ':', ';', ',', '?', '"', '*', '|', '/', ']', '+', '$']
+            for i in not_ok:
+                if i in str(text):
+                    new_ok = False
+            if new_ok and not exists_set(str(text)):
+                my_set = newSet(text,len(globalSets))
+                print(my_set.name)
+
+                item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(0))
+                item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
+                self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(len(globalSets)), 0, SetButton(my_set,self.verticalLayout_image_collections_show,self.verticalLayout_widget_selected_view,self.treeWidget))
+
+                globalSets.append(my_set)
+                print(len(globalSets))
+            else :
+                err = QtGui.QMessageBox.critical(self, "Error",
+                                                     "The name you entered is not valid (empty, invalid caracter or already exists)")
+
 
 
 

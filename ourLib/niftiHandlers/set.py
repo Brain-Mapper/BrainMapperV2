@@ -43,7 +43,6 @@ class Set(object):
         :param name : name (String) of the new subset.
         control if the name doesn't exist in subset_dict.
         """
-        print("fonction")
         if name not in self.subset_dict.keys():
             p = self.number_of_subset()
             self.subset_dict[name] = Set(name,p)
