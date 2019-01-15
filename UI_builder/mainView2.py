@@ -144,8 +144,76 @@ class SetButton(QtGui.QWidget):
       SupprButton.setFixedSize(QSize(20, 20))
       hbox.addWidget(SupprButton)
 
+      ImportButton = QtGui.QPushButton()
+      ImportButton.setText("Import")
+      ImportButton.clicked.connect(self.importdata)
+      ImportButton.setStatusTip("Import Data inside this set")
+      ImportButton.setFixedSize(QSize(50, 20))
+      hbox.addWidget(ImportButton)
+
       self.setLayout(hbox)
 
+    def fromNiFile(self):
+        # -- We create a collection with the list of images the user selected and give it to the main view and the edit view
+        print("coucou3")
+        file = QFileDialog.getOpenFileNames()
+        if (file != ""):
+            try:
+                collec = do_image_collection(file) 
+                #homepage.mainview.show_coll(collec)
+                #homepage.edit_colls.fill_coll() #rapport a editview2
+            except:
+                err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. Maybe you tried to open a non-NIfTI file")
+
+        # -- We create a collection with the list of images the user selected and give it to the main view and the edit view
+
+    def fromExcel(self):
+        file = QFileDialog.getOpenFileName()
+        if (file != ""):
+            # try:
+            collec = simple_import(file, os.path.join(os.path.dirname(__file__),
+                                                      'ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii'))
+            #homepage.mainview.show_coll(collec)
+            #homepage.edit_colls.fill_coll() #rapport a editview2
+            # except:
+            #     err = QtGui.QMessageBox.critical(self, "Error",
+            #                                      "An error has occured. Maybe you tried to open a non-CSV file")
+
+    def importdata(self):
+        
+        import_choice = QtGui.QMessageBox()
+        import_choice.setWindowTitle('Import collections')
+
+        nifti_opt = QRadioButton("Import from Nifti")
+        excel_opt = QRadioButton("Import from Excel")
+        nifti_opt.setChecked(True)
+
+        l1 = import_choice.layout()
+        l1.setContentsMargins(20, 0, 0, 20)
+        # l1.addWidget(QLabel("You have selected (" + str(len(
+        #     get_selected())) + ") image collections. \nThere is a total of (" + str(get_selected_images_number()) +
+        #                     ") NIfTI images to be treated. \nPlease select the way "
+        #                     "you would like to export these files : "),
+        #              l1.rowCount() - 3, 0, 1, l1.columnCount() - 2, Qt.AlignCenter)
+        rb_box = QtGui.QGroupBox()
+        vbox = QtGui.QVBoxLayout()
+        vbox.addWidget(nifti_opt)
+        vbox.addWidget(excel_opt)
+
+        rb_box.setLayout(vbox)
+        l1.addWidget(rb_box, l1.rowCount() - 2, 0, Qt.AlignCenter)
+
+        import_choice.setStandardButtons(QMessageBox.Cancel | QMessageBox.Apply)
+
+        ret = import_choice.exec_()
+
+        if ret == QtGui.QMessageBox.Apply:
+            if nifti_opt.isChecked():
+                print("coucou")
+                self.fromNiFile()
+
+            elif excel_opt.isChecked():
+                self.fromExcel()  
 
     def state_changed(self):
         print(selected)
