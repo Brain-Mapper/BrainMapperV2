@@ -43,6 +43,8 @@ calculsets = []  # List of sets created as a result for calculation, permit to r
 currentSet = None  # The current set shown in main view
 currentVizu = None  # The current collections shown in main view
 
+collshow=[]
+
 # Dictionary of available clustering methods
 app_clustering_available = {}
 with open('ressources/clustering_data/clustering_algorithms_available.json', 'r') as fc:
@@ -91,17 +93,18 @@ def do_image_collection(files):
 
 
 def add_coll(coll):
+    pass
     """
     Add a collection to the selected collection list [global variable 'selected']
     :param coll: ImageCollection instance
     :return: Nothing
     """
-    found = False
-    for i in selected:
-        if i.name == coll.name:
-            found = True
-    if not found:
-        selected.append(coll)
+    # found = False
+    # for i in selected:
+    #     if i.name == coll.name:
+    #         found = True
+    # if not found:
+    #     selected.append(coll)
 
 
 def rm_coll(coll):
