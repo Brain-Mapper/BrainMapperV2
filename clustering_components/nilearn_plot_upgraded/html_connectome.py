@@ -75,6 +75,16 @@ def _add_centers(connectome, centers_coords, centers_colors):
     connectome["centers_colors"] = to_color_strings(centers_colors)
     connectome["centers_symbols"] = [SYMBOLS[i%8] for i in range(len(centers_coords))]
 
+def _add_noise(connectome, noise_coords, noise_colors):
+    coords = np.asarray(centers_coords, dtype="<f4")
+    x, y, z = coords.T
+    for coord, cname in [(x, "x"), (y, "y"), (z, "z")]:
+        connectome["_noise_con_{}".format(cname)] = encode(
+            np.asarray(coord, dtype='<f4')
+        )
+    connectome["noise_colors"] = to_color_strings(noise_colors)
+    connectome["noise_symbol"] = SYMBOLS[0]
+
 def _make_connectome_html(connectome_info, embed_js=True):
     plot_info = {"connectome": connectome_info}
     mesh = datasets.fetch_surf_fsaverage()
@@ -190,13 +200,42 @@ def view_markers(coords, colors, labels, marker_size=5.,  centers=None, centers_
         surface.
 
     """
+    
+    noise_coords = None
+    noise_colors = None
+    
     if colors is None:
         colors = ['black' for i in range(len(coords))]
+    
+    if -1 in labels :
+        points_coords = []
+        points_colors = []
+        noise_coords = []
+        noise_colors = []
+        for label,coord,color in zip(labels, coords, colors):
+            if label == -1:
+                noise_coords.append(coord)
+                noise_colors.append(color)
+            else:
+                points_coords.append(coord)
+                noise_colors.append(color) 
+        coords = points_coords
+        colors = points_colors
+    
     connectome_info = _get_markers(coords, colors)
     connectome_info["symbol"] = [SYMBOLS[i%8] for i in labels]
 
     if centers is not None:
         _add_centers(connectome_info, centers, centers_colors)
+
+    if noise_coords is not None:
+        _add_noise(connectome, noise_coords, noise_colors)
+
     connectome_info["marker_size"] = marker_size
     connectome_info["center_size"] = 2*marker_size
+    connectome_info["noise_size"] = int(0.8*marker_size)
+
     return _make_connectome_html(connectome_info)
+
+
+    

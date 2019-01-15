@@ -70,7 +70,7 @@
                 z: info["con_z"],
                 opacity: 1,
                 marker: {
-                    symbol: "octagon", //info["symbol"],
+                    symbol: info["symbol"], //info["symbol"],
                     size: info["marker_size"],
                     color: info["marker_color"],
                 }
@@ -97,7 +97,27 @@
                     color: info["centers_colors"],
                 }
             }]);
-
+            // Add markers for the noises
+            for (let attribute of ["noise_con_x", "noise_con_y","noise_con_z"]){
+                if (!(attribute in info)){
+                    info[attribute] = Array.from(decodeBase64(
+                        info["_" + attribute], "float32"
+                    ));
+                }
+            }
+            Plotly.plot('connectome-plot', [{
+                type: 'scatter3d',
+                mode: 'markers',
+                name: 'noise',
+                x: info["noise_con_x"],
+                y: info["noise_con_y"],
+                z: info["noise_con_z"],
+                opacity: 0.5,
+                marker: {
+                    size: info["noise_size"],//info["marker_size"],
+                    color: info["noise_colors"],
+                }
+            }]);
         }
     </script>
     <script>
