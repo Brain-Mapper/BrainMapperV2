@@ -113,6 +113,7 @@ class SetButton(QtGui.QWidget):
       self.my_set = my_set
       self.image_zone=image_zone
       self.selected_zone=selected_zone
+      self.treeWidget = parent
 
 
       hbox = QtGui.QHBoxLayout()
@@ -214,15 +215,27 @@ class SetButton(QtGui.QWidget):
                     if i in str(text):
                         new_ok = False
                 if new_ok and not exists_set(str(text)):
-                    self.my_set.add_empty_subset(str(text))
-                    self.SSList.addItem(str(text))
-                    print("coucou")
-                    ssSet = self.my_set.get_sub_set(str(text))
-                    print("coucou2")
+                    print("test")
+                    ss = self.my_set.add_empty_subset(str(text))
+                    print(ss.name)
+                    position = ss.getPosition()
+                    print(position)
+                    p = self.treeWidget.topLevelItem(position[0])
+                    position.pop(0)
+                    for i in range(len(position)-1):
+                        p = p.child(position[i])
+                    item_0 = QtGui.QTreeWidgetItem(p)
+                    item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
+                    print(self.my_set.number_of_subset()-1)
+                    self.treeWidget.setItemWidget(p.child(position[-1]), 0, SetButton(ss,self.destination,self.treeWidget))
+
+                    #self.SSList.addItem(str(text))
+                    #ssSet = self.my_set.get_sub_set(str(text))
                     self.my_set.get_sub_set(str(text)).setParent(self.my_set)
-                    add_set(ssSet)
-                    set_current_set(ssSet)
-                    self.parent().parent().parent().parent().parent().parent().parent().add(ssSet)
+                    add_set(ss)
+                    set_current_set(ss)
+                    #self.parent().parent().parent().parent().parent().parent().parent().add(ss)
+                    print("test4")
                 else :
                     err = QtGui.QMessageBox.critical(self, "Error", "The name you entered is not valid (empty, invalid caracter or already exists)")
             except :
@@ -357,7 +370,7 @@ class MainView2(QtGui.QWidget):
         self.widget_image_collections_show.setSizePolicy(sizePolicy)
         self.widget_image_collections_show.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
         self.widget_image_collections_show.setObjectName(_fromUtf8("widget_image_collections_show"))
-        self.verticalLayout_image_collections_show = QtGui.QVBoxLayout(self.widget_image_collections_show)
+        self.verticalLayout_image_collections_show = QtGui.QFormLayout(self.widget_image_collections_show)
         self.verticalLayout_image_collections_show.setMargin(0)
         self.verticalLayout_image_collections_show.setObjectName(_fromUtf8("verticalLayout_image_collections_show"))
         self.verticalLayout_image_collections.addWidget(self.widget_image_collections_show)
@@ -444,6 +457,7 @@ class MainView2(QtGui.QWidget):
         item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
         self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(0), 0, SetButton(my_set,self.verticalLayout_image_collections_show,self.verticalLayout_widget_selected_view,self.treeWidget))
 
+
         # item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(0).child(0))
         # item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
         # self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(0).child(0), 0, SetButton(my_set,self.treeWidget))
@@ -454,6 +468,8 @@ class MainView2(QtGui.QWidget):
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
+
+
 
     def show_coll(self, coll):
         # -- This show_coll will add a collection to the current vizu

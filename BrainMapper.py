@@ -412,14 +412,14 @@ def exists_set(name):
     return False
 
 
-def newSet(name):
+def newSet(name,position):
     """
     Creates a new set a the name "name" and add it into the set list. Also change the current set with the new one
     :param name: The new set's name
     :return: Set instance
     """
     global currentSet
-    new_set = Set(name)
+    new_set = Set(name,position)
     sets.append(new_set)
     currentSet = new_set
     return new_set
