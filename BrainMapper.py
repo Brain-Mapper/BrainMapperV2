@@ -234,6 +234,9 @@ def run_clustering(selectedClusteringMethod, params_dict):
         if len(range_of_cluster) == 1:
             # normal use
             final_results = CLUSTERING_METHODS[selectedClusteringMethod](params_dict, clusterizable_dataset)
+            final_results["n_selected"] = None
+            final_results["scores"] = None
+            final_results["n"] = int(params_dict["n_clusters"])
         else :
             # search of the best clustering result
             final_results = None
