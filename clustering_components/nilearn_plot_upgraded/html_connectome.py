@@ -76,7 +76,7 @@ def _add_centers(connectome, centers_coords, centers_colors):
     connectome["centers_symbols"] = [SYMBOLS[i%8] for i in range(len(centers_coords))]
 
 def _add_noise(connectome, noise_coords, noise_colors):
-    coords = np.asarray(centers_coords, dtype="<f4")
+    coords = np.asarray(noise_coords, dtype="<f4")
     x, y, z = coords.T
     for coord, cname in [(x, "x"), (y, "y"), (z, "z")]:
         connectome["_noise_con_{}".format(cname)] = encode(
@@ -208,8 +208,11 @@ def view_markers(coords, colors, labels, marker_size=5.,  centers=None, centers_
         colors = ['black' for i in range(len(coords))]
     
     if -1 in labels :
+        # If we have the result of DBSCAN
+        # We need to filter the noise
         points_coords = []
         points_colors = []
+        points_labels = []
         noise_coords = []
         noise_colors = []
         for label,coord,color in zip(labels, coords, colors):
@@ -218,9 +221,11 @@ def view_markers(coords, colors, labels, marker_size=5.,  centers=None, centers_
                 noise_colors.append(color)
             else:
                 points_coords.append(coord)
-                noise_colors.append(color) 
+                points_colors.append(color) 
+                points_labels.append(label)
         coords = points_coords
         colors = points_colors
+        labels = points_labels
     
     connectome_info = _get_markers(coords, colors)
     connectome_info["symbol"] = [SYMBOLS[i%8] for i in labels]
@@ -229,7 +234,7 @@ def view_markers(coords, colors, labels, marker_size=5.,  centers=None, centers_
         _add_centers(connectome_info, centers, centers_colors)
 
     if noise_coords is not None:
-        _add_noise(connectome, noise_coords, noise_colors)
+        _add_noise(connectome_info, noise_coords, noise_colors)
 
     connectome_info["marker_size"] = marker_size
     connectome_info["center_size"] = 2*marker_size

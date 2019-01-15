@@ -230,13 +230,16 @@ def run_clustering(selectedClusteringMethod, params_dict):
     clusterizable_dataset = currentUsableDataset.export_as_clusterizable()
 
     if selectedClusteringMethod in CLUSTERING_METHODS.keys():
-        range_of_cluster = read_n(params_dict["n_clusters"])
-        if len(range_of_cluster) == 1:
+        bool_not_range = True # True if there isn't a 
+        if selectedClusteringMethod != "DBSCAN":
+            range_of_cluster = read_n(params_dict["n_clusters"])
+            bool_not_range = len(range_of_cluster) == 1 
+        if bool_not_range:
             # normal use
             final_results = CLUSTERING_METHODS[selectedClusteringMethod](params_dict, clusterizable_dataset)
             final_results["n_selected"] = None
             final_results["scores"] = None
-            final_results["n"] = int(params_dict["n_clusters"])
+            final_results["n"] = int(params_dict["n_clusters"]) if selectedClusteringMethod != "DBSCAN" else len(set(clustering.filter(clusterizable_dataset, final_results["labels"])[1]))
         else :
             # search of the best clustering result
             final_results = None
