@@ -17,7 +17,7 @@ from BrainMapper import compute_sample_silhouettes, get_current_usableDataset
 import numpy as np
 import pandas as pd
 from nilearn import plotting
-from .nilearn_plot_upgraded import view_markers 
+from .nilearn_plot_upgraded import view_markers
 import numpy as np
 from scipy.cluster.hierarchy import dendrogram
 
@@ -103,13 +103,13 @@ def plot_3d_clusters(labels: list, centroids:list = None, marker_size=5.):
     """
 
     points_list, colors_list = get_points_list_colors_list(labels)
-    
+
     centroids_colors = None
     if centroids is not None:
         # To print the centers we need the list of centers and the color of each cluster
         color_dict = get_color(sorted(set(labels)))
         centroids_colors = [color_dict[i] for i in sorted(set(labels))]
-        
+
     view = view_markers(points_list, labels=labels, colors=colors_list, marker_size=marker_size, centers = centroids, centers_colors=centroids_colors)
     view.open_in_browser()
 
@@ -225,5 +225,4 @@ def get_color(distinct_labels: list, in_int: bool = False) -> dict:
         distinct_labels.remove(-1)
     for label in distinct_labels:
         color_dict[label] = cm.magma(float(label) / float(number_of_clusters), bytes=in_int)
-    print("color_dict", color_dict)
     return color_dict
