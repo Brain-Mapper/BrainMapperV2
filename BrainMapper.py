@@ -221,7 +221,7 @@ def run_clustering(selectedClusteringMethod, params_dict):
         a list of clustering labels (to which cluster does one individual belong to)
     """
     clusterizable_dataset = currentUsableDataset.export_as_clusterizable()
-    
+
     if selectedClusteringMethod in CLUSTERING_METHODS.keys():
         range_of_cluster = read_n(params_dict["n_clusters"])
         if len(range_of_cluster) == 1:
@@ -229,18 +229,25 @@ def run_clustering(selectedClusteringMethod, params_dict):
             final_results = CLUSTERING_METHODS[selectedClusteringMethod](params_dict, clusterizable_dataset)
         else :
             # search of the best clustering result
-            if SCORING_METHODS[params_dict["score"]] is not None: 
+            if SCORING_METHODS[params_dict["score"]] is not None:
                 method = SCORING_METHODS[params_dict["score"]]
                 final_results = None
                 best_score = method[1]
+                n_results = []
+                scores_results = []
                 for i in range(range_of_cluster[0], range_of_cluster[1]+1):
                     params_dict["n_clusters"] = i
                     result = CLUSTERING_METHODS[selectedClusteringMethod](params_dict, clusterizable_dataset)
                     score = method[0](X=clusterizable_dataset, predicted_labels=result["labels"])
+                    n_results.append(i)
+                    scores_results.append(score)
                     if method[2](best_score, score):
                         best_score = score
                         final_results = result
-                
+                        final_results["n_selected"] = i
+
+            final_results["n"] = n_results
+            final_results["scores"] = scores_results
     else:
         print('clustering method not recognised')
         final_results = ['']

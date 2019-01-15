@@ -207,14 +207,20 @@ class ClusteringResultsPopUp(QtGui.QWidget):
 
         self.setLayout(vbox)
 
-    def update_details(self, clustering_method, user_values, centroids, validation_values):
+    def update_details(self, clustering_method, user_values, centroids, validation_values, n_selected, n, scores):
         self.info_panel.setText("")
 
         self.info_panel.insertPlainText(clustering_method+"\n-----------------------------------------------------------------------------\n")
 
         for param_name in user_values.keys():
             self.info_panel.insertPlainText(param_name+"\t\t\t "+user_values[param_name]+"\n")
-
+        self.info_panel.insertPlainText("n_selected"+"\t\t"+str(n_selected)+"\n")
+        self.info_panel.insertPlainText("-----------------------------------------------------------------------------\n\n")
+        self.info_panel.insertPlainText(
+            "Different scores for each value of clusters number\n-----------------------------------------------------------------------------\n")
+        self.info_panel.insertPlainText("n \t\t scores \n\n")
+        for i in range(len(n)):
+            self.info_panel.insertPlainText(str(n[i]) + "\t\t" + str(scores[i])+"\n\n")
         self.info_panel.insertPlainText("-----------------------------------------------------------------------------\n\n")
         self.info_panel.insertPlainText(
             "Cluster centroids\n-----------------------------------------------------------------------------\n")
