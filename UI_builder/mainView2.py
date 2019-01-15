@@ -35,13 +35,24 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
+class SelectedButton(QtGui.QPushButton):
+
+    def __init__(self, coll, num, date, parent=None):
+        super(SelectedButton, self).__init__(parent=parent)
+        self.coll = coll
+
+        self.setText(  "Name : " + str(self.coll.name) + "\nNIfTI : " + num + "\nLast modified : " + date )
+
+
 class CollButton(QtGui.QCheckBox):
     # -- The CollButton class is a QCheckBox that show all collection info
 
-    def __init__(self, coll, parent=None):
+    def __init__(self, coll, selected_zone, parent=None):
         super(CollButton, self).__init__(parent=parent)
         self.coll = coll
+        self.selected_zone=selected_zone
         self.toggle()
+        self.setChecked(False)
         self.stateChanged.connect(self.selectColl)
 
         list = self.coll.get_img_list()
@@ -61,11 +72,19 @@ class CollButton(QtGui.QCheckBox):
 
     def selectColl(self):
         # -- This selectColl will add or delete the collection from the selected ones
+        #self.selected_zone.addWidget(SelectedButton(self.coll,str(len(self.coll.get_img_list())),str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
         if (self.isChecked()):
-            add_coll(self.coll)
+            if self.coll not in collshow:
+                collshow.append(self.coll)
         else:
-            rm_coll(self.coll)
-
+            collshow.remove(self.coll)
+        print("collshow : ")
+        print(collshow)
+        for i in reversed(range(self.selected_zone.count())): 
+            self.selected_zone.itemAt(i).widget().setParent(None)
+        for coll in collshow:
+                self.selected_zone.addWidget(SelectedButton(coll,str(len(self.coll.get_img_list())),str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
+        
     def update(self):
         # -- This update will update the information of the collection if they have changed in the edit collection view
         list = self.coll.get_img_list()
@@ -87,12 +106,14 @@ class SetButton(QtGui.QWidget):
     #styler = "SetButton {background-color: white; border-bottom: 1px solid black;} " \
       # "SetButton:hover {background-color : #ccff99;}"
 
-    def __init__(self, my_set, destination, parent=None):
+    def __init__(self, my_set, image_zone, selected_zone, parent=None):
       # -- Will create all objects we need
       super(SetButton, self).__init__( parent=parent)
 
       self.my_set = my_set
-      self.destination=destination
+      self.image_zone=image_zone
+      self.selected_zone=selected_zone
+
 
       hbox = QtGui.QHBoxLayout()
 
@@ -103,38 +124,45 @@ class SetButton(QtGui.QWidget):
 
       SSButton = QtGui.QPushButton()
       SSButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/up-arrow.png'))
-      #SSButton.clicked.connect(self.addSubet)
-      #SSButton.setStatusTip("Add sub set")
+      SSButton.clicked.connect(self.addSubet)
+      SSButton.setStatusTip("Add sub set")
       SSButton.setFixedSize(QSize(20, 20))
       hbox.addWidget(SSButton)
 
       NameButton = QtGui.QPushButton()
       NameButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/writing.png'))
-      #NameButton.clicked.connect(self.changeName)
+      NameButton.clicked.connect(self.changeName)
       NameButton.setStatusTip("Change Set Name")
       NameButton.setFixedSize(QSize(20, 20))
       hbox.addWidget(NameButton)
 
       self.setLayout(hbox)
 
+
     def state_changed(self):
+        print(selected)
         dict=self.my_set.get_all_nifti_set()
         if self.check.isChecked():
             print("CHECKED!")
-            print(dict not in selected)
             for d in dict:
                 if d not in selected:
                     selected.append(d)
-            print(selected)
+            #print(selected)
         else:
             for d in dict:
                 selected.remove(d)
+                if d in collshow:
+                    collshow.remove(d)
             print("UNCHECKED!")
-            print(selected)
-        for i in reversed(range(self.destination.count())): 
-            self.destination.itemAt(i).widget().setParent(None)
+        for i in reversed(range(self.image_zone.count())): 
+            self.image_zone.itemAt(i).widget().setParent(None)
         for coll in selected:
-                self.destination.addWidget(CollButton(coll))
+            self.image_zone.addWidget(CollButton(coll,self.selected_zone))
+
+        for i in reversed(range(self.selected_zone.count())): 
+            self.selected_zone.itemAt(i).widget().setParent(None)
+        for coll in collshow:
+                self.selected_zone.addWidget(SelectedButton(coll,str(len(self.coll.get_img_list())),str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
 
     def changeName(self):
         # -- This changeName will change the name of the set selected.
@@ -148,6 +176,7 @@ class SetButton(QtGui.QWidget):
                     if i in str(text):
                         new_ok = False
                 if new_ok and not exists_set(str(text)):
+                    print(self.my_set.get_name())
                     rm_set(self.my_set)
                     if (self.my_set.getParent() != None):  # if its a subset
                         self.my_set.getParent().remove_subset(self.my_set.get_name())
@@ -155,14 +184,10 @@ class SetButton(QtGui.QWidget):
                         self.my_set.getParent().add_subset(self.my_set)
                     else:
                         self.my_set.set_name(str(text))
-                    size = self.setB.size()
-                    self.setB.setText(str(text))
-                    rec = QApplication.desktop().availableGeometry()
-                    mainwind_h = rec.height()
-                    mainwind_w = rec.width()
-                    self.setB.setMaximumSize(size)
+                    print("coucou")
+                    print(self.my_set.get_name())
+                    self.check.setText(str(text))
                     add_set(self.my_set)
-                    self.parent().parent().parent().parent().parent().parent().update()
                 else:
                     err = QtGui.QMessageBox.critical(self, "Error",
                                                      "The name you entered is not valid (empty, invalid caracter or already exists)")
@@ -373,6 +398,12 @@ class MainView2(QtGui.QWidget):
         self.label_selected.setObjectName(_fromUtf8("label_selected"))
         self.verticalLayout_selected_view.addWidget(self.label_selected)
         self.widget_selected_view = QtGui.QWidget(self.widget_selected)
+
+        self.verticalLayout_widget_selected_view = QtGui.QVBoxLayout(self.widget_selected_view)
+        self.verticalLayout_widget_selected_view.setMargin(0)
+        self.verticalLayout_widget_selected_view.setObjectName(_fromUtf8("verticalLayout_widget_selected_view"))
+        self.verticalLayout_selected_view.addWidget(self.widget_selected_view)
+
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -390,6 +421,7 @@ class MainView2(QtGui.QWidget):
         self.horizontalLayout_buttons.addWidget(self.pushButton_edit)
         self.pushButton_export = QtGui.QPushButton(Form)
         self.pushButton_export.setObjectName(_fromUtf8("pushButton_export"))
+        self.pushButton_export.clicked.connect(self.export)
         self.horizontalLayout_buttons.addWidget(self.pushButton_export)
         self.pushButton_clustering = QtGui.QPushButton(Form)
         self.pushButton_clustering.setObjectName(_fromUtf8("pushButton_clustering"))
@@ -403,13 +435,14 @@ class MainView2(QtGui.QWidget):
         self.widget_list_of_sets.raise_()
 
         default_name = datetime.fromtimestamp(int(round(time.time()))).strftime('--%m-%d %H-%M')
+
         my_set = newSet(default_name[2:])
-        set_current_set(my_set)
+        #set_current_set(my_set)
         print(get_current_set().get_name())
 
         item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(0))
         item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
-        self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(0), 0, SetButton(my_set,self.verticalLayout_image_collections_show,self.treeWidget))
+        self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(0), 0, SetButton(my_set,self.verticalLayout_image_collections_show,self.verticalLayout_widget_selected_view,self.treeWidget))
 
         # item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(0).child(0))
         # item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
@@ -428,81 +461,81 @@ class MainView2(QtGui.QWidget):
 
 
     def export(self):
-    #     if get_selected():
-    #         export_choice = QtGui.QMessageBox()
-    #         export_choice.setWindowTitle('Export dataSet')
-    #
-    #         nifti_opt = QRadioButton("Export to Nifti")
-    #         excel_opt = QRadioButton("Export to CSV")
-    #         nifti_opt.setChecked(True)
-    #
-    #         l1 = export_choice.layout()
-    #         l1.setContentsMargins(20, 0, 0, 20)
-    #         l1.addWidget(QLabel("You have selected (" + str(len(
-    #             get_selected())) + ") image collections. \nThere is a total of (" + str(get_selected_images_number()) +
-    #                             ") NIfTI images to be treated. \nPlease select the way "
-    #                             "you would like to export these files : "),
-    #                      l1.rowCount() - 3, 0, 1, l1.columnCount() - 2, Qt.AlignCenter)
-    #         rb_box = QtGui.QGroupBox()
-    #         vbox = QtGui.QVBoxLayout()
-    #         vbox.addWidget(nifti_opt)
-    #         vbox.addWidget(excel_opt)
-    #
-    #         rb_box.setLayout(vbox)
-    #         l1.addWidget(rb_box, l1.rowCount() - 2, 0, Qt.AlignCenter)
-    #
-    #         export_choice.setStandardButtons(QMessageBox.Cancel | QMessageBox.Apply)
-    #
-    #         ret = export_choice.exec_()
-    #
-    #         if ret == QtGui.QMessageBox.Apply:
-    #
-    #             if nifti_opt.isChecked():
-    #
-    #                 folder_path = str(QFileDialog.getExistingDirectory())
-    #                 image_recreation_from_list(folder_path, selected)
-    #
-    #             elif excel_opt.isChecked():
-    #                 type_choice = QtGui.QMessageBox()
-    #                 type_choice.setWindowTitle('Export excel all or centroid')
-    #
-    #                 all_opt = QRadioButton("Export all points")
-    #                 centroid_opt = QRadioButton("Export only the centroid of each file")
-    #                 all_opt.setChecked(True)
-    #
-    #                 l2 = type_choice.layout()
-    #                 l2.setContentsMargins(20, 0, 0, 20)
-    #                 l2.addWidget(QLabel(" Excel Export \nPlease select the type of export"),
-    #                              l2.rowCount() - 3, 0, 1, l2.columnCount() - 2, Qt.AlignCenter)
-    #
-    #                 rb_box = QtGui.QGroupBox()
-    #                 vbox = QtGui.QVBoxLayout()
-    #                 vbox.addWidget(all_opt)
-    #                 vbox.addWidget(centroid_opt)
-    #
-    #                 rb_box.setLayout(vbox)
-    #                 l2.addWidget(rb_box, l2.rowCount() - 2, 0, Qt.AlignCenter)
-    #
-    #                 type_choice.setStandardButtons(QMessageBox.Cancel | QMessageBox.Apply)
-    #
-    #                 ret = type_choice.exec_()
-    #
-    #                 if ret == QtGui.QMessageBox.Apply:
-    #
-    #                     (f_path, f_name) = os.path.split(str(QFileDialog.getSaveFileName(self, "Browse Directory")))
-    #
-    #                     if all_opt.isChecked():
-    #                         extract_data_from_selected()
-    #                     elif centroid_opt.isChecked():
-    #                         extract_data_as_centroids_from_selected()
-    #
-    #                 ee.simple_export(f_name, f_path, get_current_usableDataset())
-    #
-    #             else:
-    #                 print("There was a problem in export options")
-    #
-    #     else:
-    #         QtGui.QMessageBox.information(self, "Selection empty", "There's nothing to export.")
+        if get_selected():
+            export_choice = QtGui.QMessageBox()
+            export_choice.setWindowTitle('Export dataSet')
+    
+            nifti_opt = QRadioButton("Export to Nifti")
+            excel_opt = QRadioButton("Export to CSV")
+            nifti_opt.setChecked(True)
+    
+            l1 = export_choice.layout()
+            l1.setContentsMargins(20, 0, 0, 20)
+            l1.addWidget(QLabel("You have selected (" + str(len(
+                get_selected())) + ") image collections. \nThere is a total of (" + str(get_selected_images_number()) +
+                                ") NIfTI images to be treated. \nPlease select the way "
+                                "you would like to export these files : "),
+                         l1.rowCount() - 3, 0, 1, l1.columnCount() - 2, Qt.AlignCenter)
+            rb_box = QtGui.QGroupBox()
+            vbox = QtGui.QVBoxLayout()
+            vbox.addWidget(nifti_opt)
+            vbox.addWidget(excel_opt)
+    
+            rb_box.setLayout(vbox)
+            l1.addWidget(rb_box, l1.rowCount() - 2, 0, Qt.AlignCenter)
+    
+            export_choice.setStandardButtons(QMessageBox.Cancel | QMessageBox.Apply)
+    
+            ret = export_choice.exec_()
+    
+            if ret == QtGui.QMessageBox.Apply:
+    
+                if nifti_opt.isChecked():
+    
+                    folder_path = str(QFileDialog.getExistingDirectory())
+                    image_recreation_from_list(folder_path, selected)
+    
+                elif excel_opt.isChecked():
+                    type_choice = QtGui.QMessageBox()
+                    type_choice.setWindowTitle('Export excel all or centroid')
+    
+                    all_opt = QRadioButton("Export all points")
+                    centroid_opt = QRadioButton("Export only the centroid of each file")
+                    all_opt.setChecked(True)
+    
+                    l2 = type_choice.layout()
+                    l2.setContentsMargins(20, 0, 0, 20)
+                    l2.addWidget(QLabel(" Excel Export \nPlease select the type of export"),
+                                 l2.rowCount() - 3, 0, 1, l2.columnCount() - 2, Qt.AlignCenter)
+    
+                    rb_box = QtGui.QGroupBox()
+                    vbox = QtGui.QVBoxLayout()
+                    vbox.addWidget(all_opt)
+                    vbox.addWidget(centroid_opt)
+    
+                    rb_box.setLayout(vbox)
+                    l2.addWidget(rb_box, l2.rowCount() - 2, 0, Qt.AlignCenter)
+    
+                    type_choice.setStandardButtons(QMessageBox.Cancel | QMessageBox.Apply)
+    
+                    ret = type_choice.exec_()
+    
+                    if ret == QtGui.QMessageBox.Apply:
+    
+                        (f_path, f_name) = os.path.split(str(QFileDialog.getSaveFileName(self, "Browse Directory")))
+    
+                        if all_opt.isChecked():
+                            extract_data_from_selected()
+                        elif centroid_opt.isChecked():
+                            extract_data_as_centroids_from_selected()
+    
+                    ee.simple_export(f_name, f_path, get_current_usableDataset())
+    
+                else:
+                    print("There was a problem in export options")
+    
+        else:
+            QtGui.QMessageBox.information(self, "Selection empty", "There's nothing to export.")
         print()
 
     def extract_and_cluster(self):
