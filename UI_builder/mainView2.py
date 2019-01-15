@@ -104,7 +104,7 @@ class SetButton(QtGui.QWidget):
       hbox.addWidget(self.check)
 
       SSButton = QtGui.QPushButton()
-      SSButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/up-arrow.png'))
+      SSButton.setText("+")
       SSButton.clicked.connect(self.addSubet)
       SSButton.setStatusTip("Add sub set")
       SSButton.setFixedSize(QSize(20, 20))
@@ -116,6 +116,13 @@ class SetButton(QtGui.QWidget):
       NameButton.setStatusTip("Change Set Name")
       NameButton.setFixedSize(QSize(20, 20))
       hbox.addWidget(NameButton)
+
+      SupprButton = QtGui.QPushButton()
+      SupprButton.setText("-")
+      SupprButton.clicked.connect(self.deleteSet)
+      SupprButton.setStatusTip("Delete this set or subset")
+      SupprButton.setFixedSize(QSize(20, 20))
+      hbox.addWidget(SupprButton)
 
       self.setLayout(hbox)
 
@@ -172,12 +179,12 @@ class SetButton(QtGui.QWidget):
                 err = QtGui.QMessageBox.critical(self, "Error",
                                                  "The name you entered is not valid (" + str(sys.exc_info()[0]) + ")")
 
-    def current_set(self):
-        # -- This current_set will vizualize the set and the collections inside when pressed
-        set_current_set(self.my_set)
-        set_current_vizu(self.vizu)
-        self.parent().parent().parent().parent().parent().parent().parent().parent().parent().updateVizu(self.vizu)
-        self.parent().parent().parent().parent().parent().parent().parent().parent().parent().upCollLabel()
+    # def current_set(self):
+    #     # -- This current_set will vizualize the set and the collections inside when pressed
+    #     set_current_set(self.my_set)
+    #     set_current_vizu(self.vizu)
+    #     self.parent().parent().parent().parent().parent().parent().parent().parent().parent().updateVizu(self.vizu)
+    #     self.parent().parent().parent().parent().parent().parent().parent().parent().parent().upCollLabel()
 
     def addSubet(self):
         # -- This addSubet will add a subset to the set selected.
@@ -217,6 +224,30 @@ class SetButton(QtGui.QWidget):
             except :
                 err = QtGui.QMessageBox.critical(self, "Error", "The name you entered is not valid ("+str(sys.exc_info()[0])+")")
 
+    def deleteSet(self):
+        position = self.my_set.getPosition()
+        p = self.treeWidget.topLevelItem(position[0])
+        position.pop(0)
+        for i in range(len(position)-1):
+            p = p.child(position[i])
+        p.removeChild(p.child(position[-1]))
+
+        if self in selected:
+            for d in self.my_set.get_all_nifti_set():
+                selected.remove(self)
+        for i in reversed(range(self.destination.count())):
+            self.destination.itemAt(i).widget().setParent(None)
+        for coll in selected:
+                self.destination.addWidget(CollButton(coll))
+
+        if self.my_set.getParent()!=None:
+            self.my_set.getParent().remove_subset(self.my_set.name)
+            for set in self.my_set.getParent().getAllSubSets():
+                if set!=self and set.position>self.my_set.position:
+                    set.position-=1
+
+
+
 class MainView2(QtGui.QWidget):
 
     showClust = pyqtSignal()
@@ -241,7 +272,7 @@ class MainView2(QtGui.QWidget):
         self.horizontalLayout = QtGui.QHBoxLayout(Form)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         self.widget_list_of_sets = QtGui.QWidget(Form)
-        self.widget_list_of_sets.setMinimumSize(QtCore.QSize(250, 0))
+        self.widget_list_of_sets.setMinimumSize(QtCore.QSize(400, 0))
         self.widget_list_of_sets.setStyleSheet(_fromUtf8("background-color: rgb(223, 223, 223);"))
         self.widget_list_of_sets.setObjectName(_fromUtf8("widget_list_of_sets"))
         self.verticalLayout_list_of_sets = QtGui.QVBoxLayout(self.widget_list_of_sets)
