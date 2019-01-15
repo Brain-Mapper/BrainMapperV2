@@ -47,7 +47,7 @@ def add_js_lib(html, embed_js=True):
     else:
         with open(os.path.join(js_dir, 'jquery.min.js')) as f:
             jquery = f.read()
-        with open(os.path.join(js_dir, 'plotly-gl3d-latest.min.js')) as f:
+        with open(os.path.join(js_dir, 'plotly-latest.min.js')) as f: #-gl3d
             plotly = f.read()
         js_lib = """
         <script>{}</script>

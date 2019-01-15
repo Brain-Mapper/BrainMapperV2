@@ -102,6 +102,7 @@ def perform_FuzzyCMeans(param_dict,X):
         "belong" : belong,
         "centers" : cntr,
         "u" : u,
+        "fpc" : fpc,
     }
 
 # ------------------------------------- K Medoids implementation ------------------------------------------

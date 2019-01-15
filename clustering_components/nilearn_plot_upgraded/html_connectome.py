@@ -8,7 +8,7 @@ from .js_plotting_utils import (add_js_lib, HTMLDocument, mesh_to_plotly,
                                 encode, colorscale, get_html_template,
                                 to_color_strings)
 
-SYMBOLS = ["circle", "square", "diamond", "cross", "x", "hexagon", "hexagon2", "octagon", "star", "hexagram", "star-triangle-up", "star-triangle-down", "star-square", "star-diamond", "diamond-tall", "diamond-wide",  "pentagon", "hourglass", "bowtie", "circle-x", "square-cross", "square-x", "diamond-cross",  "diamond-x",  "cross-thin", "x-thin", "asterisk", "hash", "y-up", "y-down", "y-left", "y-right", "line-ew", "line-ns", "line-ne",  "line-nw"]
+SYMBOLS = ["circle" , "circle-open" ,"square" , "square-open" , "diamond" , "diamond-open", "cross","x" ]
 # "triangle-up", "triangle-down", "triangle-left", "triangle-right", "triangle-ne", "triangle-se", "triangle-sw", "triangle-nw",
 
 class ConnectomeView(HTMLDocument):
@@ -73,7 +73,7 @@ def _add_centers(connectome, centers_coords, centers_colors):
             np.asarray(coord, dtype='<f4')
         )
     connectome["centers_colors"] = to_color_strings(centers_colors)
-    connectome["centers_symbols"] = [SYMBOLS[i] for i in range(len(centers_coords))]
+    connectome["centers_symbols"] = [SYMBOLS[i%8] for i in range(len(centers_coords))]
 
 def _make_connectome_html(connectome_info, embed_js=True):
     plot_info = {"connectome": connectome_info}
@@ -193,10 +193,10 @@ def view_markers(coords, colors, labels, marker_size=5.,  centers=None, centers_
     if colors is None:
         colors = ['black' for i in range(len(coords))]
     connectome_info = _get_markers(coords, colors)
-    connectome_info["symbol"] = [SYMBOLS[i] for i in labels]
+    connectome_info["symbol"] = [SYMBOLS[i%8] for i in labels]
 
     if centers is not None:
         _add_centers(connectome_info, centers, centers_colors)
     connectome_info["marker_size"] = marker_size
     connectome_info["center_size"] = 2*marker_size
-    return _make_connectome_html(connectome_info, False)
+    return _make_connectome_html(connectome_info)
