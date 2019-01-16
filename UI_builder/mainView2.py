@@ -78,8 +78,6 @@ class CollButton(QtGui.QCheckBox):
                 collshow.append(self.coll)
         else:
             collshow.remove(self.coll)
-        print("collshow : ")
-        print(collshow)
         for i in reversed(range(self.selected_zone.count())):
             self.selected_zone.itemAt(i).widget().setParent(None)
         for coll in collshow:
@@ -305,7 +303,6 @@ class SetButton(QtGui.QWidget):
                     add_set(ss)
                     set_current_set(ss)
                     #self.parent().parent().parent().parent().parent().parent().parent().add(ss)
-                    print("test4")
                 else :
                     err = QtGui.QMessageBox.critical(self, "Error", "The name you entered is not valid (empty, invalid caracter or already exists)")
             except TypeError as e:
@@ -322,11 +319,9 @@ class SetButton(QtGui.QWidget):
                 p = p.child(position[i])
             p.removeChild(p.child(position[-1]))
 
-            print(selected)
             for d in self.my_set.get_all_nifti_set_and_subset():
                 if d in selected:
                     selected.remove(d)
-            print(selected)
             for i in reversed(range(self.image_zone.count())):
                 self.image_zone.itemAt(i).widget().setParent(None)
             for coll in selected:
