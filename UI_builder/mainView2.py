@@ -273,13 +273,6 @@ class SetButton(QtGui.QWidget):
                 err = QtGui.QMessageBox.critical(self, "Error",
                                                  "The name you entered is not valid (" + str(sys.exc_info()[0]) + ")")
 
-    # def current_set(self):
-    #     # -- This current_set will vizualize the set and the collections inside when pressed
-    #     set_current_set(self.my_set)
-    #     set_current_vizu(self.vizu)
-    #     self.parent().parent().parent().parent().parent().parent().parent().parent().parent().updateVizu(self.vizu)
-    #     self.parent().parent().parent().parent().parent().parent().parent().parent().parent().upCollLabel()
-
     def addSubet(self):
         # -- This addSubet will add a subset to the set selected.
         text, ok = QInputDialog.getText(self, 'Create a Sub Set',
@@ -573,10 +566,6 @@ class MainView2(QtGui.QWidget):
         globalSets.append(my_set)
 
 
-        # item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(0).child(0))
-        # item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
-        # self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(0).child(0), 0, SetButton(my_set,self.treeWidget))
-
 
         self.pushButton_clustering.clicked.connect(self.extract_and_cluster)
         self.pushButton_edit.clicked.connect(self.edit_pannel)
@@ -699,11 +688,11 @@ class MainView2(QtGui.QWidget):
         if get_selected():
             choice = QtGui.QMessageBox()
             choice.setWindowTitle('Extract data for clustering')
-        
+
             centroid_opt = QRadioButton("Use centroids as file representation")
             all_points_opt = QRadioButton("Use all region points for each file")
             all_points_opt.setChecked(True)
-        
+
             l = choice.layout()
             l.setContentsMargins(20, 0, 0, 20)
             l.addWidget(QLabel("You have selected (" + str(len(
@@ -716,30 +705,29 @@ class MainView2(QtGui.QWidget):
             vbox = QtGui.QVBoxLayout()
             vbox.addWidget(all_points_opt)
             vbox.addWidget(centroid_opt)
-        
+
             rb_box.setLayout(vbox)
             l.addWidget(rb_box, l.rowCount() - 2, 0, Qt.AlignCenter)
-        
+
             choice.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-        
+
             ret = choice.exec_()
-        
+
             if ret == QtGui.QMessageBox.Yes:
-        
+
                 if all_points_opt.isChecked():
                     extract_data_from_selected()
-        
+
                 elif centroid_opt.isChecked():
                     extract_data_as_centroids_from_selected()
-        
+
                 else:
                     print("There was a problem in data extraction options")
-        
+
                 self.showClust.emit()
-        
+
         else:
             QtGui.QMessageBox.information(self, "Selection empty", "There's no data to extract and clusterize.")
-    
 
     def calcul(self):
         # if (get_selected()):
