@@ -140,7 +140,7 @@ class HomePage(QWidget):
         self.calculation.showMain.connect(self.updateMainCalcul)
 
         # Set current widget to main view by default
-        self.stack.setCurrentWidget(self.mainview)
+        self.stack.setCurrentWidget(self.clustering)
 
     def updateClusteringView(self):
         # TODO
@@ -249,7 +249,7 @@ class UI(QtGui.QMainWindow):
         file = QFileDialog.getOpenFileNames()
         if (file != ""):
             try:
-                collec = do_image_collection(file) 
+                collec = do_image_collection(file)
                 #homepage.mainview.show_coll(collec)
                 #homepage.edit_colls.fill_coll() #rapport a editview2
             except:
