@@ -43,7 +43,87 @@ class ClusteringView2(QtGui.QWidget):
     def __init__(self):
         super(ClusteringView2, self).__init__()
 
+        self.clust_chooser = None
+        self.table_displayer = None
+
+        self.results_popup = ClusteringResultsPopUp(':ressources/logo.png', ':ressources/app_icons_png/file-1.png')
+
+        self.label = None
+        self.centroids = None
+
+        title_style = "QLabel { background-color : #ffcc33 ; color : black;  font-style : bold; font-size : 14px;}"
+
         self.setupUi(self)
+
+    def popup_results_details(self, method_name, user_params):
+        self.results_popup.setGeometry(QRect(100, 100, 500, 300))
+
+        if self.label is not None:
+            self.results_popup.update_details(method_name, user_params, self.centroids, clustering_validation_indexes(self.label,
+                                                                                                      self.centroids,
+                                                                                                      float(len(set(self.label)))))
+        self.results_popup.show()
+
+
+    def fill_table(self, usable_dataset_instance):
+        #self.table_displayer.fill_with_extracted_data(usable_dataset_instance)
+
+        """
+        Fills this custom table with the data of a UsableDataSet obtained after data extraction
+        :param a_usable_dataset_instance: see UsableData for more details
+        :return: Nothing"""
+        print("coucou")
+        self.clustering_usable_dataset = usable_dataset_instance
+        self.tableWidget.setRowCount(usable_dataset_instance.get_row_num())
+
+        row_count = 0
+
+        for udcoll in self.clustering_usable_dataset.get_usable_data_list():
+
+            extracted_data_dictionary = udcoll.get_extracted_data_dict()
+
+            for origin_file in extracted_data_dictionary.keys():
+                data_array = extracted_data_dictionary[origin_file]
+                for data_rows in range(0, data_array.shape[0]):
+                    self.tableWidget.setItem(row_count, 0, QtGui.QTableWidgetItem(udcoll.get_imgcoll_name()))
+                    self.tableWidget.setItem(row_count, 1, QtGui.QTableWidgetItem(str(origin_file.filename)))
+                    self.tableWidget.setItem(row_count, 2, QtGui.QTableWidgetItem(str(data_array[data_rows, 0]))) # X coordinate at column 0
+                    self.tableWidget.setItem(row_count, 3, QtGui.QTableWidgetItem(str(data_array[data_rows, 1]))) # Y coordinate at column 1
+                    self.tableWidget.setItem(row_count, 4, QtGui.QTableWidgetItem(str(data_array[data_rows, 2]))) # Z coordinate at column 2
+                    self.tableWidget.setItem(row_count, 5, QtGui.QTableWidgetItem(str(data_array[data_rows, 3]))) # Intensity at column 3
+                    self.tableWidget.setItem(row_count, 6, QtGui.QTableWidgetItem("None yet"))
+                    row_count = row_count+1
+
+
+    def runSelectedClust(self, selectedMethod, param_dict):
+        clustering_results = run_clustering(selectedMethod, param_dict)
+        print("runSelectedCLud -> Param dict : {}".format(param_dict.keys()));
+        self.label = clustering_results[0]
+        self.centroids = clustering_results[1]
+        self.table_displayer.fill_clust_labels(self.label)
+        self.add_hist(param_dict, self.label)
+        self.add_silhouette(self.label)
+
+        # Plot the differents figures for test
+        clustering_plot.plot_silhouette(self.label)
+        clustering_plot.plot_3d_clusters(self.label)
+        clustering_plot.plot_cross_section(self.label)
+
+    def export(self):
+        if self.label is not None:
+            (f_path, f_name) = os.path.split(str(QFileDialog.getSaveFileName(self, "Browse Directory")))
+            ee.clustering_export(f_name, f_path, self.table_displayer.clustering_usable_dataset, self.label)
+        else:
+            QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")
+
+    def save(self):
+        if self.label is not None:
+            makeClusterResultSet(self.table_displayer.clustering_usable_dataset, self.label)
+            QtGui.QMessageBox.information(self, "Results saved!",
+                                          "A set has been created in the clustering results tab at home page.")
+
+        else:
+            QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")
 
     def go_back(self):
         # -- When the user wants to return to the main view, we reinit the cluster view

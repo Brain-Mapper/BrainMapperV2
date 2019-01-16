@@ -69,18 +69,20 @@ def open_nifti(path):
     return image
 
 
-def do_image_collection(files):
+def do_image_collection(files,set_import):
     """
     Create an image collection from a list of file paths
     :param files: list of strings (file paths)
     :return: ImageCollection instance
     """
-    coll = ImageCollection("default", currentSet)
+    
+    coll = ImageCollection("default", set_import)
     # We want an unique name for each collection
     # To do so we use the object ID
     name = str(coll).split("0x")
     name = name[1]
     coll.set_name(name[:-1])
+
     for file in files:
         # For french language, encode to latin1 -> to be able to take files with special characters of french in their file path
         filename = file#.toLatin1().data()
@@ -89,7 +91,8 @@ def do_image_collection(files):
         image = open_nifti(filename)
         coll.add(image)
     add_coll(coll)  # We add the collection create to selected by default
-    currentSet.add_collection(coll)  # We add the collection created in the current set
+    print(set_import)
+    set_import.add_collection(coll)  # We add the collection created in the current set
     return coll
 
 
@@ -122,17 +125,18 @@ def rm_coll(coll):
         selected.remove(coll)
 
 
+
 def get_selected():
     """
     Return the selected collections (useful for all views that use data)
     :return: global variable 'selected'
     """
-    return selected
+    return collshow
 
 
 def get_selected_images_number():
     img_num = 0
-    for imgc in selected:
+    for imgc in collshow:
         img_num = img_num + imgc.get_image_total_num()
     return img_num
 
@@ -144,7 +148,7 @@ def extract_data_from_selected():
     :return: Nothing. Global var 'currentUsableDataset' is modified
     """
     global currentUsableDataset
-    currentUsableDataset = xt.extract_from_collection_list(selected)
+    currentUsableDataset = xt.extract_from_collection_list(collshow)
 
 
 def extract_data_as_centroids_from_selected():
@@ -155,7 +159,7 @@ def extract_data_as_centroids_from_selected():
       :return: Nothing. Global var 'currentUsableDataset' is modified
     """
     global currentUsableDataset
-    currentUsableDataset = xt.extract_from_collection_list_using_centroids(selected)
+    currentUsableDataset = xt.extract_from_collection_list_using_centroids(collshow)
 
 
 def get_current_usableDataset():
@@ -270,7 +274,7 @@ def get_selected_from_name(name):
     :param name: The collection that we look for (unique ID)
     :return: ImageCollection
     """
-    for x in selected:
+    for x in collshow:
         if (name == x.name):
             return x
 
@@ -588,10 +592,10 @@ def rmClusterResultSets(s):
 # ---- IMPORT ----
 
 
-def simple_import(csv_file_path, template_mni_path):
+def simple_import(csv_file_path, template_mni_path,set_import):
     coll = imp.simple_import(csv_file_path, template_mni_path, currentSet)
     add_coll(coll)
-    currentSet.add_collection(coll)
+    set_import.add_collection(coll)
     return coll
 
 
