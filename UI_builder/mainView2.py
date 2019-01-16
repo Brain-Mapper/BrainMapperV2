@@ -599,7 +599,7 @@ class MainView2(QtGui.QWidget):
             print(s[0].name,s[1])
             item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(s[1]))
             item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
-            self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(len(globalSets[s[1]])), 0, SetButton(s[0],self.verticalLayout_image_collections_show,self.verticalLayout_widget_selected_view,self.treeWidget))
+            self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(s[1]).child(len(globalSets[s[1]])), 0, SetButton(s[0],self.verticalLayout_image_collections_show,self.verticalLayout_widget_selected_view,self.treeWidget))
             globalSets[s[1]].append(s[0])
             setToAdd.remove(s)
 
