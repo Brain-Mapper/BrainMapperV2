@@ -224,7 +224,7 @@ class ParameterAndScriptStack(QtGui.QWidget):
     def __init__(self, title_style, clustering_chooser=None):
 
         super(ParameterAndScriptStack, self).__init__()
-
+        print("stack")
         # Initialize a stack (pile) widget
         self.stack = QtGui.QStackedWidget()
         layout = QtGui.QVBoxLayout(self) # vertical layout
@@ -243,18 +243,19 @@ class ParameterAndScriptStack(QtGui.QWidget):
         #  on signals and events)
 
         # -- when clusteringChooser widget emits signal showClustParamsWidget, change current Widget in stack to clust params widget
+        #self.clusteringChooser.
         self.clusteringChooser.showClustParamsWidget.connect(self.update_clustering_parameters)
         # -- when clusteringChooser widget emits signal showClustParamsWidget, change current Widget in stack to scrip env widget
         self.clusteringChooser.showScriptEnvWidget.connect(partial(self.stack.setCurrentWidget, self.script_env_widget))
 
 
         # Set current widget to main view by default
-        self.stack.setCurrentWidget(self.clust_params_widget)
-        rec = QtGui.QApplication.desktop().availableGeometry()
-        mainwind_h = rec.height() / 1.4
-        mainwind_w = rec.width() / 1.5
-        del rec  # Saves memory
-        self.setMaximumSize(QSize(mainwind_w / 3, mainwind_h))
+        #self.stack.setCurrentWidget(self.clust_params_widget)
+        #rec = QtGui.QApplication.desktop().availableGeometry()
+        #mainwind_h = rec.height() / 1.4
+        #mainwind_w = rec.width() / 1.5
+        #del rec  # Saves memory
+        #self.setMaximumSize(QSize(mainwind_w / 3, mainwind_h))
 
     def update_clustering_parameters(self):
         self.clust_params_widget.update_clustering_info_and_params(self.clusteringChooser.get_selected_method_name())

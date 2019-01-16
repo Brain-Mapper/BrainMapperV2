@@ -51,7 +51,10 @@ class ClusteringView2(QtGui.QWidget):
         self.label = None
         self.centroids = None
 
+        
+
         title_style = "QLabel { background-color : #ffcc33 ; color : black;  font-style : bold; font-size : 14px;}"
+
 
         self.setupUi(self)
 
@@ -95,7 +98,8 @@ class ClusteringView2(QtGui.QWidget):
                     row_count = row_count+1
 
 
-    def runSelectedClust(self, selectedMethod, param_dict):
+    def runSelectedClust(self):
+        print(self.comboBox_methode.currentText())
         clustering_results = run_clustering(selectedMethod, param_dict)
         print("runSelectedCLud -> Param dict : {}".format(param_dict.keys()));
         self.label = clustering_results[0]
@@ -163,21 +167,22 @@ class ClusteringView2(QtGui.QWidget):
         self.label_select_methode.setTextFormat(QtCore.Qt.AutoText)
         self.label_select_methode.setObjectName(_fromUtf8("label_select_methode"))
         self.verticalLayout_clustering.addWidget(self.label_select_methode)
-        self.comboBox_methode = QtGui.QComboBox(self.widget_clustering)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.comboBox_methode.sizePolicy().hasHeightForWidth())
-        self.comboBox_methode.setSizePolicy(sizePolicy)
-        self.comboBox_methode.setMaximumSize(QtCore.QSize(16777215, 30))
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.comboBox_methode.setFont(font)
-        self.comboBox_methode.setObjectName(_fromUtf8("comboBox_methode"))
-        self.comboBox_methode.addItem(_fromUtf8(""))
-        self.comboBox_methode.addItem(_fromUtf8(""))
-        self.comboBox_methode.addItem(_fromUtf8(""))
-        self.comboBox_methode.addItem(_fromUtf8(""))
+        self.comboBox_methode = ClusteringChooser()
+        # self.comboBox_methode = QtGui.QComboBox(self.widget_clustering)
+        # sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
+        # sizePolicy.setHorizontalStretch(0)
+        # sizePolicy.setVerticalStretch(0)
+        # sizePolicy.setHeightForWidth(self.comboBox_methode.sizePolicy().hasHeightForWidth())
+        # self.comboBox_methode.setSizePolicy(sizePolicy)
+        # self.comboBox_methode.setMaximumSize(QtCore.QSize(16777215, 30))
+        # font = QtGui.QFont()
+        # font.setPointSize(10)
+        # self.comboBox_methode.setFont(font)
+        # self.comboBox_methode.setObjectName(_fromUtf8("comboBox_methode"))
+        # self.comboBox_methode.addItem(_fromUtf8(""))
+        # self.comboBox_methode.addItem(_fromUtf8(""))
+        # self.comboBox_methode.addItem(_fromUtf8(""))
+        # self.comboBox_methode.addItem(_fromUtf8(""))
         self.verticalLayout_clustering.addWidget(self.comboBox_methode)
         self.plainTextEdit = QtGui.QPlainTextEdit(self.widget_clustering)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
@@ -195,7 +200,9 @@ class ClusteringView2(QtGui.QWidget):
         self.widget_informations = QtGui.QWidget(self.widget_clustering)
         self.widget_informations.setObjectName(_fromUtf8("widget_informations"))
         self.verticalLayout_clustering.addWidget(self.widget_informations)
-        self.widget_parametres = QtGui.QWidget(self.widget_clustering)
+        title_style = "QLabel { background-color : #ffcc33 ; color : black;  font-style : bold; font-size : 14px;}"
+        self.widget_parametres = ParameterAndScriptStack(title_style, self.comboBox_methode)
+        #self.widget_parametres = QtGui.QWidget(self.widget_clustering)
         font = QtGui.QFont()
         font.setPointSize(12)
         font.setBold(False)
@@ -277,6 +284,10 @@ class ClusteringView2(QtGui.QWidget):
         self.horizontalLayout_buttons.setObjectName(_fromUtf8("horizontalLayout_buttons"))
         self.pushButton_run = QtGui.QPushButton(self.widget_buttons)
         self.pushButton_run.setObjectName(_fromUtf8("pushButton_run"))
+
+        # self.pushButton_run.clicked.connect(lambda: self.runSelectedClust(self.clust_chooser.get_selected_method_name(),
+        #                                                                   self.param_script_stack.get_user_params()))
+        self.pushButton_run.clicked.connect(self.runSelectedClust)
         self.horizontalLayout_buttons.addWidget(self.pushButton_run)
         self.pushButton_export = QtGui.QPushButton(self.widget_buttons)
         self.pushButton_export.setObjectName(_fromUtf8("pushButton_export"))
@@ -334,10 +345,10 @@ class ClusteringView2(QtGui.QWidget):
         Form.setWindowTitle(_translate("Form", "Form", None))
         self.label_clustering.setText(_translate("Form", "Clustering", None))
         self.label_select_methode.setText(_translate("Form", "Select a clustering methods", None))
-        self.comboBox_methode.setItemText(0, _translate("Form", "K-means", None))
-        self.comboBox_methode.setItemText(1, _translate("Form", "K-medoids", None))
-        self.comboBox_methode.setItemText(2, _translate("Form", "Agglomerative", None))
-        self.comboBox_methode.setItemText(3, _translate("Form", "Fuzzy C-means", None))
+        # self.comboBox_methode.setItemText(0, _translate("Form", "K-means", None))
+        # self.comboBox_methode.setItemText(1, _translate("Form", "K-medoids", None))
+        # self.comboBox_methode.setItemText(2, _translate("Form", "Agglomerative", None))
+        # self.comboBox_methode.setItemText(3, _translate("Form", "Fuzzy C-means", None))
         self.plainTextEdit.setPlainText(_translate("Form", "You have to select columns to apply cluster on thos columns", None))
         self.label_data.setText(_translate("Form", "Data inside the collection", None))
         item = self.tableWidget.horizontalHeaderItem(0)
