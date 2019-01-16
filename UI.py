@@ -140,7 +140,7 @@ class HomePage(QWidget):
         self.calculation.showMain.connect(self.updateMainCalcul)
 
         # Set current widget to main view by default
-        self.stack.setCurrentWidget(self.clustering)
+        self.stack.setCurrentWidget(self.mainview)
 
     def updateClusteringView(self):
         # TODO
