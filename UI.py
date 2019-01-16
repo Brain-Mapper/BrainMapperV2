@@ -144,7 +144,7 @@ class HomePage(QWidget):
 
     def updateClusteringView(self):
         # TODO
-        # self.clustering.fill_table(get_current_usableDataset())
+        self.clustering.fill_table(get_current_usableDataset())
         self.stack.setCurrentWidget(self.clustering)
 
     def updateEditView(self):

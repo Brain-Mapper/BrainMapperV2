@@ -66,7 +66,34 @@ class ClusteringView2(QtGui.QWidget):
 
 
     def fill_table(self, usable_dataset_instance):
-        self.table_displayer.fill_with_extracted_data(usable_dataset_instance)
+        #self.table_displayer.fill_with_extracted_data(usable_dataset_instance)
+
+        """
+        Fills this custom table with the data of a UsableDataSet obtained after data extraction
+        :param a_usable_dataset_instance: see UsableData for more details
+        :return: Nothing"""
+        print("coucou")
+        self.clustering_usable_dataset = usable_dataset_instance
+        self.tableWidget.setRowCount(usable_dataset_instance.get_row_num())
+
+        row_count = 0
+
+        for udcoll in self.clustering_usable_dataset.get_usable_data_list():
+
+            extracted_data_dictionary = udcoll.get_extracted_data_dict()
+
+            for origin_file in extracted_data_dictionary.keys():
+                data_array = extracted_data_dictionary[origin_file]
+                for data_rows in range(0, data_array.shape[0]):
+                    self.tableWidget.setItem(row_count, 0, QtGui.QTableWidgetItem(udcoll.get_imgcoll_name()))
+                    self.tableWidget.setItem(row_count, 1, QtGui.QTableWidgetItem(str(origin_file.filename)))
+                    self.tableWidget.setItem(row_count, 2, QtGui.QTableWidgetItem(str(data_array[data_rows, 0]))) # X coordinate at column 0
+                    self.tableWidget.setItem(row_count, 3, QtGui.QTableWidgetItem(str(data_array[data_rows, 1]))) # Y coordinate at column 1
+                    self.tableWidget.setItem(row_count, 4, QtGui.QTableWidgetItem(str(data_array[data_rows, 2]))) # Z coordinate at column 2
+                    self.tableWidget.setItem(row_count, 5, QtGui.QTableWidgetItem(str(data_array[data_rows, 3]))) # Intensity at column 3
+                    self.tableWidget.setItem(row_count, 6, QtGui.QTableWidgetItem("None yet"))
+                    row_count = row_count+1
+
 
     def runSelectedClust(self, selectedMethod, param_dict):
         clustering_results = run_clustering(selectedMethod, param_dict)
@@ -85,7 +112,6 @@ class ClusteringView2(QtGui.QWidget):
     def export(self):
         if self.label is not None:
             (f_path, f_name) = os.path.split(str(QFileDialog.getSaveFileName(self, "Browse Directory")))
-
             ee.clustering_export(f_name, f_path, self.table_displayer.clustering_usable_dataset, self.label)
         else:
             QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")
@@ -98,6 +124,7 @@ class ClusteringView2(QtGui.QWidget):
 
         else:
             QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")
+
     def go_back(self):
         # -- When the user wants to return to the main view, we reinit the cluster view
         #self.resultsGraphs.graph1.clear()

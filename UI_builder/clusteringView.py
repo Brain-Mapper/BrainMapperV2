@@ -267,7 +267,7 @@ class ClusteringView(QtGui.QWidget):
         clustering_plot.plot_cross_section(self.label)
 
 
-     def export(self):
+    def export(self):
         if self.label is not None:
             (f_path, f_name) = os.path.split(str(QFileDialog.getSaveFileName(self, "Browse Directory")))
 
