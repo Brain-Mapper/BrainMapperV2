@@ -20,7 +20,7 @@ from PyQt4.QtCore import Qt, QRect
 # Imports for the plotting
 
 
-import ourLib.ExcelExport.excelExport as ee
+import ourLib.Excel.excelExport as ee
 from clustering_components.clustering_paramspace import ParameterAndScriptStack
 # View components' import
 from clustering_components.clustering_results import ClusteringDataTable, ClusteringGraphs, ClusteringResultsPopUp
@@ -283,11 +283,10 @@ class ClusteringView(QtGui.QWidget):
 
         else:
             QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")
-            
+
     def go_back(self):
         # -- When the user wants to return to the main view, we reinit the cluster view
         self.resultsGraphs.graph1.clear()
         self.resultsGraphs.graph2.clear()
 
         self.showMain.emit()
-    
