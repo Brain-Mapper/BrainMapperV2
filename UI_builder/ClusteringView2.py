@@ -157,9 +157,9 @@ class ClusteringView2(QtGui.QWidget):
         print("coucou")
         print(self.label)
         if self.label is not None:
-            makeClusterResultSet(self.table_displayer.clustering_usable_dataset, self.label)
+            makeClusterResultSet(get_current_usableDataset(), self.label)
             QtGui.QMessageBox.information(self, "Results saved!",
-                                          "A set has been created in the clustering results tab at home page.")
+                                          "A set has been created in the clustering part at home page.")
 
         else:
             QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")

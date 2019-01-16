@@ -133,7 +133,7 @@ class UsableDataSet(object):
         return clusterizable
 
     def extract_set_images_by_cluster(self, label, template_mni_path):
-        new_set = Set("Clust")
+        new_set = Set("Clust",0)
         setName = str(new_set).split("0x")
         setName = setName[1]
         setName = "Clust" + setName[:-1]
