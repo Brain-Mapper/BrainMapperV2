@@ -63,9 +63,7 @@ class ClusteringView2(QtGui.QWidget):
         self.results_popup.setGeometry(QRect(100, 100, 500, 300))
 
         if self.label is not None:
-            self.results_popup.update_details(method_name, user_params, self.centroids, clustering_validation_indexes(self.label,
-                                                                                                      self.centroids,
-                                                                                                      float(len(set(self.label)))))
+            self.results_popup.update_details(method_name, user_params, self.centroids, clustering_validation_indexes(self.label,self.centroid,float(len(set(self.label)))))
         self.results_popup.show()
 
 
@@ -149,7 +147,7 @@ class ClusteringView2(QtGui.QWidget):
     def export(self):
         if self.label is not None:
             (f_path, f_name) = os.path.split(str(QFileDialog.getSaveFileName(self, "Browse Directory")))
-            ee.clustering_export(f_name, f_path, self.table_displayer.clustering_usable_dataset, self.label)
+            ee.clustering_export(f_name, f_path, get_current_usableDataset(), self.label)
         else:
             QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")
 
@@ -195,7 +193,7 @@ class ClusteringView2(QtGui.QWidget):
         self.label_clustering.setAlignment(QtCore.Qt.AlignCenter)
         self.label_clustering.setObjectName(_fromUtf8("label_clustering"))
         self.verticalLayout_clustering.addWidget(self.label_clustering)
-        
+
         self.comboBox_methode = ClusteringChooser()
         # self.comboBox_methode = QtGui.QComboBox(self.widget_clustering)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
@@ -322,6 +320,7 @@ class ClusteringView2(QtGui.QWidget):
         self.horizontalLayout_buttons.addWidget(self.pushButton_run)
         self.pushButton_export = QtGui.QPushButton(self.widget_buttons)
         self.pushButton_export.setObjectName(_fromUtf8("pushButton_export"))
+        self.pushButton_export.clicked.connect(self.export)
         self.horizontalLayout_buttons.addWidget(self.pushButton_export)
         self.comboBox_3 = QtGui.QComboBox(self.widget_buttons)
         self.comboBox_3.setObjectName(_fromUtf8("comboBox_3"))

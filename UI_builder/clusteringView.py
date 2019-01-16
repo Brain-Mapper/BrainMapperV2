@@ -283,11 +283,10 @@ class ClusteringView(QtGui.QWidget):
 
         else:
             QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")
-            
+
     def go_back(self):
         # -- When the user wants to return to the main view, we reinit the cluster view
         self.resultsGraphs.graph1.clear()
         self.resultsGraphs.graph2.clear()
 
         self.showMain.emit()
-    
