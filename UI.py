@@ -8,7 +8,7 @@ from UI_builder import resources
 
 from UI_builder.mainView2 import MainView2
 from UI_builder.ClusteringView2 import ClusteringView2
-from UI_builder.clusteringView import ClusteringView
+# from UI_builder.clusteringView import ClusteringView
 from UI_builder.editCollectionsView import EditCollectionsView
 from UI_builder.EditView2 import EditView2
 from UI_builder.exportView import ExportView
