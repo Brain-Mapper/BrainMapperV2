@@ -279,7 +279,25 @@ class ClusteringView(QtGui.QWidget):
         self.resultsGraphs.graph1.clear()
         self.resultsGraphs.graph2.clear()
 
-        self.showMain.emit()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     def popup_results_details(self, method_name, user_params):
         self.results_popup.setGeometry(QRect(100, 100, 500, 300))
@@ -289,3 +307,47 @@ class ClusteringView(QtGui.QWidget):
                                                                                                       self.centroids,
                                                                                                       float(len(set(self.label)))), self.n_selected, self.n, self.scores)
         self.results_popup.show()
+
+
+    def fill_table(self, usable_dataset_instance):
+        self.table_displayer.fill_with_extracted_data(usable_dataset_instance)
+
+    def runSelectedClust(self, selectedMethod, param_dict):
+        clustering_results = run_clustering(selectedMethod, param_dict)
+        print("runSelectedCLud -> Param dict : {}".format(param_dict.keys()));
+        self.label = clustering_results[0]
+        self.centroids = clustering_results[1]
+        self.table_displayer.fill_clust_labels(self.label)
+        self.add_hist(param_dict, self.label)
+        self.add_silhouette(self.label)
+
+        # Plot the differents figures for test
+        clustering_plot.plot_silhouette(self.label)
+        clustering_plot.plot_3d_clusters(self.label)
+        clustering_plot.plot_cross_section(self.label)
+
+
+    def export(self):
+        if self.label is not None:
+            (f_path, f_name) = os.path.split(str(QFileDialog.getSaveFileName(self, "Browse Directory")))
+
+            ee.clustering_export(f_name, f_path, self.table_displayer.clustering_usable_dataset, self.label)
+        else:
+            QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")
+
+    def save(self):
+        if self.label is not None:
+            makeClusterResultSet(self.table_displayer.clustering_usable_dataset, self.label)
+            QtGui.QMessageBox.information(self, "Results saved!",
+                                          "A set has been created in the clustering results tab at home page.")
+
+        else:
+            QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")
+
+    def go_back(self):
+        # -- When the user wants to return to the main view, we reinit the cluster view
+        self.resultsGraphs.graph1.clear()
+        self.resultsGraphs.graph2.clear()
+
+        self.showMain.emit()
+

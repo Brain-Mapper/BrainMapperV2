@@ -6,9 +6,11 @@ from functools import partial
 
 from UI_builder import resources
 
-from UI_builder.mainView import MainView
+from UI_builder.mainView2 import MainView2
+from UI_builder.ClusteringView2 import ClusteringView2
 from UI_builder.clusteringView import ClusteringView
 from UI_builder.editCollectionsView import EditCollectionsView
+from UI_builder.EditView2 import EditView2
 from UI_builder.exportView import ExportView
 from UI_builder.calculationView import CalculationView
 
@@ -98,10 +100,12 @@ class HomePage(QWidget):
         layout.addWidget(self.stack)  # stack in the vertical layout
 
         # Here are the custom widgets we will put on the stack
-        self.mainview = MainView()
-        self.clustering = ClusteringView()
+        self.mainview = MainView2()
+        self.clustering = ClusteringView2()
+        #self.clustering = ClusteringView()
         self.calculation = CalculationView()
-        self.edit_colls = EditCollectionsView()
+        self.edit_colls = EditView2()
+        #self.edit_colls = EditCollectionsView()
         self.export = ExportView()
         # -- Add them to stack widget
         self.stack.addWidget(self.mainview)
@@ -136,14 +140,15 @@ class HomePage(QWidget):
         self.calculation.showMain.connect(self.updateMainCalcul)
 
         # Set current widget to main view by default
-        self.stack.setCurrentWidget(self.mainview)
+        self.stack.setCurrentWidget(self.clustering)
 
     def updateClusteringView(self):
+        # TODO
         self.clustering.fill_table(get_current_usableDataset())
         self.stack.setCurrentWidget(self.clustering)
 
     def updateEditView(self):
-        self.edit_colls.fill_coll()
+        #self.edit_colls.fill_coll()
         self.stack.setCurrentWidget(self.edit_colls)
 
     def updateMain(self):
@@ -151,6 +156,7 @@ class HomePage(QWidget):
 
     def updateMainCluster(self):
         self.mainview.updateClusterRes()
+        self.mainview.updateTreeView()
 
     def updateMainCalcul(self):
         self.mainview.updateCalculRes()
@@ -183,7 +189,8 @@ class UI(QtGui.QMainWindow):
         rec = QApplication.desktop().availableGeometry()
         screenHeight = rec.height()
         screenWidth = rec.width()
-        self.setGeometry(300, 200, screenWidth / 1.5, screenHeight / 1.4)
+        #self.setGeometry(300, 200, screenWidth / 1.5, screenHeight / 1.4)
+        self.setGeometry(300, 200, 500,200)
         self.setWindowTitle('BrainMapper')
         self.setWindowIcon(QtGui.QIcon(':ressources/logo.png'))
 
@@ -199,20 +206,20 @@ class UI(QtGui.QMainWindow):
         saveAction.setStatusTip('Help')
         saveAction.triggered.connect(self.showHelp)
 
-        setAction = QtGui.QAction('&Create new set', self)
-        setAction.setStatusTip('Create new set')
-        setAction.setShortcut('Ctrl+S')
-        setAction.triggered.connect(self.createSet)
+        # setAction = QtGui.QAction('&Create new set', self)
+        # setAction.setStatusTip('Create new set')
+        # setAction.setShortcut('Ctrl+S')
+        # setAction.triggered.connect(self.createSet)
 
-        excelAction = QtGui.QAction('&Import from Excel file', self)
-        excelAction.setStatusTip('Import from Excel file')
-        excelAction.setShortcut('Ctrl+E')
-        excelAction.triggered.connect(self.fromExcel)
+        # excelAction = QtGui.QAction('&Import from Excel file', self)
+        # excelAction.setStatusTip('Import from Excel file')
+        # excelAction.setShortcut('Ctrl+E')
+        # excelAction.triggered.connect(self.fromExcel)
 
-        niftiAction = QtGui.QAction('&Import from NIfTI file(s)', self)
-        niftiAction.setStatusTip('Create a collection with one or several NIfTI images (added in the current set)')
-        niftiAction.setShortcut('Ctrl+N')
-        niftiAction.triggered.connect(self.fromNiFile)
+        # niftiAction = QtGui.QAction('&Import from NIfTI file(s)', self)
+        # niftiAction.setStatusTip('Create a collection with one or several NIfTI images (added in the current set)')
+        # niftiAction.setShortcut('Ctrl+N')
+        # niftiAction.triggered.connect(self.fromNiFile)
 
         workspaceImportAction = QtGui.QAction('&Import workspace', self)
         workspaceImportAction.setStatusTip(
@@ -230,11 +237,11 @@ class UI(QtGui.QMainWindow):
         workspaceMenu = menubar.addMenu('&Workspace')
         workspaceMenu.addAction(workspaceImportAction)
         workspaceMenu.addAction(workspaceSaveAction)
-        SetMenu = menubar.addMenu('&New Set')
-        SetMenu.addAction(setAction)
-        CollecMenu = menubar.addMenu('&New Collection')
-        CollecMenu.addAction(excelAction)
-        CollecMenu.addAction(niftiAction)
+        # SetMenu = menubar.addMenu('&New Set')
+        # SetMenu.addAction(setAction)
+        # CollecMenu = menubar.addMenu('&New Collection')
+        # CollecMenu.addAction(excelAction)
+        # CollecMenu.addAction(niftiAction)
 
         self.show()
 
@@ -242,12 +249,12 @@ class UI(QtGui.QMainWindow):
         # -- We create a collection with the list of images the user selected and give it to the main view and the edit view
         file = QFileDialog.getOpenFileNames()
         if (file != ""):
-            # try:
-            collec = do_image_collection(file)
-            homepage.mainview.show_coll(collec)
-            homepage.edit_colls.fill_coll()
-            # except:
-            #    err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. Maybe you tried to open a non-NIfTI file")
+            try:
+                collec = do_image_collection(file)
+                #homepage.mainview.show_coll(collec)
+                #homepage.edit_colls.fill_coll() #rapport a editview2
+            except:
+                err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. Maybe you tried to open a non-NIfTI file")
 
         # -- We create a collection with the list of images the user selected and give it to the main view and the edit view
 
@@ -257,29 +264,28 @@ class UI(QtGui.QMainWindow):
             # try:
             collec = simple_import(file, os.path.join(os.path.dirname(__file__),
                                                       'ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii'))
-            homepage.mainview.show_coll(collec)
-            homepage.edit_colls.fill_coll()
+            #homepage.mainview.show_coll(collec)
+            #homepage.edit_colls.fill_coll() #rapport a editview2
             # except:
             #     err = QtGui.QMessageBox.critical(self, "Error",
             #                                      "An error has occured. Maybe you tried to open a non-CSV file")
 
     def fromWorkspace(self):
         folder_path = str(QFileDialog.getExistingDirectory())
-        if (file != ""):
-            test = general_workspace_import_control(folder_path)
-            temp = []
-            # print test
-            if test is None:
-                general_workspace_import(folder_path)
-                for key in get_workspace_set():
-                    if not key in temp :
-                        homepage.mainview.show_set(key)
-                        temp.append(key)
-                        for i in key.get_all_subsets_subsubsets():
-                            temp.append(i)
-                rm_all_workspace_set()
-            else:
-                err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. " + test)
+        test = general_workspace_import_control(folder_path)
+        temp = []
+        # print test
+        if test is None:
+            general_workspace_import(folder_path)
+            for key in get_workspace_set():
+                if not key in temp :
+                    homepage.mainview.show_set(key)
+                    temp.append(key)
+                    for i in key.get_all_subsets_subsubsets():
+                        temp.append(i)
+            rm_all_workspace_set()
+        else:
+            err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. " + test)
 
     def workspaceSave(self):
         folder_path = str(QFileDialog.getExistingDirectory())
