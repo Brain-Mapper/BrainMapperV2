@@ -6,12 +6,11 @@
 #       The module 'clustering' contains methods for clustering on
 #       nifti image collections extracted data
 #
-# HISTORY
+# AUTHORS
 #
-# 6 january 2018 - Initial design and coding. (@vz-chameleon, Valentina Z.)
-# 16 january 2018 - Added functions for k-medoids clustering (@vz-chameleon, Valentina Z.)
-# 12 february 2018 - Finished K-Medoids and added DBSCAN (@vz-chameleon, Valentina Z.)
-# 18 february 2018 - Added silhouette and Calinski-Habaraz score (@vz-chameleon, Valentina Z.)
+#       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
+#       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
+
 
 
 from sklearn.cluster import KMeans, AgglomerativeClustering, DBSCAN
@@ -39,38 +38,72 @@ def perform_kmeans(param_dict, X):
     clustering = KMeans(n_clusters=int(param_dict["n_clusters"]), random_state=int(param_dict["random_state"]),
                         init=param_dict["init"],
                         n_init=int(param_dict["n_init"]), max_iter=int(param_dict["max_iter"])).fit(X)
-    return clustering.labels_, clustering.cluster_centers_
+    return {
+        "labels": clustering.labels_,
+        "centers": clustering.cluster_centers_
+    }
+    #return clustering.labels_, clustering.cluster_centers_
 
 
 def perform_agglomerative_clustering(param_dict, X):
     X = format_to_dataframe(X)
     clustering = AgglomerativeClustering(n_clusters=int(param_dict["n_clusters"]), affinity=param_dict["affinity"],
-                                         linkage=param_dict["linkage"]).fit(X)
+                                         linkage=param_dict["linkage"]).fit(X.values)
     # TODO Put this functionality on a button
-    return clustering.labels_, []
+    return {
+        "labels" : clustering.labels_,
+        "hac" : clustering,
+    }
 
 
 def perform_DBSCAN(param_dict, X):
-    # TODO Add this function to the JSON
     X = format_to_dataframe(X)
     dbscan = DBSCAN(eps=float(param_dict["eps"]), min_samples=int(param_dict["min_samples"]),
                     metric=param_dict["metric"]).fit(X)
-    return dbscan.labels_, []
+    return {
+        "labels" : dbscan.labels_,
+        #"core_sample_indices" : dbscan.core_sample_indices_,
+        #"components" : dbscan.components_,
+    }
 
 
 def perform_kmedoids(param_dict, X):
     X = format_to_dataframe(X)
     distances_matrix_pairwise = compute_distances(X.values, param_dict['metric'])
-    clustering_labels = kmedoids_cluster(str(param_dict["init"]), X.values, distances_matrix_pairwise,
+    clustering_labels, clustering_medoids = kmedoids_cluster(str(param_dict["init"]), X.values, distances_matrix_pairwise,
                                          int(param_dict["n_clusters"]))
-    return clustering_labels
+    return {
+        "labels" : clustering_labels,
+        "centers" : clustering_medoids,
+    }
 
 def perform_FuzzyCMeans(param_dict,X):
     X = format_to_dataframe(X)
-    cntr, u, u0, d, jm, p, fpc = fuzz.cluster.cmeans(X, int(param_dict["n_clusters"]), 2, error=0.005, maxiter=1000, init=None)
-    #TODO : param à revoir
-    #TODO : plot
-    return u,cntr
+    print("perform_FuzzyCMeans -> n_clusters : {}".format(int(param_dict["n_clusters"])))
+    pts = np.vstack(([X["X"].values, X["Y"].values, X["Z"].values]))
+    cntr, u, u0, d, jm, p, fpc = fuzz.cluster.cmeans(pts, int(param_dict["n_clusters"]), int(param_dict["m"]), error=float(param_dict["error"]),
+     maxiter=int(param_dict["maxiter"]), seed=int(param_dict["seed"]))
+
+    # Create a labels list for viewing purposes
+    labels = []
+    belong = []
+    for col in range(len(u[0])):
+        line_max = 0
+        belong_max = 0
+        for line in range(len(u)):
+            if u[line][col] > belong_max:
+                belong_max = u[line][col]
+                line_max = line
+        labels.append(line_max)
+        belong.append(belong_max)
+
+    return {
+        "labels" : labels,
+        "belong" : belong,
+        "centers" : cntr,
+        "u" : u,
+        "fpc" : fpc,
+    }
 
 # ------------------------------------- K Medoids implementation ------------------------------------------
 
@@ -243,7 +276,8 @@ def compute_mean_silhouette(X, predicted_labels, metric='euclidean'):
     :param metric: metric used, euclidean distance by default
     :return: float between -1 and +1
     """
-    return silhouette_score(X, labels=predicted_labels, metric=metric)
+    X_filtered,predicted_labels = filter(X,predicted_labels)
+    return silhouette_score(X_filtered, labels=predicted_labels, metric=metric)
 
 
 def compute_samples_silhouette(X, predicted_labels, metric='euclidean'):
@@ -254,7 +288,8 @@ def compute_samples_silhouette(X, predicted_labels, metric='euclidean'):
     :param metric: metric used, euclidean by default
     :return: an array (size n_samples) of floats between -1 and +1
     """
-    return silhouette_samples(X, labels=predicted_labels, metric=metric)
+    X_filtered,predicted_labels = filter(X,predicted_labels)
+    return silhouette_samples(X_filtered, labels=predicted_labels, metric=metric), predicted_labels
 
 
 def compute_calinski_habaraz(X, predicted_labels):
@@ -264,7 +299,8 @@ def compute_calinski_habaraz(X, predicted_labels):
     :param predicted_labels:
     :return:
     """
-    return calinski_harabaz_score(X, labels=predicted_labels)
+    X_filtered,predicted_labels = filter(X,predicted_labels)
+    return calinski_harabaz_score(X_filtered, labels=predicted_labels)
 
 
 def compute_db(X,predicted_labels):
@@ -275,7 +311,9 @@ def compute_db(X,predicted_labels):
     :param predicted_labels:
     :return:
     """
-    return davies_bouldin_score(X,labels=predicted_labels)
+
+    X_filtered, predicted_labels = filter(X,predicted_labels)
+    return davies_bouldin_score(X_filtered,labels=predicted_labels)
 
 
 def compute_s(i, x, centroids, labels, cluster_number):
@@ -302,3 +340,11 @@ def compute_R(i, x, centroids, labels, cluster_number):
                 Ri = compute_Rij(i, j, x, centroids, labels, cluster_number)
                 list_R.append(Ri)
     return max(list_R)
+
+
+def filter(X, predicted_labels):
+    predicted_labels = list(predicted_labels)
+    index_to_keep = [True if i != -1 else False for i in predicted_labels]
+    for i in range(predicted_labels.count(-1)):
+        predicted_labels.remove(-1)
+    return X[index_to_keep], predicted_labels

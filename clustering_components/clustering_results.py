@@ -6,7 +6,10 @@
 #
 #       'clustering_results' contains the custom QTableWdget for the clustering data table, the plots and the results window
 #
-
+# AUTHORS
+#
+#       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
+#       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
@@ -41,8 +44,9 @@ class ClusteringDataTable(QtGui.QTableWidget):
     def fill_with_extracted_data(self, a_usable_dataset_instance):
         """
         Fills this custom table with the data of a UsableDataSet obtained after data extraction
-        :param a_usable_dataset_instance: see UsableData for more details
-        :return: Nothing
+
+        Arguments :
+            a_usable_dataset_instance -- see UsableData for more details
         """
         self.clustering_usable_dataset = a_usable_dataset_instance
         self.setRowCount(a_usable_dataset_instance.get_row_num())
@@ -68,8 +72,9 @@ class ClusteringDataTable(QtGui.QTableWidget):
     def fill_clust_labels(self, assigned_labels_array):
         """
         Fill the 'Assigned cluster' column once we have the clustering labels result
-        :param assigned_labels_array:
-        :return:
+
+        Arguments :
+            assigned_labels_array -- clustering labels
         """
         # # The following function is only needed here !
         # def generate_random_hex_dict(n):
@@ -91,7 +96,7 @@ class ClusteringDataTable(QtGui.QTableWidget):
         for label in assigned_labels_array:
             item = QtGui.QTableWidgetItem(str(label))
             item.setTextAlignment(Qt.AlignCenter)
-            color = colors[label]  
+            color = colors[label]
             item.setBackground(QtGui.QColor(colors[label][0],colors[label][1],colors[label][2], 150))
             self.setItem(row_count, 6, item)
             row_count = row_count + 1
@@ -202,21 +207,29 @@ class ClusteringResultsPopUp(QtGui.QWidget):
 
         self.setLayout(vbox)
 
-    def update_details(self, clustering_method, user_values, centroids, validation_values):
+    def update_details(self, clustering_method, user_values, centroids, validation_values, n_selected, n, scores):
         self.info_panel.setText("")
 
         self.info_panel.insertPlainText(clustering_method+"\n-----------------------------------------------------------------------------\n")
 
         for param_name in user_values.keys():
             self.info_panel.insertPlainText(param_name+"\t\t\t "+user_values[param_name]+"\n")
-
+        if n_selected is not None :
+            self.info_panel.insertPlainText("n_selected"+"\t\t"+str(n_selected)+"\n")
         self.info_panel.insertPlainText("-----------------------------------------------------------------------------\n\n")
+        if scores is not None :
+            self.info_panel.insertPlainText("Different scores for each value of clusters number\n-----------------------------------------------------------------------------\n")
+            self.info_panel.insertPlainText("n \t\t scores \n\n")
+            for i in range(len(n)):
+                self.info_panel.insertPlainText(str(n[i]) + "\t\t" + str(scores[i])+"\n\n")
+            self.info_panel.insertPlainText("-----------------------------------------------------------------------------\n\n")
         self.info_panel.insertPlainText(
             "Cluster centroids\n-----------------------------------------------------------------------------\n")
         count = 0
-        for c in centroids:
-            self.info_panel.insertPlainText("Cluster "+str(count)+": \t\t" + str(c)+"\n")
-            count = count+1
+        if centroids is not None :
+            for c in centroids:
+                self.info_panel.insertPlainText("Cluster "+str(count)+": \t\t" + str(c)+"\n")
+                count = count+1
 
         self.info_panel.insertPlainText(
             "-----------------------------------------------------------------------------\n\n")
@@ -226,7 +239,7 @@ class ClusteringResultsPopUp(QtGui.QWidget):
         self.info_panel.insertPlainText("This mean is between -1 and 1 and the best value is around 1." +"\n\n")
         self.info_panel.insertPlainText("Calinski-Habaraz score: \t " + str(validation_values[1]) + "\n\n")
         self.info_panel.insertPlainText("Davies-Bouldin index: \t\t " + str(validation_values[2]) + "\n\n")
-        self.info_panel.insertPlainText("Calinski-Habaraz score and Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the indice, better is the number of clusters.\n\n")
+        self.info_panel.insertPlainText("Calinski-Habaraz score is the relation between the sum of distances squared intergroup and the sum of distances squared intragroup. Whereas, Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the Davies-Bouldin index and bigger is the Calinski-Habaraz score, better is the number of clusters.\n\n")
 
 
     def export_as_textfile(self):
