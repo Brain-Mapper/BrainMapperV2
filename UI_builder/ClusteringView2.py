@@ -59,13 +59,6 @@ class ClusteringView2(QtGui.QWidget):
 
         self.setupUi(self)
 
-    def popup_results_details(self, method_name, user_params):
-        self.results_popup.setGeometry(QRect(100, 100, 500, 300))
-
-        if self.label is not None:
-            self.results_popup.update_details(method_name, user_params, self.centroids, clustering_validation_indexes(self.label,self.centroid,float(len(set(self.label)))))
-        self.results_popup.show()
-
 
     def fill_table(self, usable_dataset_instance):
         #self.table_displayer.fill_with_extracted_data(usable_dataset_instance)
@@ -128,6 +121,33 @@ class ClusteringView2(QtGui.QWidget):
             tableWidget.setItem(row_count, 6, item)
             row_count = row_count + 1
 
+    def update_details(self, clustering_method, user_values, centroids, validation_values):
+        print("update")
+        self.info_panel.setText("")
+
+        self.info_panel.insertPlainText(clustering_method+"\n-----------------------------------------------------------------------------\n")
+
+        for param_name in user_values.keys():
+            self.info_panel.insertPlainText(param_name+"\t\t\t "+user_values[param_name]+"\n")
+
+        self.info_panel.insertPlainText("-----------------------------------------------------------------------------\n\n")
+        self.info_panel.insertPlainText(
+            "Cluster centroids\n-----------------------------------------------------------------------------\n")
+        count = 0
+        for c in centroids:
+            self.info_panel.insertPlainText("Cluster "+str(count)+": \t\t" + str(c)+"\n")
+            count = count+1
+
+        self.info_panel.insertPlainText(
+            "-----------------------------------------------------------------------------\n\n")
+        self.info_panel.insertPlainText("Validation Indexes\n-----------------------------------------------------------------------------\n")
+
+        self.info_panel.insertPlainText("Mean Silhouette : \t\t "+str(validation_values[0])+"\n")
+        self.info_panel.insertPlainText("This mean is between -1 and 1 and the best value is around 1." +"\n\n")
+        self.info_panel.insertPlainText("Calinski-Habaraz score: \t " + str(validation_values[1]) + "\n\n")
+        self.info_panel.insertPlainText("Davies-Bouldin index: \t\t " + str(validation_values[2]) + "\n\n")
+        self.info_panel.insertPlainText("Calinski-Habaraz score and Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the indice, better is the number of clusters.\n\n")
+
     def runSelectedClust(self, selectedMethod, param_dict):
         print(param_dict)
         clustering_results = run_clustering(selectedMethod, param_dict)
@@ -135,10 +155,14 @@ class ClusteringView2(QtGui.QWidget):
         self.label = clustering_results[0]
         self.centroids = clustering_results[1]
         self.fill_clust_labels(self.label,self.tableWidget)
-        print("test")
+        print("ici")
+        self.update_details(selectedMethod, param_dict, self.centroids, clustering_validation_indexes(self.label,self.centroids,float(len(set(self.label)))))
+        
+
+
+        #self.results_popup.update_details(method_name, user_params, self.centroids, clustering_validation_indexes(self.label,self.centroid,float(len(set(self.label)))))
         #self.add_hist(param_dict, self.label)
         #self.add_silhouette(self.label)
-
         # Plot the differents figures for test
         ###clustering_plot.plot_silhouette(self.label)
         #clustering_plot.plot_3d_clusters(self.label)
@@ -152,7 +176,6 @@ class ClusteringView2(QtGui.QWidget):
             QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")
 
     def save(self):
-        print("coucou")
         print(self.label)
         if self.label is not None:
             makeClusterResultSet(get_current_usableDataset(), self.label)
@@ -160,7 +183,7 @@ class ClusteringView2(QtGui.QWidget):
                                           "A set has been created in the clustering part at home page.")
 
         else:
-            QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")
+            QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation") 
 
     def go_back(self):
         # -- When the user wants to return to the main view, we reinit the cluster view
@@ -362,6 +385,15 @@ class ClusteringView2(QtGui.QWidget):
         self.verticalLayout_result.addWidget(self.label_result)
         self.widget_result_view = QtGui.QWidget(self.widget_result)
         self.widget_result_view.setObjectName(_fromUtf8("widget_result_view"))
+
+        self.info_panel = QtGui.QTextEdit()
+        self.info_panel.setReadOnly(True)
+
+        self.info_panel.setText("======= CLUSTERING VALIDATION INDEXES =======\n\n"
+                                "No algorithm has been applied, no indexes were computed ...")
+
+        self.verticalLayout_result.addWidget(self.info_panel)
+
         self.verticalLayout_result.addWidget(self.widget_result_view)
         self.verticalLayout_dataAndResult.addWidget(self.widget_result)
         self.horizontalLayout.addLayout(self.verticalLayout_dataAndResult)
