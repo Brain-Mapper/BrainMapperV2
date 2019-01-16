@@ -251,8 +251,8 @@ class SetButton(QtGui.QWidget):
         # -- This current_set will vizualize the set and the collections inside when pressed
         set_current_set(self.my_set)
         set_current_vizu(self.vizu)
-        self.parent().parent().parent().parent().parent().parent().parent().parent().parent().updateVizu(self.vizu)
-        self.parent().parent().parent().parent().parent().parent().parent().parent().parent().upCollLabel()
+        #self.parent().parent().parent().parent().parent().parent().parent().parent().parent().updateVizu(self.vizu)
+        #self.parent().parent().parent().parent().parent().parent().parent().parent().parent().upCollLabel()
 
     def addSubet(self):
         # -- This addSubet will add a subset to the set selected.

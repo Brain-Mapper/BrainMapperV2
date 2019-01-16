@@ -696,51 +696,50 @@ class MainView2(QtGui.QWidget):
         print()
 
     def extract_and_cluster(self):
-        # if get_selected():
-        #     choice = QtGui.QMessageBox()
-        #     choice.setWindowTitle('Extract data for clustering')
-        #
-        #     centroid_opt = QRadioButton("Use centroids as file representation")
-        #     all_points_opt = QRadioButton("Use all region points for each file")
-        #     all_points_opt.setChecked(True)
-        #
-        #     l = choice.layout()
-        #     l.setContentsMargins(20, 0, 0, 20)
-        #     l.addWidget(QLabel("You have selected (" + str(len(
-        #         get_selected())) + ") image collections. \nThere is a total of ("
-        #                        + str(
-        #         get_selected_images_number()) + ") NIfTI images to be treated. \n\nPlease select the way "
-        #                                         "you would like each file to be represented : "),
-        #                 l.rowCount() - 3, 0, 1, l.columnCount() - 2, Qt.AlignCenter)
-        #     rb_box = QtGui.QGroupBox()
-        #     vbox = QtGui.QVBoxLayout()
-        #     vbox.addWidget(all_points_opt)
-        #     vbox.addWidget(centroid_opt)
-        #
-        #     rb_box.setLayout(vbox)
-        #     l.addWidget(rb_box, l.rowCount() - 2, 0, Qt.AlignCenter)
-        #
-        #     choice.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-        #
-        #     ret = choice.exec_()
-        #
-        #     if ret == QtGui.QMessageBox.Yes:
-        #
-        #         if all_points_opt.isChecked():
-        #             extract_data_from_selected()
-        #
-        #         elif centroid_opt.isChecked():
-        #             extract_data_as_centroids_from_selected()
-        #
-        #         else:
-        #             print("There was a problem in data extraction options")
-        #
-        #         self.showClust.emit()
-        #
-        # else:
-        #     QtGui.QMessageBox.information(self, "Selection empty", "There's no data to extract and clusterize.")
-        self.showClust.emit()
-        print()
+        if get_selected():
+            choice = QtGui.QMessageBox()
+            choice.setWindowTitle('Extract data for clustering')
+        
+            centroid_opt = QRadioButton("Use centroids as file representation")
+            all_points_opt = QRadioButton("Use all region points for each file")
+            all_points_opt.setChecked(True)
+        
+            l = choice.layout()
+            l.setContentsMargins(20, 0, 0, 20)
+            l.addWidget(QLabel("You have selected (" + str(len(
+                get_selected())) + ") image collections. \nThere is a total of ("
+                               + str(
+                get_selected_images_number()) + ") NIfTI images to be treated. \n\nPlease select the way "
+                                                "you would like each file to be represented : "),
+                        l.rowCount() - 3, 0, 1, l.columnCount() - 2, Qt.AlignCenter)
+            rb_box = QtGui.QGroupBox()
+            vbox = QtGui.QVBoxLayout()
+            vbox.addWidget(all_points_opt)
+            vbox.addWidget(centroid_opt)
+        
+            rb_box.setLayout(vbox)
+            l.addWidget(rb_box, l.rowCount() - 2, 0, Qt.AlignCenter)
+        
+            choice.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        
+            ret = choice.exec_()
+        
+            if ret == QtGui.QMessageBox.Yes:
+        
+                if all_points_opt.isChecked():
+                    extract_data_from_selected()
+        
+                elif centroid_opt.isChecked():
+                    extract_data_as_centroids_from_selected()
+        
+                else:
+                    print("There was a problem in data extraction options")
+        
+                self.showClust.emit()
+        
+        else:
+            QtGui.QMessageBox.information(self, "Selection empty", "There's no data to extract and clusterize.")
+    
 
     def calcul(self):
         # if (get_selected()):
