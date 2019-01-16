@@ -20,6 +20,7 @@ from clustering_components.clustering_paramspace import ParameterAndScriptStack
 # View components' import
 from clustering_components.clustering_results import ClusteringDataTable, ClusteringGraphs, ClusteringResultsPopUp
 from clustering_components.clustering_topbar import *
+from clustering_components.clustering_plot import get_color
 import clustering_components.clustering_plot as clustering_plot
 
 try:
@@ -76,6 +77,7 @@ class ClusteringView2(QtGui.QWidget):
         :param a_usable_dataset_instance: see UsableData for more details
         :return: Nothing"""
         print("coucou")
+
         self.clustering_usable_dataset = usable_dataset_instance
         self.tableWidget.setRowCount(usable_dataset_instance.get_row_num())
 
@@ -97,14 +99,44 @@ class ClusteringView2(QtGui.QWidget):
                     self.tableWidget.setItem(row_count, 6, QtGui.QTableWidgetItem("None yet"))
                     row_count = row_count+1
 
+    def fill_clust_labels(self, assigned_labels_array, tableWidget):
+        """
+        Fill the 'Assigned cluster' column once we have the clustering labels result
+        :param assigned_labels_array:
+        :return:
+        """
+        # # The following function is only needed here !
+        # def generate_random_hex_dict(n):
+        #     import random   #local import (reduced scope)
+        #     ra = lambda: random.randint(0, 255)
+        #     hex_dict = dict()
+        #     for i in range(0, n):
+        #         # Mixing with white to have pastel colors
+        #         hex_string = '#%02X%02X%02X' % (int((ra()+255)/2), int((ra()+255)/2), int((ra()+255)/2))
+        #         hex_dict[str(i)] = hex_string
+        #     return hex_dict
 
-    def runSelectedClust(self):
-        print(self.comboBox_methode.currentText())
+        # # Generate one random pastel color for each cluster
+        # colors = generate_random_hex_dict(len(assigned_labels_array))
+
+        colors = get_color(sorted(set(assigned_labels_array)), True)
+
+        row_count = 0
+        for label in assigned_labels_array:
+            item = QtGui.QTableWidgetItem(str(label))
+            item.setTextAlignment(Qt.AlignCenter)
+            color = colors[label]  
+            item.setBackground(QtGui.QColor(colors[label][0],colors[label][1],colors[label][2], 150))
+            tableWidget.setItem(row_count, 6, item)
+            row_count = row_count + 1
+
+    def runSelectedClust(self, selectedMethod, param_dict):
+        print(param_dict)
         clustering_results = run_clustering(selectedMethod, param_dict)
         print("runSelectedCLud -> Param dict : {}".format(param_dict.keys()));
         self.label = clustering_results[0]
         self.centroids = clustering_results[1]
-        self.table_displayer.fill_clust_labels(self.label)
+        self.fill_clust_labels(self.label,self.tableWidget)
         self.add_hist(param_dict, self.label)
         self.add_silhouette(self.label)
 
@@ -121,7 +153,9 @@ class ClusteringView2(QtGui.QWidget):
             QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")
 
     def save(self):
+        print("coucou")
         if self.label is not None:
+            print("coucou")
             makeClusterResultSet(self.table_displayer.clustering_usable_dataset, self.label)
             QtGui.QMessageBox.information(self, "Results saved!",
                                           "A set has been created in the clustering results tab at home page.")
@@ -159,14 +193,6 @@ class ClusteringView2(QtGui.QWidget):
         self.label_clustering.setAlignment(QtCore.Qt.AlignCenter)
         self.label_clustering.setObjectName(_fromUtf8("label_clustering"))
         self.verticalLayout_clustering.addWidget(self.label_clustering)
-        self.label_select_methode = QtGui.QLabel(self.widget_clustering)
-        self.label_select_methode.setMaximumSize(QtCore.QSize(16777215, 20))
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.label_select_methode.setFont(font)
-        self.label_select_methode.setTextFormat(QtCore.Qt.AutoText)
-        self.label_select_methode.setObjectName(_fromUtf8("label_select_methode"))
-        self.verticalLayout_clustering.addWidget(self.label_select_methode)
         self.comboBox_methode = ClusteringChooser()
         # self.comboBox_methode = QtGui.QComboBox(self.widget_clustering)
         # sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
@@ -285,8 +311,7 @@ class ClusteringView2(QtGui.QWidget):
         self.pushButton_run = QtGui.QPushButton(self.widget_buttons)
         self.pushButton_run.setObjectName(_fromUtf8("pushButton_run"))
 
-        # self.pushButton_run.clicked.connect(lambda: self.runSelectedClust(self.clust_chooser.get_selected_method_name(),
-        #                                                                   self.param_script_stack.get_user_params()))
+        self.pushButton_run.clicked.connect(lambda: self.runSelectedClust(self.comboBox_methode.get_selected_method_name(),self.widget_parametres.get_user_params()))
         self.pushButton_run.clicked.connect(self.runSelectedClust)
         self.horizontalLayout_buttons.addWidget(self.pushButton_run)
         self.pushButton_export = QtGui.QPushButton(self.widget_buttons)
@@ -304,6 +329,7 @@ class ClusteringView2(QtGui.QWidget):
         self.horizontalLayout_buttons.addWidget(self.pushButton_show)
         self.pushButton_save = QtGui.QPushButton(self.widget_buttons)
         self.pushButton_save.setObjectName(_fromUtf8("pushButton_save"))
+        self.pushButton_save.clicked.connect(self.save)
         self.horizontalLayout_buttons.addWidget(self.pushButton_save)
         self.pushButton_back = QtGui.QPushButton(self.widget_buttons)
         self.pushButton_back.clicked.connect(self.go_back)
@@ -344,7 +370,7 @@ class ClusteringView2(QtGui.QWidget):
     def retranslateUi(self, Form):
         Form.setWindowTitle(_translate("Form", "Form", None))
         self.label_clustering.setText(_translate("Form", "Clustering", None))
-        self.label_select_methode.setText(_translate("Form", "Select a clustering methods", None))
+        # self.label_select_methode.setText(_translate("Form", "Select a clustering methods", None))
         # self.comboBox_methode.setItemText(0, _translate("Form", "K-means", None))
         # self.comboBox_methode.setItemText(1, _translate("Form", "K-medoids", None))
         # self.comboBox_methode.setItemText(2, _translate("Form", "Agglomerative", None))
