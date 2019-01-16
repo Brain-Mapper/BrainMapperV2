@@ -159,11 +159,11 @@ class SetButton(QtGui.QWidget):
 
     def fromNiFile(self):
         # -- We create a collection with the list of images the user selected and give it to the main view and the edit view
-        print("coucou3")
+        
         file = QFileDialog.getOpenFileNames()
         if (file != ""):
             try:
-                collec = do_image_collection(file) 
+                collec = do_image_collection(file,self.my_set) 
                 #homepage.mainview.show_coll(collec)
                 #homepage.edit_colls.fill_coll() #rapport a editview2
             except:
@@ -176,7 +176,7 @@ class SetButton(QtGui.QWidget):
         if (file != ""):
             # try:
             collec = simple_import(file, os.path.join(os.path.dirname(__file__),
-                                                      'ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii'))
+                                                      'ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii'),self.my_set)
             #homepage.mainview.show_coll(collec)
             #homepage.edit_colls.fill_coll() #rapport a editview2
             # except:
@@ -213,7 +213,6 @@ class SetButton(QtGui.QWidget):
 
         if ret == QtGui.QMessageBox.Apply:
             if nifti_opt.isChecked():
-                print("coucou")
                 self.fromNiFile()
 
             elif excel_opt.isChecked():
@@ -264,7 +263,6 @@ class SetButton(QtGui.QWidget):
                         self.my_set.getParent().add_subset(self.my_set)
                     else:
                         self.my_set.set_name(str(text))
-                    print("coucou")
                     print(self.my_set.get_name())
                     self.check.setText(str(text))
                     add_set(self.my_set)
