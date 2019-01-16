@@ -22,7 +22,7 @@ import os
 class Set(object):
     """ A custom structure to contain several image collections """
 
-    def __init__(self, name):
+    def __init__(self, name, position):
         """
         Constructor of the Set Class.
 
@@ -39,6 +39,7 @@ class Set(object):
         self.subset_dict = dict()
         self.collection_dict = dict()
         self.parent = None
+        self.position = position
 
     def add_empty_subset(self, name):
         """
@@ -49,9 +50,15 @@ class Set(object):
             name{string} -- name of the new subset.
         """
         if name not in self.subset_dict.keys():
-            self.subset_dict[name] = Set(name)
+            p = self.number_of_subset()
+            self.subset_dict[name] = Set(name,p)
+            print("t")
+            self.subset_dict[name].setParent(self)
+            print("t1")
+            return self.subset_dict[name]
         else:
             print('The Subset name : %s already exist' % name)
+            return Null
 
     def add_empty_collection(self, name, set_name):
         """
@@ -278,3 +285,16 @@ class Set(object):
                     return recursive_scan_of_subsets(subset_list, subset)
 
         return recursive_scan_of_subsets([], self)
+
+    def getPosition(self):
+        p = []
+        p.append(self.position)
+        parent = self.parent
+        while parent!= None:
+            print(parent.name)
+            p.append(parent.position)
+            parent = parent.parent
+        p.append(0)
+        p.reverse()
+        print(p)
+        return p

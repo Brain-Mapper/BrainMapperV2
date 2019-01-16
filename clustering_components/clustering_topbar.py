@@ -36,7 +36,7 @@ class ClusteringChooser(QtGui.QToolButton):
 
         self.currently_selected = None
         self.setText("Choose a clustering algorithm")
-        self.setStyleSheet("width: 250px; background-color: #fefee1;")
+        self.setStyleSheet("width: 250px;")
         self.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
 
         self.clustering_algo_menu = QtGui.QMenu()

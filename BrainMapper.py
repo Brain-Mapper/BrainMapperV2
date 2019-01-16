@@ -39,6 +39,8 @@ toRM = []  # Contains all images to remove in edit view (can be used somewhere e
 currentUsableDataset = None
 
 sets = []  # List of all sets (and sub sets) created (usefull to know if a name is already used)
+globalSets = [[],[],[]]
+setToAdd = []
 workspace_sets = []  # List of all sets (and sub sets) created by workspace import
 clusteringsets = []  # List of sets created as a result for clustering, permit to remember wich one to create
 calculsets = []  # List of sets created as a result for calculation, permit to remember wich one to create
@@ -46,6 +48,8 @@ currentSet = None  # The current set shown in main view
 currentVizu = None  # The current collections shown in main view
 
 history = []
+collshow=[]
+
 
 # Dictionary of available clustering methods
 app_clustering_available = {}
@@ -74,7 +78,7 @@ def open_nifti(path):
     return image
 
 
-def do_image_collection(files):
+def do_image_collection(files,set_import):
     """
     Create an image collection from a list of file paths
 
@@ -84,35 +88,39 @@ def do_image_collection(files):
     Return :
         ImageCollection instance
     """
-    coll = ImageCollection("default", currentSet)
+
+    coll = ImageCollection("default", set_import)
     # We want an unique name for each collection
     # To do so we use the object ID
     name = str(coll).split("0x")
     name = name[1]
     coll.set_name(name[:-1])
+
     for file in files:
         # For french language, encode to latin1 -> to be able to take files with special characters of french in their file path
         filename = file#.toLatin1().data()
         image = open_nifti(filename)
         coll.add(image)
     add_coll(coll)  # We add the collection create to selected by default
-    currentSet.add_collection(coll)  # We add the collection created in the current set
+    print(set_import)
+    set_import.add_collection(coll)  # We add the collection created in the current set
     return coll
 
 
 def add_coll(coll):
+    pass
     """
     Add a collection to the selected collection list [global variable 'selected']
 
     Arguments :
         coll -- ImageCollection instance
     """
-    found = False
-    for i in selected:
-        if i.name == coll.name:
-            found = True
-    if not found:
-        selected.append(coll)
+    # found = False
+    # for i in selected:
+    #     if i.name == coll.name:
+    #         found = True
+    # if not found:
+    #     selected.append(coll)
 
 
 def rm_coll(coll):
@@ -130,6 +138,7 @@ def rm_coll(coll):
         selected.remove(coll)
 
 
+
 def get_selected():
     """
     Return the selected collections (useful for all views that use data)
@@ -137,7 +146,7 @@ def get_selected():
     Return :
         global variable 'selected'
     """
-    return selected
+    return collshow
 
 
 def get_selected_images_number():
@@ -148,7 +157,7 @@ def get_selected_images_number():
         img_num{int}
     """
     img_num = 0
-    for imgc in selected:
+    for imgc in collshow:
         img_num = img_num + imgc.get_image_total_num()
     return img_num
 
@@ -160,7 +169,7 @@ def extract_data_from_selected():
     Global var 'currentUsableDataset' is modified
     """
     global currentUsableDataset
-    currentUsableDataset = xt.extract_from_collection_list(selected)
+    currentUsableDataset = xt.extract_from_collection_list(collshow)
 
 
 def extract_data_as_centroids_from_selected():
@@ -171,7 +180,7 @@ def extract_data_as_centroids_from_selected():
       Global var 'currentUsableDataset' is modified
     """
     global currentUsableDataset
-    currentUsableDataset = xt.extract_from_collection_list_using_centroids(selected)
+    currentUsableDataset = xt.extract_from_collection_list_using_centroids(collshow)
 
 
 def get_current_usableDataset():
@@ -232,13 +241,16 @@ def run_clustering(selectedClusteringMethod, params_dict):
     clusterizable_dataset = currentUsableDataset.export_as_clusterizable()
     print("run_clustering -> clusterizable_dataset", clusterizable_dataset)
     if selectedClusteringMethod in CLUSTERING_METHODS.keys():
-        range_of_cluster = read_n(params_dict["n_clusters"])
-        if len(range_of_cluster) == 1:
+        bool_not_range = True # True if there isn't a
+        if selectedClusteringMethod != "DBSCAN":
+            range_of_cluster = read_n(params_dict["n_clusters"])
+            bool_not_range = len(range_of_cluster) == 1
+        if bool_not_range:
             # normal use
             final_results = CLUSTERING_METHODS[selectedClusteringMethod](params_dict, clusterizable_dataset)
             final_results["n_selected"] = None
             final_results["scores"] = None
-            final_results["n"] = int(params_dict["n_clusters"])
+            final_results["n"] = int(params_dict["n_clusters"]) if selectedClusteringMethod != "DBSCAN" else len(set(clustering.filter(clusterizable_dataset, final_results["labels"])[1]))
             final_results["clusterizable_dataset"] = clusterizable_dataset
         else :
             # search of the best clustering result
@@ -387,7 +399,7 @@ def get_selected_from_name(name):
     Return :
         ImageCollection
     """
-    for x in selected:
+    for x in collshow:
         if (name == x.name):
             return x
 
@@ -548,7 +560,7 @@ def exists_set(name):
     return False
 
 
-def newSet(name):
+def newSet(name,position):
     """
     Creates a new set a the name "name" and add it into the set list. Also change the current set with the new one
 
@@ -559,7 +571,7 @@ def newSet(name):
         Set instance
     """
     global currentSet
-    new_set = Set(name)
+    new_set = Set(name,position)
     sets.append(new_set)
     currentSet = new_set
     return new_set
@@ -719,6 +731,7 @@ def makeClusterResultSet(a_usable_dataset, label):
                                                 'ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii')
     add_set(new_set)
     clusteringsets.append(new_set)
+    setToAdd.append([new_set,2])
 
 
 def getClusterResultSets():
@@ -742,7 +755,7 @@ def rmClusterResultSets(s):
 # ---- IMPORT ----
 
 
-def simple_import(csv_file_path, template_mni_path):
+def simple_import(csv_file_path, template_mni_path,set_import):
     """
     Import a file
 
@@ -755,7 +768,7 @@ def simple_import(csv_file_path, template_mni_path):
     """
     coll = imp.simple_import(csv_file_path, template_mni_path, currentSet)
     add_coll(coll)
-    currentSet.add_collection(coll)
+    set_import.add_collection(coll)
     return coll
 
 
