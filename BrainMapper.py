@@ -37,7 +37,8 @@ toRM = []  # Contains all images to remove in edit view (can be used somewhere e
 currentUsableDataset = None
 
 sets = []  # List of all sets (and sub sets) created (usefull to know if a name is already used)
-globalSets = []
+globalSets = [[],[],[]]
+setToAdd = []
 workspace_sets = []  # List of all sets (and sub sets) created by workspace import
 clusteringsets = []  # List of sets created as a result for clustering, permit to remember wich one to create
 calculsets = []  # List of sets created as a result for calculation, permit to remember wich one to create
@@ -75,7 +76,7 @@ def do_image_collection(files,set_import):
     :param files: list of strings (file paths)
     :return: ImageCollection instance
     """
-    
+
     coll = ImageCollection("default", set_import)
     # We want an unique name for each collection
     # To do so we use the object ID
@@ -571,6 +572,7 @@ def makeClusterResultSet(a_usable_dataset, label):
                                                 'ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii')
     add_set(new_set)
     clusteringsets.append(new_set)
+    setToAdd.append([new_set,2])
 
 
 def getClusterResultSets():

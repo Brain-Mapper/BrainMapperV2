@@ -156,6 +156,7 @@ class HomePage(QWidget):
 
     def updateMainCluster(self):
         self.mainview.updateClusterRes()
+        self.mainview.updateTreeView()
 
     def updateMainCalcul(self):
         self.mainview.updateCalculRes()

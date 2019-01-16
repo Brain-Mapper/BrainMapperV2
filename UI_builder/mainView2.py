@@ -154,14 +154,15 @@ class SetButton(QtGui.QWidget):
       hbox.addWidget(ImportButton)
 
       self.setLayout(hbox)
+      print("fini")
 
     def fromNiFile(self):
         # -- We create a collection with the list of images the user selected and give it to the main view and the edit view
-        
+
         file = QFileDialog.getOpenFileNames()
         if (file != ""):
             try:
-                collec = do_image_collection(file,self.my_set) 
+                collec = do_image_collection(file,self.my_set)
                 #homepage.mainview.show_coll(collec)
                 #homepage.edit_colls.fill_coll() #rapport a editview2
             except:
@@ -333,8 +334,8 @@ class SetButton(QtGui.QWidget):
                     if set!=self and set.position>self.my_set.position:
                         set.position-=1
             else:
-                globalSets.remove(self.my_set)
-                for s in globalSets :
+                globalSets[0].remove(self.my_set)
+                for s in globalSets[0] :
                     s.position-=1
 
 
@@ -558,7 +559,7 @@ class MainView2(QtGui.QWidget):
         item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(0))
         item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
         self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(0), 0, SetButton(my_set,self.verticalLayout_image_collections_show,self.verticalLayout_widget_selected_view,self.treeWidget))
-        globalSets.append(my_set)
+        globalSets[0].append(my_set)
 
 
 
@@ -580,18 +581,27 @@ class MainView2(QtGui.QWidget):
                 if i in str(text):
                     new_ok = False
             if new_ok and not exists_set(str(text)):
-                my_set = newSet(text,len(globalSets))
+                my_set = newSet(text,len(globalSets[0]))
                 print(my_set.name)
 
                 item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(0))
                 item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
-                self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(len(globalSets)), 0, SetButton(my_set,self.verticalLayout_image_collections_show,self.verticalLayout_widget_selected_view,self.treeWidget))
+                self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(len(globalSets[0])), 0, SetButton(my_set,self.verticalLayout_image_collections_show,self.verticalLayout_widget_selected_view,self.treeWidget))
 
-                globalSets.append(my_set)
-                print(len(globalSets))
+                globalSets[0].append(my_set)
+                print(len(globalSets[0]))
             else :
                 err = QtGui.QMessageBox.critical(self, "Error",
                                                      "The name you entered is not valid (empty, invalid caracter or already exists)")
+
+    def updateTreeView(self):
+        for s in setToAdd :
+            print(s[0].name,s[1])
+            item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(s[1]))
+            item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
+            self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(len(globalSets[s[1]])), 0, SetButton(s[0],self.verticalLayout_image_collections_show,self.verticalLayout_widget_selected_view,self.treeWidget))
+            globalSets[s[1]].append(s[0])
+            setToAdd.remove(s)
 
 
 
