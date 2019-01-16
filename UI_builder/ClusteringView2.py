@@ -137,13 +137,14 @@ class ClusteringView2(QtGui.QWidget):
         self.label = clustering_results[0]
         self.centroids = clustering_results[1]
         self.fill_clust_labels(self.label,self.tableWidget)
-        self.add_hist(param_dict, self.label)
-        self.add_silhouette(self.label)
+        print("test")
+        #self.add_hist(param_dict, self.label)
+        #self.add_silhouette(self.label)
 
         # Plot the differents figures for test
-        clustering_plot.plot_silhouette(self.label)
-        clustering_plot.plot_3d_clusters(self.label)
-        clustering_plot.plot_cross_section(self.label)
+        ###clustering_plot.plot_silhouette(self.label)
+        #clustering_plot.plot_3d_clusters(self.label)
+        #clustering_plot.plot_cross_section(self.label)
 
     def export(self):
         if self.label is not None:
@@ -154,8 +155,8 @@ class ClusteringView2(QtGui.QWidget):
 
     def save(self):
         print("coucou")
+        print(self.label)
         if self.label is not None:
-            print("coucou")
             makeClusterResultSet(self.table_displayer.clustering_usable_dataset, self.label)
             QtGui.QMessageBox.information(self, "Results saved!",
                                           "A set has been created in the clustering results tab at home page.")
@@ -183,7 +184,8 @@ class ClusteringView2(QtGui.QWidget):
         self.verticalLayout_clustering.setContentsMargins(0, 0, 0, 9)
         self.verticalLayout_clustering.setObjectName(_fromUtf8("verticalLayout_clustering"))
         self.label_clustering = QtGui.QLabel(self.widget_clustering)
-        self.label_clustering.setMaximumSize(QtCore.QSize(16777215, 30))
+        self.label_clustering.setMinimumSize(QtCore.QSize(16777215, 30))
+        self.label_clustering.setMaximumSize(QtCore.QSize(16777215, 80))
         font = QtGui.QFont()
         font.setPointSize(12)
         font.setBold(False)
@@ -317,7 +319,6 @@ class ClusteringView2(QtGui.QWidget):
         self.pushButton_run.setObjectName(_fromUtf8("pushButton_run"))
 
         self.pushButton_run.clicked.connect(lambda: self.runSelectedClust(self.comboBox_methode.get_selected_method_name(),self.widget_parametres.get_user_params()))
-        self.pushButton_run.clicked.connect(self.runSelectedClust)
         self.horizontalLayout_buttons.addWidget(self.pushButton_run)
         self.pushButton_export = QtGui.QPushButton(self.widget_buttons)
         self.pushButton_export.setObjectName(_fromUtf8("pushButton_export"))
