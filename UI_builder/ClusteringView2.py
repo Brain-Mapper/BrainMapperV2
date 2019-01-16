@@ -121,22 +121,31 @@ class ClusteringView2(QtGui.QWidget):
             tableWidget.setItem(row_count, 6, item)
             row_count = row_count + 1
 
-    def update_details(self, clustering_method, user_values, centroids, validation_values):
-        print("update")
+    #def update_details(self, clustering_method, user_values, centroids, validation_values):
+    def update_details(self, clustering_method, user_values, centroids, validation_values, n_selected, n, scores):
+        # TODO Lucie recopie ton result detail là !
         self.info_panel.setText("")
 
         self.info_panel.insertPlainText(clustering_method+"\n-----------------------------------------------------------------------------\n")
 
         for param_name in user_values.keys():
-            self.info_panel.insertPlainText(param_name+"\t\t\t "+user_values[param_name]+"\n")
-
+            self.info_panel.insertPlainText(param_name+"\t\t\t "+str(user_values[param_name])+"\n")
+        if n_selected is not None :
+            self.info_panel.insertPlainText("n_selected"+"\t\t"+str(n_selected)+"\n")
         self.info_panel.insertPlainText("-----------------------------------------------------------------------------\n\n")
+        if scores is not None :
+            self.info_panel.insertPlainText("Different scores for each value of clusters number\n-----------------------------------------------------------------------------\n")
+            self.info_panel.insertPlainText("n \t\t scores \n\n")
+            for i in range(len(n)):
+                self.info_panel.insertPlainText(str(n[i]) + "\t\t" + str(scores[i])+"\n\n")
+            self.info_panel.insertPlainText("-----------------------------------------------------------------------------\n\n")
         self.info_panel.insertPlainText(
             "Cluster centroids\n-----------------------------------------------------------------------------\n")
         count = 0
-        for c in centroids:
-            self.info_panel.insertPlainText("Cluster "+str(count)+": \t\t" + str(c)+"\n")
-            count = count+1
+        if centroids is not None :
+            for c in centroids:
+                self.info_panel.insertPlainText("Cluster "+str(count)+": \t\t" + str(c)+"\n")
+                count = count+1
 
         self.info_panel.insertPlainText(
             "-----------------------------------------------------------------------------\n\n")
@@ -146,18 +155,61 @@ class ClusteringView2(QtGui.QWidget):
         self.info_panel.insertPlainText("This mean is between -1 and 1 and the best value is around 1." +"\n\n")
         self.info_panel.insertPlainText("Calinski-Habaraz score: \t " + str(validation_values[1]) + "\n\n")
         self.info_panel.insertPlainText("Davies-Bouldin index: \t\t " + str(validation_values[2]) + "\n\n")
-        self.info_panel.insertPlainText("Calinski-Habaraz score and Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the indice, better is the number of clusters.\n\n")
+        self.info_panel.insertPlainText("Calinski-Habaraz score is the relation between the sum of distances squared intergroup and the sum of distances squared intragroup. Whereas, Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the Davies-Bouldin index and bigger is the Calinski-Habaraz score, better is the number of clusters.\n\n")
+
+        # print("update")
+        # self.info_panel.setText("")
+
+        # self.info_panel.insertPlainText(clustering_method+"\n-----------------------------------------------------------------------------\n")
+
+        # for param_name in user_values.keys():
+        #     self.info_panel.insertPlainText(param_name+"\t\t\t "+user_values[param_name]+"\n")
+
+        # self.info_panel.insertPlainText("-----------------------------------------------------------------------------\n\n")
+        # self.info_panel.insertPlainText(
+        #     "Cluster centroids\n-----------------------------------------------------------------------------\n")
+        # count = 0
+        # for c in centroids:
+        #     self.info_panel.insertPlainText("Cluster "+str(count)+": \t\t" + str(c)+"\n")
+        #     count = count+1
+
+        # self.info_panel.insertPlainText(
+        #     "-----------------------------------------------------------------------------\n\n")
+        # self.info_panel.insertPlainText("Validation Indexes\n-----------------------------------------------------------------------------\n")
+
+        # self.info_panel.insertPlainText("Mean Silhouette : \t\t "+str(validation_values[0])+"\n")
+        # self.info_panel.insertPlainText("This mean is between -1 and 1 and the best value is around 1." +"\n\n")
+        # self.info_panel.insertPlainText("Calinski-Habaraz score: \t " + str(validation_values[1]) + "\n\n")
+        # self.info_panel.insertPlainText("Davies-Bouldin index: \t\t " + str(validation_values[2]) + "\n\n")
+        # self.info_panel.insertPlainText("Calinski-Habaraz score and Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the indice, better is the number of clusters.\n\n")
 
     def runSelectedClust(self, selectedMethod, param_dict):
-        print(param_dict)
-        clustering_results = run_clustering(selectedMethod, param_dict)
-        print("runSelectedCLud -> Param dict : {}".format(param_dict.keys()));
-        self.label = clustering_results[0]
-        self.centroids = clustering_results[1]
-        self.fill_clust_labels(self.label,self.tableWidget)
-        print("ici")
-        self.update_details(selectedMethod, param_dict, self.centroids, clustering_validation_indexes(self.label,self.centroids,float(len(set(self.label)))))
         
+        history.append({})
+        last_i = len(history)-1
+
+        #print("runSelectedClust -> len(history)", len(history))
+        clustering_results = run_clustering(selectedMethod, param_dict)
+        print("runSelectedClust -> data", clustering_results["clusterizable_dataset"])
+
+        history[last_i]["method_used"] = selectedMethod
+        history[last_i]["labels"] = clustering_results["labels"]
+        history[last_i]["data"] = clustering_results["clusterizable_dataset"]
+
+
+        self.label = clustering_results["labels"]
+        self.centroids = clustering_results["centers"] if "centers" in clustering_results.keys() else None
+        self.n_selected = clustering_results["n_selected"] if clustering_results["n_selected"] is not None else None
+        self.n = clustering_results["n"]
+        self.scores = clustering_results["scores"] if clustering_results["scores"] is not None else None
+        if (selectedMethod == 'FuzzyCMeans'):
+            self.belong = clustering_results["belong"]
+
+        self.fill_clust_labels(self.label,self.tableWidget)
+        # self.update_details(selectedMethod, param_dict, self.centroids, clustering_validation_indexes(self.label,self.centroids,float(len(set(self.label)))))
+        self.update_details(selectedMethod, param_dict, self.centroids, clustering_validation_indexes(self.label,
+                                                                                                      self.centroids,
+                                                                                                      float(len(set(self.label)))), self.n_selected, self.n, self.scores)
 
 
         #self.results_popup.update_details(method_name, user_params, self.centroids, clustering_validation_indexes(self.label,self.centroid,float(len(set(self.label)))))
