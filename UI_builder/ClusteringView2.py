@@ -43,7 +43,98 @@ class ClusteringView2(QtGui.QWidget):
     def __init__(self):
         super(ClusteringView2, self).__init__()
 
+        self.clust_chooser = None
+        self.table_displayer = None
+
+        self.results_popup = ClusteringResultsPopUp(':ressources/logo.png', ':ressources/app_icons_png/file-1.png')
+
+        self.label = None
+        self.centroids = None
+
+
+
+        title_style = "QLabel { background-color : #ffcc33 ; color : black;  font-style : bold; font-size : 14px;}"
+
+
         self.setupUi(self)
+
+    def popup_results_details(self, method_name, user_params):
+        self.results_popup.setGeometry(QRect(100, 100, 500, 300))
+
+        if self.label is not None:
+            self.results_popup.update_details(method_name, user_params, self.centroids, clustering_validation_indexes(self.label,
+                                                                                                      self.centroids,
+                                                                                                      float(len(set(self.label)))))
+        self.results_popup.show()
+
+
+    def fill_table(self, usable_dataset_instance):
+        #self.table_displayer.fill_with_extracted_data(usable_dataset_instance)
+
+        """
+        Fills this custom table with the data of a UsableDataSet obtained after data extraction
+        :param a_usable_dataset_instance: see UsableData for more details
+        :return: Nothing"""
+        print("coucou")
+        self.clustering_usable_dataset = usable_dataset_instance
+        self.tableWidget.setRowCount(usable_dataset_instance.get_row_num())
+
+        row_count = 0
+
+        for udcoll in self.clustering_usable_dataset.get_usable_data_list():
+
+            extracted_data_dictionary = udcoll.get_extracted_data_dict()
+
+            for origin_file in extracted_data_dictionary.keys():
+                data_array = extracted_data_dictionary[origin_file]
+                for data_rows in range(0, data_array.shape[0]):
+                    self.tableWidget.setItem(row_count, 0, QtGui.QTableWidgetItem(udcoll.get_imgcoll_name()))
+                    self.tableWidget.setItem(row_count, 1, QtGui.QTableWidgetItem(str(origin_file.filename)))
+                    self.tableWidget.setItem(row_count, 2, QtGui.QTableWidgetItem(str(data_array[data_rows, 0]))) # X coordinate at column 0
+                    self.tableWidget.setItem(row_count, 3, QtGui.QTableWidgetItem(str(data_array[data_rows, 1]))) # Y coordinate at column 1
+                    self.tableWidget.setItem(row_count, 4, QtGui.QTableWidgetItem(str(data_array[data_rows, 2]))) # Z coordinate at column 2
+                    self.tableWidget.setItem(row_count, 5, QtGui.QTableWidgetItem(str(data_array[data_rows, 3]))) # Intensity at column 3
+                    self.tableWidget.setItem(row_count, 6, QtGui.QTableWidgetItem("None yet"))
+                    row_count = row_count+1
+
+
+    def runSelectedClust(self):
+        print(self.comboBox_methode.currentText())
+        clustering_results = run_clustering(selectedMethod, param_dict)
+        print("runSelectedCLud -> Param dict : {}".format(param_dict.keys()));
+        self.label = clustering_results[0]
+        self.centroids = clustering_results[1]
+        self.table_displayer.fill_clust_labels(self.label)
+        self.add_hist(param_dict, self.label)
+        self.add_silhouette(self.label)
+
+        # Plot the differents figures for test
+        clustering_plot.plot_silhouette(self.label)
+        clustering_plot.plot_3d_clusters(self.label)
+        clustering_plot.plot_cross_section(self.label)
+
+    def export(self):
+        if self.label is not None:
+            (f_path, f_name) = os.path.split(str(QFileDialog.getSaveFileName(self, "Browse Directory")))
+            ee.clustering_export(f_name, f_path, self.table_displayer.clustering_usable_dataset, self.label)
+        else:
+            QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")
+
+    def save(self):
+        if self.label is not None:
+            makeClusterResultSet(self.table_displayer.clustering_usable_dataset, self.label)
+            QtGui.QMessageBox.information(self, "Results saved!",
+                                          "A set has been created in the clustering results tab at home page.")
+
+        else:
+            QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")
+
+    def go_back(self):
+        # -- When the user wants to return to the main view, we reinit the cluster view
+        #self.resultsGraphs.graph1.clear()
+        #self.resultsGraphs.graph2.clear()
+
+        self.showMain.emit()
 
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
@@ -68,31 +159,32 @@ class ClusteringView2(QtGui.QWidget):
         self.label_2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_2.setObjectName(_fromUtf8("label_2"))
         self.verticalLayout.addWidget(self.label_2)
-        self.label = QtGui.QLabel(self.widget)
-        self.label.setMaximumSize(QtCore.QSize(16777215, 20))
+        self.label_select_methode = QtGui.QLabel(self.widget)
+        self.label_select_methode.setMaximumSize(QtCore.QSize(16777215, 20))
         font = QtGui.QFont()
         font.setPointSize(10)
-        self.label.setFont(font)
-        self.label.setTextFormat(QtCore.Qt.AutoText)
-        self.label.setObjectName(_fromUtf8("label"))
-        self.verticalLayout.addWidget(self.label)
-        self.comboBox_2 = QtGui.QComboBox(self.widget)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.comboBox_2.sizePolicy().hasHeightForWidth())
-        self.comboBox_2.setSizePolicy(sizePolicy)
-        self.comboBox_2.setMaximumSize(QtCore.QSize(16777215, 30))
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.comboBox_2.setFont(font)
-        self.comboBox_2.setObjectName(_fromUtf8("comboBox_2"))
-        self.comboBox_2.addItem(_fromUtf8(""))
-        self.comboBox_2.addItem(_fromUtf8(""))
-        self.comboBox_2.addItem(_fromUtf8(""))
-        self.comboBox_2.addItem(_fromUtf8(""))
-        self.verticalLayout.addWidget(self.comboBox_2)
-        self.plainTextEdit = QtGui.QPlainTextEdit(self.widget)
+        self.label_select_methode.setFont(font)
+        self.label_select_methode.setTextFormat(QtCore.Qt.AutoText)
+        self.label_select_methode.setObjectName(_fromUtf8("label_select_methode"))
+        self.verticalLayout_clustering.addWidget(self.label_select_methode)
+        self.comboBox_methode = ClusteringChooser()
+        # self.comboBox_methode = QtGui.QComboBox(self.widget_clustering)
+        # sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
+        # sizePolicy.setHorizontalStretch(0)
+        # sizePolicy.setVerticalStretch(0)
+        # sizePolicy.setHeightForWidth(self.comboBox_methode.sizePolicy().hasHeightForWidth())
+        # self.comboBox_methode.setSizePolicy(sizePolicy)
+        # self.comboBox_methode.setMaximumSize(QtCore.QSize(16777215, 30))
+        # font = QtGui.QFont()
+        # font.setPointSize(10)
+        # self.comboBox_methode.setFont(font)
+        # self.comboBox_methode.setObjectName(_fromUtf8("comboBox_methode"))
+        # self.comboBox_methode.addItem(_fromUtf8(""))
+        # self.comboBox_methode.addItem(_fromUtf8(""))
+        # self.comboBox_methode.addItem(_fromUtf8(""))
+        # self.comboBox_methode.addItem(_fromUtf8(""))
+        self.verticalLayout_clustering.addWidget(self.comboBox_methode)
+        self.plainTextEdit = QtGui.QPlainTextEdit(self.widget_clustering)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -104,11 +196,13 @@ class ClusteringView2(QtGui.QWidget):
         self.plainTextEdit.setFont(font)
         self.plainTextEdit.setReadOnly(True)
         self.plainTextEdit.setObjectName(_fromUtf8("plainTextEdit"))
-        self.verticalLayout.addWidget(self.plainTextEdit)
-        self.widget_5 = QtGui.QWidget(self.widget)
-        self.widget_5.setObjectName(_fromUtf8("widget_5"))
-        self.verticalLayout.addWidget(self.widget_5)
-        self.widget_6 = QtGui.QWidget(self.widget)
+        self.verticalLayout_clustering.addWidget(self.plainTextEdit)
+        self.widget_informations = QtGui.QWidget(self.widget_clustering)
+        self.widget_informations.setObjectName(_fromUtf8("widget_informations"))
+        self.verticalLayout_clustering.addWidget(self.widget_informations)
+        title_style = "QLabel { background-color : #ffcc33 ; color : black;  font-style : bold; font-size : 14px;}"
+        self.widget_parametres = ParameterAndScriptStack(title_style, self.comboBox_methode)
+        #self.widget_parametres = QtGui.QWidget(self.widget_clustering)
         font = QtGui.QFont()
         font.setPointSize(12)
         font.setBold(False)
@@ -177,24 +271,28 @@ class ClusteringView2(QtGui.QWidget):
         item.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter|QtCore.Qt.AlignCenter)
         self.tableWidget.setHorizontalHeaderItem(6, item)
         self.tableWidget.horizontalHeader().setVisible(True)
-        self.verticalLayout_3.addWidget(self.tableWidget)
-        self.verticalLayout_2.addWidget(self.widget_2)
-        self.widget_4 = QtGui.QWidget(Form)
-        self.widget_4.setEnabled(True)
-        self.widget_4.setMinimumSize(QtCore.QSize(0, 50))
-        self.widget_4.setMaximumSize(QtCore.QSize(16777215, 50))
-        self.widget_4.setStyleSheet(_fromUtf8(""))
-        self.widget_4.setObjectName(_fromUtf8("widget_4"))
-        self.horizontalLayout_2 = QtGui.QHBoxLayout(self.widget_4)
-        self.horizontalLayout_2.setMargin(0)
-        self.horizontalLayout_2.setObjectName(_fromUtf8("horizontalLayout_2"))
-        self.pushButton_3 = QtGui.QPushButton(self.widget_4)
-        self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
-        self.horizontalLayout_2.addWidget(self.pushButton_3)
-        self.pushButton_2 = QtGui.QPushButton(self.widget_4)
-        self.pushButton_2.setObjectName(_fromUtf8("pushButton_2"))
-        self.horizontalLayout_2.addWidget(self.pushButton_2)
-        self.comboBox_3 = QtGui.QComboBox(self.widget_4)
+        self.verticalLayout_tab.addWidget(self.tableWidget)
+        self.verticalLayout_dataAndResult.addWidget(self.widget_tab)
+        self.widget_buttons = QtGui.QWidget(Form)
+        self.widget_buttons.setEnabled(True)
+        self.widget_buttons.setMinimumSize(QtCore.QSize(0, 50))
+        self.widget_buttons.setMaximumSize(QtCore.QSize(16777215, 50))
+        self.widget_buttons.setStyleSheet(_fromUtf8(""))
+        self.widget_buttons.setObjectName(_fromUtf8("widget_buttons"))
+        self.horizontalLayout_buttons = QtGui.QHBoxLayout(self.widget_buttons)
+        self.horizontalLayout_buttons.setMargin(0)
+        self.horizontalLayout_buttons.setObjectName(_fromUtf8("horizontalLayout_buttons"))
+        self.pushButton_run = QtGui.QPushButton(self.widget_buttons)
+        self.pushButton_run.setObjectName(_fromUtf8("pushButton_run"))
+
+        # self.pushButton_run.clicked.connect(lambda: self.runSelectedClust(self.clust_chooser.get_selected_method_name(),
+        #                                                                   self.param_script_stack.get_user_params()))
+        self.pushButton_run.clicked.connect(self.runSelectedClust)
+        self.horizontalLayout_buttons.addWidget(self.pushButton_run)
+        self.pushButton_export = QtGui.QPushButton(self.widget_buttons)
+        self.pushButton_export.setObjectName(_fromUtf8("pushButton_export"))
+        self.horizontalLayout_buttons.addWidget(self.pushButton_export)
+        self.comboBox_3 = QtGui.QComboBox(self.widget_buttons)
         self.comboBox_3.setObjectName(_fromUtf8("comboBox_3"))
         self.comboBox_3.addItem(_fromUtf8(""))
         self.comboBox_3.addItem(_fromUtf8(""))
@@ -241,12 +339,12 @@ class ClusteringView2(QtGui.QWidget):
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(_translate("Form", "Form", None))
-        self.label_2.setText(_translate("Form", "Clustering", None))
-        self.label.setText(_translate("Form", "Select a clustering methods", None))
-        self.comboBox_2.setItemText(0, _translate("Form", "K-means", None))
-        self.comboBox_2.setItemText(1, _translate("Form", "K-medoids", None))
-        self.comboBox_2.setItemText(2, _translate("Form", "Agglomerative", None))
-        self.comboBox_2.setItemText(3, _translate("Form", "Fuzzy C-means", None))
+        self.label_clustering.setText(_translate("Form", "Clustering", None))
+        self.label_select_methode.setText(_translate("Form", "Select a clustering methods", None))
+        # self.comboBox_methode.setItemText(0, _translate("Form", "K-means", None))
+        # self.comboBox_methode.setItemText(1, _translate("Form", "K-medoids", None))
+        # self.comboBox_methode.setItemText(2, _translate("Form", "Agglomerative", None))
+        # self.comboBox_methode.setItemText(3, _translate("Form", "Fuzzy C-means", None))
         self.plainTextEdit.setPlainText(_translate("Form", "You have to select columns to apply cluster on thos columns", None))
         self.label_3.setText(_translate("Form", "Data inside the collection", None))
         item = self.tableWidget.horizontalHeaderItem(0)
