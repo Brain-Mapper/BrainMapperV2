@@ -184,7 +184,7 @@ class SetButton(QtGui.QWidget):
             #                                      "An error has occured. Maybe you tried to open a non-CSV file")
 
     def importdata(self):
-        
+
         import_choice = QtGui.QMessageBox()
         import_choice.setWindowTitle('Import collections')
 
@@ -216,7 +216,7 @@ class SetButton(QtGui.QWidget):
                 self.fromNiFile()
 
             elif excel_opt.isChecked():
-                self.fromExcel()  
+                self.fromExcel()
 
     def state_changed(self):
         print(selected)
@@ -331,7 +331,8 @@ class SetButton(QtGui.QWidget):
 
             print(selected)
             for d in self.my_set.get_all_nifti_set_and_subset():
-                selected.remove(d)
+                if d in selected:
+                    selected.remove(d)
             print(selected)
             for i in reversed(range(self.image_zone.count())):
                 self.image_zone.itemAt(i).widget().setParent(None)
@@ -345,6 +346,8 @@ class SetButton(QtGui.QWidget):
                         set.position-=1
             else:
                 globalSets.remove(self.my_set)
+                for s in globalSets :
+                    s.position-=1
 
 
 
@@ -477,6 +480,7 @@ class MainView2(QtGui.QWidget):
         self.checkBox.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
         self.checkBox.setObjectName(_fromUtf8("checkBox"))
         self.verticalLayout_image_collections.addWidget(self.checkBox)
+
         self.widget_image_collections_show = QtGui.QWidget(self.widget_image_collections)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
