@@ -20,7 +20,7 @@ from PyQt4.QtCore import Qt, QRect
 # Imports for the plotting
 
 
-import ourLib.Excel.excelExport as ee
+import ourLib.ExcelExport.excelExport as ee
 from clustering_components.clustering_paramspace import ParameterAndScriptStack
 # View components' import
 from clustering_components.clustering_results import ClusteringDataTable, ClusteringGraphs, ClusteringResultsPopUp
