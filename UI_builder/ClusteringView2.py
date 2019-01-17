@@ -203,6 +203,13 @@ class ClusteringView2(QtGui.QWidget):
         self.scores = clustering_results["scores"] if clustering_results["scores"] is not None else None
         if (selectedMethod == 'FuzzyCMeans'):
             self.belong = clustering_results["belong"]
+        if selectedMethod == "AgglomerativeClustering" :
+            self.hac = clustering_results['hac']
+            self.comboBox_3.model().item(3).setEnabled(True)
+        else :
+            self.hac = None
+            self.comboBox_3.model().item(3).setEnabled(False)
+
 
         self.fill_clust_labels(self.label,self.tableWidget)
         # self.update_details(selectedMethod, param_dict, self.centroids, clustering_validation_indexes(self.label,self.centroids,float(len(set(self.label)))))
@@ -213,7 +220,6 @@ class ClusteringView2(QtGui.QWidget):
         self.pushButton_save.setEnabled(True)
         self.pushButton_export.setEnabled(True)
         self.comboBox_3.setEnabled(True)
-
 
         #self.results_popup.update_details(method_name, user_params, self.centroids, clustering_validation_indexes(self.label,self.centroid,float(len(set(self.label)))))
         #self.add_hist(param_dict, self.label)
@@ -257,9 +263,9 @@ class ClusteringView2(QtGui.QWidget):
                 clustering_plot.plot_3d_fuzzy(self.label, self.belong, centroids=self.centroids)
             else :
                 clustering_plot.plot_3d_clusters(self.label, centroids=self.centroids)
-        elif type=="Repartition":
-            print("tant pis pour vous")
-        elif type=="Affichage des coupes":
+        elif type=="Dendrogram":
+            clustering_plot.plot_dendrogram(self.hac)
+        elif type=="Cross sections":
             clustering_plot.plot_cross_section(self.label)
 
 
@@ -507,8 +513,8 @@ class ClusteringView2(QtGui.QWidget):
         self.pushButton_export.setText(_translate("Form", "Export", None))
         self.comboBox_3.setItemText(0, _translate("Form", "Sihouette", None))
         self.comboBox_3.setItemText(1, _translate("Form", "3D view", None))
-        self.comboBox_3.setItemText(2, _translate("Form", "Repartition", None))
-        self.comboBox_3.setItemText(3, _translate("Form", "Affichage des coupes", None))
+        self.comboBox_3.setItemText(2, _translate("Form", "Cross sections", None))
+        self.comboBox_3.setItemText(3, _translate("Form", "Dendrogram", None))
         self.pushButton_show.setText(_translate("Form", "Show", None))
         self.pushButton_save.setText(_translate("Form", "Save as set", None))
         self.pushButton_back.setText(_translate("Form", "Go back", None))
