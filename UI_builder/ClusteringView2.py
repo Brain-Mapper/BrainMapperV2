@@ -211,7 +211,6 @@ class ClusteringView2(QtGui.QWidget):
                                                                                                       self.centroids,
                                                                                                       float(len(set(self.label)))), self.n_selected, self.n, self.scores)
 
-        clustering_plot.plot_3d()
         #self.results_popup.update_details(method_name, user_params, self.centroids, clustering_validation_indexes(self.label,self.centroid,float(len(set(self.label)))))
         #self.add_hist(param_dict, self.label)
         #self.add_silhouette(self.label)
