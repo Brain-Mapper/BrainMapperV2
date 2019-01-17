@@ -55,9 +55,6 @@ def extract(a_nifti_img_obj):
 
     usable_data = np.zeros(shape=(nb_interesting_voxels, 4))
 
-    # --- Incorporating Maxime's search
-    # (modified by vz-chameleon to return an array that can be used in clustering)
-
     lx, ly, lz = img_data.shape  # length of the three image axis
     c = 0  # counter for array construction
 

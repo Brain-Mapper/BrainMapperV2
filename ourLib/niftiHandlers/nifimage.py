@@ -98,7 +98,6 @@ class NifImage(object):
     def set_filename(self, new_filename):
         self.filename = new_filename
 
-    # TODO L'utiliser pour se placer en MNI !
     def get_affine_matrix(self):
         """
         Return the NIfTI images' affine

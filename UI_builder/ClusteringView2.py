@@ -123,7 +123,6 @@ class ClusteringView2(QtGui.QWidget):
 
     #def update_details(self, clustering_method, user_values, centroids, validation_values):
     def update_details(self, clustering_method, user_values, centroids, validation_values, n_selected, n, scores):
-        # TODO Lucie recopie ton result detail là !
         self.info_panel.setText("")
 
         self.info_panel.insertPlainText(clustering_method+"\n-----------------------------------------------------------------------------\n")
