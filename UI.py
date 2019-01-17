@@ -140,7 +140,7 @@ class HomePage(QWidget):
         self.calculation.showMain.connect(self.updateMainCalcul)
 
         # Set current widget to main view by default
-        self.stack.setCurrentWidget(self.mainview)
+        self.stack.setCurrentWidget(self.clustering)
 
     def updateClusteringView(self):
         # TODO
@@ -150,6 +150,7 @@ class HomePage(QWidget):
         self.clustering.pushButton_save.setEnabled(False)
         self.clustering.pushButton_export.setEnabled(False)
         self.clustering.comboBox_3.setEnabled(False)
+        self.clustering.comboBox_3.item(3).setEnabled(False)
 
 
     def updateEditView(self):

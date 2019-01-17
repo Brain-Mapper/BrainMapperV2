@@ -68,10 +68,12 @@ class ParameterNameAndValue(QtGui.QGroupBox):
     def __init__(self, param_name, param_type, param_default_value, param_info):
         super(ParameterNameAndValue, self).__init__()
         self.grid = QtGui.QGridLayout()
+        self.grid.setContentsMargins(0, 3, 3, 0)
 
         # -- Parameter's name ------
         self.param_name_label = QtGui.QLabel(param_name)
-        self.param_name_label.setMinimumSize(QSize(100, 21))
+        self.param_name_label.setMinimumSize(QSize(100, 15))
+        #self.param_name_label.setMaximumSize(QSize(100, 21))
 
         # --- Parameter type control ----
         if type(param_type) is list:
