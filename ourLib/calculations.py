@@ -360,7 +360,6 @@ def and_opperation(list_of_NifImage_obj):
     return ([file_Nifti_clusterised], output)
 
 
-# TODO:  REVIEW
 def mask_opperation(Nifti_file_collection):
     (lx, ly, lz) = max_shape(Nifti_file_collection)
     file_Nifti_clusterised = np.zeros(shape=(lx, ly, lz), dtype='f')
@@ -381,13 +380,11 @@ def mask_opperation(Nifti_file_collection):
     return ([file_Nifti_clusterised], output)
 
 
-# TODO:  REVIEW
 def linear_combination_opperation(Nifti_file_collection, coef):
     (lx, ly, lz) = max_shape(Nifti_file_collection)
     file_Nifti_clusterised = np.zeros(shape=(lx, ly, lz), dtype='f')
     i = 0
     for file in Nifti_file_collection:
-        #img = load_nifti(file)
         data = file.get_copy_img_data()
         list_voxels = extract(file)
         for voxels in list_voxels:
@@ -557,7 +554,7 @@ def threshold_opperation(Nifti_file_collection, arguments):
     Arguments :
         data -- List of Nifti Image Object
 
-    Return : 
+    Return :
         List with the Nifti image object resulting from the Threshold opperation
     """
     result = []

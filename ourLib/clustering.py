@@ -51,7 +51,6 @@ def perform_agglomerative_clustering(param_dict, X):
     X = format_to_dataframe(X)
     clustering = AgglomerativeClustering(n_clusters=int(param_dict["n_clusters"]), affinity=param_dict["affinity"],
                                          linkage=param_dict["linkage"]).fit(X.values)
-    # TODO Put this functionality on a button
     return {
         "labels" : clustering.labels_,
         "hac" : clustering,
