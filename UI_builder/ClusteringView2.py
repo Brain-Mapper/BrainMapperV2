@@ -184,7 +184,7 @@ class ClusteringView2(QtGui.QWidget):
         # self.info_panel.insertPlainText("Calinski-Habaraz score and Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the indice, better is the number of clusters.\n\n")
 
     def runSelectedClust(self, selectedMethod, param_dict):
-        
+
         history.append({})
         last_i = len(history)-1
 
@@ -210,6 +210,10 @@ class ClusteringView2(QtGui.QWidget):
         self.update_details(selectedMethod, param_dict, self.centroids, clustering_validation_indexes(self.label,
                                                                                                       self.centroids,
                                                                                                       float(len(set(self.label)))), self.n_selected, self.n, self.scores)
+        self.pushButton_show.setEnabled(True)
+        self.pushButton_save.setEnabled(True)
+        self.pushButton_export.setEnabled(True)
+        self.comboBox_3.setEnabled(True)
 
 
         #self.results_popup.update_details(method_name, user_params, self.centroids, clustering_validation_indexes(self.label,self.centroid,float(len(set(self.label)))))
@@ -235,7 +239,7 @@ class ClusteringView2(QtGui.QWidget):
                                           "A set has been created in the clustering part at home page.")
 
         else:
-            QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation") 
+            QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")
 
     def go_back(self):
         # -- When the user wants to return to the main view, we reinit the cluster view
@@ -243,6 +247,23 @@ class ClusteringView2(QtGui.QWidget):
         #self.resultsGraphs.graph2.clear()
 
         self.showMain.emit()
+
+    def plot(self):
+        type = self.comboBox_3.currentText()
+        print(type)
+        if type=="Sihouette":
+            clustering_plot.plot_silhouette(self.label,None)
+        elif type=="3D view":
+            if self.comboBox_methode.get_selected_method_name()=="FuzzyCMeans":
+                clustering_plot.plot_3d_fuzzy(self.label, self.belong, centroids=self.centroids)
+            else :
+                clustering_plot.plot_3d_clusters(self.label, centroids=self.centroids)
+        elif type=="Repartition":
+            print("tant pis pour vous")
+        elif type=="Affichage des coupes":
+            clustering_plot.plot_cross_section(self.label)
+
+
 
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
@@ -393,20 +414,23 @@ class ClusteringView2(QtGui.QWidget):
 
         self.pushButton_run.clicked.connect(lambda: self.runSelectedClust(self.comboBox_methode.get_selected_method_name(),self.widget_parametres.get_user_params()))
         self.horizontalLayout_buttons.addWidget(self.pushButton_run)
-        self.pushButton_export = QtGui.QPushButton(self.widget_buttons)
-        self.pushButton_export.setObjectName(_fromUtf8("pushButton_export"))
-        self.pushButton_export.clicked.connect(self.export)
-        self.horizontalLayout_buttons.addWidget(self.pushButton_export)
+
         self.comboBox_3 = QtGui.QComboBox(self.widget_buttons)
         self.comboBox_3.setObjectName(_fromUtf8("comboBox_3"))
         self.comboBox_3.addItem(_fromUtf8(""))
         self.comboBox_3.addItem(_fromUtf8(""))
         self.comboBox_3.addItem(_fromUtf8(""))
         self.comboBox_3.addItem(_fromUtf8(""))
+        #self.comboBox_3.currentIndexChanged.connect(self.plot)
         self.horizontalLayout_buttons.addWidget(self.comboBox_3)
         self.pushButton_show = QtGui.QPushButton(self.widget_buttons)
         self.pushButton_show.setObjectName(_fromUtf8("pushButton_show"))
+        self.pushButton_show.clicked.connect(self.plot)
         self.horizontalLayout_buttons.addWidget(self.pushButton_show)
+        self.pushButton_export = QtGui.QPushButton(self.widget_buttons)
+        self.pushButton_export.setObjectName(_fromUtf8("pushButton_export"))
+        self.pushButton_export.clicked.connect(self.export)
+        self.horizontalLayout_buttons.addWidget(self.pushButton_export)
         self.pushButton_save = QtGui.QPushButton(self.widget_buttons)
         self.pushButton_save.setObjectName(_fromUtf8("pushButton_save"))
         self.pushButton_save.clicked.connect(self.save)
@@ -485,7 +509,7 @@ class ClusteringView2(QtGui.QWidget):
         self.comboBox_3.setItemText(0, _translate("Form", "Sihouette", None))
         self.comboBox_3.setItemText(1, _translate("Form", "3D view", None))
         self.comboBox_3.setItemText(2, _translate("Form", "Repartition", None))
-        self.comboBox_3.setItemText(3, _translate("Form", "Graphic", None))
+        self.comboBox_3.setItemText(3, _translate("Form", "Affichage des coupes", None))
         self.pushButton_show.setText(_translate("Form", "Show", None))
         self.pushButton_save.setText(_translate("Form", "Save as set", None))
         self.pushButton_back.setText(_translate("Form", "Go back", None))

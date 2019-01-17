@@ -146,6 +146,11 @@ class HomePage(QWidget):
         # TODO
         self.clustering.fill_table(get_current_usableDataset())
         self.stack.setCurrentWidget(self.clustering)
+        self.clustering.pushButton_show.setEnabled(False)
+        self.clustering.pushButton_save.setEnabled(False)
+        self.clustering.pushButton_export.setEnabled(False)
+        self.clustering.comboBox_3.setEnabled(False)
+
 
     def updateEditView(self):
         #self.edit_colls.fill_coll()
