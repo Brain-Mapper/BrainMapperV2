@@ -14,45 +14,6 @@ SYMBOLS = ["circle" ,"square","diamond","cross","x" ] # "diamond-open","circle-o
 class ConnectomeView(HTMLDocument):
     pass
 
-
-# def _prepare_line(edges, nodes):
-#     path_edges = np.zeros(len(edges) * 3, dtype=int)
-#     path_edges[::3] = edges
-#     path_edges[1::3] = edges
-#     path_nodes = np.zeros(len(nodes) * 3, dtype=int)
-#     path_nodes[::3] = nodes[:, 0]
-#     path_nodes[1::3] = nodes[:, 1]
-#     return path_edges, path_nodes
-
-
-# def _get_connectome(adjacency_matrix, coords, threshold=None,
-#                     cmap=cm.cold_hot, symmetric_cmap=True):
-#     connectome = {}
-#     coords = np.asarray(coords, dtype='<f4')
-#     adjacency_matrix = adjacency_matrix.copy()
-#     colors = colorscale(
-#         cmap, adjacency_matrix.ravel(), threshold=threshold,
-#         symmetric_cmap=symmetric_cmap)
-#     connectome['colorscale'] = colors['colors']
-#     connectome['cmin'] = float(colors['vmin'])
-#     connectome['cmax'] = float(colors['vmax'])
-#     if threshold is not None:
-#         adjacency_matrix[
-#             np.abs(adjacency_matrix) <= colors['abs_threshold']] = 0
-#     s = sparse.coo_matrix(adjacency_matrix)
-#     nodes = np.asarray([s.row, s.col], dtype=int).T
-#     edges = np.arange(len(nodes))
-#     path_edges, path_nodes = _prepare_line(edges, nodes)
-#     connectome["_con_w"] = encode(np.asarray(s.data, dtype='<f4')[path_edges])
-#     c = coords[path_nodes]
-#     x, y, z = c.T
-#     for coord, cname in [(x, "x"), (y, "y"), (z, "z")]:
-#         connectome["_con_{}".format(cname)] = encode(
-#             np.asarray(coord, dtype='<f4'))
-#     connectome["markers_only"] = False
-#     return connectome
-
-
 def _get_markers(coords, colors):
     connectome = {}
     coords = np.asarray(coords, dtype='<f4')

@@ -28,7 +28,6 @@ from sys import maxsize as MAX
 
 import os
 import platform
-import gc
 import time
 import json
 
