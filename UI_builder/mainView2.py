@@ -161,12 +161,15 @@ class SetButton(QtGui.QWidget):
 
         file = QFileDialog.getOpenFileNames()
         if (file != ""):
-            try:
-                collec = do_image_collection(file,self.my_set)
-                #homepage.mainview.show_coll(collec)
-                #homepage.edit_colls.fill_coll() #rapport a editview2
-            except:
-                err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. Maybe you tried to open a non-NIfTI file")
+            # TODO put the try/except 
+            # try:
+            collec = do_image_collection(file,self.my_set)
+            #homepage.mainview.show_coll(collec)
+            #homepage.edit_colls.fill_coll() #rapport a editview2
+            # except Error as error:
+            #     print(error)
+            #     err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. Maybe you tried to open a non-NIfTI file")
+
 
         # -- We create a collection with the list of images the user selected and give it to the main view and the edit view
 
@@ -174,8 +177,7 @@ class SetButton(QtGui.QWidget):
         file = QFileDialog.getOpenFileName()
         if (file != ""):
             # try:
-            collec = simple_import(file, os.path.join(os.path.dirname(__file__),
-                                                      'ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii'),self.my_set)
+            collec = simple_import(file,'ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii',self.my_set)
             #homepage.mainview.show_coll(collec)
             #homepage.edit_colls.fill_coll() #rapport a editview2
             # except:
