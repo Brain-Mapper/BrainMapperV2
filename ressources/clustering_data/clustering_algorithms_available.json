@@ -10,7 +10,7 @@
         "i_iter" : {
           "param_info" : "The number of iterations you wish to obtain",
           "type" : "int",
-          "default" : "10"
+          "default" : "1"
         },
         "n_clusters" : {
           "param_info" : "The number of clusters you wish to obtain",

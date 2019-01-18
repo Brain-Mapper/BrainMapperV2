@@ -14,6 +14,8 @@
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt, QSize
 
+import gc
+
 from BrainMapper import *
 from functools import partial
 
