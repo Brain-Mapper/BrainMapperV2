@@ -199,26 +199,26 @@ class ClusteringParameters(QtGui.QWidget):
             gc.collect()  # DANGER : calling garbage collector
 
             # ---- Add clustering info and title box ----
-            self.clust_title = QtGui.QGroupBox("Clustering method parameters");
-            vbox1 = QtGui.QVBoxLayout()
-            grid = QtGui.QGridLayout()
+            #self.clust_title = QtGui.QGroupBox("Clustering method parameters");
+            #vbox1 = QtGui.QVBoxLayout()
+            #grid = QtGui.QGridLayout()
 
             # Labels for the title group box
-            clustering_selected_label = QtGui.QLabel(self.clustering_name)
-            clustering_selected_label.setWordWrap(True)
+            #clustering_selected_label = QtGui.QLabel(self.clustering_name)
+            #clustering_selected_label.setWordWrap(True)
 
-            clustering_info = QtGui.QLabel("Clustering method information : ")
-            clustering_selected_info = QtGui.QLabel(self.clustering_info)
-            clustering_selected_info.setWordWrap(True)
+            #clustering_info = QtGui.QLabel("Clustering method information : ")
+            #clustering_selected_info = QtGui.QLabel(self.clustering_info)
+            #clustering_selected_info.setWordWrap(True)
 
-            grid.addWidget(clustering_selected_label, 0, 0)
+            #grid.addWidget(clustering_selected_label, 0, 0)
 
-            grid.addWidget(clustering_info, 1, 0)
-            grid.addWidget(clustering_selected_info, 2, 0)
+            #grid.addWidget(clustering_info, 1, 0)
+            #grid.addWidget(clustering_selected_info, 2, 0)
 
-            vbox1.addLayout(grid)
-            self.clust_title.setLayout(vbox1)
-            self.container_box.addWidget(self.clust_title)
+            #vbox1.addLayout(grid)
+            #self.clust_title.setLayout(vbox1)
+            #self.container_box.addWidget(self.clust_title)
 
             # Add parameter box
             self.param_box = ParametersBox(self.parameters_dict) #self.param_dict has been set to method_dict["param_list"]

@@ -268,7 +268,21 @@ class ClusteringView2(QtGui.QWidget):
         elif type=="Dendrogram":
             clustering_plot.plot_dendrogram(self.hac)
         elif type=="Cross sections":
-            clustering_plot.plot_cross_section(self.label)
+            default = list(get_current_usableDataset().export_as_clusterizable()[0,0:3])
+            default = [str(int(i)) for i in default]
+            default = ",".join(default)
+            text, ok = QtGui.QInputDialog.getText(self, 'Choice of the coordinates',
+            'Enter the cross coordinates : x,y,z',text=default)
+            c = list(map(int,text.split(',')))
+            if len(c)!=3:
+                QtGui.QMessageBox.warning(self, "Choice of the coordinates", "You must use the format x,y,z to enter the coordinates")
+            else :
+                clustering_plot.plot_cross_section(self.label,c)
+
+
+
+
+             #clustering_plot.plot_cross_section(self.label)
 
 
 
@@ -480,6 +494,7 @@ class ClusteringView2(QtGui.QWidget):
         self.verticalLayout_result.addWidget(self.widget_result_view)
         self.verticalLayout_dataAndResult.addWidget(self.widget_result)
         self.horizontalLayout.addLayout(self.verticalLayout_dataAndResult)
+
 
 
 
