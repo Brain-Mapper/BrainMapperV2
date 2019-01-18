@@ -96,6 +96,7 @@ class ClusteringView2(QtGui.QWidget):
         self.tableResults.setRowCount(len(history))
         row_count = 0
         for iter in history:
+            print(iter)
             self.tableResults.setItem(row_count, 0, QtGui.QTableWidgetItem(iter.get("clusters")))
             self.tableResults.setItem(row_count, 1, QtGui.QTableWidgetItem(iter.get("silhouette_score")))
             self.tableWidget.setItem(row_count, 2, QtGui.QTableWidgetItem(iter.get("calinski_harabaz_score")))
@@ -198,9 +199,14 @@ class ClusteringView2(QtGui.QWidget):
         print(param_dict["i_iter"])
         if param_dict["i_iter"]=="1":
             print("ok")
+            for i in reversed(range(self.verticalLayout_result.count())):
+                self.verticalLayout_result.itemAt(i).widget().setParent(None)
+            self.info_panel = QtGui.QTextEdit()
+            self.verticalLayout_result.addWidget(self.info_panel)
             self.update_details(selectedMethod,param_dict,self.centroids,clustering_validation_indexes(self.label,self.centroids, float(len(set(self.label)))), self.n_selected, self.n, self.scores)
         else :
-            self.verticalLayout_result.itemAt(1).widget().setParent(None)
+            for i in reversed(range(self.verticalLayout_result.count())):
+                self.verticalLayout_result.itemAt(i).widget().setParent(None)
             self.tableResults = QtGui.QTableWidget(self.widget_result)
             self.tableResults.setAcceptDrops(False)
             self.tableResults.setAlternatingRowColors(False)
