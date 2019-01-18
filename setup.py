@@ -28,7 +28,7 @@ os.environ['TK_LIBRARY'] = os.path.join(PYTHON_INSTALL_DIR, 'tcl', 'tk8.6')
 #'./UI/mainView.py'
 #("C:\Users\thoma\Desktop\LOG\brainMapper/UI/resources.py","C:\Users\thoma\Desktop\LOG\brainMapper\build\exe.win-amd64-2.7\lib\resources.py")
 includefiles = ["UI.bat",'./ressources',os.path.join(PYTHON_INSTALL_DIR, 'DLLs', 'tk86t.dll'),
-            os.path.join(PYTHON_INSTALL_DIR, 'DLLs', 'tcl86t.dll'),]
+            os.path.join(PYTHON_INSTALL_DIR, 'DLLs', 'tcl86t.dll'),"./clustering_components/nilearn_plot_upgraded/rm_file.py"]
 includes = ["os","sys","time","csv","nibabel","numpy","scipy","sklearn","sip","atexit","OpenGL","PyQt4","pyqtgraph",
 "matplotlib","nilearn","tkinter", "pandas", "tkinter.filedialog",
 "mpl_toolkits",
