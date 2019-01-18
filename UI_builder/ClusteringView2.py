@@ -185,8 +185,8 @@ class ClusteringView2(QtGui.QWidget):
         # self.info_panel.insertPlainText("Calinski-Habaraz score and Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the indice, better is the number of clusters.\n\n")
 
     def createResultView(self,param_dict,selectedMethod):
-        print(param_dict["n_iter"])
-        if param_dict["n_iter"]=="1":
+        print(param_dict["i_iter"])
+        if param_dict["i_iter"]=="1":
             print("ok")
             self.update_details(selectedMethod,param_dict,self.centroids,clustering_validation_indexes(self.label,self.centroids, float(len(set(self.label)))), self.n_selected, self.n, self.scores)
         else :
@@ -221,7 +221,6 @@ class ClusteringView2(QtGui.QWidget):
 
         self.fill_clust_labels(self.label,self.tableWidget)
         # self.update_details(selectedMethod, param_dict, self.centroids, clustering_validation_indexes(self.label,self.centroids,float(len(set(self.label)))))
-<<<<<<< HEAD
         validation_values = clustering_validation_indexes(self.label, self.centroids,float(len(set(self.label))))
 
         history_iterations[last_i]["silhouette_score"] = validation_values[0]
@@ -229,9 +228,6 @@ class ClusteringView2(QtGui.QWidget):
         history_iterations[last_i]["davies_bouldin_score"] = validation_values[2]
 
         self.update_details(selectedMethod, param_dict, self.centroids, validation_values, self.n_selected, self.n, self.scores)
-=======
-
->>>>>>> 1b8c0be9177848ecf88e822ec9e45c84bd5de040
         self.pushButton_show.setEnabled(True)
         self.pushButton_save.setEnabled(True)
         self.pushButton_export.setEnabled(True)
@@ -507,12 +503,6 @@ class ClusteringView2(QtGui.QWidget):
         self.horizontalLayout.addLayout(self.verticalLayout_dataAndResult)
 
 
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> 1b8c0be9177848ecf88e822ec9e45c84bd5de040
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
