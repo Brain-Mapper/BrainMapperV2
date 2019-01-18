@@ -121,7 +121,10 @@ class ParameterNameAndValue(QtGui.QGroupBox):
         self.param_value_input.setText(new_user_value)
 
     def get_name_value_pair(self):
-        return str(self.param_name_label.text()), str(self.param_value_input.text())
+        if type(self.param_value_input)==QtGui.QComboBox:
+            return str(self.param_name_label.text()), str(self.param_value_input.currentText())
+        else:
+            return str(self.param_name_label.text()), str(self.param_value_input.text())
 
 
 # A custom widget to implement the script environment
