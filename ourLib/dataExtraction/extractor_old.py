@@ -44,11 +44,7 @@ def extract(a_nifti_img_obj):
 
     # Safe copy the data so you won't modify the original image data (see NifImage class)
     # finite=True is given as an argument to replace NaN or Inf values by zeros
-    img_data = a_nifti_img_obj.get_img_data()
-
-    # if finite_values:
-    infinite_values_mask = np.logical_not(np.isfinite(img_data))
-    img_data[infinite_values_mask] = 0
+    img_data = a_nifti_img_obj.get_copy_img_data(True)
 
     # img_data>0 returns a boolean mask the same size as the image with :
     #     False if voxel value is not >0, True if it is
@@ -61,6 +57,9 @@ def extract(a_nifti_img_obj):
 
     lx, ly, lz = img_data.shape  # length of the three image axis
     c = 0  # counter for array construction
+
+    # Putting in mni coordinates
+    # TODO rendre ça plus propre
 
     M = a_nifti_img_obj.get_affine_matrix()[:3, :3]
     abc = a_nifti_img_obj.get_affine_matrix()[:3, 3]
@@ -82,25 +81,25 @@ def extract(a_nifti_img_obj):
                             usable_data[c] = [x_y_z[0], x_y_z[1], x_y_z[2], voxel_intensity]
                             c = c + 1
 
-    a_nifti_img_obj.uncache() # deleting safe copy of image data saves a lot of memory !
+    del img_data  # deleting safe copy of image data saves a lot of memory !
 
     return usable_data
 
 
-# # This version is 0.01 seconds slower than the first one
-# def extract2(a_nifti_img_obj):
-#     # Safe copy the data so you won't modify the original image data (see NifImage class)
-#     # finite=True is given as an argument to replace NaN or Inf values by zeros
-#     img_data = a_nifti_img_obj.get_copy_img_data(True)
+# This version is 0.01 seconds slower than the first one
+def extract2(a_nifti_img_obj):
+    # Safe copy the data so you won't modify the original image data (see NifImage class)
+    # finite=True is given as an argument to replace NaN or Inf values by zeros
+    img_data = a_nifti_img_obj.get_copy_img_data(True)
 
-#     # img_data>0 returns a boolean mask the same size as the image with :
-#     #     False if voxel value is not >0, True if it is
-#     mask = img_data > 0
-#     del img_data    # saves a LOT of memory
+    # img_data>0 returns a boolean mask the same size as the image with :
+    #     False if voxel value is not >0, True if it is
+    mask = img_data > 0
+    del img_data    # saves a LOT of memory
 
-#     usable_data = np.nonzero(mask)
+    usable_data = np.nonzero(mask)
 
-#     return usable_data
+    return usable_data
 
 
 def extract_from_collection(a_nifti_imgcoll_obj):
