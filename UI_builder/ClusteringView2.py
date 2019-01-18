@@ -92,6 +92,16 @@ class ClusteringView2(QtGui.QWidget):
                     self.tableWidget.setItem(row_count, 6, QtGui.QTableWidgetItem("None yet"))
                     row_count = row_count+1
 
+    def fill_results(self, history):
+        self.tableResults.setRowCount(len(history))
+        row_count = 0
+        for iter in history:
+            self.tableResults.setItem(row_count, 0, QtGui.QTableWidgetItem(iter.get("clusters")))
+            self.tableResults.setItem(row_count, 1, QtGui.QTableWidgetItem(iter.get("silhouette_score")))
+            self.tableWidget.setItem(row_count, 2, QtGui.QTableWidgetItem(iter.get("calinski_harabaz_score")))
+            self.tableWidget.setItem(row_count, 3, QtGui.QTableWidgetItem(iter.get("davies_bouldin_score")))
+            row_count = row_count+1
+
     def fill_clust_labels(self, assigned_labels_array, tableWidget):
         """
         Fill the 'Assigned cluster' column once we have the clustering labels result
@@ -218,6 +228,7 @@ class ClusteringView2(QtGui.QWidget):
         history_iterations[last_i]["method_used"] = selectedMethod
         history_iterations[last_i]["labels"] = clustering_results["labels"]
         history_iterations[last_i]["data"] = clustering_results["clusterizable_dataset"]
+        history_iterations[last_i]["clusters"] = clustering_results["n_selected"]
 
         self.label = clustering_results["labels"]
         self.centroids = clustering_results["centers"] if "centers" in clustering_results.keys() else None
@@ -249,6 +260,7 @@ class ClusteringView2(QtGui.QWidget):
         self.comboBox_3.setEnabled(True)
 
         self.createResultView(param_dict,selectedMethod)
+        self.fill_results(history_iterations)
 
         #self.results_popup.update_details(method_name, user_params, self.centroids, clustering_validation_indexes(self.label,self.centroid,float(len(set(self.label)))))
         #self.add_hist(param_dict, self.label)
