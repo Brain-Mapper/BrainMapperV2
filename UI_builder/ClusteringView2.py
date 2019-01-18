@@ -184,6 +184,15 @@ class ClusteringView2(QtGui.QWidget):
         # self.info_panel.insertPlainText("Davies-Bouldin index: \t\t " + str(validation_values[2]) + "\n\n")
         # self.info_panel.insertPlainText("Calinski-Habaraz score and Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the indice, better is the number of clusters.\n\n")
 
+    def createResultView(self,param_dict,selectedMethod):
+        print(param_dict["n_iter"])
+        if param_dict["n_iter"]=="1":
+            print("ok")
+            self.update_details(selectedMethod,param_dict,self.centroids,clustering_validation_indexes(self.label,self.centroids, float(len(set(self.label)))), self.n_selected, self.n, self.scores)
+        else :
+            self.verticalLayout_result.itemAt(1).widget().setParent(None)
+
+
     def runSelectedClust(self, selectedMethod, param_dict):
 
         history_iterations.append({})
@@ -212,6 +221,7 @@ class ClusteringView2(QtGui.QWidget):
 
         self.fill_clust_labels(self.label,self.tableWidget)
         # self.update_details(selectedMethod, param_dict, self.centroids, clustering_validation_indexes(self.label,self.centroids,float(len(set(self.label)))))
+<<<<<<< HEAD
         validation_values = clustering_validation_indexes(self.label, self.centroids,float(len(set(self.label))))
 
         history_iterations[last_i]["silhouette_score"] = validation_values[0]
@@ -219,10 +229,15 @@ class ClusteringView2(QtGui.QWidget):
         history_iterations[last_i]["davies_bouldin_score"] = validation_values[2]
 
         self.update_details(selectedMethod, param_dict, self.centroids, validation_values, self.n_selected, self.n, self.scores)
+=======
+
+>>>>>>> 1b8c0be9177848ecf88e822ec9e45c84bd5de040
         self.pushButton_show.setEnabled(True)
         self.pushButton_save.setEnabled(True)
         self.pushButton_export.setEnabled(True)
         self.comboBox_3.setEnabled(True)
+
+        self.createResultView(param_dict,selectedMethod)
 
         #self.results_popup.update_details(method_name, user_params, self.centroids, clustering_validation_indexes(self.label,self.centroid,float(len(set(self.label)))))
         #self.add_hist(param_dict, self.label)
@@ -269,7 +284,16 @@ class ClusteringView2(QtGui.QWidget):
         elif type=="Dendrogram":
             clustering_plot.plot_dendrogram(self.hac)
         elif type=="Cross sections":
-            clustering_plot.plot_cross_section(self.label)
+            default = list(get_current_usableDataset().export_as_clusterizable()[0,0:3])
+            default = [str(int(i)) for i in default]
+            default = ",".join(default)
+            text, ok = QtGui.QInputDialog.getText(self, 'Choice of the coordinates',
+            'Enter the cross coordinates : x,y,z',text=default)
+            c = list(map(int,text.split(',')))
+            if len(c)!=3:
+                QtGui.QMessageBox.warning(self, "Choice of the coordinates", "You must use the format x,y,z to enter the coordinates")
+            else :
+                clustering_plot.plot_cross_section(self.label,c)
 
 
 
@@ -483,6 +507,12 @@ class ClusteringView2(QtGui.QWidget):
         self.horizontalLayout.addLayout(self.verticalLayout_dataAndResult)
 
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> 1b8c0be9177848ecf88e822ec9e45c84bd5de040
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
