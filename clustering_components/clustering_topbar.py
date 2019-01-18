@@ -64,16 +64,16 @@ class ClusteringChooser(QtGui.QToolButton):
         Fuzzy_choice.setStatusTip('Apply Fuzzy C Means Clustering algorithm to dataset')
         Fuzzy_choice.triggered.connect(lambda: self.updateLabel("FuzzyCMeans", self.showClustParamsWidget))
 
-        user_script_choice = QtGui.QAction('&Custom user script', self)
-        user_script_choice.setStatusTip('Make a custom clustering script')
-        user_script_choice.triggered.connect(lambda: self.updateLabel("Custom user script", self.showScriptEnvWidget))
+        #user_script_choice = QtGui.QAction('&Custom user script', self)
+        #user_script_choice.setStatusTip('Make a custom clustering script')
+        #user_script_choice.triggered.connect(lambda: self.updateLabel("Custom user script", self.showScriptEnvWidget))
 
         self.clustering_algo_menu.addAction(Kmeans_choice)
         self.clustering_algo_menu.addAction(Kmedoids_choice)
         self.clustering_algo_menu.addAction(Agglomerative_choice)
         self.clustering_algo_menu.addAction(DBSCAN_choice)
         self.clustering_algo_menu.addAction(Fuzzy_choice)
-        self.clustering_algo_menu.addAction(user_script_choice)
+        #self.clustering_algo_menu.addAction(user_script_choice)
 
         self.setMenu(self.clustering_algo_menu)
 
