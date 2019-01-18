@@ -234,7 +234,7 @@ class ClusteringView2(QtGui.QWidget):
         history_iterations[last_i]["method_used"] = selectedMethod
         history_iterations[last_i]["labels"] = clustering_results["labels"]
         history_iterations[last_i]["data"] = clustering_results["clusterizable_dataset"]
-        history_iterations[last_i]["clusters"] = clustering_results["n_selected"]
+        history_iterations[last_i]["clusters"] = clustering_results["n_selected"] if clustering_results["n_selected"] is not None else clustering_results["n"]
 
         self.label = clustering_results["labels"]
         self.centroids = clustering_results["centers"] if "centers" in clustering_results.keys() else None
