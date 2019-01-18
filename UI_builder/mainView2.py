@@ -337,6 +337,7 @@ class SetButton(QtGui.QWidget):
                 globalSets[0].remove(self.my_set)
                 for s in globalSets[0] :
                     s.position-=1
+            sets.remove(self.my_set)
 
 
 
@@ -381,7 +382,7 @@ class MainView2(QtGui.QWidget):
         self.label_list_of_sets.setObjectName(_fromUtf8("label_list_of_sets"))
         self.verticalLayout_list_of_sets.addWidget(self.label_list_of_sets)
         self.treeWidget = QtGui.QTreeWidget(self.widget_list_of_sets)
-        self.treeWidget.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);\n"
+        self.treeWidget.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"
 "border-color: rgb(255, 255, 255);"))
         self.treeWidget.setObjectName(_fromUtf8("treeWidget"))
         font = QtGui.QFont()
