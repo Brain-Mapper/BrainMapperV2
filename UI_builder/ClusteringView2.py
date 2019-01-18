@@ -22,6 +22,8 @@ from clustering_components.clustering_results import ClusteringDataTable, Cluste
 from clustering_components.clustering_topbar import *
 from clustering_components.clustering_plot import get_color
 import clustering_components.clustering_plot as clustering_plot
+#BrainMapper' import
+from BrainMapper import history_iterations
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -183,8 +185,8 @@ class ClusteringView2(QtGui.QWidget):
         # self.info_panel.insertPlainText("Calinski-Habaraz score and Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the indice, better is the number of clusters.\n\n")
 
     def createResultView(self,param_dict,selectedMethod):
-        print(param_dict["n_iter"])
-        if param_dict["n_iter"]=="1":
+        print(param_dict["i_iter"])
+        if param_dict["i_iter"]=="1":
             print("ok")
             self.update_details(selectedMethod,param_dict,self.centroids,clustering_validation_indexes(self.label,self.centroids, float(len(set(self.label)))), self.n_selected, self.n, self.scores)
         else :
@@ -208,17 +210,14 @@ class ClusteringView2(QtGui.QWidget):
 
     def runSelectedClust(self, selectedMethod, param_dict):
 
-        history.append({})
-        last_i = len(history)-1
+        history_iterations.append({})
+        last_i = len(history_iterations)-1
 
-        #print("runSelectedClust -> len(history)", len(history))
         clustering_results = run_clustering(selectedMethod, param_dict)
-        print("runSelectedClust -> data", clustering_results["clusterizable_dataset"])
 
-        history[last_i]["method_used"] = selectedMethod
-        history[last_i]["labels"] = clustering_results["labels"]
-        history[last_i]["data"] = clustering_results["clusterizable_dataset"]
-
+        history_iterations[last_i]["method_used"] = selectedMethod
+        history_iterations[last_i]["labels"] = clustering_results["labels"]
+        history_iterations[last_i]["data"] = clustering_results["clusterizable_dataset"]
 
         self.label = clustering_results["labels"]
         self.centroids = clustering_results["centers"] if "centers" in clustering_results.keys() else None
@@ -237,7 +236,13 @@ class ClusteringView2(QtGui.QWidget):
 
         self.fill_clust_labels(self.label,self.tableWidget)
         # self.update_details(selectedMethod, param_dict, self.centroids, clustering_validation_indexes(self.label,self.centroids,float(len(set(self.label)))))
+        validation_values = clustering_validation_indexes(self.label, self.centroids,float(len(set(self.label))))
 
+        history_iterations[last_i]["silhouette_score"] = validation_values[0]
+        history_iterations[last_i]["calinski_harabaz_score"] = validation_values[1]
+        history_iterations[last_i]["davies_bouldin_score"] = validation_values[2]
+
+        self.update_details(selectedMethod, param_dict, self.centroids, validation_values, self.n_selected, self.n, self.scores)
         self.pushButton_show.setEnabled(True)
         self.pushButton_save.setEnabled(True)
         self.pushButton_export.setEnabled(True)
@@ -510,9 +515,6 @@ class ClusteringView2(QtGui.QWidget):
         self.verticalLayout_result.addWidget(self.widget_result_view)
         self.verticalLayout_dataAndResult.addWidget(self.widget_result)
         self.horizontalLayout.addLayout(self.verticalLayout_dataAndResult)
-
-
-
 
 
         self.retranslateUi(Form)
