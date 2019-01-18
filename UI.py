@@ -140,7 +140,7 @@ class HomePage(QWidget):
         self.calculation.showMain.connect(self.updateMainCalcul)
 
         # Set current widget to main view by default
-        self.stack.setCurrentWidget(self.clustering)
+        self.stack.setCurrentWidget(self.mainview)
 
     def updateClusteringView(self):
         self.clustering.fill_table(get_current_usableDataset())
@@ -254,12 +254,14 @@ class UI(QtGui.QMainWindow):
         # -- We create a collection with the list of images the user selected and give it to the main view and the edit view
         file = QFileDialog.getOpenFileNames()
         if (file != ""):
-            try:
-                collec = do_image_collection(file)
-                #homepage.mainview.show_coll(collec)
-                #homepage.edit_colls.fill_coll() #rapport a editview2
-            except:
-                err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. Maybe you tried to open a non-NIfTI file")
+            # TODO put the try/except 
+            # try:
+            collec = do_image_collection(file)
+            #homepage.mainview.show_coll(collec)
+            #homepage.edit_colls.fill_coll() #rapport a editview2
+            # except Error as error:
+            #     print(error)
+            #     err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. Maybe you tried to open a non-NIfTI file")
 
         # -- We create a collection with the list of images the user selected and give it to the main view and the edit view
 

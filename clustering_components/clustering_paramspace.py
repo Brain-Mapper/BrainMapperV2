@@ -68,7 +68,7 @@ class ParameterNameAndValue(QtGui.QGroupBox):
     def __init__(self, param_name, param_type, param_default_value, param_info):
         super(ParameterNameAndValue, self).__init__()
         self.grid = QtGui.QGridLayout()
-        self.grid.setContentsMargins(0, 3, 3, 0)
+        self.grid.setContentsMargins(0, 9, 9, 0)
 
         # -- Parameter's name ------
         self.param_name_label = QtGui.QLabel(param_name)
@@ -77,18 +77,24 @@ class ParameterNameAndValue(QtGui.QGroupBox):
 
         # --- Parameter type control ----
         if type(param_type) is list:
-            self.param_value_input = QtGui.QToolButton()
-            self.param_value_input.setText(str(param_default_value))
-            self.param_value_input.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
-
-            param_value_chooser = QtGui.QMenu()
-
+            # self.param_value_input = QtGui.QToolButton()
+            # self.param_value_input.setText(str(param_default_value))
+            # self.param_value_input.setPopupMode(QtGui.QToolButton.MenuButtonPopup)
+            #
+            # param_value_chooser = QtGui.QMenu()
+            #
+            # for param_value_choice in param_type:
+            #     param_choice = QtGui.QAction(param_value_choice, self)
+            #     param_choice.triggered.connect(self.choice_clicked)
+            #     param_value_chooser.addAction(param_choice)
+            #
+            # self.param_value_input.setMenu(param_value_chooser)
+            self.param_value_input = QtGui.QComboBox()
+            self.param_value_input.setObjectName("param_value_input")
             for param_value_choice in param_type:
-                param_choice = QtGui.QAction(param_value_choice, self)
-                param_choice.triggered.connect(self.choice_clicked)
-                param_value_chooser.addAction(param_choice)
+                self.param_value_input.addItem(param_value_choice)
 
-            self.param_value_input.setMenu(param_value_chooser)
+
 
         else:
             self.param_value_input = QtGui.QLineEdit()
@@ -197,28 +203,6 @@ class ClusteringParameters(QtGui.QWidget):
                 self.container_box.itemAt(i).widget().setParent(None)
 
             gc.collect()  # DANGER : calling garbage collector
-
-            # ---- Add clustering info and title box ----
-            #self.clust_title = QtGui.QGroupBox("Clustering method parameters");
-            #vbox1 = QtGui.QVBoxLayout()
-            #grid = QtGui.QGridLayout()
-
-            # Labels for the title group box
-            #clustering_selected_label = QtGui.QLabel(self.clustering_name)
-            #clustering_selected_label.setWordWrap(True)
-
-            #clustering_info = QtGui.QLabel("Clustering method information : ")
-            #clustering_selected_info = QtGui.QLabel(self.clustering_info)
-            #clustering_selected_info.setWordWrap(True)
-
-            #grid.addWidget(clustering_selected_label, 0, 0)
-
-            #grid.addWidget(clustering_info, 1, 0)
-            #grid.addWidget(clustering_selected_info, 2, 0)
-
-            #vbox1.addLayout(grid)
-            #self.clust_title.setLayout(vbox1)
-            #self.container_box.addWidget(self.clust_title)
 
             # Add parameter box
             self.param_box = ParametersBox(self.parameters_dict) #self.param_dict has been set to method_dict["param_list"]
