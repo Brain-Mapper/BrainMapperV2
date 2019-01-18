@@ -47,7 +47,7 @@ calculsets = []  # List of sets created as a result for calculation, permit to r
 currentSet = None  # The current set shown in main view
 currentVizu = None  # The current collections shown in main view
 
-history = []
+history_iterations = []
 collshow=[]
 
 
@@ -239,7 +239,6 @@ def run_clustering(selectedClusteringMethod, params_dict):
         a list of clustering labels (to which cluster does one individual belong to)
     """
     clusterizable_dataset = currentUsableDataset.export_as_clusterizable()
-    print("run_clustering -> clusterizable_dataset", clusterizable_dataset)
     if selectedClusteringMethod in CLUSTERING_METHODS.keys():
         bool_not_range = True # True if there isn't a
         if selectedClusteringMethod != "DBSCAN":

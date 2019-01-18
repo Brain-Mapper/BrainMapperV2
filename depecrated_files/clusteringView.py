@@ -16,7 +16,7 @@ import pyqtgraph as pg
 import pyqtgraph.opengl as gl
 from PyQt4.Qt import QFileDialog
 from PyQt4.QtCore import Qt, QRect
-from BrainMapper import history
+from BrainMapper import history_iterations
 # Imports for the plotting
 
 
@@ -178,7 +178,7 @@ class ClusteringView(QtGui.QWidget):
 
         #print("runSelectedClust -> len(history)", len(history))
         clustering_results = run_clustering(selectedMethod, param_dict)
-        print("runSelectedClust -> data", clustering_results["clusterizable_dataset"])
+        #print("runSelectedClust -> data", clustering_results["clusterizable_dataset"])
 
         history[last_i]["method_used"] = selectedMethod
         history[last_i]["labels"] = clustering_results["labels"]
@@ -205,7 +205,7 @@ class ClusteringView(QtGui.QWidget):
         #     clustering_plot.plot_3d_fuzzy(self.label, self.belong, self.centroids)
         # if "hac" in clustering_results.keys():
         #     clustering_plot.plot_dendrogram(clustering_results["hac"])
-        print("runSelectedClust -> history", history)
+        #print("runSelectedClust -> history", history)
 
 
 
@@ -328,7 +328,7 @@ class ClusteringView(QtGui.QWidget):
 
     def runSelectedClust(self, selectedMethod, param_dict):
         clustering_results = run_clustering(selectedMethod, param_dict)
-        print("runSelectedCLud -> Param dict : {}".format(param_dict.keys()));
+        #print("runSelectedCLud -> Param dict : {}".format(param_dict.keys()));
         self.label = clustering_results[0]
         self.centroids = clustering_results[1]
         self.table_displayer.fill_clust_labels(self.label)
@@ -364,4 +364,3 @@ class ClusteringView(QtGui.QWidget):
         self.resultsGraphs.graph2.clear()
 
         self.showMain.emit()
-
