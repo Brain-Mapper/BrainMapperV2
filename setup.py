@@ -68,6 +68,8 @@ else:
 
 # pour que les bibliotheques binaires de /usr/lib soient recopiees aussi sous Linux
 binpathincludes = []
+if sys.platform == "win32":
+    binpathincludes += ["C:/Python/Virtualenv/pi/Lib"]
 if sys.platform == "linux2":
     binpathincludes += ["/usr/lib"]
     binpathincludes += ["~/.local/lib"]
