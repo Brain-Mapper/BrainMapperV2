@@ -177,8 +177,7 @@ class SetButton(QtGui.QWidget):
         file = QFileDialog.getOpenFileName()
         if (file != ""):
             # try:
-            collec = simple_import(file, os.path.join(os.path.dirname(__file__),
-                                                      'ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii'),self.my_set)
+            collec = simple_import(file,'ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii',self.my_set)
             #homepage.mainview.show_coll(collec)
             #homepage.edit_colls.fill_coll() #rapport a editview2
             # except:

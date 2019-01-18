@@ -46,10 +46,6 @@ def extract(a_nifti_img_obj):
     # finite=True is given as an argument to replace NaN or Inf values by zeros
     img_data = a_nifti_img_obj.get_img_data()
 
-    # if finite_values:
-    infinite_values_mask = np.logical_not(np.isfinite(img_data))
-    img_data[infinite_values_mask] = 0
-
     # img_data>0 returns a boolean mask the same size as the image with :
     #     False if voxel value is not >0, True if it is
     mask = img_data > 0
