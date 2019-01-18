@@ -128,7 +128,8 @@ class HomePage(QWidget):
         self.mainview.showEdit.connect(partial(self.stack.setCurrentWidget, self.edit_colls))
         # -- when collection edition widget emits signal showMain, change current Widget in stack to main view widget
         self.edit_colls.showMain.connect(partial(self.stack.setCurrentWidget, self.mainview))
-        self.edit_colls.showMain.connect(self.updateMain)
+        self.edit_colls.showMain.connect(self.updateMainColumn)
+        #self.edit_colls.showMain.connect(self.updateMain)
 
         self.mainview.showExport.connect(self.updateExportView)
         self.export.showMain.connect(partial(self.stack.setCurrentWidget, self.mainview))
@@ -140,7 +141,7 @@ class HomePage(QWidget):
         self.calculation.showMain.connect(self.updateMainCalcul)
 
         # Set current widget to main view by default
-        self.stack.setCurrentWidget(self.clustering)
+        self.stack.setCurrentWidget(self.mainview)
 
     def updateClusteringView(self):
         # TODO
@@ -148,15 +149,18 @@ class HomePage(QWidget):
         self.stack.setCurrentWidget(self.clustering)
 
     def updateEditView(self):
-        #self.edit_colls.fill_coll()
+        self.edit_colls.fill_coll()
         self.stack.setCurrentWidget(self.edit_colls)
 
-    def updateMain(self):
-        self.mainview.update()
+    # def updateMain(self):
+    #     self.mainview.update()
 
     def updateMainCluster(self):
         self.mainview.updateClusterRes()
         self.mainview.updateTreeView()
+
+    def updateMainColumn(self):
+        self.mainview.updateColumn()
 
     def updateMainCalcul(self):
         self.mainview.updateCalculRes()

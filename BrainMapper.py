@@ -46,6 +46,7 @@ currentSet = None  # The current set shown in main view
 currentVizu = None  # The current collections shown in main view
 
 collshow=[]
+list_img=[]
 
 # Dictionary of available clustering methods
 app_clustering_available = {}
@@ -532,7 +533,7 @@ def setColNameInSet(name):
     :return:
     """
     old = get_current_coll()
-    rm_coll(old)
+    #rm_coll(old)
     this_set = old.getSetName()
     this_set.renameCollinSet(old, name)
     set_current_coll_name(name)

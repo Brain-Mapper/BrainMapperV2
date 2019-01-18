@@ -67,7 +67,6 @@ class ClusteringView2(QtGui.QWidget):
         Fills this custom table with the data of a UsableDataSet obtained after data extraction
         :param a_usable_dataset_instance: see UsableData for more details
         :return: Nothing"""
-        print("coucou")
 
         self.clustering_usable_dataset = usable_dataset_instance
         self.tableWidget.setRowCount(usable_dataset_instance.get_row_num())
@@ -122,7 +121,6 @@ class ClusteringView2(QtGui.QWidget):
             row_count = row_count + 1
 
     def update_details(self, clustering_method, user_values, centroids, validation_values):
-        print("update")
         self.info_panel.setText("")
 
         self.info_panel.insertPlainText(clustering_method+"\n-----------------------------------------------------------------------------\n")
@@ -149,16 +147,13 @@ class ClusteringView2(QtGui.QWidget):
         self.info_panel.insertPlainText("Calinski-Habaraz score and Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the indice, better is the number of clusters.\n\n")
 
     def runSelectedClust(self, selectedMethod, param_dict):
-        print(param_dict)
         clustering_results = run_clustering(selectedMethod, param_dict)
         print("runSelectedCLud -> Param dict : {}".format(param_dict.keys()));
         self.label = clustering_results[0]
         self.centroids = clustering_results[1]
         self.fill_clust_labels(self.label,self.tableWidget)
-        print("ici")
         self.update_details(selectedMethod, param_dict, self.centroids, clustering_validation_indexes(self.label,self.centroids,float(len(set(self.label)))))
         
-
 
         #self.results_popup.update_details(method_name, user_params, self.centroids, clustering_validation_indexes(self.label,self.centroid,float(len(set(self.label)))))
         #self.add_hist(param_dict, self.label)
@@ -176,7 +171,6 @@ class ClusteringView2(QtGui.QWidget):
             QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")
 
     def save(self):
-        print(self.label)
         if self.label is not None:
             makeClusterResultSet(get_current_usableDataset(), self.label)
             QtGui.QMessageBox.information(self, "Results saved!",
