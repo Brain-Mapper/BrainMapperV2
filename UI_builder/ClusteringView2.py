@@ -96,11 +96,10 @@ class ClusteringView2(QtGui.QWidget):
         self.tableResults.setRowCount(len(history))
         row_count = 0
         for iter in history:
-            print(iter)
             self.tableResults.setItem(row_count, 0, QtGui.QTableWidgetItem(iter.get("clusters")))
-            self.tableResults.setItem(row_count, 1, QtGui.QTableWidgetItem(iter.get("silhouette_score")))
-            self.tableWidget.setItem(row_count, 2, QtGui.QTableWidgetItem(iter.get("calinski_harabaz_score")))
-            self.tableWidget.setItem(row_count, 3, QtGui.QTableWidgetItem(iter.get("davies_bouldin_score")))
+            self.tableResults.setItem(row_count, 1, QtGui.QTableWidgetItem(str(iter.get("silhouette_score"))))
+            self.tableResults.setItem(row_count, 2, QtGui.QTableWidgetItem(str(iter.get("calinski_harabaz_score"))))
+            self.tableResults.setItem(row_count, 3, QtGui.QTableWidgetItem(str(iter.get("davies_bouldin_score"))))
             row_count = row_count+1
 
     def fill_clust_labels(self, assigned_labels_array, tableWidget):
