@@ -4,9 +4,10 @@
 # DESCRIPTION
 #
 #
-# HISTORY
+# AUTHORS
 #
-# 14 feb 2018 - Initial design and coding. (@yoshcraft, Raphael A.)
+#       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
+#       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
 from nibabel import save
 from os import path
@@ -31,6 +32,3 @@ def image_recreation_from_list(folder_path, image_collection_list):
             makedirs(folder_path_ic)
 
         image_recreation(folder_path_ic, ic)
-
-
-

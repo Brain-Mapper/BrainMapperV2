@@ -6,16 +6,10 @@
 #
 #       'exportView' contains the Qwidget for the export view
 #
-# HISTORY
+# AUTHORS
 #
-# 15 january 2018 - Initial design and coding. (@yoshcraft, Raphael A.)
-# 16 january 2018 - Basing graphic interface and add export csv method (@yoshcraft, Raphael A.)
-# 18 january 2018 - Modification to fit with the new export method (@yoshcraft, Raphael A.)
-# 13 february 2018 - Useless, cause of some modification of the csv exporting method, in waiting of the nifti
-#  export implementation
-
-
-
+#       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
+#       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
 from PyQt4 import QtGui
 from PyQt4.Qt import *
@@ -118,15 +112,3 @@ class ExportView(QtGui.QWidget):
 
     def set_usable_data_set(self,a_usable_dataset_instance):
         self.export_usable_dataset = a_usable_dataset_instance
-
-
-
-
-
-
-
-
-
-
-
-

@@ -6,11 +6,10 @@
 #       The module 'excelExport.py' contains all the functions export the data to the CSV format.
 #
 #
-# HISTORY
+# AUTHORS
 #
-# 16 january 2018 - Initial design and coding. (@yoshcraft, Raphael A.)
-# 18 january 2018 - Add method for clustering export. (@yoshcraft, Raphael A.)
-
+#       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
+#       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
 import os
 import csv
@@ -24,6 +23,8 @@ def export_control(name, path):
     """
     Method to control all the os data to verify if the user can export is file
     at path/name
+
+    Arguments :
     :param name: file name
     :param path: path of the directory link to this file name
     """
@@ -104,6 +105,15 @@ def simple_export(name, path, a_usable_dataset):
         f.close()
 
 def clustering_export(name, path, a_usable_dataset, label):
+    """
+    Method to export clustering data as a CSV file
+
+    Arguments :
+        name{string} -- file name
+        path{strig} -- path file
+        a_usable_dataset{list} -- data
+        label{list} -- labels
+    """
 
     if export_control(name, path):
         file_path = os.path.join(str(path), str(name) + '.csv')
@@ -138,9 +148,9 @@ def clustering_export(name, path, a_usable_dataset, label):
 
                     new_line[1] = f_name  # file name
 
-                    new_line[2] = str(data_array[data_rows, 0] - deltas[0])  # X coordinate
-                    new_line[3] = str(data_array[data_rows, 1] - deltas[1])  # Y coordinate
-                    new_line[4] = str(data_array[data_rows, 2] - deltas[2])  # Z coordinate
+                    new_line[2] = str(data_array[data_rows, 0])  # X coordinate
+                    new_line[3] = str(data_array[data_rows, 1])  # Y coordinate
+                    new_line[4] = str(data_array[data_rows, 2])  # Z coordinate
                     new_line[5] = str(data_array[data_rows, 3])  # Intensity
                     new_line[6] = str(label[row_cont])
                     row_cont = row_cont + 1
