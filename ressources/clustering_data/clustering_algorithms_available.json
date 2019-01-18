@@ -7,8 +7,13 @@
           "type" : ["random","k-means++"],
           "default" : "random"
         },
+        "n_iter" : {
+          "param_info" : "The number of iterations you wish to obtain",
+          "type" : "int",
+          "default" : "10"
+        },
         "n_clusters" : {
-          "param_info" : "The number of clusters the user wishes to obtain",
+          "param_info" : "The number of clusters you wish to obtain",
           "type" : "int",
           "default" : "3"
         },
@@ -43,8 +48,13 @@
           "type" : ["random","k-means++"],
           "default" : "k-means++"
         },
+        "n_iter" : {
+          "param_info" : "The number of iterations you wish to obtain",
+          "type" : "int",
+          "default" : "10"
+        },
         "n_clusters" : {
-          "param_info" : "The number of clusters the user wishes to obtain",
+          "param_info" : "The number of clusters you wish to obtain",
           "type" : "int",
           "default" : "3"
         },
@@ -64,8 +74,13 @@
   "AgglomerativeClustering" : { "algo_info" : "Recursively merges the pair of clusters that minimally increases a given linkage distance (see scikit-learn).",
     "algo_usecase" : "Many clusters, possibly connectivity constraints + \nLarge n_samples and n_clusters",
     "param_list" : {
+      "n_iter" : {
+        "param_info" : "The number of iterations you wish to obtain",
+        "type" : "int",
+        "default" : "10"
+      },
       "n_clusters" : {
-          "param_info" : "The number of clusters the user wishes to obtain",
+          "param_info" : "The number of clusters you wish to obtain",
           "type" : "int",
           "default" : "2"
       },
@@ -89,6 +104,11 @@
   "DBSCAN" : { "algo_info": "Density-Based Spatial Clustering of Applications with Noise. Finds core samples of high density and expands clusters from them. Good for data which contains clusters of similar density.",
       "algo_usecase" : "Non-flat geometry, uneven cluster sizes, very large number of samples, medium number of clusters.",
       "param_list" : {
+        "n_iter" : {
+          "param_info" : "The number of iterations you wish to obtain",
+          "type" : "int",
+          "default" : "10"
+        },
         "eps" : {
           "param_info" : "The maximum distance between two samples for them to be considered as in the same neighborhood",
           "type" : "float",
@@ -110,6 +130,11 @@
         "algo_info" : "Fuzzy CMeans creates K clusters represented by a central point that is the mean of all the points in a given cluster and each points belongs more or less to the cluster. A point can belong to one or many cluster(s).",
         "algo_usecase" : "Borders between clusters are fuzzy",
         "param_list" : {
+            "n_iter" : {
+              "param_info" : "The number of iterations you wish to obtain",
+              "type" : "int",
+              "default" : "10"
+            },  
             "m" : {
                 "param_info" : "m is the weighting exponent. It controls the relative weights placed on each of the squared errors. The best value is between 1,5 and 3.",
                 "type" : "float",

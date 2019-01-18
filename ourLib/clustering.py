@@ -25,12 +25,14 @@ import math
 import skfuzzy as fuzz
 
 
-def format_to_dataframe(X) -> pd.DataFrame:
+def format_to_dataframe(X, columns_to_keep=['X', 'Y', 'Z']) -> pd.DataFrame:
     # TODO format the code so that we don't have to use this function
     X = pd.DataFrame(X, columns=['X', 'Y', 'Z', 'Intensity'])
-    # Drop the column of intensity
-    X = X.drop(columns=['Intensity'])
-    return X
+    # columns_to_drop = ['X', 'Y', 'Z', 'Intensity']
+    # for col in columns_to_keep:
+    #     columns_to_drop.remove(col)
+    # X = X.drop(columns=columns_to_drop)
+    return X[columns_to_keep]
 
 
 def perform_kmeans(param_dict, X):
