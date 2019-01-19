@@ -357,7 +357,7 @@ class ClusteringView2(QtGui.QWidget):
         self.horizontalLayout = QtGui.QHBoxLayout(Form)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         self.widget_clustering = QtGui.QWidget(Form)
-        self.widget_clustering.setMaximumSize(QtCore.QSize(300, 16777215))
+        self.widget_clustering.setMaximumSize(QtCore.QSize(400, 16777215))
         self.widget_clustering.setStyleSheet(_fromUtf8("QWidget#widget_clustering{background-color: rgb(255, 255, 255);}"))
         self.widget_clustering.setObjectName(_fromUtf8("widget_clustering"))
         self.verticalLayout_clustering = QtGui.QVBoxLayout(self.widget_clustering)
