@@ -96,11 +96,13 @@ class ClusteringView2(QtGui.QWidget):
         self.tableResults.setRowCount(len(history))
         row_count = 0
         for iter in history:
+            self.tableResults.verticalHeaderItem(row_count).setText(str(row_count+1))
             self.tableResults.setItem(row_count, 0, QtGui.QTableWidgetItem(str(iter.get("clusters"))))
             self.tableResults.setItem(row_count, 1, QtGui.QTableWidgetItem(str(iter.get("silhouette_score"))))
             self.tableResults.setItem(row_count, 2, QtGui.QTableWidgetItem(str(iter.get("calinski_harabaz_score"))))
             self.tableResults.setItem(row_count, 3, QtGui.QTableWidgetItem(str(iter.get("davies_bouldin_score"))))
             row_count = row_count+1
+        self.tableResults.setSortingEnabled(True)
 
     def fill_clust_labels(self, assigned_labels_array, tableWidget):
         """
@@ -194,7 +196,7 @@ class ClusteringView2(QtGui.QWidget):
         # self.info_panel.insertPlainText("Davies-Bouldin index: \t\t " + str(validation_values[2]) + "\n\n")
         # self.info_panel.insertPlainText("Calinski-Habaraz score and Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the indice, better is the number of clusters.\n\n")
 
-    def createResultView(self,param_dict,selectedMethod):
+    def createResultView(self,param_dict,selectedMethod,history):
         print(param_dict["i_iter"])
         if param_dict["i_iter"]=="1":
             print("ok")
@@ -206,25 +208,49 @@ class ClusteringView2(QtGui.QWidget):
         else :
             for i in reversed(range(self.verticalLayout_result.count())):
                 self.verticalLayout_result.itemAt(i).widget().setParent(None)
-            self.tableResults = QtGui.QTableWidget(self.widget_result)
-            self.tableResults.setAcceptDrops(False)
-            self.tableResults.setAlternatingRowColors(False)
-            self.tableResults.setIconSize(QtCore.QSize(0, 0))
-            self.tableResults.setTextElideMode(QtCore.Qt.ElideRight)
-            self.tableResults.setObjectName(_fromUtf8("tableResults"))
-            self.tableResults.setColumnCount(4)
-            self.tableResults.setRowCount(2)
+            tableResults = QtGui.QTableWidget(self.widget_result)
+            tableResults.setAcceptDrops(False)
+            tableResults.setAlternatingRowColors(False)
+            tableResults.setIconSize(QtCore.QSize(0, 0))
+            tableResults.setTextElideMode(QtCore.Qt.ElideRight)
+            tableResults.setObjectName(_fromUtf8("tableResults"))
+            tableResults.setColumnCount(4)
+            tableResults.setRowCount(1)
             item = QtGui.QTableWidgetItem()
-            self.tableResults.setVerticalHeaderItem(0, item)
+            tableResults.setVerticalHeaderItem(0, item)
             item = QtGui.QTableWidgetItem()
-            self.tableResults.setVerticalHeaderItem(1, item)
-            self.tableResults.horizontalHeader().setCascadingSectionResizes(False)
-            self.tableResults.horizontalHeader().setDefaultSectionSize(145)
-            self.verticalLayout_result.addWidget(self.tableResults)
+            tableResults.setHorizontalHeaderItem(0, item)
+            item = QtGui.QTableWidgetItem()
+            tableResults.setHorizontalHeaderItem(1, item)
+            item = QtGui.QTableWidgetItem()
+            tableResults.setHorizontalHeaderItem(2, item)
+            item = QtGui.QTableWidgetItem()
+            tableResults.setHorizontalHeaderItem(3, item)
+            tableResults.horizontalHeaderItem(0).setText("Clusters")
+            tableResults.horizontalHeaderItem(1).setText("Mean Silhouette")
+            tableResults.horizontalHeaderItem(2).setText("Calinski-Habaraz")
+            tableResults.horizontalHeaderItem(3).setText("Davies-Bouldin")
+            tableResults.horizontalHeader().setCascadingSectionResizes(False)
+            tableResults.horizontalHeader().setDefaultSectionSize(145)
+
+            tableResults.setRowCount(len(history))
+            row_count = 0
+            for iter in history:
+                print(row_count)
+                tableResults.verticalHeaderItem(row_count).setText(str(row_count+1))
+                tableResults.setItem(row_count, 0, QtGui.QTableWidgetItem(str(iter.get("clusters"))))
+                tableResults.setItem(row_count, 1, QtGui.QTableWidgetItem(str(iter.get("silhouette_score"))))
+                tableResults.setItem(row_count, 2, QtGui.QTableWidgetItem(str(iter.get("calinski_harabaz_score"))))
+                tableResults.setItem(row_count, 3, QtGui.QTableWidgetItem(str(iter.get("davies_bouldin_score"))))
+                row_count = row_count+1
+            tableResults.setSortingEnabled(True)
+
+            self.verticalLayout_result.addWidget(tableResults)
 
 
     def runSelectedClust(self, selectedMethod, param_dict):
 
+        history_iterations = []
         history_iterations.append({})
         last_i = len(history_iterations)-1
 
@@ -264,8 +290,8 @@ class ClusteringView2(QtGui.QWidget):
         self.pushButton_export.setEnabled(True)
         self.comboBox_3.setEnabled(True)
 
-        self.createResultView(param_dict,selectedMethod)
-        self.fill_results(history_iterations)
+        self.createResultView(param_dict,selectedMethod,history_iterations)
+        #self.fill_results(history_iterations)
 
         #self.results_popup.update_details(method_name, user_params, self.centroids, clustering_validation_indexes(self.label,self.centroid,float(len(set(self.label)))))
         #self.add_hist(param_dict, self.label)
