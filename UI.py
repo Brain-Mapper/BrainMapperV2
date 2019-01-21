@@ -64,7 +64,15 @@ class Help(QMainWindow):
         verticalLayout.addWidget(label_5)
 
         label_4 = QLabel(horizontalLayoutWidget)
-        label_4.setText("Graziella Husson & Valentina Zelaya")
+        label_4.setText("Graziella Husson, Valentina Zelaya")
+        verticalLayout.addWidget(label_4)
+
+        label_5 = QLabel(horizontalLayoutWidget)
+        label_5.setText("Marie Adler, Aurélien Benoit,")
+        verticalLayout.addWidget(label_5)
+
+        label_4 = QLabel(horizontalLayoutWidget)
+        label_4.setText("Thomas Grasselini & Lucie Martin")
         verticalLayout.addWidget(label_4)
 
         pushButton = QPushButton(horizontalLayoutWidget)
@@ -254,7 +262,7 @@ class UI(QtGui.QMainWindow):
         # -- We create a collection with the list of images the user selected and give it to the main view and the edit view
         file = QFileDialog.getOpenFileNames()
         if (file != ""):
-            # TODO put the try/except 
+            # TODO put the try/except
             # try:
             collec = do_image_collection(file)
             #homepage.mainview.show_coll(collec)
