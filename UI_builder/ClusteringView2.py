@@ -197,7 +197,7 @@ class ClusteringView2(QtGui.QWidget):
         # self.info_panel.insertPlainText("Calinski-Habaraz score and Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the indice, better is the number of clusters.\n\n")
 
     def createResultView(self,param_dict,selectedMethod,history):
-        print(param_dict["i_iter"])
+        print("createResultView -> i_iter",param_dict["i_iter"])
         if param_dict["i_iter"]=="1":
             print("ok")
             for i in reversed(range(self.verticalLayout_result.count())):
@@ -235,9 +235,17 @@ class ClusteringView2(QtGui.QWidget):
 
             tableResults.setRowCount(len(history))
             row_count = 0
+            #print("createResultView -> history", history)
             for iter in history:
-                print(row_count)
-                tableResults.verticalHeaderItem(row_count).setText(str(row_count+1))
+                #print("createResultView -> row_count", row_count)
+                #print("createResultView -> verticalHeaderItem", tableResults.verticalHeaderItem(row_count))
+                #print("createResultView -> clusters", str(iter.get("clusters")))
+                print("createResultView -> Silhouette", str(iter.get("silhouette_score")))
+                print("createResultView -> CH", str(iter.get("calinski_harabaz_score")))
+                print("createResultView -> DB", str(iter.get("davies_bouldin_score")))
+                #print("createResultView -> iter", iter)
+                ## TODO: remove comments
+                #tableResults.verticalHeaderItem(row_count).setText(str(row_count+1))
                 tableResults.setItem(row_count, 0, QtGui.QTableWidgetItem(str(iter.get("clusters"))))
                 tableResults.setItem(row_count, 1, QtGui.QTableWidgetItem(str(iter.get("silhouette_score"))))
                 tableResults.setItem(row_count, 2, QtGui.QTableWidgetItem(str(iter.get("calinski_harabaz_score"))))
@@ -250,16 +258,24 @@ class ClusteringView2(QtGui.QWidget):
 
     def runSelectedClust(self, selectedMethod, param_dict):
 
+        i_iter = int(param_dict["i_iter"])
+
         history_iterations = []
-        history_iterations.append({})
-        last_i = len(history_iterations)-1
 
-        clustering_results = run_clustering(selectedMethod, param_dict)
+        for i in range (i_iter):
+            history_iterations.append({})
+            last_i = len(history_iterations)-1
 
-        history_iterations[last_i]["method_used"] = selectedMethod
-        history_iterations[last_i]["labels"] = clustering_results["labels"]
-        history_iterations[last_i]["data"] = clustering_results["clusterizable_dataset"]
-        history_iterations[last_i]["clusters"] = clustering_results["n_selected"] if clustering_results["n_selected"] is not None else clustering_results["n"]
+            clustering_results = run_clustering(selectedMethod, param_dict)
+
+            history_iterations[last_i]["method_used"] = selectedMethod
+            history_iterations[last_i]["labels"] = clustering_results["labels"]
+            history_iterations[last_i]["data"] = clustering_results["clusterizable_dataset"]
+            history_iterations[last_i]["clusters"] = clustering_results["n_selected"] if clustering_results["n_selected"] is not None else clustering_results["n"]
+
+            history_iterations[last_i]["silhouette_score"] = clustering_results["silhouette_score"]
+            history_iterations[last_i]["calinski_harabaz_score"] = clustering_results["calinski_harabaz_score"]
+            history_iterations[last_i]["davies_bouldin_score"] = clustering_results["davies_bouldin_score"]
 
         self.label = clustering_results["labels"]
         self.centroids = clustering_results["centers"] if "centers" in clustering_results.keys() else None
@@ -277,12 +293,14 @@ class ClusteringView2(QtGui.QWidget):
 
 
         self.fill_clust_labels(self.label,self.tableWidget)
-        # self.update_details(selectedMethod, param_dict, self.centroids, clustering_validation_indexes(self.label,self.centroids,float(len(set(self.label)))))
+        #self.update_details(selectedMethod, param_dict, self.centroids, clustering_validation_indexes(self.label,self.centroids,float(len(set(self.label)))))
+
         validation_values = clustering_validation_indexes(self.label, self.centroids,float(len(set(self.label))))
 
-        history_iterations[last_i]["silhouette_score"] = validation_values[0]
-        history_iterations[last_i]["calinski_harabaz_score"] = validation_values[1]
-        history_iterations[last_i]["davies_bouldin_score"] = validation_values[2]
+        #history_iterations[last_i]["silhouette_score"] = validation_values[0]
+        #history_iterations[last_i]["calinski_harabaz_score"] = validation_values[1]
+        #history_iterations[last_i]["davies_bouldin_score"] = validation_values[2]
+        #print("runSelectedClust -> history", history_iterations)
 
         self.update_details(selectedMethod, param_dict, self.centroids, validation_values, self.n_selected, self.n, self.scores)
         self.pushButton_show.setEnabled(True)
@@ -309,7 +327,7 @@ class ClusteringView2(QtGui.QWidget):
             QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")
 
     def save(self):
-        print(self.label)
+        print("save -> self.label", self.label)
         if self.label is not None:
             makeClusterResultSet(get_current_usableDataset(), self.label)
             QtGui.QMessageBox.information(self, "Results saved!",
@@ -327,7 +345,7 @@ class ClusteringView2(QtGui.QWidget):
 
     def plot(self):
         type = self.comboBox_3.currentText()
-        print(type)
+        print("plot -> type",type)
         if type=="Sihouette":
             clustering_plot.plot_silhouette(self.label,None)
         elif type=="3D view":

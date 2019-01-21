@@ -250,6 +250,10 @@ def run_clustering(selectedClusteringMethod, params_dict):
             final_results["scores"] = None
             final_results["n"] = int(params_dict["n_clusters"]) if selectedClusteringMethod != "DBSCAN" else len(set(clustering.filter(clusterizable_dataset, final_results["labels"])[1]))
             final_results["clusterizable_dataset"] = clusterizable_dataset
+            print("run_clustering -> labels", final_results["labels"])
+            final_results["silhouette_score"] = clustering.compute_mean_silhouette(clusterizable_dataset,final_results["labels"])
+            final_results["calinski_harabaz_score"] = clustering.compute_calinski_habaraz(clusterizable_dataset,final_results["labels"])
+            final_results["davies_bouldin_score"] = clustering.compute_db(clusterizable_dataset,final_results["labels"])
         else :
             # search of the best clustering result
             final_results = None
@@ -292,6 +296,7 @@ def run_clustering(selectedClusteringMethod, params_dict):
 
     del clusterizable_dataset  # Deleting exported data : saves memory !!
 
+    print("run_clustering -> silhouette_score", final_results["silhouette_score"])
     return final_results
 
 
