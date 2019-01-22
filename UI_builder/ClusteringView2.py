@@ -218,6 +218,7 @@ class ClusteringView2(QtGui.QWidget):
             tableResults.setRowCount(1)
             item = QtGui.QTableWidgetItem()
             tableResults.setVerticalHeaderItem(0, item)
+            tableResults.verticalHeaderItem(0).setText("1")
             item = QtGui.QTableWidgetItem()
             tableResults.setHorizontalHeaderItem(0, item)
             item = QtGui.QTableWidgetItem()
@@ -337,10 +338,15 @@ class ClusteringView2(QtGui.QWidget):
             QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")
 
     def go_back(self):
-        # -- When the user wants to return to the main view, we reinit the cluster view
-        #self.resultsGraphs.graph1.clear()
-        #self.resultsGraphs.graph2.clear()
+        for i in reversed(range(self.verticalLayout_result.count())):
+            self.verticalLayout_result.itemAt(i).widget().setParent(None)
+        self.info_panel = QtGui.QTextEdit()
+        self.info_panel.setReadOnly(True)
 
+        self.info_panel.setText("======= CLUSTERING VALIDATION INDEXES =======\n\n"
+                                "No algorithm has been applied, no indexes were computed ...")
+
+        self.verticalLayout_result.addWidget(self.info_panel)
         self.showMain.emit()
 
     def plot(self):
