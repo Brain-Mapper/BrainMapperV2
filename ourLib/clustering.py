@@ -26,12 +26,7 @@ import skfuzzy as fuzz
 
 
 def format_to_dataframe(X, columns_to_keep=['X', 'Y', 'Z']) -> pd.DataFrame:
-    # TODO format the code so that we don't have to use this function
     X = pd.DataFrame(X, columns=['X', 'Y', 'Z', 'Intensity'])
-    # columns_to_drop = ['X', 'Y', 'Z', 'Intensity']
-    # for col in columns_to_keep:
-    #     columns_to_drop.remove(col)
-    # X = X.drop(columns=columns_to_drop)
     return X[columns_to_keep]
 
 
@@ -44,7 +39,6 @@ def perform_kmeans(param_dict, X):
         "labels": clustering.labels_,
         "centers": clustering.cluster_centers_
     }
-    #return clustering.labels_, clustering.cluster_centers_
 
 
 def perform_agglomerative_clustering(param_dict, X):
@@ -63,8 +57,6 @@ def perform_DBSCAN(param_dict, X):
                     metric=param_dict["metric"]).fit(X)
     return {
         "labels" : dbscan.labels_,
-        #"core_sample_indices" : dbscan.core_sample_indices_,
-        #"components" : dbscan.components_,
     }
 
 
@@ -305,7 +297,6 @@ def compute_calinski_habaraz(X, predicted_labels):
 
 
 def compute_db(X,predicted_labels):
-#X, centroids, labels, cluster_number):
     """
     Compute the Davies-Bouldin score for a given clustering result
     :param X: The data matrix : a list of n_features-dimensional data (each row corresponds to a single data point)
