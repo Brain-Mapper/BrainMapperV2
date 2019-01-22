@@ -37,7 +37,7 @@ def format_to_dataframe(X, columns_to_keep=['X', 'Y', 'Z']) -> pd.DataFrame:
 
 def perform_kmeans(param_dict, X):
     X = format_to_dataframe(X)
-    clustering = KMeans(n_clusters=int(param_dict["n_clusters"]), random_state=int(param_dict["random_state"]),
+    clustering = KMeans(n_clusters=int(param_dict["n_clusters"]), random_state=None,
                         init=param_dict["init"],
                         n_init=int(param_dict["n_init"]), max_iter=int(param_dict["max_iter"])).fit(X)
     return {
@@ -83,7 +83,7 @@ def perform_FuzzyCMeans(param_dict,X):
     print("perform_FuzzyCMeans -> n_clusters : {}".format(int(param_dict["n_clusters"])))
     pts = np.vstack(([X["X"].values, X["Y"].values, X["Z"].values]))
     cntr, u, u0, d, jm, p, fpc = fuzz.cluster.cmeans(pts, int(param_dict["n_clusters"]), int(param_dict["m"]), error=float(param_dict["error"]),
-     maxiter=int(param_dict["maxiter"]), seed=int(param_dict["seed"]))
+     maxiter=int(param_dict["maxiter"]), seed=None)
 
     # Create a labels list for viewing purposes
     labels = []
