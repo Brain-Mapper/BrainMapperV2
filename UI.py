@@ -9,10 +9,11 @@ from UI_builder import resources
 from UI_builder.mainView2 import MainView2
 from UI_builder.ClusteringView2 import ClusteringView2
 # from UI_builder.clusteringView import ClusteringView
-from UI_builder.editCollectionsView import EditCollectionsView
+#from UI_builder.editCollectionsView import EditCollectionsView
 from UI_builder.EditView2 import EditView2
 from UI_builder.exportView import ExportView
-from UI_builder.calculationView import CalculationView
+#from UI_builder.calculationView import CalculationView
+from UI_builder.calculationView2 import calculationView2
 
 from multiprocessing import freeze_support
 
@@ -111,7 +112,8 @@ class HomePage(QWidget):
         self.mainview = MainView2()
         self.clustering = ClusteringView2()
         #self.clustering = ClusteringView()
-        self.calculation = CalculationView()
+        #self.calculation = CalculationView()
+        self.calculation = calculationView2()
         self.edit_colls = EditView2()
         #self.edit_colls = EditCollectionsView()
         self.export = ExportView()

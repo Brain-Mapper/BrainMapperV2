@@ -76,7 +76,7 @@ class NifImage(object):
         """
         Returns the shape of image
         """
-        self.nib_image.get_data_shape()
+        return self.nib_image.shape
 
     def save_to_file(self, folder_path):
         """
