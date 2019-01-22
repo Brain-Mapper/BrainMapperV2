@@ -832,6 +832,12 @@ def recursive_workspace_save(folder_path, usable_set):
         recursive_workspace_save(new_folder_set_path, usable_set.subset_dict[key])
 
 
+def format_to_dataframe(X, columns_to_keep=['X', 'Y', 'Z']) -> pd.DataFrame:
+    X = pd.DataFrame(X, columns=['X', 'Y', 'Z', 'Intensity'])
+    return X[columns_to_keep]
+
+
+
 def add_workspace_set(my_set):
     """
     Add my_set to the workspace sets list
