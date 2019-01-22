@@ -114,6 +114,16 @@ def plot_3d_clusters(labels: list, centroids:list = None, marker_size=5.):
     #view.save_as_html("Affichage.html")
     view.open_in_browser()
 
+def plot_3d(marker_size=5.):
+    """
+    Method to make a 3D plot of the points get_current_usableDataset() is the good dataset in the edit window
+    """
+    # TODO verify that
+    points_list = [(i[0], i[1], i[2]) for i in get_current_usableDataset().export_as_clusterizable()]
+    labels = [0]*len(points_list)
+    view = view_markers(points_list, labels=labels, colors=None, marker_size=marker_size, centers=None, centers_colors=None)
+    view.open_in_browser()
+
 def plot_cross_section(labels: list):
     """
     Method to make three cross-section of the brain
@@ -123,7 +133,7 @@ def plot_cross_section(labels: list):
     """
     # TODO choose the coordinates of the cut
     points_list, colors_list = get_points_list_colors_list(labels)
-    display = plotting.plot_anat()
+    display = plotting.plot_anat(cut_coords=coordinates)
     for point,color in zip(points_list, colors_list):
         display.add_markers([point], marker_color=[color])
     plotting.show()

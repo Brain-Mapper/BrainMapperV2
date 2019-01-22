@@ -9,13 +9,10 @@
 #           lines = nb_interesting_voxels
 #           columns = X, Y, Z, Intensity
 #
-# HISTORY
+# AUTHORS
 #
-# 8 december 2017 - Initial design and coding. (@vz-chameleon, Valentina Z.)
-# 11 december 2017 - First attempts at masking  (@vz-chameleon, Valentina Z.)
-# 18 december 2017 - Added Maxime's functions for data extraction (@maximeCluchague via @vz-chameleon)
-# 5 january 2018 - Adding another data extraction function, depending on numpy (@vz-chameleon)
-# 12 february 2018 - Added functions to extract data using centroids
+#       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
+#       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
 # Lib dependency imports
 import numpy as np
@@ -58,16 +55,15 @@ def extract(a_nifti_img_obj):
 
     usable_data = np.zeros(shape=(nb_interesting_voxels, 4))
 
-    # --- Incorporating Maxime's search
-    # (modified by vz-chameleon to return an array that can be used in clustering)
-
     lx, ly, lz = img_data.shape  # length of the three image axis
     c = 0  # counter for array construction
 
     # Putting in mni coordinates
     # TODO rendre ça plus propre
+
     M = a_nifti_img_obj.get_affine_matrix()[:3, :3]
     abc = a_nifti_img_obj.get_affine_matrix()[:3, 3]
+
     def f(i, j, k):
         """ Return X,Y,Z coordinates in MNI for i, j, k"""
         return M.dot([i, j, k]) + abc

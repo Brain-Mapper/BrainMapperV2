@@ -28,7 +28,6 @@ from sys import maxsize as MAX
 
 import os
 import platform
-import gc
 import time
 import json
 
@@ -47,8 +46,10 @@ calculsets = []  # List of sets created as a result for calculation, permit to r
 currentSet = None  # The current set shown in main view
 currentVizu = None  # The current collections shown in main view
 
+history_iterations = []
 collshow=[]
 list_img=[]
+
 
 # Dictionary of available clustering methods
 app_clustering_available = {}
@@ -200,7 +201,7 @@ CLUSTERING_METHODS = {
     'FuzzyCMeans': clustering.perform_FuzzyCMeans,
 }
 
-# Scoring methods dict [ name of indic : 
+# Scoring methods dict [ name of indic :
 #       (function to calculate the indice ,
 #       worst score possible,
 #       function to determine if a score is better thant the other one
@@ -238,24 +239,28 @@ def run_clustering(selectedClusteringMethod, params_dict):
         a list of clustering labels (to which cluster does one individual belong to)
     """
     clusterizable_dataset = currentUsableDataset.export_as_clusterizable()
-
     if selectedClusteringMethod in CLUSTERING_METHODS.keys():
-        bool_not_range = True # True if there isn't a 
+        bool_not_range = True # True if there isn't a
         if selectedClusteringMethod != "DBSCAN":
             range_of_cluster = read_n(params_dict["n_clusters"])
-            bool_not_range = len(range_of_cluster) == 1 
+            bool_not_range = len(range_of_cluster) == 1
         if bool_not_range:
             # normal use
             final_results = CLUSTERING_METHODS[selectedClusteringMethod](params_dict, clusterizable_dataset)
             final_results["n_selected"] = None
             final_results["scores"] = None
             final_results["n"] = int(params_dict["n_clusters"]) if selectedClusteringMethod != "DBSCAN" else len(set(clustering.filter(clusterizable_dataset, final_results["labels"])[1]))
+            final_results["clusterizable_dataset"] = clusterizable_dataset
+            print("run_clustering -> labels", final_results["labels"])
+            final_results["silhouette_score"] = clustering.compute_mean_silhouette(clusterizable_dataset,final_results["labels"])
+            final_results["calinski_harabaz_score"] = clustering.compute_calinski_habaraz(clusterizable_dataset,final_results["labels"])
+            final_results["davies_bouldin_score"] = clustering.compute_db(clusterizable_dataset,final_results["labels"])
         else :
             # search of the best clustering result
             final_results = None
             n_results = []
             scores_results = []
-            
+
             if SCORING_METHODS[params_dict["score"]] is not None:
                 method = SCORING_METHODS[params_dict["score"]]
                 best_score = method[1]
@@ -285,12 +290,14 @@ def run_clustering(selectedClusteringMethod, params_dict):
 
             final_results["n"] = n_results
             final_results["scores"] = scores_results
+            final_results["clusterizable_dataset"] = clusterizable_dataset
     else:
         print('clustering method not recognised')
         final_results = ['']
 
     del clusterizable_dataset  # Deleting exported data : saves memory !!
 
+    print("run_clustering -> silhouette_score", final_results["silhouette_score"])
     return final_results
 
 

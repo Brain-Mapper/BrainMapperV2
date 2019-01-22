@@ -45,7 +45,7 @@ class NifImage(object):
             one_filename -- the path to the .nii file to store
 
         Return :
-           a NifImage instance
+            a NifImage instance
         """
         return cls(one_filename, nib.load(one_filename))
 
@@ -82,7 +82,7 @@ class NifImage(object):
             image_data_array -- the new image's data
             same_header -- TRUE if we must use the same header as the ref_img's, FALSE if not (default)
 
-        Return:
+        Return :
             a new NifImage instance
         """
         affine = ref_img.get_affine_matrix()
@@ -98,14 +98,13 @@ class NifImage(object):
     def set_filename(self, new_filename):
         self.filename = new_filename
 
-    # TODO L'utiliser pour se placer en MNI !
     def get_affine_matrix(self):
         """
         Return the NIfTI images' affine
         An affine is the matrix that allows to pass from real world coordinates to
         the image coordinates (here, to MNI coordinates)
 
-        Return :
+        Return:
             array
         """
         return self.nib_image.affine
@@ -144,7 +143,7 @@ class NifImage(object):
         info = ""
         try:
             info = "Location : %s\nSpatial Image : %s\n(\n shape=%s,\n affine=%s\n)" % \
-                   (selfparam .filename,
+                   (self.filename,
                     self.nib_image.__class__.__name__,
                     repr(self.nib_image.shape),
                     repr(self.nib_image.affine))
@@ -161,19 +160,19 @@ class NifImage(object):
     def get_name(self):
         return self.filename
 
-    def get_img_data(self):
-        # Used only for the visualisation process
-        data = self.nib_image.get_data()
-        data = np.transpose(data, [2,0,1])
-        d2 = np.empty(data.shape + (4,), dtype=np.ubyte)
-        d2[..., 0] = data * (255./(data.max()/1))
-        d2[..., 1] = d2[..., 0]
-        d2[..., 2] = d2[..., 0]
-        d2[..., 3] = d2[..., 0]
-        d2[..., 3] = (d2[..., 3].astype(float) / 255.)**2 * 255
+    # def get_img_data(self):
+    #     # Used only for the visualisation process
+    #     data = self.nib_image.get_data()
+    #     data = np.transpose(data, [2,0,1])
+    #     d2 = np.empty(data.shape + (4,), dtype=np.ubyte)
+    #     d2[..., 0] = data * (255./(data.max()/1))
+    #     d2[..., 1] = d2[..., 0]
+    #     d2[..., 2] = d2[..., 0]
+    #     d2[..., 3] = d2[..., 0]
+    #     d2[..., 3] = (d2[..., 3].astype(float) / 255.)**2 * 255
 
-        # RGB orientation lines (optional)
-        d2[:, 0, 0] = [255, 0, 0, 255]
-        d2[0, :, 0] = [0, 255, 0, 255]
-        d2[0, 0, :] = [0, 0, 255, 255]
-        return d2
+    #     # RGB orientation lines (optional)
+    #     d2[:, 0, 0] = [255, 0, 0, 255]
+    #     d2[0, :, 0] = [0, 255, 0, 255]
+    #     d2[0, 0, :] = [0, 0, 255, 255]
+    #     return d2

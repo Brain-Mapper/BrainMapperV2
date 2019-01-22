@@ -8,7 +8,7 @@ from UI_builder import resources
 
 from UI_builder.mainView2 import MainView2
 from UI_builder.ClusteringView2 import ClusteringView2
-from UI_builder.clusteringView import ClusteringView
+# from UI_builder.clusteringView import ClusteringView
 from UI_builder.editCollectionsView import EditCollectionsView
 from UI_builder.EditView2 import EditView2
 from UI_builder.exportView import ExportView
@@ -64,7 +64,15 @@ class Help(QMainWindow):
         verticalLayout.addWidget(label_5)
 
         label_4 = QLabel(horizontalLayoutWidget)
-        label_4.setText("Graziella Husson & Valentina Zelaya")
+        label_4.setText("Graziella Husson, Valentina Zelaya")
+        verticalLayout.addWidget(label_4)
+
+        label_5 = QLabel(horizontalLayoutWidget)
+        label_5.setText("Marie Adler, Aurélien Benoit,")
+        verticalLayout.addWidget(label_5)
+
+        label_4 = QLabel(horizontalLayoutWidget)
+        label_4.setText("Thomas Grasselini & Lucie Martin")
         verticalLayout.addWidget(label_4)
 
         pushButton = QPushButton(horizontalLayoutWidget)
@@ -144,9 +152,14 @@ class HomePage(QWidget):
         self.stack.setCurrentWidget(self.mainview)
 
     def updateClusteringView(self):
-        # TODO
         self.clustering.fill_table(get_current_usableDataset())
         self.stack.setCurrentWidget(self.clustering)
+        self.clustering.pushButton_show.setEnabled(False)
+        self.clustering.pushButton_save.setEnabled(False)
+        self.clustering.pushButton_export.setEnabled(False)
+        self.clustering.comboBox_3.setEnabled(False)
+        self.clustering.comboBox_3.item(3).setEnabled(False)
+
 
     def updateEditView(self):
         self.edit_colls.fill_coll()
@@ -253,12 +266,14 @@ class UI(QtGui.QMainWindow):
         # -- We create a collection with the list of images the user selected and give it to the main view and the edit view
         file = QFileDialog.getOpenFileNames()
         if (file != ""):
-            try:
-                collec = do_image_collection(file)
-                #homepage.mainview.show_coll(collec)
-                #homepage.edit_colls.fill_coll() #rapport a editview2
-            except:
-                err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. Maybe you tried to open a non-NIfTI file")
+            # TODO put the try/except
+            # try:
+            collec = do_image_collection(file)
+            #homepage.mainview.show_coll(collec)
+            #homepage.edit_colls.fill_coll() #rapport a editview2
+            # except Error as error:
+            #     print(error)
+            #     err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. Maybe you tried to open a non-NIfTI file")
 
         # -- We create a collection with the list of images the user selected and give it to the main view and the edit view
 
