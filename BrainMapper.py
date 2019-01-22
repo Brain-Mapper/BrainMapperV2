@@ -640,6 +640,7 @@ def setColNameInSet(name):
         name{string} -- new name for collection
     """
     old = get_current_coll()
+
     this_set = old.getSetName()
     this_set.renameCollinSet(old, name)
     set_current_coll_name(name)
@@ -830,12 +831,6 @@ def recursive_workspace_save(folder_path, usable_set):
 
     for key in usable_set.subset_dict.keys():
         recursive_workspace_save(new_folder_set_path, usable_set.subset_dict[key])
-
-
-def format_to_dataframe(X, columns_to_keep=['X', 'Y', 'Z']) -> pd.DataFrame:
-    X = pd.DataFrame(X, columns=['X', 'Y', 'Z', 'Intensity'])
-    return X[columns_to_keep]
-
 
 
 def add_workspace_set(my_set):
