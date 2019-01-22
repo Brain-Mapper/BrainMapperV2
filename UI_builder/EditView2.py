@@ -144,7 +144,6 @@ class CollectionAccessButton(QtGui.QWidget):
             set_current_coll(coll)
             delete_current_coll()
             self.parent.label_10.setText("")
-            #self.pushButton_3.setEnabled(False)
             self.parent.pushButton_4.setEnabled(False)
             for i in reversed(range(self.parent.verticalLayout_3.count())):
                 self.parent.verticalLayout_3.itemAt(i).widget().setParent(None)
@@ -152,8 +151,9 @@ class CollectionAccessButton(QtGui.QWidget):
                 self.parent.verticalLayout_4.itemAt(i).widget().setParent(None)
             self.parent.label_4.setText("")
             self.parent.label_5.setText("")
-            print(list_img)
-            list_img=[]
+            del list_img[:]
+            del collshow[:]
+            print(collshow)
 
 
 
@@ -199,7 +199,7 @@ class CollectionAccessButton(QtGui.QWidget):
 
     def addImage(self, coll, parent):
         global list_img
-        list_img=[]
+        del list_img[:]
         for i in reversed(range(self.parent.verticalLayout_4.count())):
             self.parent.verticalLayout_4.itemAt(i).widget().setParent(None)
     # -- This addImage will add the images selected by the user in the current collection (ALLO THE USER TO ADD A FILE THAT ALREADY EXISTS IN THE COLLECTION)
@@ -380,7 +380,7 @@ class EditView2(QtGui.QWidget):
         #self.resultsGraphs.graph1.clear()
         #self.resultsGraphs.graph2.clear()
         global list_img
-        list_img=[]
+        del list_img[:]
         self.label_10.setText("")
         #self.pushButton_3.setEnabled(False)
         self.pushButton_4.setEnabled(False)
@@ -404,10 +404,9 @@ class EditView2(QtGui.QWidget):
         # old.deleteLater()
         colls = get_selected()
         #labels = []
-        #print(colls)
+        print("colls",colls)
         for x in colls:
             #labels.append(x.name)
-
             topleft=CollectionAccessButton(x, self)
         #print(labels)
         #topleft=CollectionsAccessBar(labels, self)

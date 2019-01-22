@@ -158,7 +158,7 @@ class HomePage(QWidget):
         self.clustering.pushButton_save.setEnabled(False)
         self.clustering.pushButton_export.setEnabled(False)
         self.clustering.comboBox_3.setEnabled(False)
-        self.clustering.comboBox_3.item(3).setEnabled(False)
+        #self.clustering.comboBox_3.item(3).setEnabled(False)
 
 
     def updateEditView(self):
