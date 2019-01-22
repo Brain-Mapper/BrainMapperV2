@@ -46,7 +46,6 @@ calculsets = []  # List of sets created as a result for calculation, permit to r
 currentSet = None  # The current set shown in main view
 currentVizu = None  # The current collections shown in main view
 
-history_iterations = []
 collshow=[]
 list_img=[]
 
@@ -58,10 +57,6 @@ with open('ressources/clustering_data/clustering_algorithms_available.json', 'r'
 
 # Global variable for currently selected clustering method
 currentClusteringMethod = None
-
-
-# Global variables for calculation results
-# currentCalculationResult = None
 
 
 def open_nifti(path):
@@ -115,12 +110,6 @@ def add_coll(coll):
     Arguments :
         coll -- ImageCollection instance
     """
-    # found = False
-    # for i in selected:
-    #     if i.name == coll.name:
-    #         found = True
-    # if not found:
-    #     selected.append(coll)
 
 
 def rm_coll(coll):
@@ -202,11 +191,7 @@ CLUSTERING_METHODS = {
     'FuzzyCMeans': clustering.perform_FuzzyCMeans,
 }
 
-# Scoring methods dict [ name of indic :
-#       (function to calculate the indice ,
-#       worst score possible,
-#       function to determine if a score is better thant the other one
-#   )]
+
 SCORING_METHODS = {
     'Davies-Bouldin' : (clustering.compute_db, MAX, lambda old,new : new<old),
     'Calinski-Harabasz' : (clustering.compute_calinski_habaraz, 0, lambda old,new : new>old),
@@ -221,10 +206,13 @@ def read_n(n_clusters):
     Arguments :
         n_clusters{string} -- string of number of clusters
     """
-    interval = n_clusters.replace(' ','')
-    interval = interval.split('-')
-    for i in range(len(interval)):
-        interval[i] = int(interval[i])
+    if '-' not in n_clusters:
+        interval = [int(n_clusters), int(n_clusters)]
+    else :
+        interval = n_clusters.replace(' ','')
+        interval = interval.split('-')
+        for i in range(len(interval)):
+            interval[i] = int(interval[i])
     return interval
 
 
@@ -241,64 +229,19 @@ def run_clustering(selectedClusteringMethod, params_dict):
     """
     clusterizable_dataset = currentUsableDataset.export_as_clusterizable()
     if selectedClusteringMethod in CLUSTERING_METHODS.keys():
-        bool_not_range = True # True if there isn't a
-        if selectedClusteringMethod != "DBSCAN":
-            range_of_cluster = read_n(params_dict["n_clusters"])
-            bool_not_range = len(range_of_cluster) == 1
-        if bool_not_range:
-            # normal use
-            final_results = CLUSTERING_METHODS[selectedClusteringMethod](params_dict, clusterizable_dataset)
-            final_results["n_selected"] = None
-            final_results["scores"] = None
-            final_results["n"] = int(params_dict["n_clusters"]) if selectedClusteringMethod != "DBSCAN" else len(set(clustering.filter(clusterizable_dataset, final_results["labels"])[1]))
-            final_results["clusterizable_dataset"] = clusterizable_dataset
-            print("run_clustering -> labels", final_results["labels"])
-            final_results["silhouette_score"] = clustering.compute_mean_silhouette(clusterizable_dataset,final_results["labels"])
-            final_results["calinski_harabaz_score"] = clustering.compute_calinski_habaraz(clusterizable_dataset,final_results["labels"])
-            final_results["davies_bouldin_score"] = clustering.compute_db(clusterizable_dataset,final_results["labels"])
-        else :
-            # search of the best clustering result
-            final_results = None
-            n_results = []
-            scores_results = []
 
-            if SCORING_METHODS[params_dict["score"]] is not None:
-                method = SCORING_METHODS[params_dict["score"]]
-                best_score = method[1]
-                for i in range(range_of_cluster[0], range_of_cluster[1]+1):
-                    params_dict["n_clusters"] = i
-                    result = CLUSTERING_METHODS[selectedClusteringMethod](params_dict, clusterizable_dataset)
-                    score = method[0](X=clusterizable_dataset, predicted_labels=result["labels"])
-                    n_results.append(i)
-                    scores_results.append(score)
-                    if method[2](best_score, score):
-                        best_score = score
-                        final_results = result
-                        final_results["n_selected"] = i
-            else:
-                # Fuzzy partition coefficient
-                for i in range(range_of_cluster[0], range_of_cluster[1]+1):
-                    best_score = 0
-                    params_dict["n_clusters"] = i
-                    result = CLUSTERING_METHODS[selectedClusteringMethod](params_dict, clusterizable_dataset)
-                    score = result["fpc"]
-                    n_results.append(i)
-                    scores_results.append(score)
-                    if score > best_score :
-                        best_score = score
-                        final_results = result
-                        final_results["n_selected"] = i
+        final_results = CLUSTERING_METHODS[selectedClusteringMethod](params_dict, clusterizable_dataset)
 
-            final_results["n"] = n_results
-            final_results["scores"] = scores_results
-            final_results["clusterizable_dataset"] = clusterizable_dataset
+        final_results["n"] = int(params_dict["n_clusters"]) if selectedClusteringMethod != "DBSCAN" else len(set(clustering.filter(clusterizable_dataset, final_results["labels"])[1]))
+        final_results["clusterizable_dataset"] = clusterizable_dataset
+        final_results["silhouette_score"] =clustering.compute_mean_silhouette(clusterizable_dataset,final_results["labels"])
+        final_results["calinski_harabaz_score"] = clustering.compute_calinski_habaraz(clusterizable_dataset,final_results["labels"])
+        final_results["davies_bouldin_score"] = clustering.compute_db(clusterizable_dataset,final_results["labels"])
+
     else:
         print('clustering method not recognised')
         final_results = ['']
 
-    del clusterizable_dataset  # Deleting exported data : saves memory !!
-
-    print("run_clustering -> silhouette_score", final_results["silhouette_score"])
     return final_results
 
 
@@ -697,7 +640,6 @@ def setColNameInSet(name):
         name{string} -- new name for collection
     """
     old = get_current_coll()
-    #rm_coll(old)
     this_set = old.getSetName()
     this_set.renameCollinSet(old, name)
     set_current_coll_name(name)
@@ -888,6 +830,12 @@ def recursive_workspace_save(folder_path, usable_set):
 
     for key in usable_set.subset_dict.keys():
         recursive_workspace_save(new_folder_set_path, usable_set.subset_dict[key])
+
+
+def format_to_dataframe(X, columns_to_keep=['X', 'Y', 'Z']) -> pd.DataFrame:
+    X = pd.DataFrame(X, columns=['X', 'Y', 'Z', 'Intensity'])
+    return X[columns_to_keep]
+
 
 
 def add_workspace_set(my_set):
