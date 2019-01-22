@@ -222,6 +222,9 @@ class ClusteringView2(QtGui.QWidget):
                 item.setFlags(QtCore.Qt.ItemIsSelectable |  QtCore.Qt.ItemIsEnabled)
                 self.tableResults.setItem(row_count, 4, item)
                 row_count = row_count+1
+
+            for j in range(self.tableResults.columnCount()):
+                self.tableResults.item(self.the_best_iteration.get("iteration"), j).setBackground(QtGui.QColor(255, 250, 168))
             self.tableResults.setSortingEnabled(True)
             self.tableResults.clicked.connect(self.clicked_table)
             self.verticalLayout_result.addWidget(self.tableResults)
@@ -232,6 +235,7 @@ class ClusteringView2(QtGui.QWidget):
 
         self.history_iterations = []
         self.the_best_iteration = {}
+        self.the_best_iteration["iteration"] = 0
         self.the_best_iteration["n_clusters"] = 0
         self.the_best_iteration["silhouette_score"] = 0
         self.the_best_iteration["calinski_harabaz_score"] = 0
@@ -240,6 +244,7 @@ class ClusteringView2(QtGui.QWidget):
 
         range_of_cluster = read_n(param_dict["n_clusters"])
 
+        nb_iteration = 0
         for n in range (range_of_cluster[0], range_of_cluster[1]+1):
             for i in range (i_iter):
                 self.history_iterations.append({})
@@ -250,6 +255,7 @@ class ClusteringView2(QtGui.QWidget):
                 clustering_results = run_clustering(selectedMethod, copy_param_dict)
 
                 if clustering_results["silhouette_score"] > self.the_best_iteration["silhouette_score"] and clustering_results["calinski_harabaz_score"] > self.the_best_iteration["calinski_harabaz_score"] and clustering_results["davies_bouldin_score"] < self.the_best_iteration["davies_bouldin_score"]:
+                    self.the_best_iteration["iteration"]=nb_iteration
                     self.the_best_iteration["silhouette_score"] = clustering_results["silhouette_score"]
                     self.the_best_iteration["calinski_harabaz_score"] = clustering_results["calinski_harabaz_score"]
                     self.the_best_iteration["davies_bouldin_score"] = clustering_results["davies_bouldin_score"]
@@ -270,6 +276,8 @@ class ClusteringView2(QtGui.QWidget):
                     self.scores.append(clustering_results["davies_bouldin_score"])
                 else :
                     self.scores.append(clustering_results["silhouette_score"])
+
+                nb_iteration+=1
 
         self.label = clustering_results["labels"]
         self.centroids = clustering_results["centers"] if "centers" in clustering_results.keys() else None
