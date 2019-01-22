@@ -37,23 +37,23 @@ except AttributeError:
 
 class SelectedButton(QtGui.QPushButton):
 
-    def __init__(self, coll, num, date, parent=None):
+    def __init__(self, coll, num, setname, date, parent=None):
         super(SelectedButton, self).__init__(parent=parent)
         self.coll = coll
 
-        self.setText(  "Name : " + str(self.coll.name) + "\nNIfTI : " + num + "\nLast modified : " + date )
+        self.setText("Set name : "+ str(setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + num + "\nLast modified : " + date )
 
 
 class CollButton(QtGui.QCheckBox):
     # -- The CollButton class is a QCheckBox that show all collection info
 
-    def __init__(self, coll, selected_zone, parent=None):
+    def __init__(self, coll, setname, selected_zone, parent=None):
         super(CollButton, self).__init__(parent=parent)
         self.coll = coll
         self.selected_zone=selected_zone
         self.toggle()
         self.setChecked(False)
-        self.stateChanged.connect(self.selectColl)
+        self.stateChanged.connect(lambda : self.selectColl(setname))
 
         list = self.coll.get_img_list()
 
@@ -65,12 +65,12 @@ class CollButton(QtGui.QCheckBox):
             d = datetime.fromtimestamp(int(round(date))).strftime('%Y-%m-%d')
         except:
             d = datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d')
-        label = "Name : " + str(self.coll.name) + "\nNIfTI : " + str(len(list)) + "\nLast modified : " + str(d)
+        label = "Set name : "+ str(setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + str(len(list)) + "\nLast modified : " + str(d)
         self.setText(label)
         self.setStyleSheet(
             "CollButton {background-color : #eee; spacing: 5px;border: 2px solid #99cccc;border-radius: 8px;padding: 1px 18px 1px 3px;max-width: 225%;}; CollButton::indicator {width: 13px; height: 13px;};")
 
-    def selectColl(self):
+    def selectColl(self,setname):
         # -- This selectColl will add or delete the collection from the selected ones
         #self.selected_zone.addWidget(SelectedButton(self.coll,str(len(self.coll.get_img_list())),str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
         if (self.isChecked()):
@@ -81,7 +81,7 @@ class CollButton(QtGui.QCheckBox):
         for i in reversed(range(self.selected_zone.count())):
             self.selected_zone.itemAt(i).widget().setParent(None)
         for coll in collshow:
-                self.selected_zone.addWidget(SelectedButton(coll,str(len(self.coll.get_img_list())),str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
+            self.selected_zone.addWidget(SelectedButton(coll,str(len(self.coll.get_img_list())),setname,str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
 
     def update(self):
         # -- This update will update the information of the collection if they have changed in the edit collection view
@@ -97,7 +97,7 @@ class CollButton(QtGui.QCheckBox):
                 d = datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d')
         except:
             d = datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d')
-        self.setText("Name : " + str(self.coll.name) + "\nNIfTI : " + str(len(list)) + "\nLast modified : " + str(d))
+        self.setText("Set name : "+ str(setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + str(len(list)) + "\nLast modified : " + str(d))
 
 class SetButton(QtGui.QWidget):
 
@@ -238,12 +238,12 @@ class SetButton(QtGui.QWidget):
         for i in reversed(range(self.image_zone.count())):
             self.image_zone.itemAt(i).widget().setParent(None)
         for coll in selected:
-            self.image_zone.addWidget(CollButton(coll,self.selected_zone))
+            self.image_zone.addWidget(CollButton(coll,self.my_set.get_name(),self.selected_zone))
 
         for i in reversed(range(self.selected_zone.count())):
             self.selected_zone.itemAt(i).widget().setParent(None)
         for coll in collshow:
-                self.selected_zone.addWidget(SelectedButton(coll,str(len(self.coll.get_img_list())),str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
+            self.selected_zone.addWidget(SelectedButton(coll,str(len(self.coll.get_img_list())),str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
 
     def changeName(self):
         # -- This changeName will change the name of the set selected.
