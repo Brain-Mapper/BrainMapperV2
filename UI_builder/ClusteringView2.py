@@ -69,7 +69,6 @@ class ClusteringView2(QtGui.QWidget):
         Fills this custom table with the data of a UsableDataSet obtained after data extraction
         :param a_usable_dataset_instance: see UsableData for more details
         :return: Nothing"""
-        print("coucou")
 
         self.clustering_usable_dataset = usable_dataset_instance
         self.tableWidget.setRowCount(usable_dataset_instance.get_row_num())
@@ -134,6 +133,7 @@ class ClusteringView2(QtGui.QWidget):
             item.setBackground(QtGui.QColor(colors[label][0],colors[label][1],colors[label][2], 150))
             tableWidget.setItem(row_count, 6, item)
             row_count = row_count + 1
+
 
     #def update_details(self, clustering_method, user_values, centroids, validation_values):
     def update_details(self, clustering_method, user_values, centroids, validation_values, n_selected, n, scores):
@@ -258,7 +258,6 @@ class ClusteringView2(QtGui.QWidget):
 
 
     def runSelectedClust(self, selectedMethod, param_dict):
-
         i_iter = int(param_dict["i_iter"])
 
         history_iterations = []
@@ -311,7 +310,6 @@ class ClusteringView2(QtGui.QWidget):
 
         self.createResultView(param_dict,selectedMethod,history_iterations)
         #self.fill_results(history_iterations)
-
         #self.results_popup.update_details(method_name, user_params, self.centroids, clustering_validation_indexes(self.label,self.centroid,float(len(set(self.label)))))
         #self.add_hist(param_dict, self.label)
         #self.add_silhouette(self.label)

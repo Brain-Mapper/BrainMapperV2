@@ -31,11 +31,6 @@
           "param_info": "Maximum number of iterations of the k-means algorithm for a single run",
           "type" : "int",
           "default": "300"
-        },
-        "random_state" : {
-          "param_info" : "random_state is an optional parameter to specify the seed used by the random number generator",
-          "type" : "int",
-          "default" : "0"
         }
       }
     },
@@ -143,18 +138,14 @@
             "error" : {
                 "param_info" : "stopping criterion. The algorithm stops if the norm of (u[p]-u[p-1] < error)" ,
                 "type" : "float",
-                "default" : 0.005
+                "default" : 1.5
             },
             "maxiter" : {
                 "param_info" : "maxiter is the maximum number of iterations allowed",
                 "type" : "int",
                 "default" : 1000
             },
-            "seed" : {
-                "param_info" : "Random seed for the initialisation",
-                "type" : "int",
-                "default" : 0
-            },"n_clusters" : {
+            "n_clusters" : {
                 "param_info" : "The number of clusters you wish to obtain",
                 "type" : "int",
                 "default" : 3

@@ -48,6 +48,7 @@ currentVizu = None  # The current collections shown in main view
 
 history_iterations = []
 collshow=[]
+list_img=[]
 
 
 # Dictionary of available clustering methods
@@ -693,7 +694,7 @@ def setColNameInSet(name):
         name{string} -- new name for collection
     """
     old = get_current_coll()
-    rm_coll(old)
+    #rm_coll(old)
     this_set = old.getSetName()
     this_set.renameCollinSet(old, name)
     set_current_coll_name(name)
