@@ -220,6 +220,10 @@ class SetButton(QtGui.QWidget):
                 self.fromExcel()
 
     def state_changed(self):
+        global selected
+        global collshow
+        print("state_changed selected",selected)
+        print("state_changed collshow",collshow)
         dict=self.my_set.get_all_nifti_set()
         if self.check.isChecked():
             for d in dict:
@@ -309,6 +313,8 @@ class SetButton(QtGui.QWidget):
                 err = QtGui.QMessageBox.critical(self, "Error", "The name you entered is not valid ("+str(sys.exc_info()[0])+")")
 
     def deleteSet(self):
+        global selected
+        global collshow
         choice = QtGui.QMessageBox.question(self, 'Delete', "Are you sure to delete this set and all its sub-sets ?",QtGui.QMessageBox.Yes |QtGui.QMessageBox.No)
         if choice == QtGui.QMessageBox.Yes:
             position = self.my_set.getPosition()
@@ -609,8 +615,10 @@ class MainView2(QtGui.QWidget):
             self.verticalLayout_image_collections_show.itemAt(i).widget().setParent(None)
         for i in reversed(range(self.verticalLayout_widget_selected_view.count())):
             self.verticalLayout_widget_selected_view.itemAt(i).widget().setParent(None)
-        selected=[]
-        collshow=[]
+        del selected[:]
+        del collshow[:]
+        print("update selected",selected)
+        print("update collshow",collshow)
 
 
     def show_coll(self, coll):
@@ -750,12 +758,15 @@ class MainView2(QtGui.QWidget):
         print()
 
     def edit_pannel(self):
+        global selected
+        global collshow
         # -- This edit_pannel will show the edit view if selected is not empty
+        print("mv selected",selected)
+        print("mv collshow",collshow)
         if (get_selected()):
             self.showEdit.emit()
         else:
             QtGui.QMessageBox.information(self, "Selection empty", "There's no data to edit.")
-        print()
 
     def show_set(self, new_set):
         # -- This show_set will add the new_set to the setAccessBox and display the current vizu that changed in the process

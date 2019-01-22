@@ -147,6 +147,7 @@ def get_selected():
     Return :
         global variable 'selected'
     """
+    print("collshow",collshow)
     return collshow
 
 
@@ -491,6 +492,8 @@ def delete_current_coll():
     add_toRM(coll)  # We use toRM this time with a collection (toRM is rested just after used)
     set_current_coll(None)  # The current collection become None
     this_set.remove_collection(coll.name)
+    print("selected",selected)
+    print("collshow",collshow)
 
 
 def save_modifs():
