@@ -136,8 +136,7 @@ class Set(object):
         Arguments :
             name{string} -- Set of the set to remove.
         """
-        if name in self.collection_dict:
-            del self.collection_dict[name]
+        del self.collection_dict[name]
 
     def batch_remove_subset(self,subsets_array):
         """
