@@ -134,12 +134,27 @@ class CollectionAccessButton(QtGui.QWidget):
 
     def del_col(self,coll,parent):
     # -- This del_col will delete the current collection
+        global list_img
+        global selected
+        global collshow
         choice = QtGui.QMessageBox.question(self, 'Delete Collection',
                                                 "Are you sure you want to delete this collection?",
                                                 QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
         if choice == QtGui.QMessageBox.Yes:
             set_current_coll(coll)
             delete_current_coll()
+            self.parent.label_10.setText("")
+            #self.pushButton_3.setEnabled(False)
+            self.parent.pushButton_4.setEnabled(False)
+            for i in reversed(range(self.parent.verticalLayout_3.count())):
+                self.parent.verticalLayout_3.itemAt(i).widget().setParent(None)
+            for i in reversed(range(self.parent.verticalLayout_4.count())):
+                self.parent.verticalLayout_4.itemAt(i).widget().setParent(None)
+            self.parent.label_4.setText("")
+            self.parent.label_5.setText("")
+            print(list_img)
+            list_img=[]
+
 
 
     def changeNamecoll(self,coll,parent):
