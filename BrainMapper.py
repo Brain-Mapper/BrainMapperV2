@@ -31,6 +31,8 @@ import platform
 import time
 import json
 
+import pandas as pd
+
 # --- global variables ---
 current_collec = None  # The current collection shown in edit view
 selected = []  # All image collections selected by the user in main page (usefull for all views that use data)
@@ -740,6 +742,7 @@ def makeCalculResultSet(res_set):
     """
     add_set(res_set)
     calculsets.append(res_set)
+    setToAdd.append([res_set,1])
 
 
 def getCalculResultSets():

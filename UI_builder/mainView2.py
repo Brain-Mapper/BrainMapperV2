@@ -549,6 +549,7 @@ class MainView2(QtGui.QWidget):
         self.horizontalLayout_buttons.addWidget(self.pushButton_clustering)
         self.pushButton_calculation = QtGui.QPushButton(Form)
         self.pushButton_calculation.setObjectName(_fromUtf8("pushButton_calculation"))
+        self.pushButton_calculation.clicked.connect(self.calcul)
         self.horizontalLayout_buttons.addWidget(self.pushButton_calculation)
         self.verticalLayout_selected.addLayout(self.horizontalLayout_buttons)
         self.horizontalLayout.addLayout(self.verticalLayout_selected)
@@ -750,11 +751,10 @@ class MainView2(QtGui.QWidget):
             QtGui.QMessageBox.information(self, "Selection empty", "There's no data to extract and clusterize.")
 
     def calcul(self):
-        # if (get_selected()):
-        #     self.showCalcul.emit()
-        #
-        # else:
-        #     QtGui.QMessageBox.information(self, "Selection empty", "There's no data to calculation.")
+        if (get_selected()):
+            self.showCalcul.emit()
+        else:
+            QtGui.QMessageBox.information(self, "Selection empty", "There's no data to calculation.")
         print()
 
     def edit_pannel(self):

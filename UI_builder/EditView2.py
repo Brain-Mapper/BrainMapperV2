@@ -135,7 +135,6 @@ class CollectionAccessButton(QtGui.QWidget):
     def del_col(self,coll,parent):
     # -- This del_col will delete the current collection
         global list_img
-        global selected
         global collshow
         choice = QtGui.QMessageBox.question(self, 'Delete Collection',
                                                 "Are you sure you want to delete this collection?",
