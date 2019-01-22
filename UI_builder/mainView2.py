@@ -154,7 +154,7 @@ class SetButton(QtGui.QWidget):
       hbox.addWidget(ImportButton)
 
       self.setLayout(hbox)
-      print("fini")
+
 
     def fromNiFile(self):
         # -- We create a collection with the list of images the user selected and give it to the main view and the edit view
@@ -220,10 +220,8 @@ class SetButton(QtGui.QWidget):
                 self.fromExcel()
 
     def state_changed(self):
-        print(selected)
         dict=self.my_set.get_all_nifti_set()
         if self.check.isChecked():
-            print("CHECKED!")
             for d in dict:
                 if d not in selected:
                     selected.append(d)
@@ -233,7 +231,6 @@ class SetButton(QtGui.QWidget):
                 selected.remove(d)
                 if d in collshow:
                     collshow.remove(d)
-            print("UNCHECKED!")
         for i in reversed(range(self.image_zone.count())):
             self.image_zone.itemAt(i).widget().setParent(None)
         for coll in selected:
@@ -256,7 +253,6 @@ class SetButton(QtGui.QWidget):
                     if i in str(text):
                         new_ok = False
                 if new_ok and not exists_set(str(text)):
-                    print(self.my_set.get_name())
                     rm_set(self.my_set)
                     if (self.my_set.getParent() != None):  # if its a subset
                         self.my_set.getParent().remove_subset(self.my_set.get_name())
@@ -606,7 +602,15 @@ class MainView2(QtGui.QWidget):
             globalSets[s[1]].append(s[0])
             setToAdd.remove(s)
 
-
+    def updateColumn(self):
+        global selected
+        global collshow
+        for i in reversed(range(self.verticalLayout_image_collections_show.count())):
+            self.verticalLayout_image_collections_show.itemAt(i).widget().setParent(None)
+        for i in reversed(range(self.verticalLayout_widget_selected_view.count())):
+            self.verticalLayout_widget_selected_view.itemAt(i).widget().setParent(None)
+        selected=[]
+        collshow=[]
 
 
     def show_coll(self, coll):
@@ -747,11 +751,10 @@ class MainView2(QtGui.QWidget):
 
     def edit_pannel(self):
         # -- This edit_pannel will show the edit view if selected is not empty
-        # if (get_selected()):
-        #     self.showEdit.emit()
-        # else:
-        #     QtGui.QMessageBox.information(self, "Selection empty", "There's no data to edit.")
-        self.showEdit.emit()
+        if (get_selected()):
+            self.showEdit.emit()
+        else:
+            QtGui.QMessageBox.information(self, "Selection empty", "There's no data to edit.")
         print()
 
     def show_set(self, new_set):
@@ -762,10 +765,10 @@ class MainView2(QtGui.QWidget):
         self.setAccessBox.add(new_set)
         self.updateVizu(get_current_vizu())
 
-    def update(self):
-        # -- This update will call the update function of collectionsDisplayBox
-        self.collectionsDisplayBox.update()
-        print()
+    # def update(self):
+    #     # -- This update will call the update function of collectionsDisplayBox
+    #     self.collectionsDisplayBox.update()
+    #     print()
 
     def updateVizu(self, newVizu):
         # -- This updateVizu will display the newVizu but not delete the old one to be able to chow it again later
