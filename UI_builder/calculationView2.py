@@ -435,6 +435,7 @@ class calculationView2(QtGui.QWidget):
                                           "Impossible to execute "+algorithm+" algorithm")
 
     def popUpSaveFileResultCalculation(self,algorithm,result):
+        global setToAdd
         choice = QtGui.QMessageBox()
         choice.setWindowTitle('Success !')
         l = choice.layout()
@@ -444,9 +445,7 @@ class calculationView2(QtGui.QWidget):
         choice.setStandardButtons(QMessageBox.Cancel | QMessageBox.Save)
         wantToSave = choice.exec_()
         if wantToSave == QtGui.QMessageBox.Save:
-            print("test")
             setCalculation = Set("calc_",1)
-            print("test")
             setCalculation.set_name("calc_"+str(id(setCalculation)))
             coll = ImageCollection("coll_",setCalculation)
             coll.set_name("coll_"+str(id(coll)))

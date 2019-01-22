@@ -179,6 +179,7 @@ class HomePage(QWidget):
 
     def updateMainCalcul(self):
         self.mainview.updateCalculRes()
+        self.mainview.updateTreeView()
 
     def updateExportView(self):
         self.export.set_usable_data_set(get_current_usableDataset())
