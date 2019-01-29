@@ -37,23 +37,23 @@ except AttributeError:
 
 class SelectedButton(QtGui.QPushButton):
 
-    def __init__(self, coll, num, date, parent=None):
+    def __init__(self, coll, num, setname, date, parent=None):
         super(SelectedButton, self).__init__(parent=parent)
         self.coll = coll
 
-        self.setText(  "Name : " + str(self.coll.name) + "\nNIfTI : " + num + "\nLast modified : " + date )
+        self.setText("Set name : "+ str(setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + num + "\nLast modified : " + date )
 
 
 class CollButton(QtGui.QCheckBox):
     # -- The CollButton class is a QCheckBox that show all collection info
 
-    def __init__(self, coll, selected_zone, parent=None):
+    def __init__(self, coll, setname, selected_zone, parent=None):
         super(CollButton, self).__init__(parent=parent)
         self.coll = coll
         self.selected_zone=selected_zone
         self.toggle()
         self.setChecked(False)
-        self.stateChanged.connect(self.selectColl)
+        self.stateChanged.connect(lambda : self.selectColl(setname))
 
         list = self.coll.get_img_list()
 
@@ -65,12 +65,12 @@ class CollButton(QtGui.QCheckBox):
             d = datetime.fromtimestamp(int(round(date))).strftime('%Y-%m-%d')
         except:
             d = datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d')
-        label = "Name : " + str(self.coll.name) + "\nNIfTI : " + str(len(list)) + "\nLast modified : " + str(d)
+        label = "Set name : "+ str(setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + str(len(list)) + "\nLast modified : " + str(d)
         self.setText(label)
         self.setStyleSheet(
             "CollButton {background-color : #eee; spacing: 5px;border: 2px solid #99cccc;border-radius: 8px;padding: 1px 18px 1px 3px;max-width: 225%;}; CollButton::indicator {width: 13px; height: 13px;};")
 
-    def selectColl(self):
+    def selectColl(self,setname):
         # -- This selectColl will add or delete the collection from the selected ones
         #self.selected_zone.addWidget(SelectedButton(self.coll,str(len(self.coll.get_img_list())),str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
         if (self.isChecked()):
@@ -81,7 +81,7 @@ class CollButton(QtGui.QCheckBox):
         for i in reversed(range(self.selected_zone.count())):
             self.selected_zone.itemAt(i).widget().setParent(None)
         for coll in collshow:
-                self.selected_zone.addWidget(SelectedButton(coll,str(len(self.coll.get_img_list())),str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
+            self.selected_zone.addWidget(SelectedButton(coll,str(len(self.coll.get_img_list())),setname,str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
 
     def update(self):
         # -- This update will update the information of the collection if they have changed in the edit collection view
@@ -97,7 +97,7 @@ class CollButton(QtGui.QCheckBox):
                 d = datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d')
         except:
             d = datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d')
-        self.setText("Name : " + str(self.coll.name) + "\nNIfTI : " + str(len(list)) + "\nLast modified : " + str(d))
+        self.setText("Set name : "+ str(setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + str(len(list)) + "\nLast modified : " + str(d))
 
 class SetButton(QtGui.QWidget):
 
@@ -109,8 +109,8 @@ class SetButton(QtGui.QWidget):
       super(SetButton, self).__init__( parent=parent)
 
       self.my_set = my_set
-      self.image_zone=image_zone
-      self.selected_zone=selected_zone
+      self.image_zone = image_zone
+      self.selected_zone = selected_zone
       self.treeWidget = parent
 
       print(self.my_set.name)
@@ -238,12 +238,12 @@ class SetButton(QtGui.QWidget):
         for i in reversed(range(self.image_zone.count())):
             self.image_zone.itemAt(i).widget().setParent(None)
         for coll in selected:
-            self.image_zone.addWidget(CollButton(coll,self.selected_zone))
+            self.image_zone.addWidget(CollButton(coll,self.my_set.get_name(),self.selected_zone))
 
         for i in reversed(range(self.selected_zone.count())):
             self.selected_zone.itemAt(i).widget().setParent(None)
         for coll in collshow:
-                self.selected_zone.addWidget(SelectedButton(coll,str(len(self.coll.get_img_list())),str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
+            self.selected_zone.addWidget(SelectedButton(coll,str(len(self.coll.get_img_list())),str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
 
     def changeName(self):
         # -- This changeName will change the name of the set selected.
@@ -400,15 +400,15 @@ class MainView2(QtGui.QWidget):
         item = QWidget()
         itemLayout = QtGui.QHBoxLayout(item)
         itemLayout.setContentsMargins(3, 9, 9, 3)
-        check = QtGui.QCheckBox()
-        check.setText("Imported")
+        self.check = QtGui.QCheckBox()
+        self.check.setText("Imported")
         font = QtGui.QFont()
         font.setBold(True)
         font.setWeight(75)
-        check.setFont(font)
-        check.setStyleSheet("color: rgb(82, 99, 141);" "font-size: 9pt;")
-        #check.stateChanged.connect(self.state_changed)
-        itemLayout.addWidget(check)
+        self.check.setFont(font)
+        self.check.setStyleSheet("color: rgb(82, 99, 141);" "font-size: 9pt;")
+        self.check.stateChanged.connect(self.checkall)
+        itemLayout.addWidget(self.check)
         addButton = QtGui.QPushButton()
         addButton.setText("+")
         addButton.clicked.connect(self.createSet)
@@ -473,6 +473,7 @@ class MainView2(QtGui.QWidget):
         self.checkBox = QtGui.QCheckBox(self.widget_image_collections)
         self.checkBox.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
         self.checkBox.setObjectName(_fromUtf8("checkBox"))
+        self.checkBox.stateChanged.connect(self.checkselected)
         self.verticalLayout_image_collections.addWidget(self.checkBox)
 
         self.widget_image_collections_show = QtGui.QWidget(self.widget_image_collections)
@@ -549,6 +550,7 @@ class MainView2(QtGui.QWidget):
         self.horizontalLayout_buttons.addWidget(self.pushButton_clustering)
         self.pushButton_calculation = QtGui.QPushButton(Form)
         self.pushButton_calculation.setObjectName(_fromUtf8("pushButton_calculation"))
+        self.pushButton_calculation.clicked.connect(self.calcul)
         self.horizontalLayout_buttons.addWidget(self.pushButton_calculation)
         self.verticalLayout_selected.addLayout(self.horizontalLayout_buttons)
         self.horizontalLayout.addLayout(self.verticalLayout_selected)
@@ -574,6 +576,21 @@ class MainView2(QtGui.QWidget):
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
+    
+    def checkselected(self):
+        #print(self.verticalLayout_image_collections_show.rowCount())
+        for i in range(0,self.verticalLayout_image_collections_show.rowCount()):
+            self.verticalLayout_image_collections_show.itemAt(i).widget().setChecked(self.checkBox.isChecked())
+
+    def checkall(self):
+        imported = self.treeWidget.topLevelItem(0)
+        #definir calc et clust pour faire pareil.
+        it=QTreeWidgetItemIterator(self.treeWidget.topLevelItem(0))
+
+        while it.value(): 
+            if it.value().parent() is not None and it.value().parent() == imported:
+                self.treeWidget.itemWidget(it.value(),0).check.setChecked(self.check.isChecked())
+            it+=1 
 
     def createSet(self):
         text, ok = QInputDialog.getText(self, 'Create a set',
@@ -750,11 +767,10 @@ class MainView2(QtGui.QWidget):
             QtGui.QMessageBox.information(self, "Selection empty", "There's no data to extract and clusterize.")
 
     def calcul(self):
-        # if (get_selected()):
-        #     self.showCalcul.emit()
-        #
-        # else:
-        #     QtGui.QMessageBox.information(self, "Selection empty", "There's no data to calculation.")
+        if (get_selected()):
+            self.showCalcul.emit()
+        else:
+            QtGui.QMessageBox.information(self, "Selection empty", "There's no data to calculation.")
         print()
 
     def edit_pannel(self):

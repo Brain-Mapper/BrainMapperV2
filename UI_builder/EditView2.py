@@ -81,8 +81,10 @@ class Buttonpath(QtGui.QWidget):
             print(list_img)
             list_img.remove(name)
             print(list_img)
-        for i in reversed(range(self.parent.verticalLayout_4.count())):
-            self.parent.verticalLayout_4.itemAt(i).widget().setParent(None)       
+            for i in reversed(range(self.parent.verticalLayout_4.count())):
+                self.parent.verticalLayout_4.itemAt(i).widget().setParent(None)
+        else:
+            print("test")       
 
 
     def actionpath(self,filna,parent):
@@ -135,7 +137,6 @@ class CollectionAccessButton(QtGui.QWidget):
     def del_col(self,coll,parent):
     # -- This del_col will delete the current collection
         global list_img
-        global selected
         global collshow
         choice = QtGui.QMessageBox.question(self, 'Delete Collection',
                                                 "Are you sure you want to delete this collection?",
@@ -294,7 +295,7 @@ class EditView2(QtGui.QWidget):
         self.label_4.setFont(font)
         self.label_4.setText(_fromUtf8(""))
         self.label_4.setObjectName(_fromUtf8("label_4"))
-        self.gridLayout.addWidget(self.label_4, 0, 2, 1, 1)
+        self.gridLayout.addWidget(self.label_4, 0, 1, 1, 1)
         self.label_2 = QtGui.QLabel(self.widget_3)
         font = QtGui.QFont()
         font.setPointSize(10)

@@ -31,6 +31,8 @@ import platform
 import time
 import json
 
+import pandas as pd
+
 # --- global variables ---
 current_collec = None  # The current collection shown in edit view
 selected = []  # All image collections selected by the user in main page (usefull for all views that use data)
@@ -46,8 +48,6 @@ calculsets = []  # List of sets created as a result for calculation, permit to r
 currentSet = None  # The current set shown in main view
 currentVizu = None  # The current collections shown in main view
 
-# history_iterations = []
-# the_best_iteration = {}
 collshow=[]
 list_img=[]
 
@@ -59,10 +59,6 @@ with open('ressources/clustering_data/clustering_algorithms_available.json', 'r'
 
 # Global variable for currently selected clustering method
 currentClusteringMethod = None
-
-
-# Global variables for calculation results
-# currentCalculationResult = None
 
 
 def open_nifti(path):
@@ -116,12 +112,6 @@ def add_coll(coll):
     Arguments :
         coll -- ImageCollection instance
     """
-    # found = False
-    # for i in selected:
-    #     if i.name == coll.name:
-    #         found = True
-    # if not found:
-    #     selected.append(coll)
 
 
 def rm_coll(coll):
@@ -652,7 +642,7 @@ def setColNameInSet(name):
         name{string} -- new name for collection
     """
     old = get_current_coll()
-    #rm_coll(old)
+
     this_set = old.getSetName()
     this_set.renameCollinSet(old, name)
     set_current_coll_name(name)
@@ -752,6 +742,7 @@ def makeCalculResultSet(res_set):
     """
     add_set(res_set)
     calculsets.append(res_set)
+    setToAdd.append([res_set,1])
 
 
 def getCalculResultSets():
