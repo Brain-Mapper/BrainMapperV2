@@ -40,6 +40,19 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
+
+class InfoButton(QtGui.QPushButton):
+    def __init__(self,message,widget,layout):
+        super(InfoButton,self).__init__(parent=widget)
+        self.message = message
+        self.clicked.connect(self.open)
+        layout.addWidget(self)
+
+    def open(self):
+        method_dict = get_selected_clustering_info()
+        QtGui.QMessageBox.information(self,"Information",self.message,"ok")
+
+
 class ClusteringView2(QtGui.QWidget):
 
     showMain = pyqtSignal()
@@ -581,6 +594,7 @@ class ClusteringView2(QtGui.QWidget):
         self.pushButton_back.clicked.connect(self.go_back)
         self.pushButton_back.setObjectName(_fromUtf8("pushButton_back"))
         self.horizontalLayout_buttons.addWidget(self.pushButton_back)
+        #InfoButton(get_selected_clustering_info()['algo_info'],self.widget_buttons,self.horizontalLayout_buttons)
         self.verticalLayout_dataAndResult.addWidget(self.widget_buttons)
         self.widget_result = QtGui.QWidget(Form)
         self.widget_result.setMinimumSize(QtCore.QSize(700, 0))
