@@ -109,8 +109,8 @@ class SetButton(QtGui.QWidget):
       super(SetButton, self).__init__( parent=parent)
 
       self.my_set = my_set
-      self.image_zone=image_zone
-      self.selected_zone=selected_zone
+      self.image_zone = image_zone
+      self.selected_zone = selected_zone
       self.treeWidget = parent
 
       print(self.my_set.name)
@@ -400,15 +400,15 @@ class MainView2(QtGui.QWidget):
         item = QWidget()
         itemLayout = QtGui.QHBoxLayout(item)
         itemLayout.setContentsMargins(3, 9, 9, 3)
-        check = QtGui.QCheckBox()
-        check.setText("Imported")
+        self.check = QtGui.QCheckBox()
+        self.check.setText("Imported")
         font = QtGui.QFont()
         font.setBold(True)
         font.setWeight(75)
-        check.setFont(font)
-        check.setStyleSheet("color: rgb(82, 99, 141);" "font-size: 9pt;")
-        #check.stateChanged.connect(self.state_changed)
-        itemLayout.addWidget(check)
+        self.check.setFont(font)
+        self.check.setStyleSheet("color: rgb(82, 99, 141);" "font-size: 9pt;")
+        self.check.stateChanged.connect(self.checkall)
+        itemLayout.addWidget(self.check)
         addButton = QtGui.QPushButton()
         addButton.setText("+")
         addButton.clicked.connect(self.createSet)
@@ -473,6 +473,7 @@ class MainView2(QtGui.QWidget):
         self.checkBox = QtGui.QCheckBox(self.widget_image_collections)
         self.checkBox.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
         self.checkBox.setObjectName(_fromUtf8("checkBox"))
+        self.checkBox.stateChanged.connect(self.checkselected)
         self.verticalLayout_image_collections.addWidget(self.checkBox)
 
         self.widget_image_collections_show = QtGui.QWidget(self.widget_image_collections)
@@ -575,6 +576,21 @@ class MainView2(QtGui.QWidget):
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
+    
+    def checkselected(self):
+        #print(self.verticalLayout_image_collections_show.rowCount())
+        for i in range(0,self.verticalLayout_image_collections_show.rowCount()):
+            self.verticalLayout_image_collections_show.itemAt(i).widget().setChecked(self.checkBox.isChecked())
+
+    def checkall(self):
+        imported = self.treeWidget.topLevelItem(0)
+        #definir calc et clust pour faire pareil.
+        it=QTreeWidgetItemIterator(self.treeWidget.topLevelItem(0))
+
+        while it.value(): 
+            if it.value().parent() is not None and it.value().parent() == imported:
+                self.treeWidget.itemWidget(it.value(),0).check.setChecked(self.check.isChecked())
+            it+=1 
 
     def createSet(self):
         text, ok = QInputDialog.getText(self, 'Create a set',
