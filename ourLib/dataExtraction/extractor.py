@@ -18,8 +18,8 @@
 import numpy as np
 import sys
 from os import path
-from ..niftiHandlers.nifimage import NifImage
-from ..csvHandlers.csvImage import CsvImage
+from ..filesHandlers.nifimage import NifImage
+from ..filesHandlers.csvImage import CsvImage
 
 if __package__ is None:
     sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))

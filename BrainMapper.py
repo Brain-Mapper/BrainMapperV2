@@ -12,9 +12,9 @@
 #       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
 
-from ourLib.niftiHandlers.nifimage import NifImage
-from ourLib.niftiHandlers.imagecollection import ImageCollection
-from ourLib.niftiHandlers.set import Set
+from ourLib.filesHandlers.nifimage import NifImage
+from ourLib.filesHandlers.imagecollection import ImageCollection
+from ourLib.filesHandlers.set import Set
 
 from ourLib.dataExtraction import extractor as xt
 from ourLib.dataExtraction.usable_data import UsableDataSet as uds
@@ -22,7 +22,7 @@ from ourLib.dataExtraction.image_recreation import image_recreation
 from ourLib import clustering
 from ourLib import calculations as calcul
 from ourLib.Import import excelImport as imp
-import ourLib.csvHandlers.csvImage as csvImage
+import ourLib.filesHandlers.csvImage as csvImage
 from ourLib.Import import workspaceImport as ws
 
 from sys import maxsize as MAX

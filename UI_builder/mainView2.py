@@ -685,7 +685,7 @@ class MainView2(QtGui.QWidget):
                         elif centroid_opt.isChecked():
                             extract_data_as_centroids_from_selected()
 
-                    ee.simple_export(f_name, f_path, get_current_usableDataset())
+                    ee.export(f_name, f_path, get_current_usableDataset())
 
                 else:
                     print("There was a problem in export options")

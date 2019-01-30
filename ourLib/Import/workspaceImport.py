@@ -11,8 +11,8 @@
 #       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
 #       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
-from ourLib.niftiHandlers.nifimage import NifImage
-from ourLib.niftiHandlers.set import Set
+from ourLib.filesHandlers.nifimage import NifImage
+from ourLib.filesHandlers.set import Set
 import BrainMapper
 import os
 

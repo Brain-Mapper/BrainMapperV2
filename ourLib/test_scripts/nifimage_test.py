@@ -3,9 +3,9 @@ if __name__ == '__main__':
         import sys
         from os import path
         sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
-        from niftiHandlers.nifimage import NifImage
+        from filesHandlers.nifimage import NifImage
     else:
-        from ..niftiHandlers.nifimage import NifImage
+        from ..filesHandlers.nifimage import NifImage
 
 ni_patient = NifImage.from_file('ImagesTest/Image_patient.nii')
 ni1 = NifImage.from_file('ImagesTest/P92_SA_RMN_1.nii')

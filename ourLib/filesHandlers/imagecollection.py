@@ -17,7 +17,7 @@
 
 
 # Lib dependency imports
-from ourLib.niftiHandlers.nifimage import NifImage
+from ourLib.filesHandlers.nifimage import NifImage
 
 
 class ImageCollection(object):

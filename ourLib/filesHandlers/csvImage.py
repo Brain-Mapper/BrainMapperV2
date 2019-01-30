@@ -1,5 +1,5 @@
 import pandas as pd
-from ..niftiHandlers.imagecollection import ImageCollection
+from ..filesHandlers.imagecollection import ImageCollection
 from PyQt4 import QtGui
 
 class CsvImage(object):

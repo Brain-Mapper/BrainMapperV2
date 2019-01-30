@@ -85,7 +85,7 @@ class ExportView(QtGui.QWidget):
         runExportButton = QtGui.QPushButton('Run')
         runExportButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/play.png'))
         runExportButton.setStatusTip("Run the export")
-        runExportButton.clicked.connect(lambda: ee.simple_export(self.fileNameEdit.text(), self.directoryEdit.text(), self.export_usable_dataset))
+        runExportButton.clicked.connect(lambda: ee.export(self.fileNameEdit.text(), self.directoryEdit.text(), self.export_usable_dataset))
 
         selectButton = QtGui.QPushButton('browse')
         selectButton.clicked.connect(lambda: self.select_directory())

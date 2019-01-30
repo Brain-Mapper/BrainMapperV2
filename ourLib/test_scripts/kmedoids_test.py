@@ -8,12 +8,12 @@ if __name__ == '__main__':
         sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
         from ourLib import clustering as clust
         from ourLib.dataExtraction import extractor as xt
-        from ourLib.niftiHandlers.nifimage import NifImage
-        from ourLib.niftiHandlers.imagecollection import ImageCollection
+        from ourLib.filesHandlers.nifimage import NifImage
+        from ourLib.filesHandlers.imagecollection import ImageCollection
     else:
         from ..dataExtraction import extractor as xt
-        from ..niftiHandlers.nifimage import NifImage
-        from ..niftiHandlers.imagecollection import ImageCollection
+        from ..filesHandlers.nifimage import NifImage
+        from ..filesHandlers.imagecollection import ImageCollection
 
 
 #---- Load NIfTI Images -----
