@@ -18,6 +18,8 @@
 import numpy as np
 import sys
 from os import path
+from ..niftiHandlers.nifimage import NifImage
+from ..csvHandlers.csvImage import CsvImage
 
 if __package__ is None:
     sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
@@ -26,68 +28,77 @@ if __package__ is None:
 else:
     from ..dataExtraction.usable_data import UsableDataCollection, UsableDataSet
 
-def extract(a_nifti_img_obj):
+def extract(obj):
     """
     Extract data from a NIfTI file representation as an array of arrays
-    :param a_nifti_img_obj: A NifImage instance
+    :param obj: A NifImage instance
     :return: An array (nb_voxels_non_zero_intensity)x4 containing several arrays [X,Y,Z,Intensity]
     """
     # # Check if given param is NifImage class instance
-    # if not isinstance(a_nifti_img_obj, NifImage):
+    # if not isinstance(obj, NifImage):
     #     raise ValueError(
-    #     'extract function takes a NifImage class instance but ' + a_nifti_img_obj.___class___ + ' instance was given')
+    #     'extract function takes a NifImage class instance but ' + obj.___class___ + ' instance was given')
 
     # Array stacking is memory consuming
     # We must create an array that will be the size of extracted data
     # shape : lines = number of voxels found for which intensity is superior to 0
     #           col = four columns : X,Y,Z and intensity (for now...)
 
-    # Safe copy the data so you won't modify the original image data (see NifImage class)
-    # finite=True is given as an argument to replace NaN or Inf values by zeros
-    img_data = a_nifti_img_obj.get_img_data()
+    if type(obj) == NifImage :
 
-    # img_data>0 returns a boolean mask the same size as the image with :
-    #     False if voxel value is not >0, True if it is
-    mask = img_data > 0
-    # img_data[img_data>0].T gives out an array with only positive values in it
+        # Safe copy the data so you won't modify the original image data (see NifImage class)
+        # finite=True is given as an argument to replace NaN or Inf values by zeros
+        img_data = obj.get_img_data()
 
-    nb_interesting_voxels = len(img_data[mask].T)
+        # img_data>0 returns a boolean mask the same size as the image with :
+        #     False if voxel value is not >0, True if it is
+        mask = img_data > 0
+        # img_data[img_data>0].T gives out an array with only positive values in it
 
-    usable_data = np.zeros(shape=(nb_interesting_voxels, 4))
+        nb_interesting_voxels = len(img_data[mask].T)
 
-    lx, ly, lz = img_data.shape  # length of the three image axis
-    c = 0  # counter for array construction
+        usable_data = np.zeros(shape=(nb_interesting_voxels, 4))
 
-    M = a_nifti_img_obj.get_affine_matrix()[:3, :3]
-    abc = a_nifti_img_obj.get_affine_matrix()[:3, 3]
+        lx, ly, lz = img_data.shape  # length of the three image axis
+        c = 0  # counter for array construction
 
-    def f(i, j, k):
-        """ Return X,Y,Z coordinates in MNI for i, j, k"""
-        return M.dot([i, j, k]) + abc
+        M = obj.get_affine_matrix()[:3, :3]
+        abc = obj.get_affine_matrix()[:3, 3]
+
+        def f(i, j, k):
+            """ Return X,Y,Z coordinates in MNI for i, j, k"""
+            return M.dot([i, j, k]) + abc
 
 
-    for x in range(1, lx):
-        # If there is at least one value NOT EQUAL to zero, the other dimensions are worth exploring
-        if img_data[x].sum() > 0:
-            for y in range(1, ly):
-                if img_data[x][y].sum() > 0:
-                    for z in range(1, lz):
-                        voxel_intensity = img_data[x][y][z]
-                        if voxel_intensity > 0:
-                            x_y_z = f(x,y,z)
-                            usable_data[c] = [x_y_z[0], x_y_z[1], x_y_z[2], voxel_intensity]
-                            c = c + 1
+        for x in range(1, lx):
+            # If there is at least one value NOT EQUAL to zero, the other dimensions are worth exploring
+            if img_data[x].sum() > 0:
+                for y in range(1, ly):
+                    if img_data[x][y].sum() > 0:
+                        for z in range(1, lz):
+                            voxel_intensity = img_data[x][y][z]
+                            if voxel_intensity > 0:
+                                x_y_z = f(x,y,z)
+                                usable_data[c] = [x_y_z[0], x_y_z[1], x_y_z[2], voxel_intensity]
+                                c = c + 1
 
-    a_nifti_img_obj.uncache() # deleting safe copy of image data saves a lot of memory !
+        obj.uncache() # deleting safe copy of image data saves a lot of memory !
 
-    return usable_data
+        return usable_data
+    
+    elif type(obj) == CsvImage:
+
+        return obj.extract()
+
+    else:
+        RuntimeWarning(str(type(obj)) + "not currently extractable")
 
 
 # # This version is 0.01 seconds slower than the first one
-# def extract2(a_nifti_img_obj):
+# def extract2(obj):
 #     # Safe copy the data so you won't modify the original image data (see NifImage class)
 #     # finite=True is given as an argument to replace NaN or Inf values by zeros
-#     img_data = a_nifti_img_obj.get_copy_img_data(True)
+#     img_data = obj.get_copy_img_data(True)
 
 #     # img_data>0 returns a boolean mask the same size as the image with :
 #     #     False if voxel value is not >0, True if it is

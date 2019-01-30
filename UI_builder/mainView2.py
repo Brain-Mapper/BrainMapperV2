@@ -154,12 +154,13 @@ class SetButton(QtGui.QWidget):
       hbox.addWidget(ImportButton)
 
       self.setLayout(hbox)
-      print("fini")
+      # print("fini")
 
     def fromNiFile(self):
         # -- We create a collection with the list of images the user selected and give it to the main view and the edit view
 
-        file = QFileDialog.getOpenFileNames()
+        file = QFileDialog.getOpenFileNames(self, "Choose one file or more",
+                                                 "./", 'NifTI(*.nii *.nii.gz)')
         if (file != ""):
             # TODO put the try/except 
             # try:
@@ -174,10 +175,11 @@ class SetButton(QtGui.QWidget):
         # -- We create a collection with the list of images the user selected and give it to the main view and the edit view
 
     def fromExcel(self):
-        file = QFileDialog.getOpenFileName()
-        if (file != ""):
+        file_name = QFileDialog.getOpenFileName(self, "Choose one file",
+                                                 "./", 'CSV(*.csv)')
+        if (file_name != ""):
             # try:
-            collec = simple_import(file,'ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii',self.my_set)
+            collec = simple_import(file_name,'ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii',self.my_set)
             #homepage.mainview.show_coll(collec)
             #homepage.edit_colls.fill_coll() #rapport a editview2
             # except:
@@ -223,7 +225,7 @@ class SetButton(QtGui.QWidget):
         print(selected)
         dict=self.my_set.get_all_nifti_set()
         if self.check.isChecked():
-            print("CHECKED!")
+            # print("CHECKED!")
             for d in dict:
                 if d not in selected:
                     selected.append(d)

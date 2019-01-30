@@ -476,7 +476,7 @@ def baricentre_opperation(Nifti_file_collection, arguments):
 
 def image_centroid(a_nifti_image):
     """
-    Calculate the mean voxel ([x,y,z,intensity]) of a single image
+    Calculate the mean voxel ([x,y,z,intensity]) of a single image if this image
 
     Arguments :
         a_nifti_image -- A NifImage object (our custom representation of a NIfTI image
@@ -484,9 +484,10 @@ def image_centroid(a_nifti_image):
     Return :
         a 1x4 array containing an array
     """
+    # TODO check if we need to calculate the centroid if the nifti_image is a CSV file
     # Use extractor function to extract image data as a (nb_voxel_nonzero_intensity x 4) array
     # : array of [X,Y,Z, Intensity]
-    extracted = extract(a_nifti_img_obj=a_nifti_image)
+    extracted = extract(a_nifti_image)
 
     centroid = np.zeros(shape=(1, 4))
 

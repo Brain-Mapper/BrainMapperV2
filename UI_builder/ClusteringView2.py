@@ -69,7 +69,7 @@ class ClusteringView2(QtGui.QWidget):
         Fills this custom table with the data of a UsableDataSet obtained after data extraction
         :param a_usable_dataset_instance: see UsableData for more details
         :return: Nothing"""
-        print("coucou")
+        # print("coucou")
 
         self.clustering_usable_dataset = usable_dataset_instance
         self.tableWidget.setRowCount(usable_dataset_instance.get_row_num())

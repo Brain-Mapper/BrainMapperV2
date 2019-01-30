@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 .pyc
 .idea
+.vscode
 .ipynb_checkpoints/README-checkpoint.md
 UI_builder/.ipynb_checkpoints/
 ourLib/.ipynb_checkpoints/
