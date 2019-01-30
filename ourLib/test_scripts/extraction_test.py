@@ -7,12 +7,12 @@ if __name__ == '__main__':
 
         sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
         from dataExtraction import extractor as xt
-        from niftiHandlers.nifimage import NifImage
-        from niftiHandlers.imagecollection import ImageCollection
+        from filesHandlers.nifimage import NifImage
+        from filesHandlers.imagecollection import ImageCollection
     else:
         from ..dataExtraction import extractor as xt
-        from ..niftiHandlers.nifimage import NifImage
-        from ..niftiHandlers.imagecollection import ImageCollection
+        from ..filesHandlers.nifimage import NifImage
+        from ..filesHandlers.imagecollection import ImageCollection
 
 
 # ---- Load NIfTI Images -----

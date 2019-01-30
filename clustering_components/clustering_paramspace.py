@@ -247,7 +247,7 @@ class ParameterAndScriptStack(QtGui.QWidget):
     def __init__(self, title_style, clustering_chooser=None):
 
         super(ParameterAndScriptStack, self).__init__()
-        print("stack")
+        # print("stack")
         # Initialize a stack (pile) widget
         self.stack = QtGui.QStackedWidget()
         layout = QtGui.QVBoxLayout(self) # vertical layout

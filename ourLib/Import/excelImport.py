@@ -21,8 +21,8 @@ from numpy import zeros
 import numpy as np
 from csv import reader as csv_reader
 import time
-from ourLib.niftiHandlers.imagecollection import ImageCollection
-from ourLib.niftiHandlers.nifimage import NifImage
+from ourLib.filesHandlers.imagecollection import ImageCollection
+from ourLib.filesHandlers.nifimage import NifImage
 
 
 def simple_import(csv_file_path, template_mni_path, currentSet):
