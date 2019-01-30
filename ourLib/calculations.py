@@ -52,7 +52,7 @@ def Extract_voxels_from_Nifti_file(data):
 
     Arguments :
         data -- The matrix containing the nifti voxels data
-
+lin
     Return :
         The list of voxels where intensity values are positives
     """

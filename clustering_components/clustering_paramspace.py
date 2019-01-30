@@ -19,6 +19,20 @@ import gc
 from BrainMapper import *
 from functools import partial
 
+class InfoButton(QtGui.QPushButton):
+    def __init__(self,widget,layout):
+        super(InfoButton,self).__init__(parent=widget)
+        self.message = ""
+        self.clicked.connect(self.open)
+        layout.addWidget(self)
+
+    def setMessage(self,message):
+        self.message = message
+
+    def open(self):
+        method_dict = get_selected_clustering_info()
+        QtGui.QMessageBox.information(self,"Information",self.message,"ok")
+
 
 class ParametersBox(QtGui.QGroupBox):
     """ A class implementing the parameters Box"""
@@ -72,6 +86,8 @@ class ParameterNameAndValue(QtGui.QGroupBox):
         self.grid = QtGui.QGridLayout()
         self.grid.setContentsMargins(0, 9, 9, 0)
 
+        self.help_button = InfoButton(self,self.grid)
+        self.help_button.setMessage(param_info)
         # -- Parameter's name ------
         self.param_name_label = QtGui.QLabel(param_name)
         self.param_name_label.setMinimumSize(QSize(100, 15))
@@ -107,10 +123,13 @@ class ParameterNameAndValue(QtGui.QGroupBox):
         self.param_value_input.setMinimumSize(QSize(150, 19))
         self.param_value_input.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
 
-        self.grid.addWidget(self.param_name_label, 0, 0)
-        self.grid.addWidget(self.param_value_input, 0, 1)
+        self.grid.addWidget(self.help_button,0,0)
+        self.grid.addWidget(self.param_name_label, 0, 1)
+        self.grid.addWidget(self.param_value_input, 0, 2)
         self.setLayout(self.grid)
-
+        #self.pushButton_info = QtGui.QPushButton()
+        #self.pushButton_info.setObjectName(_fromUtf8("pushButton_show"))
+        #self.pushButton_info.clicked.connect(self.open)
     def choice_clicked(self):
         """
         Change label based on what button was pressed

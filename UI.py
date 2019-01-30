@@ -9,10 +9,11 @@ from UI_builder import resources
 from UI_builder.mainView2 import MainView2
 from UI_builder.ClusteringView2 import ClusteringView2
 # from UI_builder.clusteringView import ClusteringView
-from UI_builder.editCollectionsView import EditCollectionsView
+#from UI_builder.editCollectionsView import EditCollectionsView
 from UI_builder.EditView2 import EditView2
 from UI_builder.exportView import ExportView
-from UI_builder.calculationView import CalculationView
+#from UI_builder.calculationView import CalculationView
+from UI_builder.calculationView2 import calculationView2
 
 from multiprocessing import freeze_support
 
@@ -64,7 +65,15 @@ class Help(QMainWindow):
         verticalLayout.addWidget(label_5)
 
         label_4 = QLabel(horizontalLayoutWidget)
-        label_4.setText("Graziella Husson & Valentina Zelaya")
+        label_4.setText("Graziella Husson, Valentina Zelaya")
+        verticalLayout.addWidget(label_4)
+
+        label_5 = QLabel(horizontalLayoutWidget)
+        label_5.setText("Marie Adler, Aurélien Benoit,")
+        verticalLayout.addWidget(label_5)
+
+        label_4 = QLabel(horizontalLayoutWidget)
+        label_4.setText("Thomas Grasselini & Lucie Martin")
         verticalLayout.addWidget(label_4)
 
         pushButton = QPushButton(horizontalLayoutWidget)
@@ -103,7 +112,8 @@ class HomePage(QWidget):
         self.mainview = MainView2()
         self.clustering = ClusteringView2()
         #self.clustering = ClusteringView()
-        self.calculation = CalculationView()
+        #self.calculation = CalculationView()
+        self.calculation = calculationView2()
         self.edit_colls = EditView2()
         #self.edit_colls = EditCollectionsView()
         self.export = ExportView()
@@ -128,7 +138,8 @@ class HomePage(QWidget):
         self.mainview.showEdit.connect(partial(self.stack.setCurrentWidget, self.edit_colls))
         # -- when collection edition widget emits signal showMain, change current Widget in stack to main view widget
         self.edit_colls.showMain.connect(partial(self.stack.setCurrentWidget, self.mainview))
-        self.edit_colls.showMain.connect(self.updateMain)
+        self.edit_colls.showMain.connect(self.updateMainColumn)
+        #self.edit_colls.showMain.connect(self.updateMain)
 
         self.mainview.showExport.connect(self.updateExportView)
         self.export.showMain.connect(partial(self.stack.setCurrentWidget, self.mainview))
@@ -149,22 +160,26 @@ class HomePage(QWidget):
         self.clustering.pushButton_save.setEnabled(False)
         self.clustering.pushButton_export.setEnabled(False)
         self.clustering.comboBox_3.setEnabled(False)
-        self.clustering.comboBox_3.item(3).setEnabled(False)
+        #self.clustering.comboBox_3.item(3).setEnabled(False)
 
 
     def updateEditView(self):
-        #self.edit_colls.fill_coll()
+        self.edit_colls.fill_coll()
         self.stack.setCurrentWidget(self.edit_colls)
 
-    def updateMain(self):
-        self.mainview.update()
+    # def updateMain(self):
+    #     self.mainview.update()
 
     def updateMainCluster(self):
         self.mainview.updateClusterRes()
         self.mainview.updateTreeView()
 
+    def updateMainColumn(self):
+        self.mainview.updateColumn()
+
     def updateMainCalcul(self):
         self.mainview.updateCalculRes()
+        self.mainview.updateTreeView()
 
     def updateExportView(self):
         self.export.set_usable_data_set(get_current_usableDataset())
@@ -254,7 +269,7 @@ class UI(QtGui.QMainWindow):
         # -- We create a collection with the list of images the user selected and give it to the main view and the edit view
         file = QFileDialog.getOpenFileNames()
         if (file != ""):
-            # TODO put the try/except 
+            # TODO put the try/except
             # try:
             collec = do_image_collection(file)
             #homepage.mainview.show_coll(collec)
