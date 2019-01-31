@@ -23,6 +23,8 @@ class InfoButton(QtGui.QPushButton):
     def __init__(self,widget,layout):
         super(InfoButton,self).__init__(parent=widget)
         self.message = ""
+        self.setFixedSize(QSize(20, 20))
+        self.setText("?")
         self.clicked.connect(self.open)
         layout.addWidget(self)
 

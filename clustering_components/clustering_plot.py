@@ -124,7 +124,7 @@ def plot_3d(marker_size=5.):
     view = view_markers(points_list, labels=labels, colors=None, marker_size=marker_size, centers=None, centers_colors=None)
     view.open_in_browser()
 
-def plot_cross_section(labels: list):
+def plot_cross_section(labels: list,coordinates):
     """
     Method to make three cross-section of the brain
 
