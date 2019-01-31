@@ -189,6 +189,8 @@ class SetButton(QtGui.QWidget):
         import_choice = QtGui.QMessageBox()
         import_choice.setWindowTitle('Import collections')
 
+        self.check.setChecked(False)
+
         nifti_opt = QRadioButton("Import from Nifti")
         excel_opt = QRadioButton("Import from Excel")
         nifti_opt.setChecked(True)
@@ -397,25 +399,56 @@ class MainView2(QtGui.QWidget):
         self.treeWidget.headerItem().setBackground(0, QtGui.QColor(0, 0, 0, 0))
 
         item_0 = QtGui.QTreeWidgetItem(self.treeWidget)
-        item = QWidget()
-        itemLayout = QtGui.QHBoxLayout(item)
-        itemLayout.setContentsMargins(3, 9, 9, 3)
-        self.check = QtGui.QCheckBox()
-        self.check.setText("Imported")
+        item0 = QWidget()
+        item_1 = QtGui.QTreeWidgetItem(self.treeWidget)
+        item1 = QWidget()
+        item_2 = QtGui.QTreeWidgetItem(self.treeWidget)
+        item2 = QWidget()
+
         font = QtGui.QFont()
         font.setBold(True)
         font.setWeight(75)
-        self.check.setFont(font)
-        self.check.setStyleSheet("color: rgb(82, 99, 141);" "font-size: 9pt;")
-        self.check.stateChanged.connect(self.checkall)
-        itemLayout.addWidget(self.check)
+
+        itemLayout0 = QtGui.QHBoxLayout(item0)
+        itemLayout0.setContentsMargins(3, 9, 9, 3)
+
+        itemLayout1 = QtGui.QHBoxLayout(item1)
+        itemLayout1.setContentsMargins(3, 9, 9, 3)
+
+        itemLayout2 = QtGui.QHBoxLayout(item2)
+        itemLayout2.setContentsMargins(3, 9, 9, 3)
+
+        self.checkimported = QtGui.QCheckBox()
+        self.checkimported.setText("Imported")
+        self.checkimported.setFont(font)
+        self.checkimported.setStyleSheet("color: rgb(82, 99, 141);" "font-size: 9pt;")
+        self.checkimported.stateChanged.connect(self.checkimportedall)
+        itemLayout0.addWidget(self.checkimported)
+
+        self.checkclustering = QtGui.QCheckBox()
+        self.checkclustering.setText("Clustering")
+        self.checkclustering.setFont(font)
+        self.checkclustering.setStyleSheet("color: rgb(82, 99, 141);" "font-size: 9pt;")
+        self.checkclustering.stateChanged.connect(self.checkclusteringall)
+        itemLayout1.addWidget(self.checkclustering)
+
+        self.checkcalculation = QtGui.QCheckBox()
+        self.checkcalculation.setText("Calculation")
+        self.checkcalculation.setFont(font)
+        self.checkcalculation.setStyleSheet("color: rgb(82, 99, 141);" "font-size: 9pt;")
+        self.checkcalculation.stateChanged.connect(self.checkcalculationall)
+        itemLayout2.addWidget(self.checkcalculation)
+
+
+
+
         addButton = QtGui.QPushButton()
         addButton.setText("+")
         addButton.clicked.connect(self.createSet)
         addButton.setStatusTip("Add sub set")
         addButton.setFixedSize(QSize(20, 20))
-        itemLayout.addWidget(addButton)
-        self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0), 0, item)
+        itemLayout0.addWidget(addButton)
+        self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0), 0, item0)
 
 
         item_0 = QtGui.QTreeWidgetItem(self.treeWidget)
@@ -579,18 +612,38 @@ class MainView2(QtGui.QWidget):
     
     def checkselected(self):
         #print(self.verticalLayout_image_collections_show.rowCount())
-        for i in range(0,self.verticalLayout_image_collections_show.rowCount()):
+        for i in range(0,self.verticalLayout_image_collections_show.rowCount()-1):
             self.verticalLayout_image_collections_show.itemAt(i).widget().setChecked(self.checkBox.isChecked())
 
-    def checkall(self):
+    def checkimportedall(self):
         imported = self.treeWidget.topLevelItem(0)
         #definir calc et clust pour faire pareil.
         it=QTreeWidgetItemIterator(self.treeWidget.topLevelItem(0))
 
         while it.value(): 
             if it.value().parent() is not None and it.value().parent() == imported:
-                self.treeWidget.itemWidget(it.value(),0).check.setChecked(self.check.isChecked())
-            it+=1 
+                self.treeWidget.itemWidget(it.value(),0).check.setChecked(self.checkimported.isChecked())
+            it+=1
+
+    def checkclusteringall(self):
+        clustering = self.treeWidget.topLevelItem(1)
+        #definir calc et clust pour faire pareil.
+        it=QTreeWidgetItemIterator(self.treeWidget.topLevelItem(1))
+
+        while it.value(): 
+            if it.value().parent() is not None and it.value().parent() == clustering:
+                self.treeWidget.itemWidget(it.value(),0).check.setChecked(self.checkimported.isChecked())
+            it+=1
+
+    def checkcalculationall(self):
+        calculation = self.treeWidget.topLevelItem(2)
+        #definir calc et clust pour faire pareil.
+        it=QTreeWidgetItemIterator(self.treeWidget.topLevelItem(2))
+
+        while it.value(): 
+            if it.value().parent() is not None and it.value().parent() == calculation:
+                self.treeWidget.itemWidget(it.value(),0).check.setChecked(self.checkimported.isChecked())
+            it+=1
 
     def createSet(self):
         text, ok = QInputDialog.getText(self, 'Create a set',

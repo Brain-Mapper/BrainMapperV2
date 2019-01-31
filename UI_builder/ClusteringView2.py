@@ -245,6 +245,15 @@ class ClusteringView2(QtGui.QWidget):
 
 
     def runSelectedClust(self, selectedMethod, param_dict):
+
+        column_selected=[]
+        print("cc")
+        columns = self.tableWidget.selectedItems()
+        rownumber = self.tableWidget.rowCount()
+        if len(columns) != 0:
+            for i in range(0,len(columns),rownumber):
+                column_selected.append(columns[i].column())
+
         i_iter = int(param_dict["i_iter"])
 
         self.history_iterations = []
@@ -471,6 +480,15 @@ class ClusteringView2(QtGui.QWidget):
         font.setPointSize(8)
         item.setFont(font)
         self.tableWidget.setHorizontalHeaderItem(0, item)
+
+
+        #self.tableWidget.clicked.connect(self.addinclust)
+        #self.tableWidget.horizontalHeaderItem(0).isSelected().connect(self.addinclust)
+        #self.tableWidget.horizontalHeaderItem(0).clicked.connect(self.addinclust)
+
+
+
+
         item = QtGui.QTableWidgetItem()
         item.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter|QtCore.Qt.AlignCenter)
         self.tableWidget.setHorizontalHeaderItem(1, item)
@@ -569,6 +587,15 @@ class ClusteringView2(QtGui.QWidget):
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
+
+        #self.tableWidget.cellPressed.connect(self.addinclust)
+
+    # def addinclust(self):
+    #     print("cc thomas")
+    #     print(self.tableWidget.horizontalHeaderItem(0).text())
+    #     print(self.tableWidget.horizontalHeaderItem(0).isSelected() )
+    #     print(self.tableWidget.horizontalHeaderItem(0).row())
+    #     print(self.tableWidget.horizontalHeaderItem(0).column())
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(_translate("Form", "Form", None))
