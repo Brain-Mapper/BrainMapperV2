@@ -161,7 +161,7 @@ class SetButton(QtGui.QWidget):
         file = QFileDialog.getOpenFileNames(self, "Choose one file or more",
                                                  "./", 'NifTI(*.nii *.nii.gz)')
         if (file != ""):
-            # TODO put the try/except 
+            # TODO put the try/except
             # try:
             collec = do_image_collection(file,self.my_set)
             #homepage.mainview.show_coll(collec)
@@ -418,28 +418,35 @@ class MainView2(QtGui.QWidget):
         itemLayout.addWidget(addButton)
         self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0), 0, item)
 
-
         item_0 = QtGui.QTreeWidgetItem(self.treeWidget)
+        item = QWidget()
+        itemLayout = QtGui.QHBoxLayout(item)
+        itemLayout.setContentsMargins(3, 9, 9, 3)
+        self.check = QtGui.QCheckBox()
+        self.check.setText("Calculation")
         font = QtGui.QFont()
         font.setBold(True)
         font.setWeight(75)
-        item_0.setFont(0, font)
-        brush = QtGui.QBrush(QtGui.QColor(194, 78, 80))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        item_0.setForeground(0, brush)
-        item_0.setCheckState(0, QtCore.Qt.Unchecked)
-        item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
+        self.check.setFont(font)
+        self.check.setStyleSheet("color: rgb(194, 78, 80);" "font-size: 9pt;")
+        self.check.stateChanged.connect(self.checkall)
+        itemLayout.addWidget(self.check)
+        self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(1), 0, item)
 
         item_0 = QtGui.QTreeWidgetItem(self.treeWidget)
+        item = QWidget()
+        itemLayout = QtGui.QHBoxLayout(item)
+        itemLayout.setContentsMargins(3, 9, 9, 3)
+        self.check = QtGui.QCheckBox()
+        self.check.setText("Clustering")
         font = QtGui.QFont()
         font.setBold(True)
         font.setWeight(75)
-        item_0.setFont(0, font)
-        brush = QtGui.QBrush(QtGui.QColor(255, 205, 55))
-        #brush.setStyle(QtCore.Qt.SolidPattern)
-        item_0.setForeground(0, brush)
-        item_0.setCheckState(0, QtCore.Qt.Unchecked)
-        item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
+        self.check.setFont(font)
+        self.check.setStyleSheet("color: rgb(255, 205, 55);" "font-size: 9pt;")
+        self.check.stateChanged.connect(self.checkall)
+        itemLayout.addWidget(self.check)
+        self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(2), 0, item)
 
 
         self.treeWidget.header().setVisible(False)
@@ -577,7 +584,7 @@ class MainView2(QtGui.QWidget):
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
-    
+
     def checkselected(self):
         #print(self.verticalLayout_image_collections_show.rowCount())
         for i in range(0,self.verticalLayout_image_collections_show.rowCount()):
@@ -588,10 +595,10 @@ class MainView2(QtGui.QWidget):
         #definir calc et clust pour faire pareil.
         it=QTreeWidgetItemIterator(self.treeWidget.topLevelItem(0))
 
-        while it.value(): 
+        while it.value():
             if it.value().parent() is not None and it.value().parent() == imported:
                 self.treeWidget.itemWidget(it.value(),0).check.setChecked(self.check.isChecked())
-            it+=1 
+            it+=1
 
     def createSet(self):
         text, ok = QInputDialog.getText(self, 'Create a set',
