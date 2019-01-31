@@ -325,7 +325,7 @@ class ClusteringView2(QtGui.QWidget):
     def export(self):
         if self.label is not None:
             (f_path, f_name) = os.path.split(str(QFileDialog.getSaveFileName(self, "Browse Directory")))
-            ee.clustering_export(f_name, f_path, get_current_usableDataset(), self.label)
+            ee.export(f_name, f_path, get_current_usableDataset(), self.label)
         else:
             QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")
 

@@ -14,8 +14,8 @@
 #       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
 # Lib dependency imports
-from ourLib.niftiHandlers.imagecollection import ImageCollection
-from ourLib.niftiHandlers.nifimage import NifImage
+from ourLib.filesHandlers.imagecollection import ImageCollection
+from ourLib.filesHandlers.nifimage import NifImage
 import os
 
 
