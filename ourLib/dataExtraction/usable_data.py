@@ -21,13 +21,13 @@ from numpy import zeros
 from nibabel import Nifti1Image,load
 if __package__ is None:
     sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-    from niftiHandlers.imagecollection import ImageCollection
-    from niftiHandlers.nifimage import NifImage
-    from niftiHandlers.set import Set
+    from filesHandlers.imagecollection import ImageCollection
+    from filesHandlers.nifimage import NifImage
+    from filesHandlers.set import Set
 else:
-    from ..niftiHandlers.nifimage import NifImage
-    from ..niftiHandlers.imagecollection import ImageCollection
-    from ..niftiHandlers.set import Set
+    from ..filesHandlers.nifimage import NifImage
+    from ..filesHandlers.imagecollection import ImageCollection
+    from ..filesHandlers.set import Set
 
 
 class UsableDataCollection(object):

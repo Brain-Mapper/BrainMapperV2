@@ -12,9 +12,9 @@
 #       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
 
-from ourLib.niftiHandlers.nifimage import NifImage
-from ourLib.niftiHandlers.imagecollection import ImageCollection
-from ourLib.niftiHandlers.set import Set
+from ourLib.filesHandlers.nifimage import NifImage
+from ourLib.filesHandlers.imagecollection import ImageCollection
+from ourLib.filesHandlers.set import Set
 
 from ourLib.dataExtraction import extractor as xt
 from ourLib.dataExtraction.usable_data import UsableDataSet as uds
@@ -22,6 +22,7 @@ from ourLib.dataExtraction.image_recreation import image_recreation
 from ourLib import clustering
 from ourLib import calculations as calcul
 from ourLib.Import import excelImport as imp
+import ourLib.filesHandlers.csvImage as csvImage
 from ourLib.Import import workspaceImport as ws
 
 from sys import maxsize as MAX
@@ -718,7 +719,8 @@ def simple_import(csv_file_path, template_mni_path,set_import):
     Return :
         coll -- the collection
     """
-    coll = imp.simple_import(csv_file_path, template_mni_path, currentSet)
+    # coll = imp.simple_import(csv_file_path, template_mni_path, currentSet)
+    coll = csvImage.simple_import(csv_file_path, currentSet)
     add_coll(coll)
     set_import.add_collection(coll)
     return coll
