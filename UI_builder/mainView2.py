@@ -82,7 +82,7 @@ class CollButton(QtGui.QCheckBox):
         for i in reversed(range(self.selected_zone.count())):
             self.selected_zone.itemAt(i).widget().setParent(None)
         for coll in collshow:
-            self.selected_zone.addWidget(SelectedButton(coll,str(len(self.coll.get_img_list())),self.setname,str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
+            self.selected_zone.addWidget(SelectedButton(coll,str(len(coll.get_img_list())),coll.getSetName().get_name(),str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
 
     def update(self):
         # -- This update will update the information of the collection if they have changed in the edit collection view
