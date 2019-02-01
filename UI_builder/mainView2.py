@@ -503,7 +503,6 @@ class MainView2(QtGui.QWidget):
 
         self.verticalLayout_selected = QtGui.QVBoxLayout()
         self.verticalLayout_selected.setSpacing(6)
-        # self.verticalLayout_selected.setObjectName(_fromUtf8("verticalLayout_selected"))
         self.widget_selected = QtGui.QWidget(Form)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
@@ -512,7 +511,6 @@ class MainView2(QtGui.QWidget):
         self.widget_selected.setSizePolicy(sizePolicy)
         self.widget_selected.setMinimumSize(QtCore.QSize(50, 150))
         self.widget_selected.setStyleSheet(_fromUtf8("background-color: rgb(223, 223, 223);"))
-        # self.widget_selected.setObjectName(_fromUtf8("widget_selected"))
         self.verticalLayout_selected_view = QtGui.QVBoxLayout(self.widget_selected)
         self.verticalLayout_selected_view.setContentsMargins(0, 6, 0, 0)
         self.verticalLayout_selected_view.setSpacing(0)
@@ -531,14 +529,10 @@ class MainView2(QtGui.QWidget):
 
         self.scrollArea_2 = QtGui.QScrollArea(self.widget_selected)
         self.scrollArea_2.setWidgetResizable(True)
-        # self.scrollArea_2.setObjectName(_fromUtf8("scrollArea_2"))
         self.widget_selected_view = QtGui.QWidget()
         self.widget_selected_view.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
-        # self.widget_selected_view.setGeometry(QtCore.QRect(0, 0, 364, 565))
-        # self.widget_selected_view.setObjectName(_fromUtf8("self.widget_selected_view"))
         self.verticalLayout_widget_selected_view = QtGui.QFormLayout(self.widget_selected_view)
         self.verticalLayout_widget_selected_view.setMargin(0)
-        # self.verticalLayout_widget_selected_view.setObjectName(_fromUtf8("verticalLayout_widget_selected_view"))
         self.scrollArea_2.setWidget(self.widget_selected_view)
         self.verticalLayout_selected_view.addWidget(self.scrollArea_2)
         self.verticalLayout_selected.addWidget(self.widget_selected)
@@ -602,7 +596,7 @@ class MainView2(QtGui.QWidget):
     def checkclusteringall(self):
         clustering = self.treeWidget.topLevelItem(2)
         it=QTreeWidgetItemIterator(self.treeWidget.topLevelItem(2))
-        while it.value(): 
+        while it.value():
             if it.value().parent() is not None and it.value().parent() == clustering:
                 self.treeWidget.itemWidget(it.value(),0).check.setChecked(self.checkclustering.isChecked())
             it+=1

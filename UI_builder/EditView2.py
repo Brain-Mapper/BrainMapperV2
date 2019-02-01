@@ -84,7 +84,7 @@ class Buttonpath(QtGui.QWidget):
             for i in reversed(range(self.parent.verticalLayout_4.count())):
                 self.parent.verticalLayout_4.itemAt(i).widget().setParent(None)
         else:
-            print("test")       
+            print("test")
 
 
     def actionpath(self,filna,parent):
@@ -172,7 +172,7 @@ class CollectionAccessButton(QtGui.QWidget):
                         new_ok = False
                 if new_ok and not exists_coll_in_sets(str(text)):
                     setColNameInSet(str(text))
-                    
+
                     self.buttonc.setText(coll.name)
                     self.parent.label_4.setText(coll.name)
                     #cur_col = get_current_coll()
@@ -322,18 +322,38 @@ class EditView2(QtGui.QWidget):
         self.label_6.setText(_fromUtf8(""))
         self.label_6.setObjectName(_fromUtf8("label_6"))
         self.gridLayout.addWidget(self.label_6, 2, 1, 1, 2)
+
+
         self.scrollArea = QtGui.QScrollArea(self.widget_3)
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName(_fromUtf8("scrollArea"))
         self.scrollAreaWidgetContents = QtGui.QWidget()
         self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 702, 394))
         self.scrollAreaWidgetContents.setObjectName(_fromUtf8("scrollAreaWidgetContents"))
+        self.verticalLayout_4 = QtGui.QFormLayout(self.scrollAreaWidgetContents)
+        self.verticalLayout_4.setMargin(0)
+        self.verticalLayout_4.setObjectName(_fromUtf8("verticalLayout_4"))
+
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.gridLayout.addWidget(self.scrollArea, 3, 0, 1, 3)
-        self.verticalLayout_4 = QtGui.QVBoxLayout(self.scrollArea)
-        self.verticalLayout_4.setContentsMargins(0, 0, 0, 9)
-        self.verticalLayout_4.setObjectName(_fromUtf8("verticalLayout_4"))
+
         self.scrollArea.raise_()
+
+
+        # self.scrollArea = QtGui.QScrollArea(self.widget_3)
+        # self.scrollArea.setWidgetResizable(True)
+        # self.scrollArea.setObjectName(_fromUtf8("scrollArea"))
+        # self.scrollAreaWidgetContents = QtGui.QWidget()
+        # self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 702, 394))
+        # self.scrollAreaWidgetContents.setObjectName(_fromUtf8("scrollAreaWidgetContents"))
+        # self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+        # self.gridLayout.addWidget(self.scrollArea, 3, 0, 1, 3)
+        # self.verticalLayout_4 = QtGui.QVBoxLayout(self.scrollArea)
+        # self.verticalLayout_4.setContentsMargins(0, 0, 0, 9)
+        # self.verticalLayout_4.setObjectName(_fromUtf8("verticalLayout_4"))
+        # self.scrollArea.raise_()
+
+
         self.label_6.raise_()
         self.label_5.raise_()
         self.label_3.raise_()
@@ -391,14 +411,14 @@ class EditView2(QtGui.QWidget):
             self.verticalLayout_4.itemAt(i).widget().setParent(None)
         self.label_4.setText("")
         self.label_5.setText("")
-       
+
         self.showMain.emit()
 
 
 
     def fill_coll(self):
     # -- Remove the right CollectionsAccessBar and replace it with a column fill with all the collections selected
-        
+
         # old = splitter1.widget(1)
         # containerVbox.removeWidget(old)
         # old.setParent(None)
