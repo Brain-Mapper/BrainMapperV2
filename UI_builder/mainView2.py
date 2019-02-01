@@ -50,10 +50,11 @@ class CollButton(QtGui.QCheckBox):
     def __init__(self, coll, setname, selected_zone, parent=None):
         super(CollButton, self).__init__(parent=parent)
         self.coll = coll
+        self.setname = setname
         self.selected_zone=selected_zone
         self.toggle()
         self.setChecked(False)
-        self.stateChanged.connect(lambda : self.selectColl(setname))
+        self.stateChanged.connect(lambda : self.selectColl(self.setname))
 
         list = self.coll.get_img_list()
 
@@ -65,7 +66,7 @@ class CollButton(QtGui.QCheckBox):
             d = datetime.fromtimestamp(int(round(date))).strftime('%Y-%m-%d')
         except:
             d = datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d')
-        label = "Set name : "+ str(setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + str(len(list)) + "\nLast modified : " + str(d)
+        label = "Set name : "+ str(self.setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + str(len(list)) + "\nLast modified : " + str(d)
         self.setText(label)
         self.setStyleSheet(
             "CollButton {background-color : #eee; spacing: 5px;border: 2px solid #99cccc;border-radius: 8px;padding: 1px 18px 1px 3px;max-width: 225%;}; CollButton::indicator {width: 13px; height: 13px;};")
@@ -81,7 +82,7 @@ class CollButton(QtGui.QCheckBox):
         for i in reversed(range(self.selected_zone.count())):
             self.selected_zone.itemAt(i).widget().setParent(None)
         for coll in collshow:
-            self.selected_zone.addWidget(SelectedButton(coll,str(len(self.coll.get_img_list())),setname,str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
+            self.selected_zone.addWidget(SelectedButton(coll,str(len(self.coll.get_img_list())),self.setname,str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
 
     def update(self):
         # -- This update will update the information of the collection if they have changed in the edit collection view
@@ -97,7 +98,7 @@ class CollButton(QtGui.QCheckBox):
                 d = datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d')
         except:
             d = datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d')
-        self.setText("Set name : "+ str(setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + str(len(list)) + "\nLast modified : " + str(d))
+        self.setText("Set name : "+ str(self.setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + str(len(list)) + "\nLast modified : " + str(d))
 
 class SetButton(QtGui.QWidget):
 
@@ -241,7 +242,8 @@ class SetButton(QtGui.QWidget):
         for i in reversed(range(self.image_zone.count())):
             self.image_zone.itemAt(i).widget().setParent(None)
         for coll in selected:
-            self.image_zone.addWidget(CollButton(coll,self.my_set.get_name(),self.selected_zone))
+            print(coll.getSetName().get_name())
+            self.image_zone.addWidget(CollButton(coll,coll.getSetName().get_name(),self.selected_zone))
 
         for i in reversed(range(self.selected_zone.count())):
             self.selected_zone.itemAt(i).widget().setParent(None)
