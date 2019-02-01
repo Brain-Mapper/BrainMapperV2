@@ -42,6 +42,7 @@ class ParametersBox(QtGui.QGroupBox):
         super(ParametersBox, self).__init__("Parameters")
         self.user_params = {}
         self.vbox = QtGui.QVBoxLayout()
+        self.vbox.setContentsMargins(0, 0, 0, 0)
 
         if parameters_dict is not None:
 
@@ -85,6 +86,7 @@ class ParameterNameAndValue(QtGui.QGroupBox):
     """
     def __init__(self, param_name, param_type, param_default_value, param_info):
         super(ParameterNameAndValue, self).__init__()
+        self.setMaximumSize(QSize(290, 16777215))
         self.grid = QtGui.QGridLayout()
         self.grid.setContentsMargins(0, 9, 9, 0)
 
@@ -197,6 +199,7 @@ class ClusteringParameters(QtGui.QWidget):
         self.param_box = None
 
         self.container_box = QtGui.QVBoxLayout()
+        self.container_box.setContentsMargins(0, 0, 0, 0)
         self.container_box.setAlignment(Qt.AlignTop)
 
         self.setLayout(self.container_box)
