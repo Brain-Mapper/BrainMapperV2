@@ -489,26 +489,23 @@ class MainView2(QtGui.QWidget):
         self.checkBox.stateChanged.connect(self.checkselected)
         self.verticalLayout_image_collections.addWidget(self.checkBox)
 
-        self.widget_image_collections_show = QtGui.QWidget(self.widget_image_collections)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.widget_image_collections_show.sizePolicy().hasHeightForWidth())
-        self.widget_image_collections_show.setSizePolicy(sizePolicy)
+        self.scrollArea = QtGui.QScrollArea(self.widget_image_collections)
+        self.scrollArea.setWidgetResizable(True)
+        self.widget_image_collections_show = QtGui.QWidget()
         self.widget_image_collections_show.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
-        self.widget_image_collections_show.setObjectName(_fromUtf8("widget_image_collections_show"))
         self.verticalLayout_image_collections_show = QtGui.QFormLayout(self.widget_image_collections_show)
         self.verticalLayout_image_collections_show.setMargin(0)
-        self.verticalLayout_image_collections_show.setObjectName(_fromUtf8("verticalLayout_image_collections_show"))
-        self.verticalLayout_image_collections.addWidget(self.widget_image_collections_show)
+        self.verticalLayout_image_collections_show.setContentsMargins(0, 0, 7, 0)
+        self.scrollArea.setWidget(self.widget_image_collections_show)
+        self.verticalLayout_image_collections.addWidget(self.scrollArea)
 
         self.label_image_collections.raise_()
         self.widget_image_collections_show.raise_()
         self.checkBox.raise_()
         self.horizontalLayout.addWidget(self.widget_image_collections)
+
         self.verticalLayout_selected = QtGui.QVBoxLayout()
         self.verticalLayout_selected.setSpacing(6)
-        self.verticalLayout_selected.setObjectName(_fromUtf8("verticalLayout_selected"))
         self.widget_selected = QtGui.QWidget(Form)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
@@ -517,7 +514,6 @@ class MainView2(QtGui.QWidget):
         self.widget_selected.setSizePolicy(sizePolicy)
         self.widget_selected.setMinimumSize(QtCore.QSize(50, 150))
         self.widget_selected.setStyleSheet(_fromUtf8("background-color: rgb(223, 223, 223);"))
-        self.widget_selected.setObjectName(_fromUtf8("widget_selected"))
         self.verticalLayout_selected_view = QtGui.QVBoxLayout(self.widget_selected)
         self.verticalLayout_selected_view.setContentsMargins(0, 6, 0, 0)
         self.verticalLayout_selected_view.setSpacing(0)
@@ -532,22 +528,19 @@ class MainView2(QtGui.QWidget):
         self.label_selected.setAlignment(QtCore.Qt.AlignCenter)
         self.label_selected.setObjectName(_fromUtf8("label_selected"))
         self.verticalLayout_selected_view.addWidget(self.label_selected)
-        self.widget_selected_view = QtGui.QWidget(self.widget_selected)
 
+
+        self.scrollArea_2 = QtGui.QScrollArea(self.widget_selected)
+        self.scrollArea_2.setWidgetResizable(True)
+        self.widget_selected_view = QtGui.QWidget()
+        self.widget_selected_view.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
         self.verticalLayout_widget_selected_view = QtGui.QFormLayout(self.widget_selected_view)
         self.verticalLayout_widget_selected_view.setMargin(0)
-        self.verticalLayout_widget_selected_view.setObjectName(_fromUtf8("verticalLayout_widget_selected_view"))
-        self.verticalLayout_selected_view.addWidget(self.widget_selected_view)
-
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.widget_selected_view.sizePolicy().hasHeightForWidth())
-        self.widget_selected_view.setSizePolicy(sizePolicy)
-        self.widget_selected_view.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
-        self.widget_selected_view.setObjectName(_fromUtf8("widget_selected_view"))
-        self.verticalLayout_selected_view.addWidget(self.widget_selected_view)
+        self.scrollArea_2.setWidget(self.widget_selected_view)
+        self.verticalLayout_selected_view.addWidget(self.scrollArea_2)
         self.verticalLayout_selected.addWidget(self.widget_selected)
+
+
         self.horizontalLayout_buttons = QtGui.QHBoxLayout()
         self.horizontalLayout_buttons.setSpacing(6)
         self.horizontalLayout_buttons.setObjectName(_fromUtf8("horizontalLayout_buttons"))
@@ -606,7 +599,7 @@ class MainView2(QtGui.QWidget):
     def checkclusteringall(self):
         clustering = self.treeWidget.topLevelItem(2)
         it=QTreeWidgetItemIterator(self.treeWidget.topLevelItem(2))
-        while it.value(): 
+        while it.value():
             if it.value().parent() is not None and it.value().parent() == clustering:
                 self.treeWidget.itemWidget(it.value(),0).check.setChecked(self.checkclustering.isChecked())
             it+=1

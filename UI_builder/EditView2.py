@@ -15,6 +15,7 @@ import sys
 from os import path
 sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
 from BrainMapper import *
+import clustering_components.clustering_plot as clustering_plot
 
 import pyqtgraph as pg
 import pyqtgraph.opengl as gl
@@ -91,7 +92,7 @@ class Buttonpath(QtGui.QWidget):
             self.parent.pushButton_4.setEnabled(False)
 
         else:
-            print("test")       
+            print("test")
 
 
     def actionpath(self,filna,parent):
@@ -179,7 +180,7 @@ class CollectionAccessButton(QtGui.QWidget):
                         new_ok = False
                 if new_ok and not exists_coll_in_sets(str(text)):
                     setColNameInSet(str(text))
-                    
+
                     self.buttonc.setText(coll.name)
                     self.parent.label_4.setText(coll.name)
                     #cur_col = get_current_coll()
@@ -258,7 +259,7 @@ class EditView2(QtGui.QWidget):
         self.widget_6 = QtGui.QWidget(self.widget)
         self.widget_6.setMinimumSize(QtCore.QSize(250, 0))
         self.widget_6.setObjectName(_fromUtf8("widget_6"))
-        self.verticalLayout_3 = QtGui.QVBoxLayout(self.widget_6)
+        self.verticalLayout_3 = QtGui.QFormLayout(self.widget_6)
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 9)
         self.verticalLayout_3.setObjectName(_fromUtf8("verticalLayout_3"))
         self.verticalLayout_2.addWidget(self.widget_6)
@@ -329,18 +330,36 @@ class EditView2(QtGui.QWidget):
         self.label_6.setText(_fromUtf8(""))
         self.label_6.setObjectName(_fromUtf8("label_6"))
         self.gridLayout.addWidget(self.label_6, 2, 1, 1, 2)
+
+
         self.scrollArea = QtGui.QScrollArea(self.widget_3)
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName(_fromUtf8("scrollArea"))
         self.scrollAreaWidgetContents = QtGui.QWidget()
         self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 702, 394))
         self.scrollAreaWidgetContents.setObjectName(_fromUtf8("scrollAreaWidgetContents"))
+        self.verticalLayout_4 = QtGui.QFormLayout(self.scrollAreaWidgetContents)
+        self.verticalLayout_4.setMargin(0)
+        self.verticalLayout_4.setObjectName(_fromUtf8("verticalLayout_4"))
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.gridLayout.addWidget(self.scrollArea, 3, 0, 1, 3)
-        self.verticalLayout_4 = QtGui.QVBoxLayout(self.scrollArea)
-        self.verticalLayout_4.setContentsMargins(0, 0, 0, 9)
-        self.verticalLayout_4.setObjectName(_fromUtf8("verticalLayout_4"))
         self.scrollArea.raise_()
+
+
+        # self.scrollArea = QtGui.QScrollArea(self.widget_3)
+        # self.scrollArea.setWidgetResizable(True)
+        # self.scrollArea.setObjectName(_fromUtf8("scrollArea"))
+        # self.scrollAreaWidgetContents = QtGui.QWidget()
+        # self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 702, 394))
+        # self.scrollAreaWidgetContents.setObjectName(_fromUtf8("scrollAreaWidgetContents"))
+        # self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+        # self.gridLayout.addWidget(self.scrollArea, 3, 0, 1, 3)
+        # self.verticalLayout_4 = QtGui.QVBoxLayout(self.scrollArea)
+        # self.verticalLayout_4.setContentsMargins(0, 0, 0, 9)
+        # self.verticalLayout_4.setObjectName(_fromUtf8("verticalLayout_4"))
+        # self.scrollArea.raise_()
+
+
         self.label_6.raise_()
         self.label_5.raise_()
         self.label_3.raise_()
@@ -360,6 +379,7 @@ class EditView2(QtGui.QWidget):
         self.pushButton_4 = QtGui.QPushButton(Form)
         self.pushButton_4.setObjectName(_fromUtf8("pushButton_4"))
         self.pushButton_4.setEnabled(False)
+        self.pushButton_4.clicked.connect(self.plot)
         self.horizontalLayout_3.addWidget(self.pushButton_4)
         # self.pushButton_3 = QtGui.QPushButton(Form)
         # self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
@@ -398,14 +418,17 @@ class EditView2(QtGui.QWidget):
             self.verticalLayout_4.itemAt(i).widget().setParent(None)
         self.label_4.setText("")
         self.label_5.setText("")
-       
+
         self.showMain.emit()
+
+    def plot(self):
+        clustering_plot.plot_3d()
 
 
 
     def fill_coll(self):
     # -- Remove the right CollectionsAccessBar and replace it with a column fill with all the collections selected
-        
+
         # old = splitter1.widget(1)
         # containerVbox.removeWidget(old)
         # old.setParent(None)
@@ -422,7 +445,7 @@ class EditView2(QtGui.QWidget):
         # for lab in labels_array :
         #     self.parent.verticalLayout_3.addWidget(CollectionAccessButton(lab, self.parent))
 
-        self.verticalLayout_3.addWidget(topleft)
+            self.verticalLayout_3.addWidget(topleft)
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(_translate("Form", "Form", None))
