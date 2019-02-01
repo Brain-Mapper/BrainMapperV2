@@ -15,6 +15,7 @@ import sys
 from os import path
 sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
 from BrainMapper import *
+import clustering_components.clustering_plot as clustering_plot
 
 import pyqtgraph as pg
 import pyqtgraph.opengl as gl
@@ -251,7 +252,7 @@ class EditView2(QtGui.QWidget):
         self.widget_6 = QtGui.QWidget(self.widget)
         self.widget_6.setMinimumSize(QtCore.QSize(250, 0))
         self.widget_6.setObjectName(_fromUtf8("widget_6"))
-        self.verticalLayout_3 = QtGui.QVBoxLayout(self.widget_6)
+        self.verticalLayout_3 = QtGui.QFormLayout(self.widget_6)
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 9)
         self.verticalLayout_3.setObjectName(_fromUtf8("verticalLayout_3"))
         self.verticalLayout_2.addWidget(self.widget_6)
@@ -333,10 +334,8 @@ class EditView2(QtGui.QWidget):
         self.verticalLayout_4 = QtGui.QFormLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_4.setMargin(0)
         self.verticalLayout_4.setObjectName(_fromUtf8("verticalLayout_4"))
-
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.gridLayout.addWidget(self.scrollArea, 3, 0, 1, 3)
-
         self.scrollArea.raise_()
 
 
@@ -373,6 +372,7 @@ class EditView2(QtGui.QWidget):
         self.pushButton_4 = QtGui.QPushButton(Form)
         self.pushButton_4.setObjectName(_fromUtf8("pushButton_4"))
         self.pushButton_4.setEnabled(False)
+        self.pushButton_4.clicked.connect(self.plot)
         self.horizontalLayout_3.addWidget(self.pushButton_4)
         # self.pushButton_3 = QtGui.QPushButton(Form)
         # self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
@@ -414,6 +414,9 @@ class EditView2(QtGui.QWidget):
 
         self.showMain.emit()
 
+    def plot(self):
+        clustering_plot.plot_3d()
+
 
 
     def fill_coll(self):
@@ -435,7 +438,7 @@ class EditView2(QtGui.QWidget):
         # for lab in labels_array :
         #     self.parent.verticalLayout_3.addWidget(CollectionAccessButton(lab, self.parent))
 
-        self.verticalLayout_3.addWidget(topleft)
+            self.verticalLayout_3.addWidget(topleft)
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(_translate("Form", "Form", None))
