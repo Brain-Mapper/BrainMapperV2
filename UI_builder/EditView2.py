@@ -83,6 +83,13 @@ class Buttonpath(QtGui.QWidget):
             print(list_img)
             for i in reversed(range(self.parent.verticalLayout_4.count())):
                 self.parent.verticalLayout_4.itemAt(i).widget().setParent(None)
+            for i in range(0,len(list_img)):
+                print("cc")
+                buttonpath=Buttonpath(list_img[i],coll,parent)
+                self.parent.verticalLayout_4.addWidget(buttonpath)
+            self.parent.label_10.setText("")
+            self.parent.pushButton_4.setEnabled(False)
+
         else:
             print("test")       
 

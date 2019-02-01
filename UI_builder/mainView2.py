@@ -225,8 +225,6 @@ class SetButton(QtGui.QWidget):
     def state_changed(self):
         global selected
         global collshow
-        print("state_changed selected",selected)
-        print("state_changed collshow",collshow)
         dict=self.my_set.get_all_nifti_set()
         if self.check.isChecked():
             for d in dict:
@@ -238,13 +236,18 @@ class SetButton(QtGui.QWidget):
                 selected.remove(d)
                 if d in collshow:
                     collshow.remove(d)
+
+        print("state_changed selected",selected)
+        print("state_changed collshow",collshow)
+        print("\n")
+
         for i in reversed(range(self.image_zone.count())):
             self.image_zone.itemAt(i).widget().setParent(None)
-        for coll in selected:
-            self.image_zone.addWidget(CollButton(coll,self.my_set.get_name(),self.selected_zone))
-
         for i in reversed(range(self.selected_zone.count())):
             self.selected_zone.itemAt(i).widget().setParent(None)
+        #BUG A CORRIGER QUAND ON CLIQUE SUR ALL ET QU IL Y A PLUS D UN ITEM
+        for coll in selected:
+            self.image_zone.addWidget(CollButton(coll,self.my_set.get_name(),self.selected_zone))
         for coll in collshow:
             self.selected_zone.addWidget(SelectedButton(coll,str(len(coll.get_img_list())),my_set.get_name(),str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
 
