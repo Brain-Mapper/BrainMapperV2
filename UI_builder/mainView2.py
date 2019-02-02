@@ -40,8 +40,9 @@ class SelectedButton(QtGui.QPushButton):
     def __init__(self, coll, num, setname, date, parent=None):
         super(SelectedButton, self).__init__(parent=parent)
         self.coll = coll
+        self.setname=setname
 
-        self.setText("Set name : "+ str(setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + num + "\nLast modified : " + date )
+        self.setText("Set name : "+ str(self.setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + num + "\nLast modified : " + date )
 
 
 class CollButton(QtGui.QCheckBox):
@@ -81,6 +82,7 @@ class CollButton(QtGui.QCheckBox):
             collshow.remove(self.coll)
         for i in reversed(range(self.selected_zone.count())):
             self.selected_zone.itemAt(i).widget().setParent(None)
+        print(collshow)
         for coll in collshow:
             self.selected_zone.addWidget(SelectedButton(coll,str(len(coll.get_img_list())),coll.getSetName().get_name(),str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
 
@@ -114,7 +116,7 @@ class SetButton(QtGui.QWidget):
       self.selected_zone = selected_zone
       self.treeWidget = parent
 
-      print(self.my_set.name)
+      #print(self.my_set.name)
 
 
       hbox = QtGui.QHBoxLayout()
@@ -231,30 +233,50 @@ class SetButton(QtGui.QWidget):
             for d in dict:
                 if d not in selected:
                     selected.append(d)
-            #print(selected)
+                    self.image_zone.addWidget(CollButton(d,d.getSetName().get_name(),self.selected_zone))
         else:
             for d in dict:
                 selected.remove(d)
-                if d in collshow:
+                trouve= False
+                i=0
+                while trouve == False and i < self.image_zone.count():
+                # #for i in reversed(range(self.image_zone.count())):
+                    if self.image_zone.itemAt(i).widget().coll == d and self.image_zone.itemAt(i).widget().setname == self.my_set.name:
+                        trouve = True
+                    else:
+                        i=i+1
+                if trouve == True:
+                    self.image_zone.itemAt(i).widget().setParent(None)
+                trouve= False
+                i=0
+                while trouve == False and i < self.selected_zone.count():
+                    if self.selected_zone.itemAt(i).widget().coll == d and self.selected_zone.itemAt(i).widget().setname == self.my_set.name:
+                        trouve = True
+                    else:
+                        i=i+1
+                if trouve == True:
+                    self.selected_zone.itemAt(i).widget().setParent(None)
                     collshow.remove(d)
 
-        print("state_changed selected",selected)
-        print("state_changed collshow",collshow)
-        print("\n")
-
-        for i in reversed(range(self.image_zone.count())):
-            self.image_zone.itemAt(i).widget().setParent(None)
-        for coll in selected:
-            print(coll.getSetName().get_name())
-            self.image_zone.addWidget(CollButton(coll,coll.getSetName().get_name(),self.selected_zone))
-
+        # for i in reversed(range(self.image_zone.count())):
+        #     print("boucle widget",self.image_zone.itemAt(i).widget().coll)
+        #     self.image_zone.itemAt(i).widget().setParent(None)
         # for i in reversed(range(self.selected_zone.count())):
         #     self.selected_zone.itemAt(i).widget().setParent(None)
-        # #BUG A CORRIGER QUAND ON CLIQUE SUR ALL ET QU IL Y A PLUS D UN ITEM
-        # for coll in selected:
-        #     self.image_zone.addWidget(CollButton(coll,self.my_set.get_name(),self.selected_zone))
-        for coll in collshow:
-            self.selected_zone.addWidget(SelectedButton(coll,str(len(coll.get_img_list())),my_set.get_name(),str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
+
+        # if self.check.isChecked():
+        #     for coll in selected:
+        #         trouve = False
+        #         for i in reversed(range(self.image_zone.count())):
+        #             if self.image_zone.itemAt(i).widget().coll == coll:
+        #                 trouve = True
+        #                 break;
+        #         if trouve == False:
+        #             self.image_zone.addWidget(CollButton(coll,coll.getSetName().get_name(),self.selected_zone))
+
+        #BUG A CORRIGER QUAND ON CLIQUE SUR ALL ET QU IL Y A PLUS D UN ITEM
+        # for coll in collshow:
+        #     self.selected_zone.addWidget(SelectedButton(coll,str(len(coll.get_img_list())),my_set.get_name(),str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
 
     def changeName(self):
         # -- This changeName will change the name of the set selected.
@@ -275,7 +297,7 @@ class SetButton(QtGui.QWidget):
                         self.my_set.getParent().add_subset(self.my_set)
                     else:
                         self.my_set.set_name(str(text))
-                    print(self.my_set.get_name())
+                    #print(self.my_set.get_name())
                     self.check.setText(str(text))
                     add_set(self.my_set)
                 else:
@@ -297,11 +319,11 @@ class SetButton(QtGui.QWidget):
                     if i in str(text):
                         new_ok = False
                 if new_ok and not exists_set(str(text)):
-                    print("test")
+                    #print("test")
                     ss = self.my_set.add_empty_subset(str(text))
-                    print(ss.name)
+                    #print(ss.name)
                     position = ss.getPosition()
-                    print(position)
+                    #print(position)
                     p = self.treeWidget.topLevelItem(position[0])
                     position.pop(0)
                     for i in range(len(position)-1):
@@ -572,7 +594,7 @@ class MainView2(QtGui.QWidget):
 
         my_set = newSet(default_name[2:],0)
         #set_current_set(my_set)
-        print(get_current_set().get_name())
+        #print(get_current_set().get_name())
 
         item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(0))
         item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
@@ -629,14 +651,14 @@ class MainView2(QtGui.QWidget):
                     new_ok = False
             if new_ok and not exists_set(str(text)):
                 my_set = newSet(text,len(globalSets[0]))
-                print(my_set.name)
+                #print(my_set.name)
 
                 item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(0))
                 item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
                 self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(len(globalSets[0])), 0, SetButton(my_set,self.verticalLayout_image_collections_show,self.verticalLayout_widget_selected_view,self.treeWidget))
 
                 globalSets[0].append(my_set)
-                print(len(globalSets[0]))
+                #print(len(globalSets[0]))
             else :
                 err = QtGui.QMessageBox.critical(self, "Error",
                                                      "The name you entered is not valid (empty, invalid caracter or already exists)")
@@ -799,8 +821,8 @@ class MainView2(QtGui.QWidget):
         global selected
         global collshow
         # -- This edit_pannel will show the edit view if selected is not empty
-        print("mv selected",selected)
-        print("mv collshow",collshow)
+        #print("mv selected",selected)
+        #print("mv collshow",collshow)
         if (get_selected()):
             self.showEdit.emit()
         else:
