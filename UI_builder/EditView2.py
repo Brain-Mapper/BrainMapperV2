@@ -67,7 +67,7 @@ class Buttonpath(QtGui.QWidget):
 
         if choice == QtGui.QMessageBox.Yes:
             dictcopy= dict(coll.get_img_list())
-            print("dic avant",coll.get_img_list().values())
+            #print("dic avant",coll.get_img_list().values())
             for i in dictcopy.values():
                 filname = i.filename.split("/")
                 #print(filname)
@@ -78,10 +78,10 @@ class Buttonpath(QtGui.QWidget):
                     #print(coll.get_img_list().keys())
                     #print(type(coll.get_img_list()))
                     del coll.get_img_list()[i.filename]
-            print("dic final",coll.get_img_list().values())
-            print(list_img)
+            #print("dic final",coll.get_img_list().values())
+            #print(list_img)
             list_img.remove(name)
-            print(list_img)
+            #print(list_img)
             for i in reversed(range(self.parent.verticalLayout_4.count())):
                 self.parent.verticalLayout_4.itemAt(i).widget().setParent(None)
             for i in range(0,len(list_img)):
@@ -161,8 +161,12 @@ class CollectionAccessButton(QtGui.QWidget):
             self.parent.label_4.setText("")
             self.parent.label_5.setText("")
             del list_img[:]
-            del collshow[:]
-            print(collshow)
+            print("collshow final",collshow)
+            print("get",get_selected())
+            # for x in collshow:
+            #     topleft=CollectionAccessButton(x, self)
+            #     self.parent.verticalLayout_3.addWidget(topleft)
+                        
 
 
 
@@ -198,6 +202,10 @@ class CollectionAccessButton(QtGui.QWidget):
         #self.label_name.setText(str(col.name))
         self.parent.label_4.setText(str(coll.name))
         self.parent.label_5.setText(str(coll.set_n.name))
+        if len(list_img) !=0:
+            for i in reversed(range(self.parent.verticalLayout_4.count())):
+                    self.parent.verticalLayout_4.itemAt(i).widget().setParent(None)
+            del list_img[:]
         for i in coll.get_img_list().values():
                 filname = i.filename.split("/")
                 filna = filname[len(filname)-1]
