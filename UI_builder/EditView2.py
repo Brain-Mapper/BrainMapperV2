@@ -161,11 +161,9 @@ class CollectionAccessButton(QtGui.QWidget):
             self.parent.label_4.setText("")
             self.parent.label_5.setText("")
             del list_img[:]
+            collshow.remove(coll)
             print("collshow final",collshow)
-            print("get",get_selected())
-            # for x in collshow:
-            #     topleft=CollectionAccessButton(x, self)
-            #     self.parent.verticalLayout_3.addWidget(topleft)
+            self.parent.fill_coll()
                         
 
 
