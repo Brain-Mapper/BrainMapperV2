@@ -360,10 +360,17 @@ class SetButton(QtGui.QWidget):
             for d in self.my_set.get_all_nifti_set_and_subset():
                 if d in selected:
                     selected.remove(d)
+                if d in collshow:
+                    collshow.remove(d)
+            #lorsqu'on supprimer un set il faut changer l'affichage graphique
             for i in reversed(range(self.image_zone.count())):
-                self.image_zone.itemAt(i).widget().setParent(None)
-            for coll in selected:
-                    self.image_zone.addWidget(CollButton(coll,self.selected_zone))
+                if self.image_zone.itemAt(i).widget().setname == self.my_set.name:
+                    self.image_zone.itemAt(i).widget().setParent(None)
+            for i in reversed(range(self.selected_zone.count())):
+                if self.selected_zone.itemAt(i).widget().setname == self.my_set.name:
+                    self.selected_zone.itemAt(i).widget().setParent(None)
+            # for coll in selected:
+            #         self.image_zone.addWidget((CollButton(coll,coll.getSetName().get_name(),self.selected_zone)))
 
             if self.my_set.getParent()!=None:
                 self.my_set.getParent().remove_subset(self.my_set.name)
