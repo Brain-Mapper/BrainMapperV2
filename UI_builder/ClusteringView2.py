@@ -255,7 +255,7 @@ class ClusteringView2(QtGui.QWidget):
                 column_selected.append(columns[i].column())
 
         i_iter = int(param_dict["i_iter"])
-
+        print(column_selected)
         self.history_iterations = []
         self.the_best_iteration = {}
         self.the_best_iteration["iteration"] = 0
@@ -469,6 +469,13 @@ class ClusteringView2(QtGui.QWidget):
         self.tableWidget.setMinimumSize(QtCore.QSize(660, 0))
         self.tableWidget.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.tableWidget.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+    # def addinclust(self):
+    #     print("cc thomas")
+    #     print(self.tableWidget.horizontalHeaderItem(0).text())
+    #     print(self.tableWidget.horizontalHeaderItem(0).isSelected() )
+    #     print(self.tableWidget.horizontalHeaderItem(0).row())
+    #     print(self.tableWidget.horizontalHeaderItem(0).column())
+
         self.tableWidget.setGridStyle(QtCore.Qt.SolidLine)
         self.tableWidget.setRowCount(5)
         self.tableWidget.setColumnCount(7)
@@ -589,13 +596,6 @@ class ClusteringView2(QtGui.QWidget):
         QtCore.QMetaObject.connectSlotsByName(Form)
 
         #self.tableWidget.cellPressed.connect(self.addinclust)
-
-    # def addinclust(self):
-    #     print("cc thomas")
-    #     print(self.tableWidget.horizontalHeaderItem(0).text())
-    #     print(self.tableWidget.horizontalHeaderItem(0).isSelected() )
-    #     print(self.tableWidget.horizontalHeaderItem(0).row())
-    #     print(self.tableWidget.horizontalHeaderItem(0).column())
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(_translate("Form", "Form", None))

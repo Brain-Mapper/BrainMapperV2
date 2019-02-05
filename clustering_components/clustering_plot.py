@@ -131,7 +131,6 @@ def plot_cross_section(labels: list,coordinates):
     Arguments :
         labels{list} -- list of labels after clustering
     """
-    # TODO choose the coordinates of the cut
     points_list, colors_list = get_points_list_colors_list(labels)
     display = plotting.plot_anat(cut_coords=coordinates)
     for point,color in zip(points_list, colors_list):
