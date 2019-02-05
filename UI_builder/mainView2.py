@@ -148,8 +148,6 @@ class SetButton(QtGui.QWidget):
       NameButton.setFixedSize(QSize(20, 20))
       hbox.addWidget(NameButton)
 
-
-
       ImportButton = QtGui.QPushButton()
       ImportButton.setText("Import")
       ImportButton.clicked.connect(self.importdata)
@@ -392,6 +390,7 @@ class MainView2(QtGui.QWidget):
     showEdit = pyqtSignal()
     showExport = pyqtSignal()
     showCalcul = pyqtSignal()
+    showSOM = pyqtSignal()
 
     def __init__(self):
         super(MainView2, self).__init__()
@@ -593,6 +592,10 @@ class MainView2(QtGui.QWidget):
         self.pushButton_calculation.setObjectName(_fromUtf8("pushButton_calculation"))
         self.pushButton_calculation.clicked.connect(self.calcul)
         self.horizontalLayout_buttons.addWidget(self.pushButton_calculation)
+        self.pushButton_SOM = QtGui.QPushButton(Form)
+        self.pushButton_SOM.setObjectName(_fromUtf8("pushButton_SOM"))
+        self.pushButton_SOM.clicked.connect(self.SOM)
+        self.horizontalLayout_buttons.addWidget(self.pushButton_SOM)
         self.verticalLayout_selected.addLayout(self.horizontalLayout_buttons)
         self.horizontalLayout.addLayout(self.verticalLayout_selected)
         self.widget_image_collections.raise_()
@@ -824,6 +827,11 @@ class MainView2(QtGui.QWidget):
             QtGui.QMessageBox.information(self, "Selection empty", "There's no data to calculation.")
         print()
 
+    def SOM(self):
+        self.list_entete=["test1","test2","test3"]
+        self.list_data=["bla1","bla2","bla3","bla4","bla5","bla6"]
+        self.showSOM.emit()
+
     def edit_pannel(self):
         global selected
         global collshow
@@ -893,3 +901,4 @@ class MainView2(QtGui.QWidget):
         self.pushButton_export.setText(_translate("Form", "Export data", None))
         self.pushButton_clustering.setText(_translate("Form", "Clustering", None))
         self.pushButton_calculation.setText(_translate("Form", "Calculation", None))
+        self.pushButton_SOM.setText(_translate("Form", "SOM", None))
