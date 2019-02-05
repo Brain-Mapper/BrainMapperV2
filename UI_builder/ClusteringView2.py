@@ -365,7 +365,7 @@ class ClusteringView2(QtGui.QWidget):
 
     def plot(self):
         type = self.comboBox_3.currentText()
-        print("plot -> type",type)
+        # print("plot -> type",type)
         if type=="Sihouette":
             clustering_plot.plot_silhouette(self.label,None)
         elif type=="3D view":
@@ -386,7 +386,8 @@ class ClusteringView2(QtGui.QWidget):
                 QtGui.QMessageBox.warning(self, "Choice of the coordinates", "You must use the format x,y,z to enter the coordinates")
             else :
                 clustering_plot.plot_cross_section(self.label,c)
-
+        elif type=="Glass brain":
+            clustering_plot.plot_glass_brain(self.label)
 
 
     def setupUi(self, Form):
@@ -534,6 +535,7 @@ class ClusteringView2(QtGui.QWidget):
         self.comboBox_3.addItem(_fromUtf8(""))
         self.comboBox_3.addItem(_fromUtf8(""))
         self.comboBox_3.addItem(_fromUtf8(""))
+        self.comboBox_3.addItem(_fromUtf8(""))
         self.horizontalLayout_buttons.addWidget(self.comboBox_3)
         self.pushButton_show = QtGui.QPushButton(self.widget_buttons)
         self.pushButton_show.setObjectName(_fromUtf8("pushButton_show"))
@@ -625,6 +627,7 @@ class ClusteringView2(QtGui.QWidget):
         self.comboBox_3.setItemText(1, _translate("Form", "3D view", None))
         self.comboBox_3.setItemText(2, _translate("Form", "Cross sections", None))
         self.comboBox_3.setItemText(3, _translate("Form", "Dendrogram", None))
+        self.comboBox_3.setItemText(4, _translate("Form", "Glass brain", None))
         self.pushButton_show.setText(_translate("Form", "Show", None))
         self.pushButton_save.setText(_translate("Form", "Save as set", None))
         self.pushButton_back.setText(_translate("Form", "Go back", None))
