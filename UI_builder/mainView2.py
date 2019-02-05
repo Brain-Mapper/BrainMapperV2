@@ -40,8 +40,9 @@ class SelectedButton(QtGui.QPushButton):
     def __init__(self, coll, num, setname, date, parent=None):
         super(SelectedButton, self).__init__(parent=parent)
         self.coll = coll
+        self.setname=setname
 
-        self.setText("Set name : "+ str(setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + num + "\nLast modified : " + date )
+        self.setText("Set name : "+ str(self.setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + num + "\nLast modified : " + date )
 
 
 class CollButton(QtGui.QCheckBox):
@@ -50,10 +51,11 @@ class CollButton(QtGui.QCheckBox):
     def __init__(self, coll, setname, selected_zone, parent=None):
         super(CollButton, self).__init__(parent=parent)
         self.coll = coll
+        self.setname = setname
         self.selected_zone=selected_zone
         self.toggle()
         self.setChecked(False)
-        self.stateChanged.connect(lambda : self.selectColl(setname))
+        self.stateChanged.connect(lambda : self.selectColl(self.setname))
 
         list = self.coll.get_img_list()
 
@@ -65,7 +67,7 @@ class CollButton(QtGui.QCheckBox):
             d = datetime.fromtimestamp(int(round(date))).strftime('%Y-%m-%d')
         except:
             d = datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d')
-        label = "Set name : "+ str(setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + str(len(list)) + "\nLast modified : " + str(d)
+        label = "Set name : "+ str(self.setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + str(len(list)) + "\nLast modified : " + str(d)
         self.setText(label)
         self.setStyleSheet(
             "CollButton {background-color : #eee; spacing: 5px;border: 2px solid #99cccc;border-radius: 8px;padding: 1px 18px 1px 3px;max-width: 225%;}; CollButton::indicator {width: 13px; height: 13px;};")
@@ -80,8 +82,9 @@ class CollButton(QtGui.QCheckBox):
             collshow.remove(self.coll)
         for i in reversed(range(self.selected_zone.count())):
             self.selected_zone.itemAt(i).widget().setParent(None)
+        print(collshow)
         for coll in collshow:
-            self.selected_zone.addWidget(SelectedButton(coll,str(len(self.coll.get_img_list())),setname,str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
+            self.selected_zone.addWidget(SelectedButton(coll,str(len(coll.get_img_list())),coll.getSetName().get_name(),str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
 
     def update(self):
         # -- This update will update the information of the collection if they have changed in the edit collection view
@@ -97,7 +100,7 @@ class CollButton(QtGui.QCheckBox):
                 d = datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d')
         except:
             d = datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d')
-        self.setText("Set name : "+ str(setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + str(len(list)) + "\nLast modified : " + str(d))
+        self.setText("Set name : "+ str(self.setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + str(len(list)) + "\nLast modified : " + str(d))
 
 class SetButton(QtGui.QWidget):
 
@@ -113,7 +116,7 @@ class SetButton(QtGui.QWidget):
       self.selected_zone = selected_zone
       self.treeWidget = parent
 
-      print(self.my_set.name)
+      #print(self.my_set.name)
 
 
       hbox = QtGui.QHBoxLayout()
@@ -161,7 +164,7 @@ class SetButton(QtGui.QWidget):
         file = QFileDialog.getOpenFileNames(self, "Choose one file or more",
                                                  "./", 'NifTI(*.nii *.nii.gz)')
         if (file != ""):
-            # TODO put the try/except 
+            # TODO put the try/except
             # try:
             collec = do_image_collection(file,self.my_set)
             #homepage.mainview.show_coll(collec)
@@ -189,6 +192,8 @@ class SetButton(QtGui.QWidget):
 
         import_choice = QtGui.QMessageBox()
         import_choice.setWindowTitle('Import collections')
+
+        self.check.setChecked(False)
 
         nifti_opt = QRadioButton("Import from Nifti")
         excel_opt = QRadioButton("Import from Excel")
@@ -223,28 +228,55 @@ class SetButton(QtGui.QWidget):
     def state_changed(self):
         global selected
         global collshow
-        print("state_changed selected",selected)
-        print("state_changed collshow",collshow)
         dict=self.my_set.get_all_nifti_set()
         if self.check.isChecked():
             for d in dict:
                 if d not in selected:
                     selected.append(d)
-            #print(selected)
+                    self.image_zone.addWidget(CollButton(d,d.getSetName().get_name(),self.selected_zone))
         else:
             for d in dict:
                 selected.remove(d)
-                if d in collshow:
+                trouve= False
+                i=0
+                while trouve == False and i < self.image_zone.count():
+                # #for i in reversed(range(self.image_zone.count())):
+                    if self.image_zone.itemAt(i).widget().coll == d and self.image_zone.itemAt(i).widget().setname == self.my_set.name:
+                        trouve = True
+                    else:
+                        i=i+1
+                if trouve == True:
+                    self.image_zone.itemAt(i).widget().setParent(None)
+                trouve= False
+                i=0
+                while trouve == False and i < self.selected_zone.count():
+                    if self.selected_zone.itemAt(i).widget().coll == d and self.selected_zone.itemAt(i).widget().setname == self.my_set.name:
+                        trouve = True
+                    else:
+                        i=i+1
+                if trouve == True:
+                    self.selected_zone.itemAt(i).widget().setParent(None)
                     collshow.remove(d)
-        for i in reversed(range(self.image_zone.count())):
-            self.image_zone.itemAt(i).widget().setParent(None)
-        for coll in selected:
-            self.image_zone.addWidget(CollButton(coll,self.my_set.get_name(),self.selected_zone))
 
-        for i in reversed(range(self.selected_zone.count())):
-            self.selected_zone.itemAt(i).widget().setParent(None)
-        for coll in collshow:
-            self.selected_zone.addWidget(SelectedButton(coll,str(len(self.coll.get_img_list())),str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
+        # for i in reversed(range(self.image_zone.count())):
+        #     print("boucle widget",self.image_zone.itemAt(i).widget().coll)
+        #     self.image_zone.itemAt(i).widget().setParent(None)
+        # for i in reversed(range(self.selected_zone.count())):
+        #     self.selected_zone.itemAt(i).widget().setParent(None)
+
+        # if self.check.isChecked():
+        #     for coll in selected:
+        #         trouve = False
+        #         for i in reversed(range(self.image_zone.count())):
+        #             if self.image_zone.itemAt(i).widget().coll == coll:
+        #                 trouve = True
+        #                 break;
+        #         if trouve == False:
+        #             self.image_zone.addWidget(CollButton(coll,coll.getSetName().get_name(),self.selected_zone))
+
+        #BUG A CORRIGER QUAND ON CLIQUE SUR ALL ET QU IL Y A PLUS D UN ITEM
+        # for coll in collshow:
+        #     self.selected_zone.addWidget(SelectedButton(coll,str(len(coll.get_img_list())),my_set.get_name(),str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
 
     def changeName(self):
         # -- This changeName will change the name of the set selected.
@@ -265,7 +297,7 @@ class SetButton(QtGui.QWidget):
                         self.my_set.getParent().add_subset(self.my_set)
                     else:
                         self.my_set.set_name(str(text))
-                    print(self.my_set.get_name())
+                    #print(self.my_set.get_name())
                     self.check.setText(str(text))
                     add_set(self.my_set)
                 else:
@@ -287,11 +319,11 @@ class SetButton(QtGui.QWidget):
                     if i in str(text):
                         new_ok = False
                 if new_ok and not exists_set(str(text)):
-                    print("test")
+                    #print("test")
                     ss = self.my_set.add_empty_subset(str(text))
-                    print(ss.name)
+                    #print(ss.name)
                     position = ss.getPosition()
-                    print(position)
+                    #print(position)
                     p = self.treeWidget.topLevelItem(position[0])
                     position.pop(0)
                     for i in range(len(position)-1):
@@ -328,10 +360,17 @@ class SetButton(QtGui.QWidget):
             for d in self.my_set.get_all_nifti_set_and_subset():
                 if d in selected:
                     selected.remove(d)
+                if d in collshow:
+                    collshow.remove(d)
+            #lorsqu'on supprimer un set il faut changer l'affichage graphique
             for i in reversed(range(self.image_zone.count())):
-                self.image_zone.itemAt(i).widget().setParent(None)
-            for coll in selected:
-                    self.image_zone.addWidget(CollButton(coll,self.selected_zone))
+                if self.image_zone.itemAt(i).widget().setname == self.my_set.name:
+                    self.image_zone.itemAt(i).widget().setParent(None)
+            for i in reversed(range(self.selected_zone.count())):
+                if self.selected_zone.itemAt(i).widget().setname == self.my_set.name:
+                    self.selected_zone.itemAt(i).widget().setParent(None)
+            # for coll in selected:
+            #         self.image_zone.addWidget((CollButton(coll,coll.getSetName().get_name(),self.selected_zone)))
 
             if self.my_set.getParent()!=None:
                 self.my_set.getParent().remove_subset(self.my_set.name)
@@ -401,15 +440,15 @@ class MainView2(QtGui.QWidget):
         item = QWidget()
         itemLayout = QtGui.QHBoxLayout(item)
         itemLayout.setContentsMargins(3, 9, 9, 3)
-        self.check = QtGui.QCheckBox()
-        self.check.setText("Imported")
+        self.checkimported = QtGui.QCheckBox()
+        self.checkimported.setText("Imported")
         font = QtGui.QFont()
         font.setBold(True)
         font.setWeight(75)
-        self.check.setFont(font)
-        self.check.setStyleSheet("color: rgb(82, 99, 141);" "font-size: 9pt;")
-        self.check.stateChanged.connect(self.checkall)
-        itemLayout.addWidget(self.check)
+        self.checkimported.setFont(font)
+        self.checkimported.setStyleSheet("color: rgb(82, 99, 141);" "font-size: 9pt;")
+        self.checkimported.stateChanged.connect(self.checkimportedall)
+        itemLayout.addWidget(self.checkimported)
         addButton = QtGui.QPushButton()
         addButton.setText("+")
         addButton.clicked.connect(self.createSet)
@@ -418,28 +457,35 @@ class MainView2(QtGui.QWidget):
         itemLayout.addWidget(addButton)
         self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0), 0, item)
 
-
         item_0 = QtGui.QTreeWidgetItem(self.treeWidget)
+        item = QWidget()
+        itemLayout = QtGui.QHBoxLayout(item)
+        itemLayout.setContentsMargins(3, 9, 9, 3)
+        self.checkcalculation = QtGui.QCheckBox()
+        self.checkcalculation.setText("Calculation")
         font = QtGui.QFont()
         font.setBold(True)
         font.setWeight(75)
-        item_0.setFont(0, font)
-        brush = QtGui.QBrush(QtGui.QColor(194, 78, 80))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        item_0.setForeground(0, brush)
-        item_0.setCheckState(0, QtCore.Qt.Unchecked)
-        item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
+        self.checkcalculation.setFont(font)
+        self.checkcalculation.setStyleSheet("color: rgb(194, 78, 80);" "font-size: 9pt;")
+        self.checkcalculation.stateChanged.connect(self.checkcalculationall)
+        itemLayout.addWidget(self.checkcalculation)
+        self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(1), 0, item)
 
         item_0 = QtGui.QTreeWidgetItem(self.treeWidget)
+        item = QWidget()
+        itemLayout = QtGui.QHBoxLayout(item)
+        itemLayout.setContentsMargins(3, 9, 9, 3)
+        self.checkclustering = QtGui.QCheckBox()
+        self.checkclustering.setText("Clustering")
         font = QtGui.QFont()
         font.setBold(True)
         font.setWeight(75)
-        item_0.setFont(0, font)
-        brush = QtGui.QBrush(QtGui.QColor(255, 205, 55))
-        #brush.setStyle(QtCore.Qt.SolidPattern)
-        item_0.setForeground(0, brush)
-        item_0.setCheckState(0, QtCore.Qt.Unchecked)
-        item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
+        self.checkclustering.setFont(font)
+        self.checkclustering.setStyleSheet("color: rgb(255, 205, 55);" "font-size: 9pt;")
+        self.checkclustering.stateChanged.connect(self.checkclusteringall)
+        itemLayout.addWidget(self.checkclustering)
+        self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(2), 0, item)
 
 
         self.treeWidget.header().setVisible(False)
@@ -477,26 +523,23 @@ class MainView2(QtGui.QWidget):
         self.checkBox.stateChanged.connect(self.checkselected)
         self.verticalLayout_image_collections.addWidget(self.checkBox)
 
-        self.widget_image_collections_show = QtGui.QWidget(self.widget_image_collections)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.widget_image_collections_show.sizePolicy().hasHeightForWidth())
-        self.widget_image_collections_show.setSizePolicy(sizePolicy)
+        self.scrollArea = QtGui.QScrollArea(self.widget_image_collections)
+        self.scrollArea.setWidgetResizable(True)
+        self.widget_image_collections_show = QtGui.QWidget()
         self.widget_image_collections_show.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
-        self.widget_image_collections_show.setObjectName(_fromUtf8("widget_image_collections_show"))
         self.verticalLayout_image_collections_show = QtGui.QFormLayout(self.widget_image_collections_show)
         self.verticalLayout_image_collections_show.setMargin(0)
-        self.verticalLayout_image_collections_show.setObjectName(_fromUtf8("verticalLayout_image_collections_show"))
-        self.verticalLayout_image_collections.addWidget(self.widget_image_collections_show)
+        self.verticalLayout_image_collections_show.setContentsMargins(0, 0, 7, 0)
+        self.scrollArea.setWidget(self.widget_image_collections_show)
+        self.verticalLayout_image_collections.addWidget(self.scrollArea)
 
         self.label_image_collections.raise_()
         self.widget_image_collections_show.raise_()
         self.checkBox.raise_()
         self.horizontalLayout.addWidget(self.widget_image_collections)
+
         self.verticalLayout_selected = QtGui.QVBoxLayout()
         self.verticalLayout_selected.setSpacing(6)
-        self.verticalLayout_selected.setObjectName(_fromUtf8("verticalLayout_selected"))
         self.widget_selected = QtGui.QWidget(Form)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
@@ -505,7 +548,6 @@ class MainView2(QtGui.QWidget):
         self.widget_selected.setSizePolicy(sizePolicy)
         self.widget_selected.setMinimumSize(QtCore.QSize(50, 150))
         self.widget_selected.setStyleSheet(_fromUtf8("background-color: rgb(223, 223, 223);"))
-        self.widget_selected.setObjectName(_fromUtf8("widget_selected"))
         self.verticalLayout_selected_view = QtGui.QVBoxLayout(self.widget_selected)
         self.verticalLayout_selected_view.setContentsMargins(0, 6, 0, 0)
         self.verticalLayout_selected_view.setSpacing(0)
@@ -520,22 +562,19 @@ class MainView2(QtGui.QWidget):
         self.label_selected.setAlignment(QtCore.Qt.AlignCenter)
         self.label_selected.setObjectName(_fromUtf8("label_selected"))
         self.verticalLayout_selected_view.addWidget(self.label_selected)
-        self.widget_selected_view = QtGui.QWidget(self.widget_selected)
 
+
+        self.scrollArea_2 = QtGui.QScrollArea(self.widget_selected)
+        self.scrollArea_2.setWidgetResizable(True)
+        self.widget_selected_view = QtGui.QWidget()
+        self.widget_selected_view.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
         self.verticalLayout_widget_selected_view = QtGui.QFormLayout(self.widget_selected_view)
         self.verticalLayout_widget_selected_view.setMargin(0)
-        self.verticalLayout_widget_selected_view.setObjectName(_fromUtf8("verticalLayout_widget_selected_view"))
-        self.verticalLayout_selected_view.addWidget(self.widget_selected_view)
-
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.widget_selected_view.sizePolicy().hasHeightForWidth())
-        self.widget_selected_view.setSizePolicy(sizePolicy)
-        self.widget_selected_view.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
-        self.widget_selected_view.setObjectName(_fromUtf8("widget_selected_view"))
-        self.verticalLayout_selected_view.addWidget(self.widget_selected_view)
+        self.scrollArea_2.setWidget(self.widget_selected_view)
+        self.verticalLayout_selected_view.addWidget(self.scrollArea_2)
         self.verticalLayout_selected.addWidget(self.widget_selected)
+
+
         self.horizontalLayout_buttons = QtGui.QHBoxLayout()
         self.horizontalLayout_buttons.setSpacing(6)
         self.horizontalLayout_buttons.setObjectName(_fromUtf8("horizontalLayout_buttons"))
@@ -562,7 +601,7 @@ class MainView2(QtGui.QWidget):
 
         my_set = newSet(default_name[2:],0)
         #set_current_set(my_set)
-        print(get_current_set().get_name())
+        #print(get_current_set().get_name())
 
         item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(0))
         item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
@@ -577,21 +616,35 @@ class MainView2(QtGui.QWidget):
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
-    
+
     def checkselected(self):
         #print(self.verticalLayout_image_collections_show.rowCount())
-        for i in range(0,self.verticalLayout_image_collections_show.rowCount()):
+        for i in range(0,self.verticalLayout_image_collections_show.rowCount()-1):
             self.verticalLayout_image_collections_show.itemAt(i).widget().setChecked(self.checkBox.isChecked())
 
-    def checkall(self):
+    def checkimportedall(self):
         imported = self.treeWidget.topLevelItem(0)
-        #definir calc et clust pour faire pareil.
         it=QTreeWidgetItemIterator(self.treeWidget.topLevelItem(0))
-
-        while it.value(): 
+        while it.value():
             if it.value().parent() is not None and it.value().parent() == imported:
-                self.treeWidget.itemWidget(it.value(),0).check.setChecked(self.check.isChecked())
-            it+=1 
+                self.treeWidget.itemWidget(it.value(),0).check.setChecked(self.checkimported.isChecked())
+            it+=1
+
+    def checkclusteringall(self):
+        clustering = self.treeWidget.topLevelItem(2)
+        it=QTreeWidgetItemIterator(self.treeWidget.topLevelItem(2))
+        while it.value():
+            if it.value().parent() is not None and it.value().parent() == clustering:
+                self.treeWidget.itemWidget(it.value(),0).check.setChecked(self.checkclustering.isChecked())
+            it+=1
+
+    def checkcalculationall(self):
+        calculation = self.treeWidget.topLevelItem(1)
+        it=QTreeWidgetItemIterator(self.treeWidget.topLevelItem(1))
+        while it.value():
+            if it.value().parent() is not None and it.value().parent() == calculation:
+                self.treeWidget.itemWidget(it.value(),0).check.setChecked(self.checkcalculation.isChecked())
+            it+=1
 
     def createSet(self):
         text, ok = QInputDialog.getText(self, 'Create a set',
@@ -605,21 +658,20 @@ class MainView2(QtGui.QWidget):
                     new_ok = False
             if new_ok and not exists_set(str(text)):
                 my_set = newSet(text,len(globalSets[0]))
-                print(my_set.name)
+                #print(my_set.name)
 
                 item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(0))
                 item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
                 self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(len(globalSets[0])), 0, SetButton(my_set,self.verticalLayout_image_collections_show,self.verticalLayout_widget_selected_view,self.treeWidget))
 
                 globalSets[0].append(my_set)
-                print(len(globalSets[0]))
+                #print(len(globalSets[0]))
             else :
                 err = QtGui.QMessageBox.critical(self, "Error",
                                                      "The name you entered is not valid (empty, invalid caracter or already exists)")
 
     def updateTreeView(self):
         for s in setToAdd :
-            print(s[0].name,s[1])
             item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(s[1]))
             item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
             self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(s[1]).child(len(globalSets[s[1]])), 0, SetButton(s[0],self.verticalLayout_image_collections_show,self.verticalLayout_widget_selected_view,self.treeWidget))
@@ -635,8 +687,6 @@ class MainView2(QtGui.QWidget):
             self.verticalLayout_widget_selected_view.itemAt(i).widget().setParent(None)
         del selected[:]
         del collshow[:]
-        print("update selected",selected)
-        print("update collshow",collshow)
 
 
     def show_coll(self, coll):
@@ -778,8 +828,8 @@ class MainView2(QtGui.QWidget):
         global selected
         global collshow
         # -- This edit_pannel will show the edit view if selected is not empty
-        print("mv selected",selected)
-        print("mv collshow",collshow)
+        #print("mv selected",selected)
+        #print("mv collshow",collshow)
         if (get_selected()):
             self.showEdit.emit()
         else:
@@ -832,9 +882,9 @@ class MainView2(QtGui.QWidget):
         self.treeWidget.headerItem().setText(0, _translate("Form", "List of set and subset", None))
         __sortingEnabled = self.treeWidget.isSortingEnabled()
         self.treeWidget.setSortingEnabled(False)
-        self.treeWidget.topLevelItem(0).setText(0, _translate("Form", "Imported", None))
-        self.treeWidget.topLevelItem(1).setText(0, _translate("Form", "Calculation", None))
-        self.treeWidget.topLevelItem(2).setText(0, _translate("Form", "Clustering", None))
+        #self.treeWidget.topLevelItem(0).setText(0, _translate("Form", "Imported", None))
+        #self.treeWidget.topLevelItem(1).setText(0, _translate("Form", "Calculation", None))
+        #self.treeWidget.topLevelItem(2).setText(0, _translate("Form", "Clustering", None))
         self.treeWidget.setSortingEnabled(__sortingEnabled)
         self.label_image_collections.setText(_translate("Form", "Image collections", None))
         self.checkBox.setText(_translate("Form", "Select all", None))
