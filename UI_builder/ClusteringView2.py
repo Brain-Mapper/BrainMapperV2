@@ -171,11 +171,11 @@ class ClusteringView2(QtGui.QWidget):
 
 
     def clicked_table(self):
-        if self.tableResults.selectedIndexes()[0].column()==0:
-            index = self.tableResults.selectedIndexes()[0]
-            i = int(self.tableResults.model().data(index))
-            self.fill_clust_labels(self.history_iterations[i].get("labels"),self.tableWidget)
-            self.label = self.history_iterations[i].get("labels")
+        ligne = self.tableResults.selectedIndexes()[0].row()
+        i = int(self.tableResults.item(ligne,0).text())
+        self.fill_clust_labels(self.history_iterations[i].get("labels"),self.tableWidget)
+        self.label = self.history_iterations[i].get("labels")
+        self.centroids = self.history_iterations[i].get("centers")
 
 
     def createResultView(self,param_dict,selectedMethod):
@@ -283,11 +283,13 @@ class ClusteringView2(QtGui.QWidget):
                     self.the_best_iteration["calinski_harabaz_score"] = clustering_results["calinski_harabaz_score"]
                     self.the_best_iteration["davies_bouldin_score"] = clustering_results["davies_bouldin_score"]
                     self.the_best_iteration["n_clusters"] = clustering_results["n"]
+                    self.the_best_iteration["centers"] = clustering_results["centers"] if "centers" in clustering_results.keys() else None
 
                 self.history_iterations[last_i]["method_used"] = selectedMethod
                 self.history_iterations[last_i]["labels"] = clustering_results["labels"]
                 self.history_iterations[last_i]["data"] = clustering_results["clusterizable_dataset"]
                 self.history_iterations[last_i]["clusters"] = n
+                self.history_iterations[last_i]["centers"] = clustering_results["centers"] if "centers" in clustering_results.keys() else None
 
                 self.history_iterations[last_i]["silhouette_score"] = clustering_results["silhouette_score"]
                 self.history_iterations[last_i]["calinski_harabaz_score"] = clustering_results["calinski_harabaz_score"]

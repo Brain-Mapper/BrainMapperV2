@@ -16,6 +16,9 @@ from os import path
 sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
 from BrainMapper import *
 import clustering_components.clustering_plot as clustering_plot
+from ourLib.dataExtraction.extractor import *
+from ourLib.dataExtraction.usable_data import *
+from ourLib.calculations import *
 
 import pyqtgraph as pg
 import pyqtgraph.opengl as gl
@@ -41,6 +44,14 @@ class Buttonpath(QtGui.QWidget):
         super(Buttonpath, self).__init__(parent=parent)
         #self.setStyleSheet(self.stysetStyleler)
         self.parent=parent
+        # self.image = coll.get_img_list().get(filna)
+        self.image = None
+        for i in coll.get_img_list().values():
+            f = i.filename.split("/")
+            file = f[len(f)-1]
+            if file==filna:
+                print(i)
+                self.image = i
 
         hbox = QtGui.QHBoxLayout()
 
@@ -48,15 +59,61 @@ class Buttonpath(QtGui.QWidget):
         self.buttonp.clicked.connect(lambda: self.actionpath(filna,parent))
         hbox.addWidget(self.buttonp)
 
+        ShowButtoncoll = QtGui.QPushButton()
+        ShowButtoncoll.setIcon(QtGui.QIcon(':ressources/app_icons_png/eye.png'))
+        ShowButtoncoll.clicked.connect(lambda: self.showColl(coll, parent))
+        ShowButtoncoll.setStatusTip("Show graphic of the entire set")
+        ShowButtoncoll.setFixedSize(QSize(20, 20))
+        hbox.addWidget(ShowButtoncoll)
+
         SupprButton = QtGui.QPushButton()
         SupprButton.setText("-")
         SupprButton.clicked.connect(lambda: self.deleteImg(coll,filna,parent))
         SupprButton.setStatusTip("Delete this set or subset")
         SupprButton.setFixedSize(QSize(20, 20))
-
         hbox.addWidget(SupprButton)
 
         self.setLayout(hbox)
+
+    def showColl(self,coll,parent):
+        choice = QtGui.QMessageBox()
+        choice.setWindowTitle('Data representation')
+        centroid_opt = QRadioButton("Use centroids as file representation")
+        all_points_opt = QRadioButton("Use all region points for each file")
+        all_points_opt.setChecked(True)
+        l = choice.layout()
+        l.setContentsMargins(20, 0, 0, 20)
+        l.addWidget(QLabel("You have selected (" + str(len(
+            get_selected())) + ") image collections. \nThere is a total of ("
+                           + str(
+            get_selected_images_number()) + ") NIfTI images to be treated. \n\nPlease select the way "
+                                            "you would like each file to be represented : "),
+                    l.rowCount() - 3, 0, 1, l.columnCount() - 2, Qt.AlignCenter)
+        rb_box = QtGui.QGroupBox()
+        vbox = QtGui.QVBoxLayout()
+        vbox.addWidget(all_points_opt)
+        vbox.addWidget(centroid_opt)
+        rb_box.setLayout(vbox)
+        l.addWidget(rb_box, l.rowCount() - 2, 0, Qt.AlignCenter)
+        choice.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        ret = choice.exec_()
+        if ret == QtGui.QMessageBox.Yes:
+            points = []
+            if all_points_opt.isChecked():
+                # dict = self.coll.get_img_list()
+                # for i in dict:
+                data = extract(self.image)
+                for j in range(len(data)):
+                    points.append((data[j][0],data[j][1],data[j][2]))
+                clustering_plot.plot_3d(points)
+            elif centroid_opt.isChecked():
+                data = image_centroid(self.image)
+                for j in range(len(data)):
+                    points.append((data[j][0],data[j][1],data[j][2]))
+                clustering_plot.plot_3d(points)
+
+            else:
+                print("There was a problem in data extraction options")
 
     def deleteImg(self,coll,name,parent):
     # -- This del_col will delete the current collection
@@ -111,6 +168,7 @@ class CollectionAccessButton(QtGui.QWidget):
         super(CollectionAccessButton, self).__init__(parent=parent)
         #self.setStyleSheet(self.stysetStyleler)
         self.parent=parent
+        self.coll = coll
 
         hbox = QtGui.QHBoxLayout()
 
@@ -125,6 +183,13 @@ class CollectionAccessButton(QtGui.QWidget):
         NameButtoncoll.setStatusTip("Change collection name")
         NameButtoncoll.setFixedSize(QSize(20, 20))
         hbox.addWidget(NameButtoncoll)
+
+        ShowButtoncoll = QtGui.QPushButton()
+        ShowButtoncoll.setIcon(QtGui.QIcon(':ressources/app_icons_png/eye.png'))
+        ShowButtoncoll.clicked.connect(lambda: self.showColl(coll, parent))
+        ShowButtoncoll.setStatusTip("Show graphic of the entire set")
+        ShowButtoncoll.setFixedSize(QSize(20, 20))
+        hbox.addWidget(ShowButtoncoll)
 
         IButton = QtGui.QPushButton()
         IButton.setText("+")
@@ -141,6 +206,49 @@ class CollectionAccessButton(QtGui.QWidget):
         hbox.addWidget(SupprButtoncoll)
 
         self.setLayout(hbox)
+
+    def showColl(self,coll,parent):
+        choice = QtGui.QMessageBox()
+        choice.setWindowTitle('Data representation')
+        centroid_opt = QRadioButton("Use centroids as file representation")
+        all_points_opt = QRadioButton("Use all region points for each file")
+        all_points_opt.setChecked(True)
+        l = choice.layout()
+        l.setContentsMargins(20, 0, 0, 20)
+        l.addWidget(QLabel("You have selected (" + str(len(
+            get_selected())) + ") image collections. \nThere is a total of ("
+                           + str(
+            get_selected_images_number()) + ") NIfTI images to be treated. \n\nPlease select the way "
+                                            "you would like each file to be represented : "),
+                    l.rowCount() - 3, 0, 1, l.columnCount() - 2, Qt.AlignCenter)
+        rb_box = QtGui.QGroupBox()
+        vbox = QtGui.QVBoxLayout()
+        vbox.addWidget(all_points_opt)
+        vbox.addWidget(centroid_opt)
+        rb_box.setLayout(vbox)
+        l.addWidget(rb_box, l.rowCount() - 2, 0, Qt.AlignCenter)
+        choice.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        ret = choice.exec_()
+        if ret == QtGui.QMessageBox.Yes:
+            points = []
+            if all_points_opt.isChecked():
+                dict = self.coll.get_img_list()
+                for i in dict:
+                    data = extract(dict[i])
+                    for j in range(len(data)):
+                        points.append((data[j][0],data[j][1],data[j][2]))
+                clustering_plot.plot_3d(points)
+            elif centroid_opt.isChecked():
+                dict = extract_from_collection_as_centroid(self.coll).get_extracted_data_dict()
+                for i in dict:
+                    data = dict[i]
+                    for j in range(len(data)):
+                        points.append((data[j][0],data[j][1],data[j][2]))
+                clustering_plot.plot_3d(points)
+
+            else:
+                print("There was a problem in data extraction options")
+
 
     def del_col(self,coll,parent):
     # -- This del_col will delete the current collection
@@ -164,7 +272,7 @@ class CollectionAccessButton(QtGui.QWidget):
             collshow.remove(coll)
             print("collshow final",collshow)
             self.parent.fill_coll()
-                        
+
 
 
 
@@ -351,21 +459,6 @@ class EditView2(QtGui.QWidget):
         self.gridLayout.addWidget(self.scrollArea, 3, 0, 1, 3)
         self.scrollArea.raise_()
 
-
-        # self.scrollArea = QtGui.QScrollArea(self.widget_3)
-        # self.scrollArea.setWidgetResizable(True)
-        # self.scrollArea.setObjectName(_fromUtf8("scrollArea"))
-        # self.scrollAreaWidgetContents = QtGui.QWidget()
-        # self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 702, 394))
-        # self.scrollAreaWidgetContents.setObjectName(_fromUtf8("scrollAreaWidgetContents"))
-        # self.scrollArea.setWidget(self.scrollAreaWidgetContents)
-        # self.gridLayout.addWidget(self.scrollArea, 3, 0, 1, 3)
-        # self.verticalLayout_4 = QtGui.QVBoxLayout(self.scrollArea)
-        # self.verticalLayout_4.setContentsMargins(0, 0, 0, 9)
-        # self.verticalLayout_4.setObjectName(_fromUtf8("verticalLayout_4"))
-        # self.scrollArea.raise_()
-
-
         self.label_6.raise_()
         self.label_5.raise_()
         self.label_3.raise_()
@@ -374,31 +467,10 @@ class EditView2(QtGui.QWidget):
         self.label_4.raise_()
         self.gridLayout_2.addWidget(self.widget_3, 1, 0, 1, 1)
         self.verticalLayout.addWidget(self.widget_2)
-        self.horizontalLayout_3 = QtGui.QHBoxLayout()
-        self.horizontalLayout_3.setObjectName(_fromUtf8("horizontalLayout_3"))
-        self.label_10 = QtGui.QLabel(Form)
-        self.label_10.setMinimumSize(QtCore.QSize(200, 0))
-        self.label_10.setStyleSheet(_fromUtf8("background-color: rgb(223, 223, 223);"))
-        self.label_10.setText(_fromUtf8(""))
-        self.label_10.setObjectName(_fromUtf8("label_10"))
-        self.horizontalLayout_3.addWidget(self.label_10)
-        self.pushButton_4 = QtGui.QPushButton(Form)
-        self.pushButton_4.setObjectName(_fromUtf8("pushButton_4"))
-        self.pushButton_4.setEnabled(False)
-        self.pushButton_4.clicked.connect(self.plot)
-        self.horizontalLayout_3.addWidget(self.pushButton_4)
-        # self.pushButton_3 = QtGui.QPushButton(Form)
-        # self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
-        # self.pushButton_3.setEnabled(False)
-        # self.horizontalLayout_3.addWidget(self.pushButton_3)
-        self.verticalLayout.addLayout(self.horizontalLayout_3)
-        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.verticalLayout.addItem(spacerItem)
+
+
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        # self.pushButton_12 = QtGui.QPushButton(Form)
-        # self.pushButton_12.setObjectName(_fromUtf8("pushButton_12"))
-        # self.horizontalLayout.addWidget(self.pushButton_12)
         self.pushButton_8 = QtGui.QPushButton(Form)
         self.pushButton_8.setObjectName(_fromUtf8("pushButton_8"))
         self.pushButton_8.clicked.connect(self.go_back)
@@ -406,18 +478,14 @@ class EditView2(QtGui.QWidget):
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.horizontalLayout_2.addLayout(self.verticalLayout)
         self.gridLayout_3.addLayout(self.horizontalLayout_2, 0, 0, 1, 1)
+
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def go_back(self):
         # -- When the user wants to return to the main view, we reinit the cluster view
-        #self.resultsGraphs.graph1.clear()
-        #self.resultsGraphs.graph2.clear()
         global list_img
         del list_img[:]
-        self.label_10.setText("")
-        #self.pushButton_3.setEnabled(False)
-        self.pushButton_4.setEnabled(False)
         for i in reversed(range(self.verticalLayout_3.count())):
             self.verticalLayout_3.itemAt(i).widget().setParent(None)
         for i in reversed(range(self.verticalLayout_4.count())):
@@ -428,7 +496,58 @@ class EditView2(QtGui.QWidget):
         self.showMain.emit()
 
     def plot(self):
-        clustering_plot.plot_3d()
+        choice = QtGui.QMessageBox()
+        choice.setWindowTitle('Data representation')
+        centroid_opt = QRadioButton("Use centroids as file representation")
+        all_points_opt = QRadioButton("Use all region points for each file")
+        all_points_opt.setChecked(True)
+        l = choice.layout()
+        l.setContentsMargins(20, 0, 0, 20)
+        l.addWidget(QLabel("You have selected (" + str(len(
+            get_selected())) + ") image collections. \nThere is a total of ("
+                           + str(
+            get_selected_images_number()) + ") NIfTI images to be treated. \n\nPlease select the way "
+                                            "you would like each file to be represented : "),
+                    l.rowCount() - 3, 0, 1, l.columnCount() - 2, Qt.AlignCenter)
+        rb_box = QtGui.QGroupBox()
+        vbox = QtGui.QVBoxLayout()
+        vbox.addWidget(all_points_opt)
+        vbox.addWidget(centroid_opt)
+        rb_box.setLayout(vbox)
+        l.addWidget(rb_box, l.rowCount() - 2, 0, Qt.AlignCenter)
+        choice.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        ret = choice.exec_()
+        if ret == QtGui.QMessageBox.Yes:
+            points = []
+            if all_points_opt.isChecked():
+                dict = self.coll.get_img_list()
+                for i in dict:
+                    data = extract(dict[i])
+                    for j in range(len(data)):
+                        points.append((data[j][0],data[j][1],data[j][2]))
+                clustering_plot.plot_3d(points)
+            elif centroid_opt.isChecked():
+                dict = extract_from_collection_as_centroid(self.coll).get_extracted_data_dict()
+                for i in dict:
+                    data = dict[i]
+                    for j in range(len(data)):
+                        points.append((data[j][0],data[j][1],data[j][2]))
+                clustering_plot.plot_3d(points)
+
+            else:
+                print("There was a problem in data extraction options")
+
+
+
+        dict = get_current_coll().get_img_list()
+        for i in dict:
+            data = extract(dict[i])
+        points = [[],[],[]]
+        for j in range(len(data)):
+            points[0].append(data[j][0])
+            points[1].append(data[j][1])
+            points[2].append(data[j][2])
+        clustering_plot.plot_3d(points)
 
 
 
@@ -460,7 +579,7 @@ class EditView2(QtGui.QWidget):
         self.label.setText(_translate("Form", "Collection name :", None))
         self.label_2.setText(_translate("Form", "Set name :", None))
         self.label_3.setText(_translate("Form", "List of images : ", None))
-        self.pushButton_4.setText(_translate("Form", "Show Graphic", None))
+        #self.pushButton_4.setText(_translate("Form", "Show Graphic", None))
         #self.pushButton_3.setText(_translate("Form", "Remove", None))
         #self.pushButton_12.setText(_translate("Form", "Save changes", None))
         self.pushButton_8.setText(_translate("Form", "Go back", None))

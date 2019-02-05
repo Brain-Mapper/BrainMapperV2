@@ -133,6 +133,8 @@ def kmedoids_cluster(init_mode, data_matrix, distances, k=3):
         curr_medoids[c] = np.array(data_matrix[index])
         c = c + 1
 
+    print("First curr_medoids_index",curr_medoids_index)
+
     old_medoids_index = np.array([-1] * k)
     new_medoids_index = np.array([-1] * k)
 
@@ -146,6 +148,11 @@ def kmedoids_cluster(init_mode, data_matrix, distances, k=3):
             cluster = np.where(clusters == curr_medoid)[0]
             new_medoids_index[curr_medoids_index == curr_medoid] = compute_new_medoid(cluster, distances)
 
+        c = 0
+        for index in curr_medoids_index:
+            curr_medoids[c] = np.array(data_matrix[index])
+            c = c + 1
+
         old_medoids_index[:] = curr_medoids_index[:]
         curr_medoids_index[:] = new_medoids_index[:]
 
@@ -156,6 +163,7 @@ def kmedoids_cluster(init_mode, data_matrix, distances, k=3):
         clusters_labels.append(int(clust_i))
         c = c + 1
 
+    print("curr_medoids ->", curr_medoids)
     return clusters_labels, curr_medoids
 
 
