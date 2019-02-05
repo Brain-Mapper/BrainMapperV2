@@ -171,11 +171,11 @@ class ClusteringView2(QtGui.QWidget):
 
 
     def clicked_table(self):
-        if self.tableResults.selectedIndexes()[0].column()==0:
-            index = self.tableResults.selectedIndexes()[0]
-            i = int(self.tableResults.model().data(index))
-            self.fill_clust_labels(self.history_iterations[i].get("labels"),self.tableWidget)
-            self.label = self.history_iterations[i].get("labels")
+        ligne = self.tableResults.selectedIndexes()[0].row()
+        i = int(self.tableResults.item(ligne,0).text())
+        self.fill_clust_labels(self.history_iterations[i].get("labels"),self.tableWidget)
+        self.label = self.history_iterations[i].get("labels")
+        self.centroids = self.history_iterations[i].get("centers")
 
 
     def createResultView(self,param_dict,selectedMethod):
@@ -283,11 +283,13 @@ class ClusteringView2(QtGui.QWidget):
                     self.the_best_iteration["calinski_harabaz_score"] = clustering_results["calinski_harabaz_score"]
                     self.the_best_iteration["davies_bouldin_score"] = clustering_results["davies_bouldin_score"]
                     self.the_best_iteration["n_clusters"] = clustering_results["n"]
+                    self.the_best_iteration["centers"] = clustering_results["centers"] if "centers" in clustering_results.keys() else None
 
                 self.history_iterations[last_i]["method_used"] = selectedMethod
                 self.history_iterations[last_i]["labels"] = clustering_results["labels"]
                 self.history_iterations[last_i]["data"] = clustering_results["clusterizable_dataset"]
                 self.history_iterations[last_i]["clusters"] = n
+                self.history_iterations[last_i]["centers"] = clustering_results["centers"] if "centers" in clustering_results.keys() else None
 
                 self.history_iterations[last_i]["silhouette_score"] = clustering_results["silhouette_score"]
                 self.history_iterations[last_i]["calinski_harabaz_score"] = clustering_results["calinski_harabaz_score"]
@@ -362,7 +364,7 @@ class ClusteringView2(QtGui.QWidget):
 
     def plot(self):
         type = self.comboBox_3.currentText()
-        print("plot -> type",type)
+        # print("plot -> type",type)
         if type=="Sihouette":
             clustering_plot.plot_silhouette(self.label,None)
         elif type=="3D view":
@@ -383,7 +385,8 @@ class ClusteringView2(QtGui.QWidget):
                 QtGui.QMessageBox.warning(self, "Choice of the coordinates", "You must use the format x,y,z to enter the coordinates")
             else :
                 clustering_plot.plot_cross_section(self.label,c)
-
+        elif type=="Glass brain":
+            clustering_plot.plot_glass_brain(self.label)
 
 
     def setupUi(self, Form):
@@ -538,6 +541,7 @@ class ClusteringView2(QtGui.QWidget):
         self.comboBox_3.addItem(_fromUtf8(""))
         self.comboBox_3.addItem(_fromUtf8(""))
         self.comboBox_3.addItem(_fromUtf8(""))
+        self.comboBox_3.addItem(_fromUtf8(""))
         self.horizontalLayout_buttons.addWidget(self.comboBox_3)
         self.pushButton_show = QtGui.QPushButton(self.widget_buttons)
         self.pushButton_show.setObjectName(_fromUtf8("pushButton_show"))
@@ -622,6 +626,7 @@ class ClusteringView2(QtGui.QWidget):
         self.comboBox_3.setItemText(1, _translate("Form", "3D view", None))
         self.comboBox_3.setItemText(2, _translate("Form", "Cross sections", None))
         self.comboBox_3.setItemText(3, _translate("Form", "Dendrogram", None))
+        self.comboBox_3.setItemText(4, _translate("Form", "Glass brain", None))
         self.pushButton_show.setText(_translate("Form", "Show", None))
         self.pushButton_save.setText(_translate("Form", "Save as set", None))
         self.pushButton_back.setText(_translate("Form", "Go back", None))
