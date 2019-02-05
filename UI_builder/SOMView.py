@@ -34,6 +34,10 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
+GRID_HEIGHT = 0
+GRID_WIDTH = 0
+data_neuron_index = []
+last_column = []
 
 class SOMView(QtGui.QWidget):
 
@@ -98,9 +102,13 @@ class SOMView(QtGui.QWidget):
         self.showMain.emit()
 
     def train(self):
+        global GRID_WIDTH
+        global GRID_HEIGHT
+        global data_neuron_index
+        global last_column
 
         utils.reproducible()
-        
+
         GRID_HEIGHT = int(self.lineEdit_hauteur.text())
         GRID_WIDTH = int(self.lineEdit_largeur.text())
 
@@ -159,13 +167,8 @@ class SOMView(QtGui.QWidget):
         # Shows training progress in terminal
         verbose=True,
         )
-        print("rad",int(self.lineEdit_radius.text()))
-        print("std",int(self.lineEdit_std.text()))
-        print("step",float(self.lineEdit_step.text()))
-        print("nbiter",int(self.lineEdit_nbiter.text()))
 
         sofm.train(data, int(self.lineEdit_nbiter.text()))
-        sofm.predict(data)
 
         weight = sofm.weight
         param_length = sofm.weight.shape[0]
@@ -178,7 +181,7 @@ class SOMView(QtGui.QWidget):
                 temp.append(weight[i,j])
             neurons.append(temp)
 
-        data_neuron_index = []
+        
 
         for k in data :
             the_closest_neuron = 0
@@ -190,6 +193,11 @@ class SOMView(QtGui.QWidget):
                     distance_min = new_distance
                     indice = l
             data_neuron_index.append(indice)
+
+    def showmap(self):
+        global GRID_WIDTH
+        global GRID_HEIGHT
+        global data_neuron_index
 
         fenetre = tkinter.Tk()
 
@@ -212,7 +220,7 @@ class SOMView(QtGui.QWidget):
                     else :
                         color = "#000000"
                 #Cas où pas de neurones
-                temp.append(Terrain.create_rectangle(i*HEIGHT,j*WIDTH,(i+1)*HEIGHT,(j+1)*WIDTH,fill=color))
+                temp.append(Terrain.create_rectangle(i*(800/GRID_HEIGHT),j*(800/GRID_WIDTH),(i+1)*(800/GRID_HEIGHT),(j+1)*(800/GRID_WIDTH),fill=color))
 
             carreau.append(temp)
 
@@ -353,6 +361,7 @@ class SOMView(QtGui.QWidget):
         self.pushButton_show.setFont(font)
         self.pushButton_show.setStyleSheet(_fromUtf8("background-color: rgb(209, 209, 209);"))
         self.pushButton_show.setObjectName(_fromUtf8("pushButton_show"))
+        self.pushButton_show.clicked.connect(self.showmap)
         self.gridLayout_2.addWidget(self.pushButton_show, 0, 2, 1, 1)
         self.pushButton_goback = QtGui.QPushButton(self.widget_button)
         font = QtGui.QFont()
