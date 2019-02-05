@@ -223,6 +223,7 @@ class SetButton(QtGui.QWidget):
 
             elif excel_opt.isChecked():
                 self.fromExcel()
+        self.check.setChecked(True)
 
     def state_changed(self):
         global selected

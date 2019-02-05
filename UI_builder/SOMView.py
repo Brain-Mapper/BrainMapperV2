@@ -54,6 +54,8 @@ class SOMView(QtGui.QWidget):
             item.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter|QtCore.Qt.AlignCenter)
             self.tableWidget.setHorizontalHeaderItem(i, item)
             item.setText(list_entete[i])
+            self.comboBox.addItem(_fromUtf8(""))
+            self.comboBox.setItemText(i, list_entete[i])
         self.tableWidget.horizontalHeader().setVisible(True)
         for i in range(0,int(len(list_data)/len(list_entete))):
             for j in range(0,len(list_entete)):
