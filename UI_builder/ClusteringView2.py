@@ -171,12 +171,11 @@ class ClusteringView2(QtGui.QWidget):
 
 
     def clicked_table(self):
-        if self.tableResults.selectedIndexes()[0].column()==0:
-            index = self.tableResults.selectedIndexes()[0]
-            i = int(self.tableResults.model().data(index))
-            self.fill_clust_labels(self.history_iterations[i].get("labels"),self.tableWidget)
-            self.label = self.history_iterations[i].get("labels")
-            self.centroids = self.history_iterations[i].get("centers")
+        ligne = self.tableResults.selectedIndexes()[0].row()
+        i = int(self.tableResults.item(ligne,0).text())
+        self.fill_clust_labels(self.history_iterations[i].get("labels"),self.tableWidget)
+        self.label = self.history_iterations[i].get("labels")
+        self.centroids = self.history_iterations[i].get("centers")
 
 
     def createResultView(self,param_dict,selectedMethod):

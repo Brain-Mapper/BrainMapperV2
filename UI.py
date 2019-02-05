@@ -14,6 +14,7 @@ from UI_builder.EditView2 import EditView2
 from UI_builder.exportView import ExportView
 #from UI_builder.calculationView import CalculationView
 from UI_builder.calculationView2 import calculationView2
+from UI_builder.SOMView import SOMView
 
 from multiprocessing import freeze_support
 
@@ -117,12 +118,14 @@ class HomePage(QWidget):
         self.edit_colls = EditView2()
         #self.edit_colls = EditCollectionsView()
         self.export = ExportView()
+        self.SOM = SOMView()
         # -- Add them to stack widget
         self.stack.addWidget(self.mainview)
         self.stack.addWidget(self.clustering)
         self.stack.addWidget(self.calculation)
         self.stack.addWidget(self.edit_colls)
         self.stack.addWidget(self.export)
+        self.stack.addWidget(self.SOM)
 
         # Define behaviour when widget emit certain signals (see class MainView and Clustering View for more details
         #  on signals and events)
@@ -149,10 +152,19 @@ class HomePage(QWidget):
         # -- when calculation widget emits signal showMain, change current Widget in stack to main view widget
         self.calculation.showMain.connect(partial(self.stack.setCurrentWidget, self.mainview))
         self.calculation.showMain.connect(self.updateMainCalcul)
+        # -- when SOM widget emits signal showMain, change current Widget in stack to main view widget
+        self.mainview.showSOM.connect(partial(self.stack.setCurrentWidget, self.SOM))
+        self.mainview.showSOM.connect(self.updateSOMView)
+
+        self.SOM.showMain.connect(partial(self.stack.setCurrentWidget, self.mainview))
 
         # Set current widget to main view by default
         self.stack.setCurrentWidget(self.mainview)
 
+    def updateSOMView(self):
+        self.SOM.fill_table(self.mainview.list_entete,self.mainview.list_data)
+        self.stack.setCurrentWidget(self.SOM)  
+              
     def updateClusteringView(self):
         self.clustering.fill_table(get_current_usableDataset())
         self.stack.setCurrentWidget(self.clustering)
