@@ -114,14 +114,17 @@ def plot_3d_clusters(labels: list, centroids:list = None, marker_size=5.):
     #view.save_as_html("Affichage.html")
     view.open_in_browser()
 
-def plot_3d(marker_size=5.):
+def plot_3d(points, marker_size=5.):
+    """plot a 3d view of the points
+    
+    Arguments:
+        points {list} -- [(X,Y,Z)]
+    
+    Keyword Arguments:
+        marker_size {[type]} -- size of a marker (default: {5.})
     """
-    Method to make a 3D plot of the points get_current_usableDataset() is the good dataset in the edit window
-    """
-    # TODO verify that
-    points_list = [(i[0], i[1], i[2]) for i in get_current_usableDataset().export_as_clusterizable()]
-    labels = [0]*len(points_list)
-    view = view_markers(points_list, labels=labels, colors=None, marker_size=marker_size, centers=None, centers_colors=None)
+    labels = [0]*len(points)
+    view = view_markers(points, labels=labels, colors=None, marker_size=marker_size, centers=None, centers_colors=None)
     view.open_in_browser()
 
 def plot_cross_section(labels: list):
