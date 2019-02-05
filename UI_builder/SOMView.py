@@ -99,7 +99,8 @@ class SOMView(QtGui.QWidget):
 
     def train(self):
 
-
+        utils.reproducible()
+        
         GRID_HEIGHT = int(self.lineEdit_hauteur.text())
         GRID_WIDTH = int(self.lineEdit_largeur.text())
 
@@ -117,6 +118,7 @@ class SOMView(QtGui.QWidget):
         data = [e[:3] for e in data_raw]
         last_column = [e[3:] for e in data_raw]
 
+
         sofm = algorithms.SOFM(
         # Use only two features for the input
         n_inputs=3,
@@ -126,10 +128,11 @@ class SOMView(QtGui.QWidget):
         # other. For this reason we set up learning radius
         # equal to zero
         learning_radius=int(self.lineEdit_radius.text()),
+        
 
         #Parameters controls learning rate for each neighbour. The further neighbour neuron from the        #winning neuron the smaller that learning rate for it. Learning rate scales based on the        #factors produced by the normal distribution with center in the place of a winning neuron and       #standard deviation specified as a parameter. The learning rate for the winning neuron is       #always equal to the value specified in the step parameter and for neighbour neurons it’s       #always lower.
         std = int(self.lineEdit_std.text()), #TODO : modifier
-
+        
         #Feature grid defines shape of the output neurons. The new shape should be compatible with      #the number of outputs
         features_grid=(GRID_HEIGHT, GRID_WIDTH),
 
@@ -148,6 +151,7 @@ class SOMView(QtGui.QWidget):
 
         # Training step size or learning rate
         step=float(self.lineEdit_step.text()),
+        
 
         # Shuffles dataset before every training epoch.
         shuffle_data=True,
@@ -155,6 +159,10 @@ class SOMView(QtGui.QWidget):
         # Shows training progress in terminal
         verbose=True,
         )
+        print("rad",int(self.lineEdit_radius.text()))
+        print("std",int(self.lineEdit_std.text()))
+        print("step",float(self.lineEdit_step.text()))
+        print("nbiter",int(self.lineEdit_nbiter.text()))
 
         sofm.train(data, int(self.lineEdit_nbiter.text()))
         sofm.predict(data)
