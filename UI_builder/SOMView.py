@@ -136,11 +136,11 @@ class SOMView(QtGui.QWidget):
         # other. For this reason we set up learning radius
         # equal to zero
         learning_radius=int(self.lineEdit_radius.text()),
-        
+
 
         #Parameters controls learning rate for each neighbour. The further neighbour neuron from the        #winning neuron the smaller that learning rate for it. Learning rate scales based on the        #factors produced by the normal distribution with center in the place of a winning neuron and       #standard deviation specified as a parameter. The learning rate for the winning neuron is       #always equal to the value specified in the step parameter and for neighbour neurons it’s       #always lower.
         std = int(self.lineEdit_std.text()), #TODO : modifier
-        
+
         #Feature grid defines shape of the output neurons. The new shape should be compatible with      #the number of outputs
         features_grid=(GRID_HEIGHT, GRID_WIDTH),
 
@@ -159,7 +159,7 @@ class SOMView(QtGui.QWidget):
 
         # Training step size or learning rate
         step=float(self.lineEdit_step.text()),
-        
+
 
         # Shuffles dataset before every training epoch.
         shuffle_data=True,
@@ -181,7 +181,6 @@ class SOMView(QtGui.QWidget):
                 temp.append(weight[i,j])
             neurons.append(temp)
 
-        
 
         for k in data :
             the_closest_neuron = 0
@@ -216,8 +215,10 @@ class SOMView(QtGui.QWidget):
                     index = data_neuron_index.index(value)
                     param = last_column[index][0]
                     if param == 1 :
+                        #Neurones + param = 1
                         color = "#ff5f00"
                     else :
+                        #Neurones + param = 0
                         color = "#000000"
                 #Cas où pas de neurones
                 temp.append(Terrain.create_rectangle(i*(800/GRID_HEIGHT),j*(800/GRID_WIDTH),(i+1)*(800/GRID_HEIGHT),(j+1)*(800/GRID_WIDTH),fill=color))
