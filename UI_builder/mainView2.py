@@ -71,7 +71,12 @@ class CollButton(QtGui.QCheckBox):
         label = "Set name : "+ str(self.setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + str(len(list)) + "\nLast modified : " + str(d)
         self.setText(label)
         self.setStyleSheet(
-            "CollButton {background-color : #eee; spacing: 5px;border: 2px solid #99cccc;border-radius: 8px;padding: 1px 18px 1px 3px;max-width: 225%;}; CollButton::indicator {width: 13px; height: 13px;};")
+            "CollButton { spacing: 5px;border: 2px solid #000000;border-radius: 8px;padding: 1px 18px 1px 3px;};")
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(0)
+        self.setSizePolicy(sizePolicy)
 
     def selectColl(self,setname):
         # -- This selectColl will add or delete the collection from the selected ones
@@ -116,9 +121,6 @@ class SetButton(QtGui.QWidget):
       self.selected_zone = selected_zone
       self.treeWidget = parent
       self.checkBox = checkbox
-
-      #print(self.my_set.name)
-
 
       hbox = QtGui.QHBoxLayout()
 
