@@ -472,12 +472,6 @@ class ClusteringView2(QtGui.QWidget):
         self.tableWidget.setMinimumSize(QtCore.QSize(660, 0))
         self.tableWidget.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.tableWidget.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
-    # def addinclust(self):
-    #     print("cc thomas")
-    #     print(self.tableWidget.horizontalHeaderItem(0).text())
-    #     print(self.tableWidget.horizontalHeaderItem(0).isSelected() )
-    #     print(self.tableWidget.horizontalHeaderItem(0).row())
-    #     print(self.tableWidget.horizontalHeaderItem(0).column())
 
         self.tableWidget.setGridStyle(QtCore.Qt.SolidLine)
         self.tableWidget.setRowCount(5)
@@ -521,10 +515,8 @@ class ClusteringView2(QtGui.QWidget):
         self.verticalLayout_tab.addWidget(self.tableWidget)
         self.verticalLayout_dataAndResult.addWidget(self.widget_tab)
         self.widget_buttons = QtGui.QWidget(Form)
-        self.widget_buttons.setEnabled(True)
         self.widget_buttons.setMinimumSize(QtCore.QSize(0, 50))
         self.widget_buttons.setMaximumSize(QtCore.QSize(16777215, 50))
-        self.widget_buttons.setStyleSheet(_fromUtf8(""))
         self.widget_buttons.setObjectName(_fromUtf8("widget_buttons"))
         self.horizontalLayout_buttons = QtGui.QHBoxLayout(self.widget_buttons)
         self.horizontalLayout_buttons.setMargin(0)
