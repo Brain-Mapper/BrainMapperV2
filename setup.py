@@ -7,64 +7,72 @@ from cx_Freeze import setup, Executable
 from os import path
 
 import cx_Freeze.hooks
+
+
 def hack(finder, module):
     return
+
+
 cx_Freeze.hooks.load_matplotlib = hack
 
 # GUI applications require a different base on Windows (the default is for a
 # console application).
 
 path = sys.path
-#print(path)
+# print(path)
 
 # Debug for Aurélien
 
 import os.path
+
 PYTHON_INSTALL_DIR = os.path.dirname(os.path.dirname(os.__file__))
 os.environ['TCL_LIBRARY'] = os.path.join(PYTHON_INSTALL_DIR, 'tcl', 'tcl8.6')
 os.environ['TK_LIBRARY'] = os.path.join(PYTHON_INSTALL_DIR, 'tcl', 'tk8.6')
 
 # Dependencies are automatically detected, but it might need fine tuning.
-#'./UI/mainView.py'
-#("C:\Users\thoma\Desktop\LOG\brainMapper/UI/resources.py","C:\Users\thoma\Desktop\LOG\brainMapper\build\exe.win-amd64-2.7\lib\resources.py")
-includefiles = ["UI.bat",'./ressources',os.path.join(PYTHON_INSTALL_DIR, 'DLLs', 'tk86t.dll'),
-            os.path.join(PYTHON_INSTALL_DIR, 'DLLs', 'tcl86t.dll'),"./clustering_components/nilearn_plot_upgraded/rm_file.py"]
-includes = ["os","sys","time","csv","nibabel","numpy","scipy","sklearn","sip","atexit","OpenGL","PyQt4","pyqtgraph",
-"matplotlib","nilearn","tkinter", "pandas", "tkinter.filedialog",
-"mpl_toolkits",
-"PyQt4.QtCore", "PyQt4.QtGui",
-"pyqtgraph.opengl", "pyqtgraph.graphicsItems","pyqtgraph.debug",
-"numpy.core._methods", "numpy.lib.format",
-"scipy.sparse.csgraph._validation","scipy.ndimage._ni_support","scipy.ndimage._ni_docstrings",
-"sklearn.tree._criterion",
-"pyqtgraph.ThreadsafeTimer","pyqtgraph.opengl.shaders",
-"pyqtgraph.opengl.glInfo","pyqtgraph.units","pyqtgraph.reload",
-"pyqtgraph.PlotData","pyqtgraph.ordereddict","pyqtgraph.frozenSupport","pyqtgraph.configfile",
-"OpenGL.arrays._buffers","OpenGL.arrays._strings","OpenGL.arrays.buffers",
-"OpenGL.arrays.ctypesarrays","OpenGL.arrays.ctypesparameters","OpenGL.arrays.ctypespointers","OpenGL.arrays.lists",
-"OpenGL.arrays.nones","OpenGL.arrays.numbers","OpenGL.arrays.numpybuffers","OpenGL.arrays.numpymodule",
-"matplotlib.backends.backend_tkagg"]
-#conflit de nom entre scipy.spatial.ckdtree dans les lib et dans le build
+# './UI/mainView.py'
+# ("C:\Users\thoma\Desktop\LOG\brainMapper/UI/resources.py","C:\Users\thoma\Desktop\LOG\brainMapper\build\exe.win-amd64-2.7\lib\resources.py")
+includefiles = ["UI.bat", './ressources', os.path.join(PYTHON_INSTALL_DIR, 'DLLs', 'tk86t.dll'),
+                os.path.join(PYTHON_INSTALL_DIR, 'DLLs', 'tcl86t.dll'),
+                "./clustering_components/nilearn_plot_upgraded/rm_file.py"]
+includes = ["os", "sys", "time", "csv", "nibabel", "numpy", "scipy", "sklearn", "sip", "atexit", "OpenGL", "PyQt4",
+            "pyqtgraph",
+            "matplotlib", "nilearn", "tkinter", "pandas", "tkinter.filedialog",
+            "mpl_toolkits",
+            "PyQt4.QtCore", "PyQt4.QtGui",
+            "pyqtgraph.opengl", "pyqtgraph.graphicsItems", "pyqtgraph.debug",
+            "numpy.core._methods", "numpy.lib.format",
+            "scipy.sparse.csgraph._validation", "scipy.ndimage._ni_support", "scipy.ndimage._ni_docstrings",
+            "sklearn.tree._criterion",
+            "pyqtgraph.ThreadsafeTimer", "pyqtgraph.opengl.shaders",
+            "pyqtgraph.opengl.glInfo", "pyqtgraph.units", "pyqtgraph.reload",
+            "pyqtgraph.PlotData", "pyqtgraph.ordereddict", "pyqtgraph.frozenSupport", "pyqtgraph.configfile",
+            "OpenGL.arrays._buffers", "OpenGL.arrays._strings", "OpenGL.arrays.buffers",
+            "OpenGL.arrays.ctypesarrays", "OpenGL.arrays.ctypesparameters", "OpenGL.arrays.ctypespointers",
+            "OpenGL.arrays.lists",
+            "OpenGL.arrays.nones", "OpenGL.arrays.numbers", "OpenGL.arrays.numpybuffers", "OpenGL.arrays.numpymodule",
+            "matplotlib.backends.backend_tkagg",
+            "google", ]
+# conflit de nom entre scipy.spatial.ckdtree dans les lib et dans le build
 
 
 excludes = ["scipy.spatial.cKDTree"]
-packages = ["UI_builder","clustering_components","ourLib"]
-#zip_includes= ["BrainMapper.pyc","./UI/mainView.pyc","./UI/resources.pyc"]
-zip_includes =[]
-#d = dirname(dirname(abspath(__file__)))
-#sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-zip_include_packages=[]
-zip_exclude_packages=[]
-
+packages = ["UI_builder", "clustering_components", "ourLib"]
+# zip_includes= ["BrainMapper.pyc","./UI/mainView.pyc","./UI/resources.pyc"]
+zip_includes = []
+# d = dirname(dirname(abspath(__file__)))
+# sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+zip_include_packages = []
+zip_exclude_packages = []
 
 if sys.platform == "win32":
-  includes+= ["OpenGL.platform.win32"]
-  includefiles+=["mkl_intel_thread.dll"]
+    includes += ["OpenGL.platform.win32"]
+    includefiles += ["mkl_intel_thread.dll"]
 elif sys.platform == "linux2":
-  includes+= ["OpenGL.platform.glx"]
-  includefiles+=[(matplotlib.get_data_path(), "mpl-data")]
+    includes += ["OpenGL.platform.glx"]
+    includefiles += [(matplotlib.get_data_path(), "mpl-data")]
 else:
-  includes+= ["OpenGL.platform.darwin"]
+    includes += ["OpenGL.platform.darwin"]
 
 # pour que les bibliotheques binaires de /usr/lib soient recopiees aussi sous Linux
 binpathincludes = []
@@ -104,7 +112,7 @@ base = None
 if sys.platform == "win32":
     base = "Win32GUI"  # pour application graphique sous Windows
     # base = "Console" # pour application en console sous Windows
-base=None
+base = None
 icone = None
 if sys.platform == "win32":
     icone = "icone.ico"
@@ -112,10 +120,10 @@ if sys.platform == "win32":
 cible_1 = Executable(
     script="UI.py",
     base=base,
-    )
+)
 
-setup(name = "BrainMapper",
-      version = "0.1",
-      description = "Executable version of BrainMapper",
-      options = {'build_exe': options},
-      executables = [cible_1])
+setup(name="BrainMapper",
+      version="0.1",
+      description="Executable version of BrainMapper",
+      options={'build_exe': options},
+      executables=[cible_1])
