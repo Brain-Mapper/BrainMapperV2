@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>User manual</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="icon" href="imgs/logo.png">
+  </head>
+  <body>
+    <header class="w3-container w3-center w3-padding-32">
+      <div class="row">
+        <div class="column">
+            <img src="imgs/logo.png" style="width:8%">
+        </div>
+        <div class="column">
+          <h1><b>USER MANUAL</b></h1>
+      	  <p>Welcome to the user manual for the <span class="w3-tag">BrainMapper</span> software.</p>
+        </div>
+      </div>
+  	</header>
+
+    <div class="row">
+      <div class="column-left">
+        <div class="w3-card w3-margin w3-margin-top">
+          <div id="toc_container">
+            <p class="toc_title">Contents - Clustering</p>
+            <a href="index.html" style="color : #5577ee"> Go back to home page </a>
+            <ul class="toc_list">
+          	   <li><a href="#data"><strong>3.1 Data extraction for clustering</strong></a></li>
+          	    <ul>
+          		      <li><a href="#extract">3.1.1 How data is extracted</a></li>
+          		      <li><a href="#all_points">3.1.2 Use all points of an image</a></li>
+          		      <li><a href="#as_centroid">3.1.3 Use the image's points centroid as data</a></li>
+          	      </ul>
+              	<li><a href="#methods"><strong>3.2 Apply clustering algorithms on extracted data</strong></a></li>
+              	  <ul>
+              		<li><a href="#kmeans">3.2.1 KMeans</a></li>
+              		<li><a href="#kmedoids">3.2.2 KMedoids</a></li>
+                  <li><a href="#agglo">3.2.3 Agglomerative Clustering</a></li>
+              	  </ul>
+              	<li><a href="#script_env"><strong>3.3 Execute custom functions : user script environment</strong></a></li>
+                <li><a href="#clust_results"><strong>3.4 Clustering results </strong></a></li>
+                <ul>
+                  <li><a href="#clust_assign">3.4.1 Cluster assignment</a></li>
+                  <ul>
+                    <li><a href="#as_set"><small>3.4.1.1 Save results as set</small></a></li>
+                    <li><a href="#to_csv"><small>3.4.1.2 Export as CSV file</small></a></li>
+                  </ul>
+                  <li><a href="#visu">3.4.2 Graphic Visualisation</a></li>
+                  <li><a href="#val_index">3.4.3 Internal Validation Indexes</a></li>
+                  <ul>
+                    <li><a href="#mean_silhouette"><small>3.4.3.1 Mean Silhouette</small></a></li>
+                    <li><a href="#ch_index"><small>3.4.3.2 Calinski-Habaraz Index</small></a></li>
+                    <li><a href="#db_index"><small>3.4.3.3 Davies Boulin index</small></a></li>
+                  </ul>
+                </ul>
+              </ul>
+        	</div>
+        </div>
+      </div>
+      <div class="column-right">
+        <div id="Clustering">
+          <h1> Clustering on NIfTI data</h1>
+          <p>
+          brain-Mapper aims to allow the user to use the interesting data from NIfTI files to perform clustering algorithms and thus determine the different groups of voxels.<br/>
+          To accomplish this, brain-Mapper extracts the data from NIfTI files and allows you to select the method you would like to apply. Clustering results can be exported as a CSV file or
+          saved in the application, and thus be exported as new NIfTI files.<br/><br/>
+          In this section we explain the main functionalities of our software around clustering
+          </p>
+
+          <h2 id="data">3.1 Data extraction for clustering</h2>
+        	<p>
+        		The NIfTI format is an image format but for some teams it is interesting to apply clustering algorithms on the list of voxels, usually represented as a list of
+            [X_coordinate,Y_coordinate,Z_coordinate, Intensity] entries, each of which represent a voxel.<br/>
+            Our software extracts the data of your selected image collections before applying clustering algorithms on it.
+
+        	</p>
+        	<h3 id="extract">3.1.1 How data is extracted</h3>
+        	<p>
+            From the main view page, where all collections are accessible, the user can click on 'clustering' button at the bottom right, once he has selected some image collections.<br/>
+            <div style="padding-left: 22%; padding-top: 1%;padding-bottom: 1%;">
+        		    <img src="imgs/access_clustering.png" style="width:70%">
+            </div>
+            <br><br>
+            A pop up dialog window will appear. It shows the number of image collections selected as well as the total number of NIfTI images to be treated.<br/>
+            <div style="padding-left: 22%; padding-top: 1%;padding-bottom: 1%;">
+              <img src="imgs/select_extraction_mode.png" style="width:70%">
+            </div>
+            <br/><br/>
+            In this windows, the user can select between two ways of extracting the image's information before the clustering view is loaded : our software creates a
+            list of <em>interesting></em> voxels by extracting the coordinates of all the voxels that have an intensity greater than 0 or by calculating the image's centroid
+            (each image will be represented by a single point).
+
+        	</p>
+          <h3 id="all_points">3.1.2 Use all points of an image</h3>
+        	<p>
+            When all points are selected by choosing 'Use all region points for each file', the data used for clustering is the list of all voxels whose intensity is greater than 0. <br/>
+            The clustering view thus contains a data table with several data entries <br/>
+            <div style="padding-left: 22%; padding-top: 1%;padding-bottom: 1%;">
+              <img src="imgs/clust_allp.png" style="width:70%">
+            </div>
+            <br/>
+
+          </p>
+          <h3 id="as_centroid">3.1.3 Use the image's points centroid as data</h3>
+        	<p>
+            By choosing 'Use centroids as file representation', the data used for clustering is the a list of a single voxel per file, which represents the <em>mean voxel</em> or <em>center</em>
+            of all the voxels in the image. This type of extraction might take a while longer than the simple extraction, because several calculations are done.
+            <br/>
+            The clustering view thus contains a data table with a single data entries per selected file : if a total of 4 files in 2 different image collections were selected, the data table
+              will display 4 data entries <br>
+              <div style="padding-left: 22%; padding-top: 1%;padding-bottom: 1%;">
+                <img src="imgs/clust_centroids.png" style="width:70%">
+              </div>
+            <br>
+          </p>
+
+          <h2 id="methods">3.2 Apply clustering algorithms on extracted data</h2>
+        	<p> Once you have extracted the data from the selected images, you can choose which algorithm clustering to apply by clicking on the yellow bar at the top left ont the clustering view.</p>
+          <br>
+          <div style="padding-left: 22%; padding-top: 1%;padding-bottom: 1%;">
+            <img src="imgs/clust_chooser.png" style="width:70%">
+          </div>
+          <br>
+          <br>
+          The current version of <em>brainMapper</em> has 3 clustering methods the user can choose from : <em><b>KMeans</b></em>, <em><b>KMedoids</b></em> and <em><b>Agglomerative Clustering</b></em>. <br>
+          <em><b>KMeans</b></em> and <em><b>Agglomerative Clustering</b></em> come from the library for machine learning in Python, <em><b>scikit-learn</b></em>
+          (for more details click <a href="http://scikit-learn.org/stable/modules/clustering.html#clustering" target="_blank" style="color : #5577ee">here</a> ) <br>
+          An implementation of <em><b>KMedoids</b></em> was made available by the developping team.
+          <br><br>
+          Once an algorithm is selected, information and the algorithm's parameters page will appear on the left section of clustering view.
+          You can select and enter the parameters for the clustering algorithm here.
+          <div style="padding-left: 35%; padding-top: 1%;padding-bottom: 1%;">
+            <img src="imgs/clust_params.png" style="height:20%">
+          </div>
+
+          <h3 id="kmeans">3.2.1 KMeans</h3>
+        	<p> The KMeans algorithm is a classic clustering algorithm. <br><br>
+            We used the implementation from the <em><b>scikit-learn</b></em> library.<br>
+            For more details on the algorithm and its parameters click <a href="http://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html#sklearn.cluster.KMeansl" target="_blank" style="color : #5577ee">here</a>
+          </p>
+          <h3 id="kmedoids">3.2.2 KMedoids</h3>
+        	<p> The KMedoids algorithm is an alternative to KMeans when you want the centroid of each cluster is the median point of each cluster.
+          </p>
+          <h3 id="agglo">3.2.3 Agglomerative Clustering</h3>
+        	<p>
+            Agglomerative clustering, specially Ward Linkage, is sometimes used in neuroimaging. It is a Hierarchical clustering algorithm. <br><br>
+              We used the implementation of this type of algorithm from the <em><b>scikit-learn</b></em> library.<br>
+              For more details on its parameters click <a href="http://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html#sklearn.cluster.KMeansl" target="_blank" style="color : #5577ee">here</a>
+          </p>
+
+          <h2 id="script_env">3.3 Execute custom functions : user script environment</h2>
+        	<p> In the clustering method chooser, you may see the option 'Custom user script'. <br>
+            By selecting it the user can write the algorithm she/he would like to apply to the extracted data.
+            <div style="padding-left: 12%; padding-top:3%; padding-bottom:3%">
+              <div class="alert note-info" role="alert">
+              <h5 style="color:#306499;">INFORMATION</h5>
+              <b>This functionality, although incorporated to the user interface, is not functional in the current version.</b>
+              <br><br>
+              As interesting as this option was in the beginning of our project, we could not yet implement the necessary controls to make it a reality given the little time we had.
+              <br>
+              It is intended that this functionality will be worked on later on.
+            </div>
+           </div>
+
+          </p>
+
+          <h2 id="clust_results">3.4 Clustering results</h2>
+        	<p> Once the selected clustering method parameters have been correctly set, you can launch the algorithm by clicking on the 'Run' button
+            <div style="padding-left: 22%; padding-top: 1%;padding-bottom: 1%;">
+              <img src="imgs/clust_run.png" style="width:60%">
+            </div>
+            <br><br>
+            Cluster assignments will appear on the data table and graphic visualisations of the results will appear.
+          </p>
+          <h3 id="clust_assign">3.4.1 Cluster assignment</h3>
+        	<p>
+            The data table will be modified to display which data entry belongs to which cluster.
+            <div style="padding-left: 22%; padding-top: 1%;padding-bottom: 1%;">
+              <img src="imgs/clust_assign.png" style="width:70%">
+            </div>
+            <br>
+            This assignment results can be saved in two ways : either by saving them as a new set in the application or by exporting
+            the results as a CSV file.
+          </p>
+
+          <h4 id="as_set">3.4.1.1 Save as set</h4>
+        	<p>
+            By clicking on the <em><b>'Save as set'</b></em> button, a NIfTI file containing all points from a given cluster will be recreated,
+            for each cluster obtained. A set containing this results will be added in the main page, in the 'Clustering' tab. <br>
+            <br>
+            They can be exported as NIfTI files from there.
+          </p>
+          <h4 id="to_csv">3.4.1.2 Export as CSV file</h4>
+        	<p> By clicking on the 'Export' button, a CSV file containing the data table can be saved on the disk</p>
+
+          <h3 id="visu">3.4.2 Graphic visualisation</h3>
+        	<p> Two graphic visualisations can give additional information on clustering results.
+            <br><br>
+            One of these graphs represents the proportion of data entries assigned to each cluster with an histogram (the graph in blue).<br>
+            The second graph plots the Silhouette values for each data entry after cluster assignment (the graph in green).
+
+            <div style="padding-left: 22%; padding-top: 1%;padding-bottom: 1%;">
+              <img src="imgs/clust_graphs.png" style="width:70%">
+            </div>
+
+          </p>
+          <h3 id="val_index">3.4.3 Internal Validation indexes</h3>
+        	<p> Internal validation indexes can be useful when one needs to determine which clustering execution is to be retained as conclusive. <br><br>
+            In this version of <em>brainMapper</em>, validation indexes are calculated automatically after a clustering algorithm is applied on data.<br>
+            The internal validation indexes of the current version are :
+            <ul>
+              <li>The mean of sample's Silhouette index</li>
+              <li>Calinski-Habaraz score</li>
+              <li>Davis-Boulin index</li>
+            </ul>
+            <br><br>
+            To visualize their values, click on the <em style="font-size : 14px"><b>'Result Details'</b></em> button on the top bar.
+            <div style="padding-left: 22%; padding-top: 1%;padding-bottom: 1%;">
+              <img src="imgs/result_details.png" style="width:40%">
+            </div>
+            A pop-up window containing parameters, cluster centers and indexes values will appear.
+            <div style="padding-left: 22%; padding-top: 1%;padding-bottom: 1%;">
+              <img src="imgs/result_details_popup.png" style="width:40%">
+            </div>
+             Its contents can be saved in a .txt file by clicking on <em style="font-size : 14px"><b>'Save as text file'</b></em>.
+             <div style="padding-left: 22%; padding-top: 1%;padding-bottom: 1%;">
+               <img src="imgs/export_save.png" style="width:40%">
+             </div>
+          </p>
+
+          <h4 id="mean_silhouette">3.4.3.1 Mean Silhouette</h4>
+        	<p> Mean silhouette index is calculated with the according function from <em><b>scikit-learn</b></em> library.
+            For more details click <a href="http://scikit-learn.org/stable/modules/generated/sklearn.metrics.silhouette_score.html" target="_blank" style="color : #5577ee">here</a>
+          </p>
+          <h4 id="ch_index">3.4.3.2 Calinski-Habaraz score</h4>
+        	<p>
+            Calinski-Habaraz score is computed with the according function from <em><b>scikit-learn</b></em> library.
+              For more details click <a href="http://scikit-learn.org/stable/modules/generated/sklearn.metrics.calinski_harabaz_score.html" target="_blank" style="color : #5577ee">here</a>
+          </p>
+          <h4 id="db_index">3.4.3.3 Davis-Boulin index</h4>
+        	<p>
+            Davis-Boulin index is a way to evaluate clustering algorithms using the features of the dataset.
+            <div style="padding-left: 12%; padding-top:3%; padding-bottom:3%">
+               <div class="alert note-info" role="alert">
+               <h5 style="color:#306499;">NOTE</h5>
+               <b>A good value of Davis-Boulin index does not imply the best information retrieval.</b>
+             </div>
+            </div>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="w3-container w3-dark-grey w3-padding-32 w3-margin-top">
+    <div class="column-left">
+	     <p>Source code available on <a href="https://github.com/Brain-Mapper/brainMapper" target="_blank">GitHub repository</a></p>
+    </div>
+    <div>
+      <p> <b>Authors</b>: R. Agathon (@yoshcraft), M. Cluchague (@maximeCluchague), G. Husson (@Graziella-Husson), V. Zelaya (@vz-chameleon)
+    </div>
+	</footer>
+  </body>
+</html>

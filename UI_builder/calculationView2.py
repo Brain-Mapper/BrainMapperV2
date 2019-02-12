@@ -6,17 +6,16 @@
 #
 # WARNING! All changes made in this file will be lost!
 
+import sys
+from os import path
+
 from PyQt4 import QtGui
 from PyQt4.Qt import *
-
-import sys
-from nibabel import Nifti1Image,load
-from os import path
+from nibabel import Nifti1Image, load
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from BrainMapper import *
 
-import UI_builder.resources
 import time
 
 from PyQt4 import QtCore
@@ -30,14 +29,16 @@ except AttributeError:
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
+
+
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class calculationView2(QtGui.QWidget):
 
+class calculationView2(QtGui.QWidget):
     showMain = pyqtSignal()
 
     def __init__(self):
@@ -106,7 +107,7 @@ class calculationView2(QtGui.QWidget):
         self.pushButton.setMaximumSize(QtCore.QSize(100, 16777215))
         self.pushButton.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.pushButton.setObjectName(_fromUtf8("pushButton"))
-        self.pushButton.clicked.connect(lambda: self.runCalculation())
+        self.pushButton.clicked.connect(lambda: self.run_calculation())
         self.verticalLayout_6.addWidget(self.pushButton)
         self.widget_2 = QtGui.QWidget(Form)
         self.widget_2.setObjectName(_fromUtf8("widget_2"))
@@ -163,102 +164,155 @@ class calculationView2(QtGui.QWidget):
         self.pushButton_2.clicked.connect(self.go_back)
         self.verticalLayout_7.addWidget(self.pushButton_2)
 
-        self.retranslateUi(Form)
+        self.retranslate_ui(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def display(self):
 
         item = self.leftlist.currentItem().text()
         if item == "Addition":
-        # ----- Addition ------------------------------------
-            self.textBrowser.setText("The Addition algorithm make a addition with a collection of nifti makes the term some term of each voxel")
-            self.textBrowser_2.setText("\t[5, 3, 0]   [0, 4, 0]       [5, 8, 0]\n\t[0, 0, 3]   [0, 7, 4]       [0, 7, 7]\nAddition ( \t[1, 1, 2] , [3, 0, 0] ) = [4, 1, 2]")
+            # ----- Addition ------------------------------------
+            self.textBrowser.setText(
+                "The Addition algorithm make a addition with a collection of nifti makes the term some term of each "
+                "voxel")
+            self.textBrowser_2.setText(
+                "\t[5, 3, 0]   [0, 4, 0]       [5, 8, 0]\n\t[0, 0, 3]   [0, 7, 4]       [0, 7, 7]\nAddition ( \t[1, "
+                "1, 2] , [3, 0, 0] ) = [4, 1, 2]")
 
-        elif item== "Boolean Intersection":
-        # ----- Boolean Intersection -----------------------
-            self.textBrowser.setText("The Boolean intersection takes a set of files and returns a binary file of 0 and 1. A voxel with 1 value means that for every file this voxels have strictely positive intensity")
-            self.textBrowser_2.setText("\t[5, 9, 0]   [0, 4, 0]       [0, 1, 0]\n\t[0, 0, 3]   [0, 7, 4]       [0, 0, 1]\nBoolInter( \t[1, 1, 2] , [3, 0, 0] ) = [1, 0, 0]")
-        
-        elif item== "Boolean Union":
-        # ----- Boolean Union ----------------------------
-            self.textBrowser.setText("The Boolean union takes a set of files and returns a binary file of 0 and 1. A voxel with 1 value means that there exists in at least some files nifti a voxel whose intensity is strictly positive")
-            self.textBrowser_2.setText("\t[5, 9, 0]   [0, 4, 0]       [1, 1, 0]\n\t[0, 0, 3]   [0, 7, 0]       [0, 1, 1]\nBoolUnion( \t[0, 1, 2] , [0, 0, 0] ) = [0, 1, 1]")
-   
-        elif item== "Centroide":
-        # ----- Centroide ------------------------------------
-            self.textBrowser.setText("This algorithm calculates the centroid of each cluster present in one or a set of nifti files")
+        elif item == "Boolean Intersection":
+            # ----- Boolean Intersection -----------------------
+            self.textBrowser.setText(
+                "The Boolean intersection takes a set of files and returns a binary file of 0 and 1. A voxel with 1 "
+                "value means that for every file this voxels have strictely positive intensity")
+            self.textBrowser_2.setText(
+                "\t[5, 9, 0]   [0, 4, 0]       [0, 1, 0]\n\t[0, 0, 3]   [0, 7, 4]       [0, 0, 1]\nBoolInter( \t[1, "
+                "1, 2] , [3, 0, 0] ) = [1, 0, 0]")
+
+        elif item == "Boolean Union":
+            # ----- Boolean Union ----------------------------
+            self.textBrowser.setText(
+                "The Boolean union takes a set of files and returns a binary file of 0 and 1. A voxel with 1 value "
+                "means that there exists in at least some files nifti a voxel whose intensity is strictly positive")
+            self.textBrowser_2.setText(
+                "\t[5, 9, 0]   [0, 4, 0]       [1, 1, 0]\n\t[0, 0, 3]   [0, 7, 0]       [0, 1, 1]\nBoolUnion( \t[0, "
+                "1, 2] , [0, 0, 0] ) = [0, 1, 1]")
+
+        elif item == "Centroide":
+            # ----- Centroide ------------------------------------
+            self.textBrowser.setText(
+                "This algorithm calculates the centroid of each cluster present in one or a set of nifti files")
             self.textBrowser_2.setText("\t[0, 1, 0]\n\t[5, 2, 3]\nCentroid ( \t[0, 1, 0] ) = (1,1,1)")
 
-        elif item== "Closing":
-        # ----- Closing ------------------------------------
+        elif item == "Closing":
+            # ----- Closing ------------------------------------
 
-            self.textBrowser.setText("In mathematical morphology, the closing of a set (binary image) A by a structuring element B is the erosion of the dilation of that set, A * B = ( A (+) B ) (-) B, denote the dilation and erosion, respectively. In image processing, closing is, together with opening, the basic workhorse of morphological noise removal. Opening removes small objects, while closing removes small holes.")
+            self.textBrowser.setText(
+                "In mathematical morphology, the closing of a set (binary image) A by a structuring element B is the "
+                "erosion of the dilation of that set, A * B = ( A (+) B ) (-) B, denote the dilation and erosion, "
+                "respectively. In image processing, closing is, together with opening, the basic workhorse of "
+                "morphological noise removal. Opening removes small objects, while closing removes small holes.")
             self.textBrowser_2.setText("Opening(n) = Erosion(Dilation(n))")
             self.param.setText("1")
 
-        elif item== "Dilation":
-        # ----- Dilatation ---------------------------
-            self.textBrowser.setText("Dilation (usually represented by (+)) is one of the basic operations in mathematical morphology. Originally developed for binary images, it has been expanded first to grayscale images, and then to complete lattices. The dilation operation usually uses a structuring element for probing and expanding the shapes contained in the input image.")
+        elif item == "Dilation":
+            # ----- Dilatation ---------------------------
+            self.textBrowser.setText(
+                "Dilation (usually represented by (+)) is one of the basic operations in mathematical morphology. "
+                "Originally developed for binary images, it has been expanded first to grayscale images, and then to "
+                "complete lattices. The dilation operation usually uses a structuring element for probing and "
+                "expanding the shapes contained in the input image.")
             self.textBrowser_2.setText("ADD")
             self.param.setText("1")
 
-        elif item== "Entropy":
-        # ----- Entropy -----------------------------
-            self.textBrowser.setText("The entropy of an image is a decimal value that allows to characterize the degree of disorganization, or unpredictability of the information content of a system.")
-            self.textBrowser_2.setText("Entropy(Nifti img) = SUM(-Pi * log2(Pi))\nWhere Pi is the probability for the value i in the image to appear.")
+        elif item == "Entropy":
+            # ----- Entropy -----------------------------
+            self.textBrowser.setText(
+                "The entropy of an image is a decimal value that allows to characterize the degree of "
+                "disorganization, or unpredictability of the information content of a system.")
+            self.textBrowser_2.setText(
+                "Entropy(Nifti img) = SUM(-Pi * log2(Pi))\nWhere Pi is the probability for the value i in the image "
+                "to appear.")
 
-        elif item== "Erosion":
-        # ----- Erosion ------------------------------
-            self.textBrowser.setText("Erosion (usually represented by (-)) is one of two fundamental operations (the other being dilation) in morphological image processing from which all other morphological operations are based. It was originally defined for binary images, later being extended to grayscale images, and subsequently to complete lattices.")
+        elif item == "Erosion":
+            # ----- Erosion ------------------------------
+            self.textBrowser.setText(
+                "Erosion (usually represented by (-)) is one of two fundamental operations (the other being dilation) "
+                "in morphological image processing from which all other morphological operations are based. It was "
+                "originally defined for binary images, later being extended to grayscale images, and subsequently to "
+                "complete lattices.")
             self.textBrowser_2.setText("ADD")
             self.param.setText("1")
 
-        elif item== "Linear combination":
-        # ----- Linear combination ---------------------------
-            self.textBrowser.setText("This algorithm makes the sum of a set of nifti files by associating a weight to each one of them (to caracterizes the importance)")
+        elif item == "Linear combination":
+            # ----- Linear combination ---------------------------
+            self.textBrowser.setText(
+                "This algorithm makes the sum of a set of nifti files by associating a weight to each one of them (to "
+                "caracterizes the importance)")
             self.textBrowser_2.setText("Linear(img1, .., imgN] , [c1, .., cN]) = c1*Ni_1 + .. + cN*Ni_N")
             self.param.setText("1;4")
 
-        elif item== "Mask":
-        # ----- Mask ---------------------------------
-            self.textBrowser.setText("The Mask process need two file : one named mask that permit to define which voxels in the second one will be selected. Only the voxels in the second one where the voxels in the mask with the same coordinates and a value > 0 will be selected.")
-            self.textBrowser_2.setText("\t[1, 1, 0]   [2, 4, 9]       [2, 4, 0]\n\t[0, 0, 1]   [3, 7, 5]       [0, 0, 5]\nMaskProc ( \t[1, 0, 1] , [6, 8, 4] ) = [6, 0, 4]")
+        elif item == "Mask":
+            # ----- Mask ---------------------------------
+            self.textBrowser.setText(
+                "The Mask process need two file : one named mask that permit to define which voxels in the second one "
+                "will be selected. Only the voxels in the second one where the voxels in the mask with the same "
+                "coordinates and a value > 0 will be selected.")
+            self.textBrowser_2.setText(
+                "\t[1, 1, 0]   [2, 4, 9]       [2, 4, 0]\n\t[0, 0, 1]   [3, 7, 5]       [0, 0, 5]\nMaskProc ( \t[1, "
+                "0, 1] , [6, 8, 4] ) = [6, 0, 4]")
 
-        elif item== "Mean":
-        # ----- Mean ---------------------------------
-            self.textBrowser.setText("The Mean process averages a set of nifti files. The algorithm performs the sum for all voxels present in each file the divides the value obtained by the number of files")
-            self.textBrowser_2.setText("\t[5, 9, 0]   [0, 4, 0]       [2.5, 6.5, 0.0]\n\t[0, 0, 3]   [0, 7, 0]       [0.0, 3.5, 1.5]\nMeanProc ( \t[0, 1, 2] , [0, 0, 0] ) = [0.0, 0.5, 1.0]")
+        elif item == "Mean":
+            # ----- Mean ---------------------------------
+            self.textBrowser.setText(
+                "The Mean process averages a set of nifti files. The algorithm performs the sum for all voxels "
+                "present in each file the divides the value obtained by the number of files")
+            self.textBrowser_2.setText(
+                "\t[5, 9, 0]   [0, 4, 0]       [2.5, 6.5, 0.0]\n\t[0, 0, 3]   [0, 7, 0]       [0.0, 3.5, "
+                "1.5]\nMeanProc ( \t[0, 1, 2] , [0, 0, 0] ) = [0.0, 0.5, 1.0]")
 
-        elif item== "Normalization":
-        # ----- Normalization ------------------------------------
-            self.textBrowser.setText("The normalization algorithm creates one nifti file result for each input nifti file. This algorithm create a file where the values for each voxel are between 0 and 1. Different ways exit to normalize a nifti file, you can select in the options panel the desired method")
+        elif item == "Normalization":
+            # ----- Normalization ------------------------------------
+            self.textBrowser.setText(
+                "The normalization algorithm creates one nifti file result for each input nifti file. This algorithm "
+                "create a file where the values for each voxel are between 0 and 1. Different ways exit to normalize "
+                "a nifti file, you can select in the options panel the desired method")
             self.textBrowser_2.setText("ADD")
 
-        elif item== "Opening":
-        # ----- Opening ------------------------------------
-            self.textBrowser.setText("In morphological opening ( A (-) B ) (+) B, erosion operation removes objects that are smaller than structuring element B and dilation operation restores the shape of remaining objects. However, restoring accuracy in dilation operation highly depends on the type of structuring element and the shape of restoring objects. The opening by reconstruction method is able to restore the objects completely after erosion applied.")
+        elif item == "Opening":
+            # ----- Opening ------------------------------------
+            self.textBrowser.setText(
+                "In morphological opening ( A (-) B ) (+) B, erosion operation removes objects that are smaller than "
+                "structuring element B and dilation operation restores the shape of remaining objects. However, "
+                "restoring accuracy in dilation operation highly depends on the type of structuring element and the "
+                "shape of restoring objects. The opening by reconstruction method is able to restore the objects "
+                "completely after erosion applied.")
             self.textBrowser_2.setText("Opening(n) = Dilation(Erosion(n))")
             self.param.setText("1")
 
-        elif item== "Threshold":
-        # ----- Threshold ------------------------------------
-            self.textBrowser.setText("The threshold operation allows you to store only voxels whose intensity value is between the min and max parameters. All voxels that do not meet this criterion have their intensity that becomes zero. If no value is assigned to min and max then their values will be less the infinite and the less infinite respectively.")
-            self.textBrowser_2.setText("For each voxels in Nifti:\n\tif not min<voxels.intensity<max:\n\t\tvoxels.intensity = 0")
+        elif item == "Threshold":
+            # ----- Threshold ------------------------------------
+            self.textBrowser.setText(
+                "The threshold operation allows you to store only voxels whose intensity value is between the min and "
+                "max parameters. All voxels that do not meet this criterion have their intensity that becomes zero. "
+                "If no value is assigned to min and max then their values will be less the infinite and the less "
+                "infinite respectively.")
+            self.textBrowser_2.setText(
+                "For each voxels in Nifti:\n\tif not min<voxels.intensity<max:\n\t\tvoxels.intensity = 0")
 
-        elif item== "Multiplication":
-        # ----- Multiplication ------------------------------------
+        elif item == "Multiplication":
+            # ----- Multiplication ------------------------------------
             self.textBrowser.setText("ADD")
             self.textBrowser_2.setText("ADD")
             self.param.setText("1")
 
-        elif item== "Division":
-        # ----- Division ------------------------------------
+        elif item == "Division":
+            # ----- Division ------------------------------------
             self.textBrowser.setText("ADD")
             self.textBrowser_2.setText("ADD")
             self.param.setText("1")
 
-    #--------------------- Action for CALCULATE button -------------------
-    def runCalculation(self):
+    # --------------------- Action for CALCULATE button -------------------
+    def run_calculation(self):
         global collshow
         print("calculation in progress...")
         algorithm = self.leftlist.currentItem().text()
@@ -271,143 +325,144 @@ class calculationView2(QtGui.QWidget):
 
         for collection in collshow:
             for nifti in collection.nifimage_dict.values():
-                #COPIE nifti_selected.append(nifti.filename)
+                # COPIE nifti_selected.append(nifti.filename)
                 nifti_selected.append(nifti)
-        if algorithm=="Mean":
-            if len(nifti_selected)<2:
-                    QtGui.QMessageBox.warning(self, "Error",
-                                              algorithm + "algorithm "+ " must have two or more input file")
-            else:
-                try:
-                        algorithm_result, output = run_calculation(algorithm, nifti_selected, arguments)
-                        self.console.setText(">>> \n"+output)
-                        self.popUpSaveFileResultCalculation(algorithm,algorithm_result)
-
-                except:
-                    QtGui.QMessageBox.warning(self, "Error",
-                                              "Impossible to execute "+algorithm+" algorithm")
-        if algorithm=="Mask":
-            if len(nifti_selected)!=2:
+        if algorithm == "Mean":
+            if len(nifti_selected) < 2:
                 QtGui.QMessageBox.warning(self, "Error",
-                                            algorithm + "algorithm "+ " must have two or more input file")
+                                          algorithm + "algorithm " + " must have two or more input file")
             else:
                 try:
                     algorithm_result, output = run_calculation(algorithm, nifti_selected, arguments)
-                    self.console.setText(">>> \n"+output)
-                    self.popUpSaveFileResultCalculation(algorithm,algorithm_result)
+                    self.console.setText(">>> \n" + output)
+                    self.popUpSaveFileResultCalculation(algorithm, algorithm_result)
+
                 except:
                     QtGui.QMessageBox.warning(self, "Error",
-                                              "Impossible to execute "+algorithm+" algorithm. This algorithm can only takes 2 File : The mask and the one which will be applied the mask. Please verify that you have select just 2 file in your collection.")
+                                              "Impossible to execute " + algorithm + " algorithm")
+        if algorithm == "Mask":
+            if len(nifti_selected) != 2:
+                QtGui.QMessageBox.warning(self, "Error",
+                                          algorithm + "algorithm " + " must have two or more input file")
+            else:
+                try:
+                    algorithm_result, output = run_calculation(algorithm, nifti_selected, arguments)
+                    self.console.setText(">>> \n" + output)
+                    self.popUpSaveFileResultCalculation(algorithm, algorithm_result)
+                except:
+                    QtGui.QMessageBox.warning(self, "Error",
+                                              "Impossible to execute " + algorithm + " algorithm. This algorithm can only takes 2 File : The mask and the one which will be applied the mask. Please verify that you have select just 2 file in your collection.")
 
-        if algorithm=="Linear combination":
-            value=self.param.text()
-            arguments=value.split(';')
+        if algorithm == "Linear combination":
+            value = self.param.text()
+            arguments = value.split(';')
             if len(nifti_selected) != len(arguments):
                 QtGui.QMessageBox.warning(self, "Error",
-                                              algorithm + "algorithm "+ "must have the same number of arguments as the number of nifti files selected. Please enter %s arguments." % (len(nifti_selected)))
+                                          algorithm + "algorithm " + "must have the same number of arguments as the number of nifti files selected. Please enter %s arguments." % (
+                                              len(nifti_selected)))
             else:
                 try:
                     algorithm_result, output = run_calculation(algorithm, nifti_selected, arguments)
-                    self.console.setText(">>> \n"+output)
-                    self.popUpSaveFileResultCalculation(algorithm,algorithm_result)
+                    self.console.setText(">>> \n" + output)
+                    self.popUpSaveFileResultCalculation(algorithm, algorithm_result)
                 except:
-                   QtGui.QMessageBox.warning(self, "Error",
-                                       "Impossible to execute "+algorithm+" algorithm. Please check if you have correctly entering the coefficent list")
-        if algorithm=="Boolean Intersection":
+                    QtGui.QMessageBox.warning(self, "Error",
+                                              "Impossible to execute " + algorithm + " algorithm. Please check if you have correctly entering the coefficent list")
+        if algorithm == "Boolean Intersection":
             try:
                 algorithm_result, output = run_calculation(algorithm, nifti_selected, arguments)
-                self.console.setText(">>> \n"+output)
-                self.popUpSaveFileResultCalculation(algorithm,algorithm_result)
+                self.console.setText(">>> \n" + output)
+                self.popUpSaveFileResultCalculation(algorithm, algorithm_result)
             except:
                 QtGui.QMessageBox.warning(self, "Error",
-                                          "Impossible to execute "+algorithm+" algorithm")
-        if algorithm=="Boolean Union":
+                                          "Impossible to execute " + algorithm + " algorithm")
+        if algorithm == "Boolean Union":
             try:
                 algorithm_result, output = run_calculation(algorithm, nifti_selected, arguments)
-                self.console.setText(">>> \n"+output)
-                self.popUpSaveFileResultCalculation(algorithm,algorithm_result)
+                self.console.setText(">>> \n" + output)
+                self.popUpSaveFileResultCalculation(algorithm, algorithm_result)
             except:
                 QtGui.QMessageBox.warning(self, "Error",
-                                          "Impossible to execute "+algorithm+" algorithm")
-        if algorithm=="Normalization":
+                                          "Impossible to execute " + algorithm + " algorithm")
+        if algorithm == "Normalization":
             try:
                 algorithm_result, output = run_calculation(algorithm, nifti_selected, arguments)
-                self.console.setText(">>> \n"+output)
-                self.popUpSaveFileResultCalculation(algorithm,algorithm_result)
+                self.console.setText(">>> \n" + output)
+                self.popUpSaveFileResultCalculation(algorithm, algorithm_result)
             except:
                 QtGui.QMessageBox.warning(self, "Error",
-                                          "Impossible to execute "+algorithm+" algorithm")
-        if algorithm=="Centroide":
+                                          "Impossible to execute " + algorithm + " algorithm")
+        if algorithm == "Centroide":
             try:
                 algorithm_result, output = run_calculation(algorithm, nifti_selected, arguments)
-                self.console.setText(">>> \n"+output)
+                self.console.setText(">>> \n" + output)
             except:
                 QtGui.QMessageBox.warning(self, "Error",
-                                          "Impossible to execute "+algorithm+" algorithm")
-        if algorithm=="Addition":
+                                          "Impossible to execute " + algorithm + " algorithm")
+        if algorithm == "Addition":
             try:
                 algorithm_result, output = run_calculation(algorithm, nifti_selected, arguments)
-                self.console.setText(">>> \n"+output)
-                self.popUpSaveFileResultCalculation(algorithm,algorithm_result)
+                self.console.setText(">>> \n" + output)
+                self.popUpSaveFileResultCalculation(algorithm, algorithm_result)
             except:
                 QtGui.QMessageBox.warning(self, "Error",
-                                          "Impossible to execute "+algorithm+" algorithm")
-        if algorithm=="Entropy":
+                                          "Impossible to execute " + algorithm + " algorithm")
+        if algorithm == "Entropy":
             try:
                 algorithm_result, output = run_calculation(algorithm, nifti_selected, arguments)
-                self.console.setText(">>> \n"+output)
+                self.console.setText(">>> \n" + output)
             except:
                 QtGui.QMessageBox.warning(self, "Error",
-                                          "Impossible to execute "+algorithm+" algorithm")
-        if algorithm=="Erosion":
+                                          "Impossible to execute " + algorithm + " algorithm")
+        if algorithm == "Erosion":
             try:
-                algorithm_result, output = run_calculation(algorithm, nifti_selected, self.param.text() )
-                self.console.setText(">>> \n"+output)
-                self.popUpSaveFileResultCalculation(algorithm,algorithm_result)
+                algorithm_result, output = run_calculation(algorithm, nifti_selected, self.param.text())
+                self.console.setText(">>> \n" + output)
+                self.popUpSaveFileResultCalculation(algorithm, algorithm_result)
             except:
                 QtGui.QMessageBox.warning(self, "Error",
-                                          "Impossible to execute "+algorithm+" algorithm")
-        if algorithm=="Dilation":
+                                          "Impossible to execute " + algorithm + " algorithm")
+        if algorithm == "Dilation":
             try:
-                algorithm_result, output = run_calculation(algorithm, nifti_selected, self.param.text() )
-                self.console.setText(">>> \n"+output)
-                self.popUpSaveFileResultCalculation(algorithm,algorithm_result)
+                algorithm_result, output = run_calculation(algorithm, nifti_selected, self.param.text())
+                self.console.setText(">>> \n" + output)
+                self.popUpSaveFileResultCalculation(algorithm, algorithm_result)
             except:
                 QtGui.QMessageBox.warning(self, "Error",
-                                          "Impossible to execute "+algorithm+" algorithm")
-        if algorithm=="Opening":
+                                          "Impossible to execute " + algorithm + " algorithm")
+        if algorithm == "Opening":
             try:
-                algorithm_result, output = run_calculation(algorithm, nifti_selected, self.param.text() )
-                self.console.setText(">>> \n"+output)
-                self.popUpSaveFileResultCalculation(algorithm,algorithm_result)
+                algorithm_result, output = run_calculation(algorithm, nifti_selected, self.param.text())
+                self.console.setText(">>> \n" + output)
+                self.popUpSaveFileResultCalculation(algorithm, algorithm_result)
             except:
                 QtGui.QMessageBox.warning(self, "Error",
-                                          "Impossible to execute "+algorithm+" algorithm")
-        if algorithm=="Closing":
+                                          "Impossible to execute " + algorithm + " algorithm")
+        if algorithm == "Closing":
             try:
-                algorithm_result, output = run_calculation(algorithm, nifti_selected, self.param.text() )
-                self.console.setText(">>> \n"+output)
-                self.popUpSaveFileResultCalculation(algorithm,algorithm_result)
+                algorithm_result, output = run_calculation(algorithm, nifti_selected, self.param.text())
+                self.console.setText(">>> \n" + output)
+                self.popUpSaveFileResultCalculation(algorithm, algorithm_result)
             except:
                 QtGui.QMessageBox.warning(self, "Error",
-                                          "Impossible to execute "+algorithm+" algorithm")
-        if algorithm=="Threshold":
+                                          "Impossible to execute " + algorithm + " algorithm")
+        if algorithm == "Threshold":
             try:
                 try:
                     min = float(self.thresholdMin.text())
                 except:
                     min = -1000000.0
                 try:
-                    max =  float(self.thresholdMax.text())
+                    max = float(self.thresholdMax.text())
                 except:
                     max = 1000000.0
-                algorithm_result, output = run_calculation(algorithm, nifti_selected, [min,max] )
-                self.console.setText(">>> \n"+output)
-                self.popUpSaveFileResultCalculation(algorithm,algorithm_result)
+                algorithm_result, output = run_calculation(algorithm, nifti_selected, [min, max])
+                self.console.setText(">>> \n" + output)
+                self.popUpSaveFileResultCalculation(algorithm, algorithm_result)
             except:
                 QtGui.QMessageBox.warning(self, "Error",
-                                          "Impossible to execute "+algorithm+" algorithm\nPlease enter the lower bound (Min) and higher bound (Max). These two arguments must be double value (ex: 5.63)")
-        if algorithm=="Multiplication":
+                                          "Impossible to execute " + algorithm + " algorithm\nPlease enter the lower bound (Min) and higher bound (Max). These two arguments must be double value (ex: 5.63)")
+        if algorithm == "Multiplication":
             try:
                 try:
                     mult_coef = float(self.param.text())
@@ -416,66 +471,68 @@ class calculationView2(QtGui.QWidget):
                     mult_coef = 1
                     print("fail mult coef")
                 algorithm_result, output = run_calculation(algorithm, nifti_selected, mult_coef)
-                self.console.setText(">>> \n"+output)
-                self.popUpSaveFileResultCalculation(algorithm,algorithm_result)
+                self.console.setText(">>> \n" + output)
+                self.popUpSaveFileResultCalculation(algorithm, algorithm_result)
             except:
                 QtGui.QMessageBox.warning(self, "Error",
-                                          "Impossible to execute "+algorithm+" algorithm")
-        if algorithm=="Division":
+                                          "Impossible to execute " + algorithm + " algorithm")
+        if algorithm == "Division":
             try:
                 try:
                     div_coef = float(self.param.text())
                 except:
                     div_coef = 1
                 algorithm_result, output = run_calculation(algorithm, nifti_selected, div_coef)
-                self.console.setText(">>> \n"+output)
-                self.popUpSaveFileResultCalculation(algorithm,algorithm_result)
+                self.console.setText(">>> \n" + output)
+                self.popUpSaveFileResultCalculation(algorithm, algorithm_result)
             except:
                 QtGui.QMessageBox.warning(self, "Error",
-                                          "Impossible to execute "+algorithm+" algorithm")
+                                          "Impossible to execute " + algorithm + " algorithm")
 
-    def popUpSaveFileResultCalculation(self,algorithm,result):
+    def popUpSaveFileResultCalculation(self, algorithm, result):
         global setToAdd
         choice = QtGui.QMessageBox()
         choice.setWindowTitle('Success !')
         l = choice.layout()
         l.setContentsMargins(20, 10, 10, 20)
-        l.addWidget(QLabel(algorithm +" algorithm has been correctly applicated on nifti(s) file(s)\n\n\n\nDo you want save the algorithm's result as Set ?"),
-        l.rowCount() - 3, 0, 1, l.columnCount() - 2, Qt.AlignCenter)
+        l.addWidget(QLabel(
+            algorithm + " algorithm has been correctly applicated on nifti(s) file(s)\n\n\n\nDo you want save the algorithm's result as Set ?"),
+            l.rowCount() - 3, 0, 1, l.columnCount() - 2, Qt.AlignCenter)
         choice.setStandardButtons(QMessageBox.Cancel | QMessageBox.Save)
         wantToSave = choice.exec_()
         if wantToSave == QtGui.QMessageBox.Save:
-            setCalculation = Set("calc_",1)
-            setCalculation.set_name("calc_"+str(id(setCalculation)))
-            coll = ImageCollection("coll_",setCalculation)
-            coll.set_name("coll_"+str(id(coll)))
+            setCalculation = Set("calc_", 1)
+            setCalculation.set_name("calc_" + str(id(setCalculation)))
+            coll = ImageCollection("coll_", setCalculation)
+            coll.set_name("coll_" + str(id(coll)))
             for matrixData in result:
                 template_mni_path = 'ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii'
                 template_data = load(template_mni_path)
                 template_affine = template_data.affine
                 recreate_image = Nifti1Image(matrixData, template_affine)
-                ni_image = NifImage(""+str(time.time()*1000), recreate_image)
-                ni_image.set_filename("file_"+str(algorithm)+"_"+str(id(ni_image))+".nii")
+                ni_image = NifImage("" + str(time.time() * 1000), recreate_image)
+                ni_image.set_filename("file_" + str(algorithm) + "_" + str(id(ni_image)) + ".nii")
                 coll.add(ni_image)
             setCalculation.add_collection(coll)
             makeCalculResultSet(setCalculation)
 
-
     def go_back(self):
         # -- When the user wants to return to the main view, we reinit the cluster view
-       
+
         self.showMain.emit()
 
-    def retranslateUi(self, Form):
-        Form.setWindowTitle(_translate("Form", "Form", None))
+    def retranslate_ui(self, form):
+        form.setWindowTitle(_translate("Form", "Form", None))
         self.label.setText(_translate("Form", "Arguments", None))
         self.label_2.setText(_translate("Form", "Name of argument", None))
         self.pushButton.setText(_translate("Form", "Calculate", None))
         self.label_3.setText(_translate("Form", "Description", None))
-        self.textBrowser.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Fira Sans\'; font-size:10pt; font-weight:200; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
+        self.textBrowser.setHtml(_translate("Form",
+                                            "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                            "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                            "p, li { white-space: pre-wrap; }\n"
+                                            "</style></head><body style=\" font-family:\'Fira Sans\'; font-size:10pt; font-weight:200; font-style:normal;\">\n"
+                                            "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>",
+                                            None))
         self.label_4.setText(_translate("Form", "Example", None))
         self.pushButton_2.setText(_translate("Form", "Go back", None))
