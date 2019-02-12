@@ -19,7 +19,7 @@ import numpy as np
 import sys
 from os import path
 from ..filesHandlers.nifimage import NifImage
-from ..filesHandlers.csvImage import CsvImage
+from ..filesHandlers.excelImage import Image
 
 if __package__ is None:
     sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
@@ -27,6 +27,7 @@ if __package__ is None:
     from ..calculations import image_centroid
 else:
     from ..dataExtraction.usable_data import UsableDataCollection, UsableDataSet
+
 
 def extract(obj):
     """
@@ -44,7 +45,9 @@ def extract(obj):
     # shape : lines = number of voxels found for which intensity is superior to 0
     #           col = four columns : X,Y,Z and intensity (for now...)
 
-    if type(obj) == NifImage :
+    # print("extractor: type obj ->", type(obj))
+
+    if isinstance(obj, NifImage):
 
         # Safe copy the data so you won't modify the original image data (see NifImage class)
         # finite=True is given as an argument to replace NaN or Inf values by zeros
@@ -69,7 +72,6 @@ def extract(obj):
             """ Return X,Y,Z coordinates in MNI for i, j, k"""
             return M.dot([i, j, k]) + abc
 
-
         for x in range(1, lx):
             # If there is at least one value NOT EQUAL to zero, the other dimensions are worth exploring
             if img_data[x].sum() > 0:
@@ -78,16 +80,16 @@ def extract(obj):
                         for z in range(1, lz):
                             voxel_intensity = img_data[x][y][z]
                             if voxel_intensity > 0:
-                                x_y_z = f(x,y,z)
+                                x_y_z = f(x, y, z)
                                 usable_data[c] = [x_y_z[0], x_y_z[1], x_y_z[2], voxel_intensity]
                                 c = c + 1
 
-        obj.uncache() # deleting safe copy of image data saves a lot of memory !
+        obj.uncache()  # deleting safe copy of image data saves a lot of memory !
 
         return usable_data
-    
-    elif type(obj) == CsvImage:
 
+    elif isinstance(obj, Image):
+        # print("extractor -> in Image")
         return obj.extract()
 
     else:

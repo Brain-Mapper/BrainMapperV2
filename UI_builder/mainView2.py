@@ -177,7 +177,7 @@ class SetButton(QtGui.QWidget):
 
     def fromExcel(self):
         file_name = QFileDialog.getOpenFileName(self, "Choose one file",
-                                                 "./", 'CSV(*.csv)')
+                                                 "./", 'CSV(*.csv);;Excel files(*.xlsx *.xls)')
         if (file_name != ""):
             # try:
             collec = simple_import(file_name,'ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii',self.my_set)
