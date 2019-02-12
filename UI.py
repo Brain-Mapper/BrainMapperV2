@@ -88,7 +88,7 @@ class Help(QMainWindow):
         self.show()
 
     def openUrl(self, url):
-        url = QtCore.QUrl('https://brain-mapper.github.io/BrainMapper-help/')
+        url = QtCore.QUrl('https://telecomnancy.github.io/BrainMapperV2/')
         if not QtGui.QDesktopServices.openUrl(url):
             QtGui.QMessageBox.warning(self, 'Open Url', 'Could not open url')
 
@@ -163,8 +163,8 @@ class HomePage(QWidget):
 
     def updateSOMView(self):
         self.SOM.fill_table(self.mainview.list_entete,self.mainview.list_data)
-        self.stack.setCurrentWidget(self.SOM)  
-              
+        self.stack.setCurrentWidget(self.SOM)
+
     def updateClusteringView(self):
         self.clustering.fill_table(get_current_usableDataset())
         self.stack.setCurrentWidget(self.clustering)
