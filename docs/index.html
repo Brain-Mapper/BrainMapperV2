@@ -1,1 +1,293 @@
-Hellow world
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>User manual</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="icon" href="imgs/logo.png">
+  </head>
+  <body>
+
+  <header class="w3-container w3-center w3-padding-32">
+    <div class="row">
+      <div class="column-h">
+          <img src="imgs/logo.png" style="width:8%">
+      </div>
+      <div class="column-h">
+        <h1><b>USER MANUAL</b></h1>
+    	  <p>Welcome to the user manual for the <span class="w3-tag">BrainMapper</span> software.</p>
+      </div>
+    </div>
+	</header>
+<div class="row">
+  <div class="column-left">
+    <div class="w3-card w3-margin w3-margin-top">
+      <div id="toc_container">
+    	<p class="toc_title">Contents</p>
+    	<ul class="toc_list">
+    	   <li><a href="#Global_presentation"><strong>1 Global presentation</strong></a></li>
+    	   <li><a href="NIfTI_handling.html"><strong>2 NIfTI Handling</strong></a></li>
+         <ul>
+           <li><a href="NIfTI_handling.html#set">2.1 Set</a></li>
+           <ul>
+             <li><small><a href="NIfTI_handling.html#new_set">2.1.1 Create a new set</a></small></li>
+             <li><small><a href="NIfTI_handling.html#rename_set">2.1.2 Rename a set</a></small></li>
+             <li><small><a href="NIfTI_handling.html#sub_set">2.1.3 Add a sub set</a></small></li>
+           </ul>
+         <li><a href="NIfTI_handling.html#collection">2.2 Collection</a></li>
+           <ul>
+           <li><small><a href="NIfTI_handling.html#new_collection">2.2.1 Create a new collection</a></small></li>
+           <li><small><a href="NIfTI_handling.html#select">2.2.2 Select collections</a></small></li>
+           </ul>
+         <li><a href="NIfTI_handling.html#edit">2.3 Edit Collections</a></li>
+          <ul>
+             <li><small><a href="NIfTI_handling.html#select_edit">2.3.1 Select collection to edit</a></small></li>
+             <li><small><a href="NIfTI_handling.html#rename_col">2.3.2 Rename a Collection</a></small></li>
+             <li><small><a href="NIfTI_handling.html#add_images">2.3.3 Add images</a></small></li>
+             <li><small><a href="NIfTI_handling.html#remove_images">2.3.4 Remove images</a></small></li>
+             <li><small><a href="NIfTI_handling.html#show">2.3.5 Show one image</a></small></li>
+             <li><small><a href="NIfTI_handling.html#del_col">2.3.6 Delete one collection</a></small></li>
+           </ul>
+          </ul>
+            <li><a href="clustering.html"><strong>3 Clustering</strong></a></li>
+            <ul>
+              <li><a href="clustering.html#data">3.1 Data extraction for clustering</a></li>
+               <ul>
+                   <li><a href="clustering.html#extract"><small>3.1.1 How data is extracted</small></a></li>
+                   <li><a href="clustering.html#all_points"><small>3.1.2 Use all points of an image</small></a></li>
+                   <li><a href="clustering.html#as_centroid"><small>3.1.3 Use the image's points centroid as data</small></a></li>
+                 </ul>
+               <li><a href="clustering.html#methods">3.2 Perform clustering algorithms on extracted data</a></li>
+                 <ul>
+                 <li><a href="clustering.html#kmeans"><small>3.2.1 KMeans</small></a></li>
+                 <li><a href="clustering.html#kmedoids"><small>3.2.2 KMedoids</small></a></li>
+                 <li><a href="clustering.html#agglo"><small>3.2.3 Agglomerative Clustering</small></a></li>
+                 </ul>
+               <li><a href="clustering.html#script_env">3.3 Execute custom functions : user script environment</a></li>
+               <li><a href="clustering.html#clust_results"> 3.4 Visualize clustering results </a></li>
+               <ul>
+                 <li><a href="clustering.html#clust_assign"><small>3.4.1 Cluster assignment</small></a></li>
+                 <ul>
+                   <li><a href="clustering.html#as_set"><small>3.4.1.1 Save results as set</small></a></li>
+                   <li><a href="clustering.html#to_csv"><small>3.4.1.2 Export as CSV file</small></a></li>
+                 </ul>
+                 <li><a href="clustering.html#visu"><small>3.4.2 Graphic Visualisation</small></a></li>
+                 <li><a href="clustering.html#val_index"><small>3.4.3 Internal Validation Indexes</small></a></li>
+                 <ul>
+                   <li><a href="clustering.html#mean_silhouette"><small>3.4.3.1 Mean Silhouette</small></a></li>
+                   <li><a href="clustering.html#ch_index"><small>3.4.3.2 Calinski-Habaraz Index</small></a></li>
+                   <li><a href="clustering.html#db_index"><small>3.4.3.3 Davies Boulin index</small></a></li>
+                 </ul>
+               </ul>
+            </ul>
+
+
+            <li><a href="calculations.html"><strong>4 Calculations</strong></a></li>
+			<ul>
+          	   <li><a href="calculations.html#41">4.1. Data extracted for calculation</a></li>
+          	    <ul>
+          		      <li><a href="calculations.html#411"><small>4.1.1. How data is extracted</small></a></li>
+
+          	      </ul>
+              	<li><a href="calculations.html#42">4.2. Optimization of calculations</a></li>
+              	  <ul>
+              		<li><a href="calculations.html#421"><small>4.2.1. Adapted library</small></a></li>
+              		<li><a href="calculations.html#422"><small>4.2.2. Reduction of search space in data extraction</small></a></li>
+              	  </ul>
+              	<li><a href="calculations.html#43">4.3. List of implemented calcul</a></li>
+		  <ul>
+              		<li><a href="calculations.html#431"><small>4.3.1. Addition</small></a></li>
+			<li><a href="calculations.html#432"><small>4.3.2. Boolean Intersection</small></a></li>
+              		<li><a href="calculations.html#433"><small>4.3.3. Boolean Union</small></a></li>
+			<li><a href="calculations.html#434"><small>4.3.4. Centroid</small></a></li>
+			<li><a href="calculations.html#435"><small>4.3.5. Closing</small></a></li>
+			<li><a href="calculations.html#436"><small>4.3.6. Dilatation</small></a></li>
+			<li><a href="calculations.html#437"><small>4.3.7. Entropy</small></a></li>
+			<li><a href="calculations.html#438"><small>4.3.8. Erosion</small></a></li>
+			<li><a href="calculations.html#439"><small>4.3.9. Mean</small></a></li>
+			<li><a href="calculations.html#4310"><small>4.3.10. Normalization</small></a></li>
+			<li><a href="calculations.html#4311"><small>4.3.11. Opening</small></a></li>
+			<li><a href="calculations.html#4312"><small>4.3.12. Threshold</small></a></li>
+
+              	  </ul>
+		<li><a href="calculations.html#script_env">4.4. Procedure to apply a calculation</small></a></li>
+			<li><a href="calculations.html#441"><small>4.4.1. Load and select a set of nifti collection</small></a></li>
+			<li><a href="calculations.html#442"><small>4.4.2. Select a calculation and the parameters</small></a></li>
+              		<li><a href="calculations.html#443"><small>4.4.3. Execute the algorithm and save it in the calculation tab</small></a></li>
+                	<li><a href="calculations.html#444"><small>4.4.4. Have an overview of the results in the Edit view</small></a></li>
+              </ul>
+            <li><a href="import_export.html"><strong>5 Import/Export</strong></a></li>
+			<ul>
+             <li><a href="import_export.html#workspace">5.1 Workspace</a></li>
+			 <ul>
+				 <li><a href="import_export.html#what"><small>5.1.1 What is it?</small></a></li>
+				 <li><a href="import_export.html#import_workspace"><small>5.1.2 Import workspace</small></a></li>
+				 <li><a href="import_export.html#export_workspace"><small>5.1.3 Export workspace</small></a></li>
+           </ul>
+             <li><a href="import_export.html#export">5.2 Export an Image Collection</a></li>
+			 <ul>
+				 <li><a href="import_export.html#export_nifti"><small>5.2.1 As a NIfTI file</small></a></li>
+				 <li><a href="import_export.html#export_csv"><small>5.2.2 As a CSV file</small></a></li>
+           </ul>
+           </ul>
+        	</ul>
+    	</div>
+    </div>
+  </div>
+  <div class="column-right">
+    <div id="Global_presentation">
+      <h1> Global presentation </h1>
+      Brain-Mapper is the product of a 5-month collaboration between the Central Hospital of Nancy, France (CHRU in french) and Computer Science and Engineering students at TELECOM Nancy<br/><br/>
+
+      The aim of this project was to simplify the treatment chain of neurosurgeon Dr. Fabien Rech, who had to use several librairies, software and methods to extract interesting data from NIfTI files.<br/>
+      The workchain of NIfTI processing and information extraction carried out by Dr. Rech for his thesis work was the following one :
+      <div style="padding-left: 24%; padding-top:3%; padding-bottom:3%">
+       <img src="imgs/chaine.jpg" style="width:60%">
+     </div>
+      Our aim was to simplify this work chain and offer the possibility to manage NIfTI, extract the interesting data from them to use it for calculations and clustering algorithms
+      <br/><br/>
+      <h2> Software usecase</h2>
+      This software is written in Python. Its user interface is written in PyQt 4.<br>
+      It can be used to create several sets and image collections associated with brain responses or patients, that will contain different images, in the NIfTI format and standards.
+      The user can then extract data from the loaded NIfTI files to perform basic calculations or apply clustering algorithms to this data.<br>
+      Calculations and clustering results can be exported as NIfTI or CSV files, as well as the original NIfTI files. Data can be imported as well as NIfTI or Excel files and the user can specify
+       a workspace directory from which files will be automatically imported
+       <div style="padding-left: 12%; padding-top:3%; padding-bottom:3%">
+         <div class="alert alert-info" role="alert">
+         <h5 style="color:#f66;">WARNING</h5>
+         <b>This software was designed for the processing of binary NIfTI files, i.e. NIfTI files where voxels have an intensity either equal to zero or equal to 1.</b>
+         <br><br>
+         Data extraction is still quite naive : our algorithms extract all points that have an intensity value greater than zero. Thus, if you have NIfTI files with the MNI template
+         still as a background and your selected regions, our software will extract a list containing all coordinates that have an intensity value other than zero.<br><br>
+
+         We are currently working on a version of the software that allows the user to specifiy a threshold for data extraction but for now, it will be best to use only binary NIfTI files.
+         Otherwise, extraction time and performance may hinder the utility of the software
+       </div>
+      </div>
+
+      Thus, the current version of this software allows the user to : <br>
+      <ul>
+        <li><b>Open</b> NIfTI files (<em><b>'.nii'</b></em> or in compressed format <em><b>'.nii.gz'</b></em>) and put them in
+          <b>Sets</b>, which are associated with a brain response and <b>Image Collections</b>, associated mostly to patients </li>
+        <li>Import and export the workspace from/into a directory, whose structure will reflect that of the application (set folders, image collections subfolders...) </li>
+        <li>Edit the content of sets and image collections, and change their names</li>
+        <li>Visualize in a 3D graph the contents of a NIfTI image from the edition page </li>
+        <li>Select several image collections, across all sets, containing the images to which calculations and clustering algorithms will be applied </li>
+        <li>Perform several calculations on selected NIfTI files</li>
+        <li>Extract data from selected NIfTI files and perform clustering methods on this data (KMeans, KMedoids, AgglomerativeClustering)</li>
+        <li>Visualize cluster assignment proportions and samples silhouette through graphical representations in clustering page</li>
+        <li>Calculate <em><b>internal validation indexes</b></em> for clustering results, such as Silhouettes, Mean Silhouette, Calinski-Habaraz score and Davis-Boulin index</li>
+        <li>Save clustering and calculation results as sets and image collections within the application</li>
+        <li>Export clustering assignments data table as a CSV file and clustering validation indexes as a Text file</li>
+        <li>Export whole image collections or sets as NIfTI files</li>
+
+      </ul>
+
+      <div style="padding-left: 12%; padding-top:3%; padding-bottom:3%">
+         <div class="alert note-info" role="alert">
+         <h5 style="color:#306499;">INFORMATION</h5>
+          Our software can open compressed NIfTI formats ('.nii.gz').
+       </div>
+      </div>
+
+
+      <h2> Install </h2>
+        <em>brainMapper</em> is written in <b>Python 2.7</b>. In this section, we present a tutorial to use the latest version of brainMapper in your computer
+        <br>
+        <div style="padding-left: 12%; padding-top:3%; padding-bottom:3%">
+          <div class="alert alert-info" role="alert">
+          <h5 style="color:#f66;">WARNING</h5>
+          <b>The desktop application of this software is not available yet </b>
+          <br><br>
+          This install tutorial will allow the user to easily <b>execute</b> <em>brainMapper</em> but will not install a compiled version of it on the machine.<br>
+          <br>
+          We will include compiled desktop applications in the near future.
+        </div>
+       </div>
+
+
+        <h3> Dependencies </h3>
+        Our software uses the following Python libraries :
+        <ul>
+          <li>PyQt 4 (>= 4.0.0)</li>
+          <li>NiBabel (>= 2.0.0 )</li>
+          <li>Numpy (>= 1.8.2)</li>
+          <li>scikit-learn</li>
+          <li>pyqtgraph</li>
+          <li>pyopengl</li>
+        </ul>
+
+        <h3> Ubuntu (GNU/Linux)</h3>
+        <ul>
+          <li>Open a terminal and install all dependencies with the following commands :</li>
+          <div style="padding-left: 1%; padding-top:1%; padding-bottom:1%">
+            <div class="command">
+              sudo apt-get install python-qt4<br>
+              sudo python2 -m pip install nibabel<br>
+              sudo python2 -m pip install -U numpy<br>
+              sudo python2 -m pip install -U scikit-learn<br>
+              sudo python2 -m pip install pyqtgraph<br>
+              sudo python2 -m pip install pyopengl<br>
+            </div>
+          </div>
+          <li>Clone the repository or download a .zip file from this project's <a href="https://github.com/Brain-Mapper/brainMapper" target="_blank">GitHub repository</a>
+            and unzip it in a folder of your choice.</li>
+          <li>Create a <em>.sh</em> file next to the extracted folder that contains the following commands : </li>
+          <div style="padding-left: 1%; padding-top:1%; padding-bottom:1%">
+            <div class="command">
+              cd brainMapper-master/UI<br>
+              python brainMapper_UI.py<br>
+            </div>
+          </div>
+          <br>
+          <li>Create a shorcut to this <em>.sh</em> file and place it where you want to : this file will be the application's "launcher"</em></li>
+        </ul>
+
+        <h3> OSX (Mac)</h3>
+
+        <h3> Windows </h3>
+        <ul>
+	         <li>Install Miniconda package manager for <b>Windows and Python 2.7</b>: <a href=https://conda.io/miniconda.html>Download the installer here</a>. </li>
+              When installing, tick the option <b><em>"Add Anaconda to my PATH variable".</em></b>
+              <br><br>
+
+           <li> In a Powershell terminal, type the following commands :</li>
+             <div style="padding-left: 1%; padding-top:1%; padding-bottom:1%">
+               <div class="command">
+                  conda install python=2.7<br>
+                  activate root<br>
+                  conda install -c anaconda pyqt=4.11.4<br>
+                  conda install numpy<br>
+                  conda install scikit-learn<br>
+                  conda install pyqtgraph<br>
+                  conda install pyopengl<br>
+                  conda install -c conda-forge nibabel<br>
+                </div>
+              </div>
+              <br>
+            <li>Download the .zip project on the <a href="https://github.com/TELECOMNancy/brainMapper" target="_blank">GitHub repository</a>. </li>
+            Decompress it, and create a .bat file (be careful with file extensions on Windows, sometimes a .txt will be added and you cannot see it.). <br>
+            <br>
+            <li>In the .bat file put in the following commands </li>
+            <div style="padding-left: 1%; padding-top:1%; padding-bottom:1%">
+              <div class="command">
+                  cd brainMapper-master/UI<br>
+                  python UI.py<br>
+              </div>
+            </div>
+            This file has to be in the same folder than the decompressed .zip. <br>
+            Finally, create a .bat shortcut (right click, 'Create shorcut') and put it on your Desktop : when you click on it, <b><em>brainMapper</em></b> will launch .
+
+    </div>
+  </div>
+</div>
+
+	<footer class="w3-container w3-dark-grey w3-padding-32 w3-margin-top">
+    <div class="column-left">
+	     <p>Source code available on <a href="https://github.com/Brain-Mapper/brainMapper" target="_blank">GitHub repository</a></p>
+    </div>
+    <div>
+      <p> <b>Authors</b>: R. Agathon (@yoshcraft), M. Cluchague (@maximeCluchague), G. Husson (@Graziella-Husson), V. Zelaya (@vz-chameleon)
+    </div>
+	</footer>
+  </body>
+</html>
