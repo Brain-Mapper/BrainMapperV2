@@ -13,18 +13,16 @@ from nibabel import save
 from os import path
 from os import makedirs
 from ..filesHandlers import nifimage
-
+from ..filesHandlers import image
 
 def image_recreation(folder_path, image_collection):
-    print(image_collection.nifimage_dict.keys())
     for key in image_collection.nifimage_dict.keys():
         obj = image_collection.nifimage_dict[key]
         if isinstance(obj,nifimage.NifImage):
             name = image_collection.nifimage_dict[key].get_name()
-            print(image_collection.nifimage_dict[key])
             save(image_collection.nifimage_dict[key].get_image(), path.join(folder_path, path.basename(name).split('.')[0])+".nii.gz")
-        elif isinstance(obj,Image):
-            print("cc")
+        elif isinstance(obj,image.Image):
+            obj.save(path.join(folder_path, path.basename(obj.filename)))
 
 def image_recreation_from_list(folder_path, image_collection_list):
 

@@ -15,6 +15,7 @@ from ourLib.filesHandlers.nifimage import NifImage
 from ourLib.filesHandlers.set import Set
 import BrainMapper
 import os
+from ..filesHandlers import image
 
 
 def recursive_import(folder_path, actual_set, depth):
@@ -41,7 +42,7 @@ def recursive_import(folder_path, actual_set, depth):
                         actual_set.subset_dict[item].setParent(actual_set)
                         recursive_import(item_path, actual_set.subset_dict[item], depth + 1)
                     else:
-                        new_set = Set(item)
+                        new_set = Set(item,0)
                         BrainMapper.add_workspace_set(new_set)
                         BrainMapper.add_set(new_set)
                         recursive_import(item_path, new_set, depth + 1)
@@ -50,7 +51,14 @@ def recursive_import(folder_path, actual_set, depth):
                     actual_set.add_empty_collection(item, actual_set)
                     for sub_item in item_list:
                         if not sub_item.startswith('.'):
-                            actual_set.collection_dict[item].add(NifImage.from_file(os.path.join(item_path, sub_item)))
+                            extension = '.'.join(sub_item.split('.')[1:])
+                            if extension in ['nii','nii.gz']:
+                                actual_set.collection_dict[item].add(NifImage.from_file(os.path.join(item_path, sub_item)))
+                            else:
+                                if extension in ["xls", "xlsx"]:
+                                    actual_set.collection_dict[item].add(image.ExcelImage(os.path.join(item_path, sub_item)))
+                                elif extension in ["csv"]:
+                                    actual_set.collection_dict[item].add(image.CSVImage(os.path.join(item_path, sub_item)))
 
 
 def recursive_import_control(folder_path, sets):
