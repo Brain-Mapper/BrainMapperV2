@@ -6,11 +6,12 @@ from shutil import copy2
 
 class Image(ABC):
     """
-    A custom structure for representing Csv files in the application
+    A custom structure for representing images files in the application
     The file is only opened during the extract phase
     """
 
     def __init__(self, filename):
+        # path of the file
         self.filename = filename
 
     def save(self, dest_path):
@@ -57,6 +58,7 @@ def simple_import(file_path, currentSet):
         [type] -- [description]
     """
     extension = file_path.split(".")[-1].lower()
+
     if extension in ["xls", "xlsx"]:
         image = ExcelImage(file_path)
     elif extension in ["csv"]:
