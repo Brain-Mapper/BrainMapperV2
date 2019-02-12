@@ -3,7 +3,7 @@
       "algo_usecase" : "General-purpose, even cluster size, flat geometry, not too many clusters. Metric is Euclidean Dist.",
       "param_list" : {
         "init": {
-          "param_info" : "A way to initialise the centers : randomly or kmeans++ (see scikit-learn documentation on kmeans)",
+          "param_info" : "The way to initialise the centers : randomly or kmeans++. Randomly chooses k-observations from data for the initial centroids. Kmeans++ selects initial cluster centers in a smart way.",
           "type" : ["random","k-means++"],
           "default" : "random"
         },
@@ -18,12 +18,12 @@
           "default" : "3"
         },
         "score" : {
-          "param_info" : "The score choose to calculate the best number of clusters",
+          "param_info" : "The score choose to calculate the best number of clusters. Calinski-Habaraz score is the relation between the sum of distances squared intergroup and the sum of distances squared intragroup. Whereas, Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the Davies-Bouldin index and bigger is the Calinski-Habaraz score, better is the number of clusters. Mean silhouette value is between -1 and 1 and the best value is around 1.",
           "type" : ["Calinski-Harabasz", "Davies-Bouldin", "Mean silhouette"],
           "default" : "Mean silhouette"
         },
         "n_init" : {
-          "param_info" : "Number of time the k-means algorithm will be run with different centroid seeds. The final results will be the best output of n_init consecutive runs in terms of inertia",
+          "param_info" : "Number of time the k-means algorithm will be run with different centroid seeds. The final results will be the best output of n_init consecutive runs in terms of inertia.",
           "type" : "int",
           "default" : "1"
         },
@@ -39,7 +39,7 @@
       "algo_usecase" : "General-purpose, even cluster size, flat geometry, not too many clusters.",
       "param_list" : {
         "init": {
-          "param_info" : "A way to initialise the centers : randomly or kmeans++ (see Arthur, D. and Vassilvitskii, S. k-means++: the advantages of careful seeding. ACM-SIAM symposiumon Discrete algorithms. 2007)",
+          "param_info" : "A way to initialise the centers : randomly or kmeans++. Randomly chooses k-observations from data for the initial centroids. Kmeans++ selects initial cluster centers in a smart way.",
           "type" : ["random","k-means++"],
           "default" : "k-means++"
         },
@@ -54,12 +54,12 @@
           "default" : "3"
         },
         "score" : {
-          "param_info" : "The score choose to calculate the best number of clusters",
+          "param_info" : "The score choose to calculate the best number of clusters. Calinski-Habaraz score is the relation between the sum of distances squared intergroup and the sum of distances squared intragroup. Whereas, Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the Davies-Bouldin index and bigger is the Calinski-Habaraz score, better is the number of clusters. Mean silhouette value is between -1 and 1 and the best value is around 1.",
           "type" : ["Calinski-Harabasz", "Davies-Bouldin", "Mean silhouette"],
           "default" : "Mean silhouette"
         },
         "metric" : {
-          "param_info" : "Metric used to compute the distance between points. Can be 'euclidean', or 'manhattan'",
+          "param_info" : "Metric used to compute the distance between points. It can be 'euclidean', or 'manhattan'. Euclidian is better when data are grouped as a circle and manhattan is better when data are like a square.",
           "type" : ["euclidean","manhattan"],
           "default" : "euclidean"
         }
@@ -80,12 +80,12 @@
           "default" : "2"
       },
       "score" : {
-        "param_info" : "The score choose to calculate the best number of clusters",
+        "param_info" : "The score choose to calculate the best number of clusters. Calinski-Habaraz score is the relation between the sum of distances squared intergroup and the sum of distances squared intragroup. Whereas, Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the Davies-Bouldin index and bigger is the Calinski-Habaraz score, better is the number of clusters. Mean silhouette value is between -1 and 1 and the best value is around 1.",
         "type" : ["Calinski-Harabasz", "Davies-Bouldin", "Mean silhouette"],
         "default" : "Mean silhouette"
       },
       "affinity" : {
-          "param_info" : "Metric used to compute the linkage. Can be 'euclidean', 'l1', 'l2', 'manhattan' or 'cosine'\nIf linkage is 'ward', only 'euclidean' is accepted.",
+          "param_info" : "Metric used to compute the linkage. It can be 'euclidean', 'l1', 'l2', 'manhattan' or 'cosine'\nIf linkage is 'ward', only 'euclidean' is accepted.",
           "type" : ["euclidean", "l1", "l2","manhattan", "cosine"],
           "default" : "euclidean"
       },
@@ -115,7 +115,7 @@
           "default" : "10"
         },
         "metric" : {
-          "param_info" : "Metric used to compute the distance between points. Can be 'euclidean', or 'manhattan'",
+          "param_info" : "Metric used to compute the distance between points. It can be 'euclidean', or 'manhattan'",
           "type" : ["euclidean","manhattan"],
           "default" : "euclidean"
         }
@@ -136,7 +136,7 @@
                 "default" : 2
             },
             "error" : {
-                "param_info" : "stopping criterion. The algorithm stops if the norm of (u[p]-u[p-1] < error)" ,
+                "param_info" : "Stopping criterion. The algorithm stops if the norm of (u[p]-u[p-1] < error)" ,
                 "type" : "float",
                 "default" : 1.5
             },
@@ -151,7 +151,7 @@
                 "default" : 3
             },
             "score" : {
-              "param_info" : "The score choose to calculate the best number of clusters",
+              "param_info" : "The score choose to calculate the best number of clusters. Calinski-Habaraz score is the relation between the sum of distances squared intergroup and the sum of distances squared intragroup. Whereas, Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the Davies-Bouldin index and bigger is the Calinski-Habaraz score, better is the number of clusters. Mean silhouette value is between -1 and 1 and the best value is around 1.",
               "type" : ["Calinski-Harabasz", "Davies-Bouldin", "Mean silhouette","Fuzzy partition coefficient"],
               "default" : "Mean silhouette"
             }
