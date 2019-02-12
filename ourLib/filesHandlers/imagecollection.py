@@ -83,6 +83,6 @@ class ImageCollection(object):
 
     def imExists(self, name):
         for nifImage in self.nifimage_dict.values():
-            if(nifImage.filename == name):
+            if nifImage.filename == name:
                 return True
         return False

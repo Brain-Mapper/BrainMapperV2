@@ -22,7 +22,7 @@ from ourLib.dataExtraction.image_recreation import image_recreation
 from ourLib import clustering
 from ourLib import calculations as calcul
 from ourLib.Import import excelImport as imp
-import ourLib.filesHandlers.csvImage as csvImage
+import ourLib.filesHandlers.excelImage as csvImage
 from ourLib.Import import workspaceImport as ws
 
 from sys import maxsize as MAX

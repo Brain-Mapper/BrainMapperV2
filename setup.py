@@ -73,7 +73,7 @@ if sys.platform == "win32":
 if sys.platform == "linux2":
     binpathincludes += ["/usr/lib"]
     binpathincludes += ["~/.local/lib"]
- 
+
 # niveau d'optimisation pour la compilation en bytecodes
 optimize = 0
 
@@ -94,7 +94,7 @@ options = {"path": path,
            "optimize": optimize,
            "silent": silent,
            }
- 
+
 # pour inclure sous Windows les dll system de Windows necessaires
 if sys.platform == "win32":
     options["include_msvcr"] = True
@@ -104,7 +104,7 @@ base = None
 if sys.platform == "win32":
     base = "Win32GUI"  # pour application graphique sous Windows
     # base = "Console" # pour application en console sous Windows
-base=None 
+base=None
 icone = None
 if sys.platform == "win32":
     icone = "icone.ico"
