@@ -807,6 +807,7 @@ def general_workspace_save(folder_path):
         folder_path{string} -- path
     """
     for set in sets:
+        print("SET",set)
         if set.getParent() is None:
             recursive_workspace_save(folder_path, set)
 
