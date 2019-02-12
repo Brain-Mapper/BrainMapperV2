@@ -19,7 +19,7 @@ import numpy as np
 import sys
 from os import path
 from ..filesHandlers.nifimage import NifImage
-from ..filesHandlers.excelImage import Image
+from ..filesHandlers.image import Image
 
 if __package__ is None:
     sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
