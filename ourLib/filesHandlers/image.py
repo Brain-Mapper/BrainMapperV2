@@ -1,6 +1,7 @@
 import pandas as pd
 from ..filesHandlers.imagecollection import ImageCollection
 from abc import ABC, abstractmethod
+from shutil import copy2
 
 
 class Image(ABC):
@@ -11,6 +12,13 @@ class Image(ABC):
 
     def __init__(self, filename):
         self.filename = filename
+
+    def save(self, dest_path):
+        """
+        Copy the original file
+        :param dest_path: where to put the copy
+        """
+        copy2(self.filename, dest_path)
 
     @abstractmethod
     def extract(self):
@@ -48,19 +56,6 @@ def simple_import(file_path, currentSet):
     Returns:
         [type] -- [description]
     """
-
-    # try:
-    # the open is necessary for path with accents on windows
-    # as pandas doesn't seem to be able to manage them
-    # with open(file_path) as buffer:
-    #     columns = list(pd.read_csv(buffer, nrows=1, encoding="latin-1").columns)
-    # except:
-    #     QtGui.QMessageBox.critical(None, "Error",
-    #                                "The file cannot be opened : verify that the path to the file is python compatible")
-    #     return None
-    # else:
-    #     # If we can read the file
-
     extension = file_path.split(".")[-1].lower()
     if extension in ["xls", "xlsx"]:
         image = ExcelImage(file_path)
