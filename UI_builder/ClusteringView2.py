@@ -146,16 +146,21 @@ class ClusteringView2(QtGui.QWidget):
                 "n_selected" + "\t\t\t" + str(n_selected) + " for " + type_score + " score " + "\n")
         self.info_panel.insertPlainText(
             "-----------------------------------------------------------------------------\n\n")
-        range_of_cluster = read_n(n)
-        length = range_of_cluster[1] - range_of_cluster[0] + 1
-        if scores is not None:
-            self.info_panel.insertPlainText(
-                "Different " + type_score + " scores for each value of clusters number\n-----------------------------------------------------------------------------\n")
-            self.info_panel.insertPlainText("n \t\t scores \n\n")
-            for n in range(length):
-                self.info_panel.insertPlainText(str(n + range_of_cluster[0]) + "\t\t" + str(scores[n]) + "\n\n")
-            self.info_panel.insertPlainText(
-                "-----------------------------------------------------------------------------\n\n")
+        # Search of the number of cluster
+        if clustering_method != "DBSCAN":
+            range_of_cluster = read_n(n)
+            length = range_of_cluster[1] - range_of_cluster[0] + 1
+            if scores is not None:
+                self.info_panel.insertPlainText(
+                    "Different " + type_score + "scores for each value of clusters "
+                                                "number\n"
+                                                "-----------------------------------------------------------------------------\n")
+                self.info_panel.insertPlainText("n \t\t scores \n\n")
+                for n in range(length):
+                    self.info_panel.insertPlainText(str(n + range_of_cluster[0]) + "\t\t" + str(scores[n]) + "\n\n")
+                self.info_panel.insertPlainText(
+                    "-----------------------------------------------------------------------------\n\n")
+        # Centroids
         self.info_panel.insertPlainText(
             "Cluster centroids\n-----------------------------------------------------------------------------\n")
         count = 0
@@ -184,8 +189,7 @@ class ClusteringView2(QtGui.QWidget):
         self.centroids = self.history_iterations[i].get("centers")
 
     def createResultView(self, param_dict, selectedMethod):
-        print("createResultView -> i_iter", param_dict["i_iter"])
-        if param_dict["i_iter"] == "1":
+        if "i_iters" not in param_dict.keys() or param_dict["i_iter"] == "1":
             for i in reversed(range(self.verticalLayout_result.count())):
                 self.verticalLayout_result.itemAt(i).widget().setParent(None)
             self.info_panel = QtGui.QTextEdit()
@@ -254,76 +258,84 @@ class ClusteringView2(QtGui.QWidget):
     def runSelectedClust(self, selectedMethod, param_dict):
 
         column_selected = []
-        print("cc")
         columns = self.tableWidget.selectedItems()
         rownumber = self.tableWidget.rowCount()
         if len(columns) != 0:
             for i in range(0, len(columns), rownumber):
                 column_selected.append(columns[i].column())
 
-        i_iter = int(param_dict["i_iter"])
-        print(column_selected)
-        self.history_iterations = []
-        self.the_best_iteration = {}
-        self.the_best_iteration["iteration"] = 0
-        self.the_best_iteration["n_clusters"] = 0
-        self.the_best_iteration["silhouette_score"] = 0
-        self.the_best_iteration["calinski_harabaz_score"] = 0
-        self.the_best_iteration["davies_bouldin_score"] = 100
-        self.scores = []
+        if selectedMethod == "DBSCAN":
+            clustering_results = run_clustering(selectedMethod, param_dict)
+            self.n_selected = "DBSCAN"
+            param_dict["score"] = "DBSCAN"
+            self.scores = []
+        else:
+            i_iter = int(param_dict["i_iter"])
+            print(column_selected)
+            self.history_iterations = []
+            self.the_best_iteration = {}
+            self.the_best_iteration["iteration"] = 0
+            self.the_best_iteration["n_clusters"] = 0
+            self.the_best_iteration["silhouette_score"] = 0
+            self.the_best_iteration["calinski_harabaz_score"] = 0
+            self.the_best_iteration["davies_bouldin_score"] = 100
+            self.scores = []
 
-        range_of_cluster = read_n(param_dict["n_clusters"])
+            range_of_cluster = read_n(param_dict["n_clusters"])
 
-        nb_iteration = 0
-        for n in range(range_of_cluster[0], range_of_cluster[1] + 1):
-            for i in range(i_iter):
-                self.history_iterations.append({})
-                last_i = len(self.history_iterations) - 1
+            nb_iteration = 0
+            for n in range(range_of_cluster[0], range_of_cluster[1] + 1):
+                for i in range(i_iter):
+                    self.history_iterations.append({})
+                    last_i = len(self.history_iterations) - 1
 
-                copy_param_dict = deepcopy(param_dict)
-                copy_param_dict["n_clusters"] = n
-                clustering_results = run_clustering(selectedMethod, copy_param_dict)
+                    copy_param_dict = deepcopy(param_dict)
+                    copy_param_dict["n_clusters"] = n
+                    clustering_results = run_clustering(selectedMethod, copy_param_dict)
 
-                if clustering_results["silhouette_score"] > self.the_best_iteration["silhouette_score"] \
-                        and clustering_results["calinski_harabaz_score"] > self.the_best_iteration[
-                    "calinski_harabaz_score"] \
-                        and clustering_results["davies_bouldin_score"] < self.the_best_iteration[
-                    "davies_bouldin_score"]:
-                    self.the_best_iteration["iteration"] = nb_iteration
-                    self.the_best_iteration["silhouette_score"] = clustering_results["silhouette_score"]
-                    self.the_best_iteration["calinski_harabaz_score"] = clustering_results["calinski_harabaz_score"]
-                    self.the_best_iteration["davies_bouldin_score"] = clustering_results["davies_bouldin_score"]
-                    self.the_best_iteration["n_clusters"] = clustering_results["n"]
-                    self.the_best_iteration["centers"] = clustering_results[
+                    if clustering_results["silhouette_score"] > self.the_best_iteration["silhouette_score"] \
+                            and clustering_results["calinski_harabaz_score"] > self.the_best_iteration[
+                        "calinski_harabaz_score"] \
+                            and clustering_results["davies_bouldin_score"] < self.the_best_iteration[
+                        "davies_bouldin_score"]:
+                        self.the_best_iteration["iteration"] = nb_iteration
+                        self.the_best_iteration["silhouette_score"] = clustering_results["silhouette_score"]
+                        self.the_best_iteration["calinski_harabaz_score"] = clustering_results["calinski_harabaz_score"]
+                        self.the_best_iteration["davies_bouldin_score"] = clustering_results["davies_bouldin_score"]
+                        self.the_best_iteration["n_clusters"] = clustering_results["n"]
+                        self.the_best_iteration["centers"] = clustering_results[
+                            "centers"] if "centers" in clustering_results.keys() else None
+
+                    self.history_iterations[last_i]["method_used"] = selectedMethod
+                    self.history_iterations[last_i]["labels"] = clustering_results["labels"]
+                    self.history_iterations[last_i]["data"] = clustering_results["clusterizable_dataset"]
+                    self.history_iterations[last_i]["clusters"] = n
+                    self.history_iterations[last_i]["centers"] = clustering_results[
                         "centers"] if "centers" in clustering_results.keys() else None
 
-                self.history_iterations[last_i]["method_used"] = selectedMethod
-                self.history_iterations[last_i]["labels"] = clustering_results["labels"]
-                self.history_iterations[last_i]["data"] = clustering_results["clusterizable_dataset"]
-                self.history_iterations[last_i]["clusters"] = n
-                self.history_iterations[last_i]["centers"] = clustering_results[
-                    "centers"] if "centers" in clustering_results.keys() else None
+                    self.history_iterations[last_i]["silhouette_score"] = clustering_results["silhouette_score"]
+                    self.history_iterations[last_i]["calinski_harabaz_score"] = clustering_results[
+                        "calinski_harabaz_score"]
+                    self.history_iterations[last_i]["davies_bouldin_score"] = clustering_results["davies_bouldin_score"]
 
-                self.history_iterations[last_i]["silhouette_score"] = clustering_results["silhouette_score"]
-                self.history_iterations[last_i]["calinski_harabaz_score"] = clustering_results["calinski_harabaz_score"]
-                self.history_iterations[last_i]["davies_bouldin_score"] = clustering_results["davies_bouldin_score"]
+                    if param_dict["score"] == "Calinski-Harabasz":
+                        self.scores.append(clustering_results["calinski_harabaz_score"])
+                    elif param_dict["score"] == "Davies-Bouldin":
+                        self.scores.append(clustering_results["davies_bouldin_score"])
+                    else:
+                        self.scores.append(clustering_results["silhouette_score"])
 
-                if param_dict["score"] == "Calinski-Harabasz":
-                    self.scores.append(clustering_results["calinski_harabaz_score"])
-                elif param_dict["score"] == "Davies-Bouldin":
-                    self.scores.append(clustering_results["davies_bouldin_score"])
-                else:
-                    self.scores.append(clustering_results["silhouette_score"])
+                    nb_iteration += 1
 
-                nb_iteration += 1
+            self.n_selected = self.the_best_iteration["n_clusters"] if self.the_best_iteration[
+                                                                           "n_clusters"] is not None else None
 
         self.label = clustering_results["labels"]
         self.centroids = clustering_results["centers"] if "centers" in clustering_results.keys() else None
-        self.n_selected = self.the_best_iteration["n_clusters"] if self.the_best_iteration[
-                                                                       "n_clusters"] is not None else None
-        self.n = param_dict["n_clusters"]
-        print("runSelectedClust -> n_clusters", param_dict["n_clusters"])
-        print("runSelectedClust -> param_dic", param_dict)
+
+        self.n = param_dict["n_clusters"] if "n_clusters" in param_dict.keys() is not None else None
+        # print("runSelectedClust -> n_clusters", param_dict["n_clusters"])
+        # print("runSelectedClust -> param_dic", param_dict)
 
         if selectedMethod == 'FuzzyCMeans':
             self.belong = clustering_results["belong"]
