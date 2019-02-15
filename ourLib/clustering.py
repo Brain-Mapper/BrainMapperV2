@@ -277,7 +277,7 @@ def compute_mean_silhouette(X, predicted_labels, metric='euclidean'):
     :param metric: metric used, euclidean distance by default
     :return: float between -1 and +1
     """
-    X_filtered,predicted_labels = filter(X,predicted_labels)
+    X_filtered, predicted_labels = filter(X, predicted_labels)
     return silhouette_score(X_filtered, labels=predicted_labels, metric=metric)
 
 
