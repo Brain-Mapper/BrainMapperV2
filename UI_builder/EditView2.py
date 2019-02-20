@@ -322,15 +322,25 @@ class CollectionAccessButton(QtGui.QWidget):
 
     def addImage(self, coll, parent):
         global list_img
-        del list_img[:]
-        for i in reversed(range(self.parent.verticalLayout_4.count())):
-            self.parent.verticalLayout_4.itemAt(i).widget().setParent(None)
+        #del list_img[:]
+        # for i in reversed(range(self.parent.verticalLayout_4.count())):
+        #     self.parent.verticalLayout_4.itemAt(i).widget().setParent(None)
     # -- This addImage will add the images selected by the user in the current collection (ALLO THE USER TO ADD A FILE THAT ALREADY EXISTS IN THE COLLECTION)
         path = QFileDialog.getOpenFileNames()
         if (path != ""):
             try:
                 add_image_coll(coll,path)
                 #self.redo(get_current_coll())
+                for i in coll.get_img_list().values():
+                    print("bjr")
+                    filname = i.filename.split("/")
+                    filna = filname[len(filname)-1]
+                    print("cc")
+                    if filna not in list_img:
+                        list_img.append(filna)
+                        print("cc2")
+                        buttonpath=Buttonpath(filna,coll,parent)
+                        self.parent.verticalLayout_4.addWidget(buttonpath)
             except:
                 err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. Maybe you tried to open a non-NIfTI file")
                 # print (sys.exc_info()[0])
