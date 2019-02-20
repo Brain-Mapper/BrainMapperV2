@@ -138,7 +138,7 @@ def view_markers(coords, colors, labels, marker_size=5., centers=None, centers_c
     # connectome_info is a dictionnary that will be passed as JSON to html view
     # It contains all the necessary information
     connectome_info = _get_markers(coords, colors)
-    connectome_info["symbol"] = [SYMBOLS[i % 5] for i in labels]
+    connectome_info["symbol"] = [SYMBOLS[i % 4] for i in labels]
 
     if centers is not None:
         # If we have centers , we add the data
