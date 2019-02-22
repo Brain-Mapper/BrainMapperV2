@@ -58,17 +58,17 @@ class CollButton(QtGui.QCheckBox):
         self.setChecked(False)
         self.stateChanged.connect(lambda : self.selectColl(self.setname))
 
-        list = self.coll.get_img_list()
+        self.list = self.coll.get_img_list()
 
         try:
             dates = []
-            for l in list:
+            for l in self.list:
                 dates.append(creation_date(str(l)))
             date = max(dates)
-            d = datetime.fromtimestamp(int(round(date))).strftime('%Y-%m-%d')
+            self.d = datetime.fromtimestamp(int(round(date))).strftime('%Y-%m-%d')
         except:
-            d = datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d')
-        label = "Set name : "+ str(self.setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + str(len(list)) + "\nLast modified : " + str(d)
+            self.d = datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d')
+        label = "Set name : "+ str(self.setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + str(len(self.list)) + "\nLast modified : " + str(self.d)
         self.setText(label)
         self.setStyleSheet(
             "CollButton { spacing: 5px;border: 2px solid #000000;border-radius: 8px;padding: 1px 18px 1px 3px;};")
@@ -164,10 +164,11 @@ class SetButton(QtGui.QWidget):
 
         file = QFileDialog.getOpenFileNames(self, "Choose one file or more",
                                                  "./", 'NifTI(*.nii *.nii.gz)')
-        if (file != ""):
+        if (len(file) !=0):
             # TODO put the try/except
             # try:
             collec = do_image_collection(file,self.my_set)
+            self.check.setChecked(True)
             #homepage.mainview.show_coll(collec)
             #homepage.edit_colls.fill_coll() #rapport a editview2
             # except Error as error:
@@ -180,9 +181,11 @@ class SetButton(QtGui.QWidget):
     def fromExcel(self):
         file_name = QFileDialog.getOpenFileName(self, "Choose one file",
                                                  "./", 'CSV(*.csv);;Excel files(*.xlsx *.xls)')
-        if (file_name != ""):
+        if (len(file_name) !=0):
+
             # try:
             collec = simple_import(file_name,'ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii',self.my_set)
+            self.check.setChecked(True)
             #homepage.mainview.show_coll(collec)
             #homepage.edit_colls.fill_coll() #rapport a editview2
             # except:
@@ -225,7 +228,7 @@ class SetButton(QtGui.QWidget):
 
             elif excel_opt.isChecked():
                 self.fromExcel()
-        self.check.setChecked(True)
+        
 
     def state_changed(self):
         global selected
@@ -353,6 +356,7 @@ class SetButton(QtGui.QWidget):
         choice = QtGui.QMessageBox.question(self, 'Delete', "Are you sure to delete this set and all its sub-sets ?",QtGui.QMessageBox.Yes |QtGui.QMessageBox.No)
         if choice == QtGui.QMessageBox.Yes:
             position = self.my_set.getPosition()
+            print("position",position)
             p = self.treeWidget.topLevelItem(position[0])
             position.pop(0)
             for i in range(len(position)-1):
@@ -688,11 +692,16 @@ class MainView2(QtGui.QWidget):
         global selected
         global collshow
         for i in reversed(range(self.verticalLayout_image_collections_show.count())):
-            self.verticalLayout_image_collections_show.itemAt(i).widget().setParent(None)
+            label = "Set name : "+ str(self.verticalLayout_image_collections_show.itemAt(i).widget().setname) + "\nName : " + str(self.verticalLayout_image_collections_show.itemAt(i).widget().coll.name) + "\nNIfTI : " + str(len(self.verticalLayout_image_collections_show.itemAt(i).widget().list)) + "\nLast modified : " + str(self.verticalLayout_image_collections_show.itemAt(i).widget().d)
+            self.verticalLayout_image_collections_show.itemAt(i).widget().setText(label)
+            self.verticalLayout_image_collections_show.itemAt(i).widget().setChecked(False)
         for i in reversed(range(self.verticalLayout_widget_selected_view.count())):
             self.verticalLayout_widget_selected_view.itemAt(i).widget().setParent(None)
-        del selected[:]
+        # del selected[:]
         del collshow[:]
+        self.checkBox.setChecked(False)
+        
+        print("cc")
 
 
     def show_coll(self, coll):

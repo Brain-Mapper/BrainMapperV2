@@ -9,10 +9,12 @@ from .js_plotting_utils import (add_js_lib, HTMLDocument, mesh_to_plotly,
                                 to_color_strings)
 
 # symbols used for the nilearn plot
-SYMBOLS = ["circle" ,"square","diamond","cross","x" ] # "diamond-open","circle-open","square-open"
+SYMBOLS = ["circle", "square", "diamond", "x"]  # "diamond-open","circle-open","square-open"
+
 
 class ConnectomeView(HTMLDocument):
     pass
+
 
 def _get_markers(coords, colors):
     connectome = {}
@@ -34,7 +36,8 @@ def _add_centers(connectome, centers_coords, centers_colors):
             np.asarray(coord, dtype='<f4')
         )
     connectome["centers_colors"] = to_color_strings(centers_colors)
-    connectome["centers_symbols"] = [SYMBOLS[i%8] for i in range(len(centers_coords))]
+    connectome["centers_symbols"] = [SYMBOLS[i % 5] for i in range(len(centers_coords))]
+
 
 def _add_noise(connectome, noise_coords, noise_colors):
     coords = np.asarray(noise_coords, dtype="<f4")
@@ -45,6 +48,7 @@ def _add_noise(connectome, noise_coords, noise_colors):
         )
     connectome["noise_colors"] = to_color_strings(noise_colors)
     connectome["noise_symbol"] = SYMBOLS[0]
+
 
 def _make_connectome_html(connectome_info, embed_js=True):
     plot_info = {"connectome": connectome_info}
@@ -59,7 +63,8 @@ def _make_connectome_html(connectome_info, embed_js=True):
     as_html = add_js_lib(as_html, embed_js=embed_js)
     return ConnectomeView(as_html)
 
-def view_markers(coords, colors, labels, marker_size=5.,  centers=None, centers_colors=None):
+
+def view_markers(coords, colors, labels, marker_size=5., centers=None, centers_colors=None):
     """
     Insert a 3d plot of markers in a brain into an HTML page.
 
@@ -99,14 +104,14 @@ def view_markers(coords, colors, labels, marker_size=5.,  centers=None, centers_
         surface.
 
     """
-    
+
     noise_coords = None
     noise_colors = None
-    
+
     if colors is None:
         colors = ['black' for i in range(len(coords))]
-    
-    if -1 in labels :
+
+    if -1 in labels:
         # If we have the result of DBSCAN
         # We need to filter the noise
         # We put information about noise points in noise_coords and noise_colors
@@ -117,23 +122,23 @@ def view_markers(coords, colors, labels, marker_size=5.,  centers=None, centers_
         points_labels = []
         noise_coords = []
         noise_colors = []
-        for label,coord,color in zip(labels, coords, colors):
+        for label, coord, color in zip(labels, coords, colors):
             if label == -1:
                 noise_coords.append(coord)
                 noise_colors.append(color)
             else:
                 points_coords.append(coord)
-                points_colors.append(color) 
+                points_colors.append(color)
                 points_labels.append(label)
         coords = points_coords
         colors = points_colors
         labels = points_labels
-    
+
     # We choose the symbol from the label associated with the point
     # connectome_info is a dictionnary that will be passed as JSON to html view
     # It contains all the necessary information
     connectome_info = _get_markers(coords, colors)
-    connectome_info["symbol"] = [SYMBOLS[i%5] for i in labels]
+    connectome_info["symbol"] = [SYMBOLS[i % 4] for i in labels]
 
     if centers is not None:
         # If we have centers , we add the data
@@ -144,10 +149,7 @@ def view_markers(coords, colors, labels, marker_size=5.,  centers=None, centers_
         _add_noise(connectome_info, noise_coords, noise_colors)
 
     connectome_info["marker_size"] = marker_size
-    connectome_info["center_size"] = 2*marker_size
-    connectome_info["noise_size"] = int(0.8*marker_size)
+    connectome_info["center_size"] = 2 * marker_size
+    connectome_info["noise_size"] = int(0.8 * marker_size)
 
     return _make_connectome_html(connectome_info)
-
-
-    

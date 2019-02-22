@@ -99,11 +99,6 @@
   "DBSCAN" : { "algo_info": "Density-Based Spatial Clustering of Applications with Noise. Finds core samples of high density and expands clusters from them. Good for data which contains clusters of similar density.",
       "algo_usecase" : "Non-flat geometry, uneven cluster sizes, very large number of samples, medium number of clusters.",
       "param_list" : {
-        "i_iter" : {
-          "param_info" : "The number of iterations you wish to obtain",
-          "type" : "int",
-          "default" : "1"
-        },
         "eps" : {
           "param_info" : "The maximum distance between two samples for them to be considered as in the same neighborhood",
           "type" : "float",

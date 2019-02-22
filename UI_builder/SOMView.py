@@ -193,6 +193,8 @@ class SOMView(QtGui.QWidget):
                     indice = l
             data_neuron_index.append(indice)
 
+        QtGui.QMessageBox.information(self, "Training done", "The training is done you can visualize by clicking on the show button.")
+
     def showmap(self):
         global GRID_WIDTH
         global GRID_HEIGHT
@@ -352,14 +354,12 @@ class SOMView(QtGui.QWidget):
         self.comboBox.setMouseTracking(True)
         self.comboBox.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.comboBox.setAutoFillBackground(False)
-        #self.comboBox.setStyleSheet(_fromUtf8("background-color: rgb(209, 209, 209);"))
         self.comboBox.setObjectName(_fromUtf8("comboBox"))
 
         self.comboBox_choice.setFont(font)
         self.comboBox_choice.setMouseTracking(True)
         self.comboBox_choice.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.comboBox_choice.setAutoFillBackground(False)
-        #self.comboBox_choice.setStyleSheet(_fromUtf8("background-color: rgb(209, 209, 209);"))
         self.comboBox_choice.addItem(_fromUtf8(""))
         self.comboBox_choice.addItem(_fromUtf8(""))
 
@@ -368,7 +368,6 @@ class SOMView(QtGui.QWidget):
         font = QtGui.QFont()
         font.setPointSize(9)
         self.pushButton_show.setFont(font)
-        #self.pushButton_show.setStyleSheet(_fromUtf8("background-color: rgb(209, 209, 209);"))
         self.pushButton_show.setObjectName(_fromUtf8("pushButton_show"))
         self.pushButton_show.clicked.connect(self.showmap)
         self.gridLayout_2.addWidget(self.pushButton_show, 0, 2, 1, 1)
@@ -376,7 +375,6 @@ class SOMView(QtGui.QWidget):
         font = QtGui.QFont()
         font.setPointSize(9)
         self.pushButton_goback.setFont(font)
-        #self.pushButton_goback.setStyleSheet(_fromUtf8("background-color: rgb(209, 209, 209);"))
         self.pushButton_goback.setObjectName(_fromUtf8("pushButton_goback"))
         self.pushButton_goback.clicked.connect(self.go_back)
         self.gridLayout_2.addWidget(self.pushButton_goback, 0, 3, 1, 1)

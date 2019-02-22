@@ -22,7 +22,7 @@ from ourLib.dataExtraction.image_recreation import image_recreation
 from ourLib import clustering
 from ourLib import calculations as calcul
 from ourLib.Import import excelImport as imp
-import ourLib.filesHandlers.excelImage as csvImage
+import ourLib.filesHandlers.image as csvImage
 from ourLib.Import import workspaceImport as ws
 
 from sys import maxsize as MAX
@@ -41,7 +41,7 @@ toRM = []  # Contains all images to remove in edit view (can be used somewhere e
 currentUsableDataset = None
 
 sets = []  # List of all sets (and sub sets) created (usefull to know if a name is already used)
-globalSets = [[],[],[]]
+globalSets = [[], [], []]
 setToAdd = []
 workspace_sets = []  # List of all sets (and sub sets) created by workspace import
 clusteringsets = []  # List of sets created as a result for clustering, permit to remember wich one to create
@@ -49,9 +49,8 @@ calculsets = []  # List of sets created as a result for calculation, permit to r
 currentSet = None  # The current set shown in main view
 currentVizu = None  # The current collections shown in main view
 
-collshow=[]
-list_img=[]
-
+collshow = []
+list_img = []
 
 # Dictionary of available clustering methods
 app_clustering_available = {}
@@ -76,7 +75,7 @@ def open_nifti(path):
     return image
 
 
-def do_image_collection(files,set_import):
+def do_image_collection(files, set_import):
     """
     Create an image collection from a list of file paths
 
@@ -96,7 +95,7 @@ def do_image_collection(files,set_import):
 
     for file in files:
         # For french language, encode to latin1 -> to be able to take files with special characters of french in their file path
-        filename = file#.toLatin1().data()
+        filename = file  # .toLatin1().data()
         image = open_nifti(filename)
         coll.add(image)
     add_coll(coll)  # We add the collection create to selected by default
@@ -130,7 +129,6 @@ def rm_coll(coll):
         selected.remove(coll)
 
 
-
 def get_selected():
     """
     Return the selected collections (useful for all views that use data)
@@ -138,7 +136,7 @@ def get_selected():
     Return :
         global variable 'selected'
     """
-    print("collshow",collshow)
+    print("collshow", collshow)
     return collshow
 
 
@@ -187,20 +185,20 @@ def get_current_usableDataset():
 
 
 CLUSTERING_METHODS = {
-    'KMeans' : clustering.perform_kmeans,
-    'KMedoids' : clustering.perform_kmedoids,
-    'AgglomerativeClustering' : clustering.perform_agglomerative_clustering,
-    'DBSCAN' : clustering.perform_DBSCAN,
+    'KMeans': clustering.perform_kmeans,
+    'KMedoids': clustering.perform_kmedoids,
+    'AgglomerativeClustering': clustering.perform_agglomerative_clustering,
+    'DBSCAN': clustering.perform_DBSCAN,
     'FuzzyCMeans': clustering.perform_FuzzyCMeans,
 }
 
-
 SCORING_METHODS = {
-    'Davies-Bouldin' : (clustering.compute_db, MAX, lambda old,new : new<old),
-    'Calinski-Harabasz' : (clustering.compute_calinski_habaraz, 0, lambda old,new : new>old),
-    'Mean silhouette' : (clustering.compute_mean_silhouette, -1, lambda old,new : new>old),
-    'Fuzzy partition coefficient' : None,
+    'Davies-Bouldin': (clustering.compute_db, MAX, lambda old, new: new < old),
+    'Calinski-Harabasz': (clustering.compute_calinski_habaraz, 0, lambda old, new: new > old),
+    'Mean silhouette': (clustering.compute_mean_silhouette, -1, lambda old, new: new > old),
+    'Fuzzy partition coefficient': None,
 }
+
 
 def read_n(n_clusters):
     """
@@ -211,8 +209,8 @@ def read_n(n_clusters):
     """
     if '-' not in n_clusters:
         interval = [int(n_clusters), int(n_clusters)]
-    else :
-        interval = n_clusters.replace(' ','')
+    else:
+        interval = n_clusters.replace(' ', '')
         interval = interval.split('-')
         for i in range(len(interval)):
             interval[i] = int(interval[i])
@@ -233,19 +231,29 @@ def run_clustering(selectedClusteringMethod, params_dict):
     clusterizable_dataset = currentUsableDataset.export_as_clusterizable()
     if selectedClusteringMethod in CLUSTERING_METHODS.keys():
 
-        final_results = CLUSTERING_METHODS[selectedClusteringMethod](params_dict, clusterizable_dataset)
+        result = CLUSTERING_METHODS[selectedClusteringMethod](params_dict, clusterizable_dataset)
 
-        final_results["n"] = int(params_dict["n_clusters"]) if selectedClusteringMethod != "DBSCAN" else len(set(clustering.filter(clusterizable_dataset, final_results["labels"])[1]))
-        final_results["clusterizable_dataset"] = clusterizable_dataset
-        final_results["silhouette_score"] =clustering.compute_mean_silhouette(clusterizable_dataset,final_results["labels"])
-        final_results["calinski_harabaz_score"] = clustering.compute_calinski_habaraz(clusterizable_dataset,final_results["labels"])
-        final_results["davies_bouldin_score"] = clustering.compute_db(clusterizable_dataset,final_results["labels"])
-
+        result["n"] = int(params_dict["n_clusters"]) if selectedClusteringMethod != "DBSCAN" else len(
+            set(clustering.filter(clusterizable_dataset, result["labels"])[1]))
+        result["clusterizable_dataset"] = clusterizable_dataset
+        try:
+            result["silhouette_score"] = clustering.compute_mean_silhouette(clusterizable_dataset,
+                                                                        result["labels"])
+        except ValueError:
+            result["silhouette_score"] = None
+        try:
+            result["calinski_harabaz_score"] = clustering.compute_calinski_habaraz(clusterizable_dataset, result["labels"])
+        except ValueError:
+            result["calinski_harabaz_score"] = None
+        try :
+            result["davies_bouldin_score"] = clustering.compute_db(clusterizable_dataset, result["labels"])
+        except ValueError:
+            result["davies_bouldin_score"] = None
     else:
         print('clustering method not recognised')
-        final_results = ['']
+        result = ['']
 
-    return final_results
+    return result
 
 
 def clustering_validation_indexes(labels, centroids, cluster_num):
@@ -311,7 +319,7 @@ def run_calculation(selectedAlgorithm, nifti_collection, arguments):
     if selectedAlgorithm == "Linear combination":
         file_result, output = calcul.linear_combination_opperation(nifti_collection, arguments)
     if selectedAlgorithm == "Mask":
-            file_result, output = calcul.mask_opperation(nifti_collection)
+        file_result, output = calcul.mask_opperation(nifti_collection)
     if selectedAlgorithm == "Mean":
         file_result, output = calcul.mean_opperation(nifti_collection)
     if selectedAlgorithm == "Normalization":
@@ -339,6 +347,7 @@ def run_calculation(selectedAlgorithm, nifti_collection, arguments):
     if selectedAlgorithm == "Division":
         file_result, output = calcul.division_opperation(nifti_collection, arguments)
     return file_result, output
+
 
 def get_selected_from_name(name):
     """
@@ -483,8 +492,8 @@ def delete_current_coll():
     add_toRM(coll)  # We use toRM this time with a collection (toRM is rested just after used)
     set_current_coll(None)  # The current collection become None
     this_set.remove_collection(coll.name)
-    print("selected",selected)
-    print("collshow",collshow)
+    print("selected", selected)
+    print("collshow", collshow)
 
 
 def save_modifs():
@@ -513,7 +522,7 @@ def exists_set(name):
     return False
 
 
-def newSet(name,position):
+def newSet(name, position):
     """
     Creates a new set a the name "name" and add it into the set list. Also change the current set with the new one
 
@@ -524,7 +533,7 @@ def newSet(name,position):
         Set instance
     """
     global currentSet
-    new_set = Set(name,position)
+    new_set = Set(name, position)
     sets.append(new_set)
     currentSet = new_set
     return new_set
@@ -684,7 +693,7 @@ def makeClusterResultSet(a_usable_dataset, label):
                                                 'ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii')
     add_set(new_set)
     clusteringsets.append(new_set)
-    setToAdd.append([new_set,2])
+    setToAdd.append([new_set, 2])
 
 
 def getClusterResultSets():
@@ -708,7 +717,7 @@ def rmClusterResultSets(s):
 # ---- IMPORT ----
 
 
-def simple_import(csv_file_path, template_mni_path,set_import):
+def simple_import(csv_file_path, template_mni_path, set_import):
     """
     Import a file
 
@@ -744,7 +753,7 @@ def makeCalculResultSet(res_set):
     """
     add_set(res_set)
     calculsets.append(res_set)
-    setToAdd.append([res_set,1])
+    setToAdd.append([res_set, 1])
 
 
 def getCalculResultSets():
@@ -807,6 +816,7 @@ def general_workspace_save(folder_path):
         folder_path{string} -- path
     """
     for set in sets:
+        print("SET",set)
         if set.getParent() is None:
             recursive_workspace_save(folder_path, set)
 

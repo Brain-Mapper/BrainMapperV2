@@ -89,3 +89,6 @@ class NifImage(object):
         Returns the path of the file
         """
         return self.filename
+
+    def get_image(self):
+        return self.nib_image

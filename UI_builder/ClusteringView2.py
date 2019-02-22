@@ -33,6 +33,8 @@ except AttributeError:
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
+
+
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
@@ -41,19 +43,18 @@ except AttributeError:
 
 
 class InfoButton(QtGui.QPushButton):
-    def __init__(self,message,widget,layout):
-        super(InfoButton,self).__init__(parent=widget)
+    def __init__(self, message, widget, layout):
+        super(InfoButton, self).__init__(parent=widget)
         self.message = message
         self.clicked.connect(self.open)
         layout.addWidget(self)
 
     def open(self):
         method_dict = get_selected_clustering_info()
-        QtGui.QMessageBox.information(self,"Information",self.message,"ok")
+        QtGui.QMessageBox.information(self, "Information", self.message, "ok")
 
 
 class ClusteringView2(QtGui.QWidget):
-
     showMain = pyqtSignal()
 
     def __init__(self):
@@ -67,13 +68,9 @@ class ClusteringView2(QtGui.QWidget):
         self.label = None
         self.centroids = None
 
-
-
         title_style = "QLabel { background-color : #ffcc33 ; color : black;  font-style : bold; font-size : 14px;}"
 
-
         self.setupUi(self)
-
 
     def fill_table(self, usable_dataset_instance):
         """
@@ -95,23 +92,27 @@ class ClusteringView2(QtGui.QWidget):
                 for data_rows in range(0, data_array.shape[0]):
                     self.tableWidget.setItem(row_count, 0, QtGui.QTableWidgetItem(udcoll.get_imgcoll_name()))
                     self.tableWidget.setItem(row_count, 1, QtGui.QTableWidgetItem(str(origin_file.filename)))
-                    self.tableWidget.setItem(row_count, 2, QtGui.QTableWidgetItem(str(data_array[data_rows, 0]))) # X coordinate at column 0
-                    self.tableWidget.setItem(row_count, 3, QtGui.QTableWidgetItem(str(data_array[data_rows, 1]))) # Y coordinate at column 1
-                    self.tableWidget.setItem(row_count, 4, QtGui.QTableWidgetItem(str(data_array[data_rows, 2]))) # Z coordinate at column 2
-                    self.tableWidget.setItem(row_count, 5, QtGui.QTableWidgetItem(str(data_array[data_rows, 3]))) # Intensity at column 3
+                    self.tableWidget.setItem(row_count, 2, QtGui.QTableWidgetItem(
+                        str(data_array[data_rows, 0])))  # X coordinate at column 0
+                    self.tableWidget.setItem(row_count, 3, QtGui.QTableWidgetItem(
+                        str(data_array[data_rows, 1])))  # Y coordinate at column 1
+                    self.tableWidget.setItem(row_count, 4, QtGui.QTableWidgetItem(
+                        str(data_array[data_rows, 2])))  # Z coordinate at column 2
+                    self.tableWidget.setItem(row_count, 5, QtGui.QTableWidgetItem(
+                        str(data_array[data_rows, 3])))  # Intensity at column 3
                     self.tableWidget.setItem(row_count, 6, QtGui.QTableWidgetItem("None yet"))
-                    row_count = row_count+1
+                    row_count = row_count + 1
 
     def fill_results(self, history):
         self.tableResults.setRowCount(len(history))
         row_count = 0
         for iter in history:
-            self.tableResults.verticalHeaderItem(row_count).setText(str(row_count+1))
+            self.tableResults.verticalHeaderItem(row_count).setText(str(row_count + 1))
             self.tableResults.setItem(row_count, 0, QtGui.QTableWidgetItem(str(iter.get("clusters"))))
             self.tableResults.setItem(row_count, 1, QtGui.QTableWidgetItem(str(iter.get("silhouette_score"))))
             self.tableResults.setItem(row_count, 2, QtGui.QTableWidgetItem(str(iter.get("calinski_harabaz_score"))))
             self.tableResults.setItem(row_count, 3, QtGui.QTableWidgetItem(str(iter.get("davies_bouldin_score"))))
-            row_count = row_count+1
+            row_count = row_count + 1
         self.tableResults.setSortingEnabled(True)
 
     def fill_clust_labels(self, assigned_labels_array, tableWidget):
@@ -127,53 +128,63 @@ class ClusteringView2(QtGui.QWidget):
             item = QtGui.QTableWidgetItem(str(label))
             item.setTextAlignment(Qt.AlignCenter)
             color = colors[label]
-            item.setBackground(QtGui.QColor(colors[label][0],colors[label][1],colors[label][2], 150))
+            item.setBackground(QtGui.QColor(colors[label][0], colors[label][1], colors[label][2], 150))
             tableWidget.setItem(row_count, 6, item)
             row_count = row_count + 1
 
-
-    def update_details(self, clustering_method, user_values, centroids, validation_values, n_selected, n, scores, type_score):
+    def update_details(self, clustering_method, user_values, centroids, validation_values, n_selected, n, scores,
+                       type_score):
         self.info_panel.setText("")
 
-        self.info_panel.insertPlainText(clustering_method+"\n-----------------------------------------------------------------------------\n")
+        self.info_panel.insertPlainText(
+            clustering_method + "\n-----------------------------------------------------------------------------\n")
 
         for param_name in user_values.keys():
-            self.info_panel.insertPlainText(param_name+"\t\t\t "+str(user_values[param_name])+"\n")
-        if n_selected is not None :
-            self.info_panel.insertPlainText("n_selected"+"\t\t\t"+str(n_selected)+" for "+type_score+" score "+"\n")
-        self.info_panel.insertPlainText("-----------------------------------------------------------------------------\n\n")
-        range_of_cluster = read_n(n)
-        length = range_of_cluster[1]-range_of_cluster[0]+1
-        if scores is not None :
-            self.info_panel.insertPlainText("Different " + type_score+ " scores for each value of clusters number\n-----------------------------------------------------------------------------\n")
-            self.info_panel.insertPlainText("n \t\t scores \n\n")
-            for n in range (length):
-                self.info_panel.insertPlainText(str(n+range_of_cluster[0]) + "\t\t" + str(scores[n])+"\n\n")
-            self.info_panel.insertPlainText("-----------------------------------------------------------------------------\n\n")
+            self.info_panel.insertPlainText(param_name + "\t\t\t " + str(user_values[param_name]) + "\n")
+        if n_selected is not None:
+            self.info_panel.insertPlainText(
+                "n_selected" + "\t\t\t" + str(n_selected) + " for " + type_score + " score " + "\n")
+        self.info_panel.insertPlainText(
+            "-----------------------------------------------------------------------------\n\n")
+        # Search of the number of cluster
+        if clustering_method != "DBSCAN":
+            range_of_cluster = read_n(n)
+            length = range_of_cluster[1] - range_of_cluster[0] + 1
+            if scores is not None:
+                self.info_panel.insertPlainText(
+                    "Different " + type_score + "scores for each value of clusters "
+                                                "number\n"
+                                                "-----------------------------------------------------------------------------\n")
+                self.info_panel.insertPlainText("n \t\t scores \n\n")
+                for n in range(length):
+                    self.info_panel.insertPlainText(str(n + range_of_cluster[0]) + "\t\t" + str(scores[n]) + "\n\n")
+                self.info_panel.insertPlainText(
+                    "-----------------------------------------------------------------------------\n\n")
+        # Centroids
         self.info_panel.insertPlainText(
             "Cluster centroids\n-----------------------------------------------------------------------------\n")
         count = 0
-        if centroids is not None :
+        if centroids is not None:
             for c in centroids:
-                self.info_panel.insertPlainText("Cluster "+str(count)+": \t\t" + str(c)+"\n")
-                count = count+1
+                self.info_panel.insertPlainText("Cluster " + str(count) + ": \t\t" + str(c) + "\n")
+                count = count + 1
 
         self.info_panel.insertPlainText(
             "-----------------------------------------------------------------------------\n\n")
-        self.info_panel.insertPlainText("Validation Indexes\n-----------------------------------------------------------------------------\n")
+        self.info_panel.insertPlainText(
+            "Validation Indexes\n-----------------------------------------------------------------------------\n")
 
-        self.info_panel.insertPlainText("Mean Silhouette : \t\t "+str(validation_values[0])+"\n")
-        self.info_panel.insertPlainText("This mean is between -1 and 1 and the best value is around 1." +"\n\n")
+        self.info_panel.insertPlainText("Mean Silhouette : \t\t " + str(validation_values[0]) + "\n")
+        self.info_panel.insertPlainText("This mean is between -1 and 1 and the best value is around 1." + "\n\n")
         self.info_panel.insertPlainText("Calinski-Habaraz score: \t " + str(validation_values[1]) + "\n\n")
         self.info_panel.insertPlainText("Davies-Bouldin index: \t\t " + str(validation_values[2]) + "\n\n")
-        self.info_panel.insertPlainText("Calinski-Habaraz score is the relation between the sum of distances squared intergroup and the sum of distances squared intragroup. Whereas, Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the Davies-Bouldin index and bigger is the Calinski-Habaraz score, better is the number of clusters.\n\n")
-
-
+        self.info_panel.insertPlainText(
+            "Calinski-Habaraz score is the relation between the sum of distances squared intergroup and the sum of distances squared intragroup. Whereas, Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the Davies-Bouldin index and bigger is the Calinski-Habaraz score, better is the number of clusters.\n\n")
 
     def clicked_table(self):
         ligne = self.tableResults.selectedIndexes()[0].row()
-        i = int(self.tableResults.item(ligne,0).text())
-        self.fill_clust_labels(self.history_iterations[i].get("labels"),self.tableWidget)
+        i = int(self.tableResults.item(ligne, 0).text())
+        self.fill_clust_labels(self.history_iterations[i].get("labels"), self.tableWidget)
         self.label = self.history_iterations[i].get("labels")
         self.centroids = self.history_iterations[i].get("centers")
         for k in range(self.tableResults.rowCount()):
@@ -185,16 +196,16 @@ class ClusteringView2(QtGui.QWidget):
                 else:
                     self.tableResults.item(k, j).setBackground(QtGui.QColor(255, 255, 255))
 
-
-    def createResultView(self,param_dict,selectedMethod):
-        print("createResultView -> i_iter",param_dict["i_iter"])
-        if param_dict["i_iter"]=="1":
+    def createResultView(self, param_dict, selectedMethod):
+        if "i_iters" not in param_dict.keys() or param_dict["i_iter"] == "1":
             for i in reversed(range(self.verticalLayout_result.count())):
                 self.verticalLayout_result.itemAt(i).widget().setParent(None)
             self.info_panel = QtGui.QTextEdit()
             self.verticalLayout_result.addWidget(self.info_panel)
-            self.update_details(selectedMethod,param_dict,self.centroids,clustering_validation_indexes(self.label,self.centroids, float(len(set(self.label)))), self.n_selected, self.n, self.scores, param_dict["score"])
-        else :
+            self.update_details(selectedMethod, param_dict, self.centroids,
+                                clustering_validation_indexes(self.label, self.centroids, float(len(set(self.label)))),
+                                self.n_selected, self.n, self.scores, param_dict["score"])
+        else:
             for i in reversed(range(self.verticalLayout_result.count())):
                 self.verticalLayout_result.itemAt(i).widget().setParent(None)
             self.tableResults = QtGui.QTableWidget(self.widget_result)
@@ -229,117 +240,132 @@ class ClusteringView2(QtGui.QWidget):
                 self.tableResults.setVerticalHeaderItem(row_count, item)
                 self.tableResults.verticalHeaderItem(row_count).setText("")
                 item = QtGui.QTableWidgetItem(str(row_count))
-                item.setFlags(QtCore.Qt.ItemIsSelectable |  QtCore.Qt.ItemIsEnabled)
-                self.tableResults.setItem(row_count, 0,item )
+                item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                self.tableResults.setItem(row_count, 0, item)
                 item = QtGui.QTableWidgetItem(str(iter.get("clusters")))
-                item.setFlags(QtCore.Qt.ItemIsSelectable |  QtCore.Qt.ItemIsEnabled)
-                self.tableResults.setItem(row_count, 1,item )
+                item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                self.tableResults.setItem(row_count, 1, item)
                 item = QtGui.QTableWidgetItem(str(iter.get("silhouette_score")))
-                item.setFlags(QtCore.Qt.ItemIsSelectable |  QtCore.Qt.ItemIsEnabled)
+                item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
                 self.tableResults.setItem(row_count, 2, item)
                 item = QtGui.QTableWidgetItem(str(iter.get("calinski_harabaz_score")))
-                item.setFlags(QtCore.Qt.ItemIsSelectable |  QtCore.Qt.ItemIsEnabled)
-                self.tableResults.setItem(row_count, 3,item )
+                item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                self.tableResults.setItem(row_count, 3, item)
                 item = QtGui.QTableWidgetItem(str(iter.get("davies_bouldin_score")))
-                item.setFlags(QtCore.Qt.ItemIsSelectable |  QtCore.Qt.ItemIsEnabled)
+                item.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
                 self.tableResults.setItem(row_count, 4, item)
-                row_count = row_count+1
+                row_count = row_count + 1
 
             for j in range(self.tableResults.columnCount()):
-                self.tableResults.item(self.the_best_iteration.get("iteration"), j).setBackground(QtGui.QColor(255, 250, 168))
+                self.tableResults.item(self.the_best_iteration.get("iteration"), j).setBackground(
+                    QtGui.QColor(255, 250, 168))
             self.tableResults.setSortingEnabled(True)
             self.tableResults.clicked.connect(self.clicked_table)
             self.verticalLayout_result.addWidget(self.tableResults)
 
-
     def runSelectedClust(self, selectedMethod, param_dict):
 
-        column_selected=[]
-        print("cc")
+        column_selected = []
         columns = self.tableWidget.selectedItems()
         rownumber = self.tableWidget.rowCount()
         if len(columns) != 0:
-            for i in range(0,len(columns),rownumber):
+            for i in range(0, len(columns), rownumber):
                 column_selected.append(columns[i].column())
 
-        i_iter = int(param_dict["i_iter"])
-        print(column_selected)
-        self.history_iterations = []
-        self.the_best_iteration = {}
-        self.the_best_iteration["iteration"] = 0
-        self.the_best_iteration["n_clusters"] = 0
-        self.the_best_iteration["silhouette_score"] = 0
-        self.the_best_iteration["calinski_harabaz_score"] = 0
-        self.the_best_iteration["davies_bouldin_score"] = 100
-        self.scores = []
+        if selectedMethod == "DBSCAN":
+            clustering_results = run_clustering(selectedMethod, param_dict)
+            self.n_selected = "DBSCAN"
+            param_dict["score"] = "DBSCAN"
+            self.scores = []
+        else:
+            i_iter = int(param_dict["i_iter"])
+            print(column_selected)
+            self.history_iterations = []
+            self.the_best_iteration = {}
+            self.the_best_iteration["iteration"] = 0
+            self.the_best_iteration["n_clusters"] = 0
+            self.the_best_iteration["silhouette_score"] = 0
+            self.the_best_iteration["calinski_harabaz_score"] = 0
+            self.the_best_iteration["davies_bouldin_score"] = 100
+            self.scores = []
 
-        range_of_cluster = read_n(param_dict["n_clusters"])
+            range_of_cluster = read_n(param_dict["n_clusters"])
 
-        nb_iteration = 0
-        for n in range (range_of_cluster[0], range_of_cluster[1]+1):
-            for i in range (i_iter):
-                self.history_iterations.append({})
-                last_i = len(self.history_iterations)-1
+            nb_iteration = 0
+            for n in range(range_of_cluster[0], range_of_cluster[1] + 1):
+                for i in range(i_iter):
+                    self.history_iterations.append({})
+                    last_i = len(self.history_iterations) - 1
 
-                copy_param_dict = deepcopy(param_dict)
-                copy_param_dict["n_clusters"] = n
-                clustering_results = run_clustering(selectedMethod, copy_param_dict)
+                    copy_param_dict = deepcopy(param_dict)
+                    copy_param_dict["n_clusters"] = n
+                    clustering_results = run_clustering(selectedMethod, copy_param_dict)
 
-                if clustering_results["silhouette_score"] > self.the_best_iteration["silhouette_score"] and clustering_results["calinski_harabaz_score"] > self.the_best_iteration["calinski_harabaz_score"] and clustering_results["davies_bouldin_score"] < self.the_best_iteration["davies_bouldin_score"]:
-                    self.the_best_iteration["iteration"]=nb_iteration
-                    self.the_best_iteration["silhouette_score"] = clustering_results["silhouette_score"]
-                    self.the_best_iteration["calinski_harabaz_score"] = clustering_results["calinski_harabaz_score"]
-                    self.the_best_iteration["davies_bouldin_score"] = clustering_results["davies_bouldin_score"]
-                    self.the_best_iteration["n_clusters"] = clustering_results["n"]
-                    self.the_best_iteration["centers"] = clustering_results["centers"] if "centers" in clustering_results.keys() else None
+                    if clustering_results["silhouette_score"] > self.the_best_iteration["silhouette_score"] \
+                            and clustering_results["calinski_harabaz_score"] > self.the_best_iteration[
+                        "calinski_harabaz_score"] \
+                            and clustering_results["davies_bouldin_score"] < self.the_best_iteration[
+                        "davies_bouldin_score"]:
+                        self.the_best_iteration["iteration"] = nb_iteration
+                        self.the_best_iteration["silhouette_score"] = clustering_results["silhouette_score"]
+                        self.the_best_iteration["calinski_harabaz_score"] = clustering_results["calinski_harabaz_score"]
+                        self.the_best_iteration["davies_bouldin_score"] = clustering_results["davies_bouldin_score"]
+                        self.the_best_iteration["n_clusters"] = clustering_results["n"]
+                        self.the_best_iteration["centers"] = clustering_results[
+                            "centers"] if "centers" in clustering_results.keys() else None
 
-                self.history_iterations[last_i]["method_used"] = selectedMethod
-                self.history_iterations[last_i]["labels"] = clustering_results["labels"]
-                self.history_iterations[last_i]["data"] = clustering_results["clusterizable_dataset"]
-                self.history_iterations[last_i]["clusters"] = n
-                self.history_iterations[last_i]["centers"] = clustering_results["centers"] if "centers" in clustering_results.keys() else None
+                    self.history_iterations[last_i]["method_used"] = selectedMethod
+                    self.history_iterations[last_i]["labels"] = clustering_results["labels"]
+                    self.history_iterations[last_i]["data"] = clustering_results["clusterizable_dataset"]
+                    self.history_iterations[last_i]["clusters"] = n
+                    self.history_iterations[last_i]["centers"] = clustering_results[
+                        "centers"] if "centers" in clustering_results.keys() else None
 
-                self.history_iterations[last_i]["silhouette_score"] = clustering_results["silhouette_score"]
-                self.history_iterations[last_i]["calinski_harabaz_score"] = clustering_results["calinski_harabaz_score"]
-                self.history_iterations[last_i]["davies_bouldin_score"] = clustering_results["davies_bouldin_score"]
+                    self.history_iterations[last_i]["silhouette_score"] = clustering_results["silhouette_score"]
+                    self.history_iterations[last_i]["calinski_harabaz_score"] = clustering_results[
+                        "calinski_harabaz_score"]
+                    self.history_iterations[last_i]["davies_bouldin_score"] = clustering_results["davies_bouldin_score"]
 
-                if (param_dict["score"] == "Calinski-Harabasz"):
-                    self.scores.append(clustering_results["calinski_harabaz_score"])
-                elif (param_dict["score"] == "Davies-Bouldin"):
-                    self.scores.append(clustering_results["davies_bouldin_score"])
-                else :
-                    self.scores.append(clustering_results["silhouette_score"])
+                    if param_dict["score"] == "Calinski-Harabasz":
+                        self.scores.append(clustering_results["calinski_harabaz_score"])
+                    elif param_dict["score"] == "Davies-Bouldin":
+                        self.scores.append(clustering_results["davies_bouldin_score"])
+                    else:
+                        self.scores.append(clustering_results["silhouette_score"])
 
-                nb_iteration+=1
+                    nb_iteration += 1
+
+            self.n_selected = self.the_best_iteration["n_clusters"] if self.the_best_iteration[
+                                                                           "n_clusters"] is not None else None
 
         self.label = clustering_results["labels"]
         self.centroids = clustering_results["centers"] if "centers" in clustering_results.keys() else None
-        self.n_selected = self.the_best_iteration["n_clusters"] if self.the_best_iteration["n_clusters"] is not None else None
-        self.n = param_dict["n_clusters"]
-        print("runSelectedClust -> n_clusters", param_dict["n_clusters"])
-        print("runSelectedClust -> param_dic", param_dict)
 
-        if (selectedMethod == 'FuzzyCMeans'):
+        self.n = param_dict["n_clusters"] if "n_clusters" in param_dict.keys() is not None else None
+        # print("runSelectedClust -> n_clusters", param_dict["n_clusters"])
+        # print("runSelectedClust -> param_dic", param_dict)
+
+        if selectedMethod == 'FuzzyCMeans':
             self.belong = clustering_results["belong"]
-        if selectedMethod == "AgglomerativeClustering" :
+        if selectedMethod == "AgglomerativeClustering":
             self.hac = clustering_results['hac']
             self.comboBox_3.model().item(3).setEnabled(True)
-        else :
+        else:
             self.hac = None
             self.comboBox_3.model().item(3).setEnabled(False)
 
-        self.fill_clust_labels(self.label,self.tableWidget)
+        self.fill_clust_labels(self.label, self.tableWidget)
 
-        validation_values = clustering_validation_indexes(self.label, self.centroids,float(len(set(self.label))))
+        validation_values = clustering_validation_indexes(self.label, self.centroids, float(len(set(self.label))))
 
-        self.update_details(selectedMethod, param_dict, self.centroids, validation_values, self.n_selected, self.n, self.scores, param_dict["score"])
+        self.update_details(selectedMethod, param_dict, self.centroids, validation_values, self.n_selected, self.n,
+                            self.scores, param_dict["score"])
         self.pushButton_show.setEnabled(True)
         self.pushButton_save.setEnabled(True)
         self.pushButton_export.setEnabled(True)
         self.comboBox_3.setEnabled(True)
 
-        self.createResultView(param_dict,selectedMethod)
-
+        self.createResultView(param_dict, selectedMethod)
 
     def export(self):
         if self.label is not None:
@@ -373,29 +399,29 @@ class ClusteringView2(QtGui.QWidget):
     def plot(self):
         type = self.comboBox_3.currentText()
         # print("plot -> type",type)
-        if type=="Sihouette":
-            clustering_plot.plot_silhouette(self.label,None)
-        elif type=="3D view":
-            if self.comboBox_methode.get_selected_method_name()=="FuzzyCMeans":
+        if type == "Sihouette":
+            clustering_plot.plot_silhouette(self.label, None)
+        elif type == "3D view":
+            if self.comboBox_methode.get_selected_method_name() == "FuzzyCMeans":
                 clustering_plot.plot_3d_fuzzy(self.label, self.belong, centroids=self.centroids)
-            else :
+            else:
                 clustering_plot.plot_3d_clusters(self.label, centroids=self.centroids)
-        elif type=="Dendrogram":
+        elif type == "Dendrogram":
             clustering_plot.plot_dendrogram(self.hac)
-        elif type=="Cross sections":
-            default = list(get_current_usableDataset().export_as_clusterizable()[0,0:3])
+        elif type == "Cross sections":
+            default = list(get_current_usableDataset().export_as_clusterizable()[0, 0:3])
             default = [str(int(i)) for i in default]
             default = ",".join(default)
             text, ok = QtGui.QInputDialog.getText(self, 'Choice of the coordinates',
-            'Enter the cross coordinates : x,y,z',text=default)
-            c = list(map(int,text.split(',')))
-            if len(c)!=3:
-                QtGui.QMessageBox.warning(self, "Choice of the coordinates", "You must use the format x,y,z to enter the coordinates")
-            else :
-                clustering_plot.plot_cross_section(self.label,c)
-        elif type=="Glass brain":
+                                                  'Enter the cross coordinates : x,y,z', text=default)
+            c = list(map(int, text.split(',')))
+            if len(c) != 3:
+                QtGui.QMessageBox.warning(self, "Choice of the coordinates",
+                                          "You must use the format x,y,z to enter the coordinates")
+            else:
+                clustering_plot.plot_cross_section(self.label, c)
+        elif type == "Glass brain":
             clustering_plot.plot_glass_brain(self.label)
-
 
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
@@ -404,7 +430,8 @@ class ClusteringView2(QtGui.QWidget):
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         self.widget_clustering = QtGui.QWidget(Form)
         self.widget_clustering.setMaximumSize(QtCore.QSize(400, 16777215))
-        self.widget_clustering.setStyleSheet(_fromUtf8("QWidget#widget_clustering{background-color: rgb(255, 255, 255);}"))
+        self.widget_clustering.setStyleSheet(
+            _fromUtf8("QWidget#widget_clustering{background-color: rgb(255, 255, 255);}"))
         self.widget_clustering.setObjectName(_fromUtf8("widget_clustering"))
         self.verticalLayout_clustering = QtGui.QVBoxLayout(self.widget_clustering)
         self.verticalLayout_clustering.setContentsMargins(0, 0, 0, 9)
@@ -447,7 +474,8 @@ class ClusteringView2(QtGui.QWidget):
         font.setBold(False)
         font.setWeight(50)
         self.widget_parametres.setFont(font)
-        self.widget_parametres.setStyleSheet(_fromUtf8("QWidget#widget_parametres{background-color: rgb(255, 255, 255);}"))
+        self.widget_parametres.setStyleSheet(
+            _fromUtf8("QWidget#widget_parametres{background-color: rgb(255, 255, 255);}"))
         self.widget_parametres.setObjectName(_fromUtf8("widget_parametres"))
         self.verticalLayout_clustering.addWidget(self.widget_parametres)
         self.horizontalLayout.addWidget(self.widget_clustering)
@@ -486,38 +514,34 @@ class ClusteringView2(QtGui.QWidget):
         self.tableWidget.setColumnCount(7)
         self.tableWidget.setObjectName(_fromUtf8("tableWidget"))
         item = QtGui.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter|QtCore.Qt.AlignCenter)
+        item.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("MS Shell Dlg 2"))
         font.setPointSize(8)
         item.setFont(font)
         self.tableWidget.setHorizontalHeaderItem(0, item)
 
-
-        #self.tableWidget.clicked.connect(self.addinclust)
-        #self.tableWidget.horizontalHeaderItem(0).isSelected().connect(self.addinclust)
-        #self.tableWidget.horizontalHeaderItem(0).clicked.connect(self.addinclust)
-
-
-
+        # self.tableWidget.clicked.connect(self.addinclust)
+        # self.tableWidget.horizontalHeaderItem(0).isSelected().connect(self.addinclust)
+        # self.tableWidget.horizontalHeaderItem(0).clicked.connect(self.addinclust)
 
         item = QtGui.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter|QtCore.Qt.AlignCenter)
+        item.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
         self.tableWidget.setHorizontalHeaderItem(1, item)
         item = QtGui.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter|QtCore.Qt.AlignCenter)
+        item.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
         self.tableWidget.setHorizontalHeaderItem(2, item)
         item = QtGui.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter|QtCore.Qt.AlignCenter)
+        item.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
         self.tableWidget.setHorizontalHeaderItem(3, item)
         item = QtGui.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter|QtCore.Qt.AlignCenter)
+        item.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
         self.tableWidget.setHorizontalHeaderItem(4, item)
         item = QtGui.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter|QtCore.Qt.AlignCenter)
+        item.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
         self.tableWidget.setHorizontalHeaderItem(5, item)
         item = QtGui.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter|QtCore.Qt.AlignCenter)
+        item.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
         self.tableWidget.setHorizontalHeaderItem(6, item)
         self.tableWidget.horizontalHeader().setVisible(True)
         self.verticalLayout_tab.addWidget(self.tableWidget)
@@ -532,7 +556,9 @@ class ClusteringView2(QtGui.QWidget):
         self.pushButton_run = QtGui.QPushButton(self.widget_buttons)
         self.pushButton_run.setObjectName(_fromUtf8("pushButton_run"))
 
-        self.pushButton_run.clicked.connect(lambda: self.runSelectedClust(self.comboBox_methode.get_selected_method_name(),self.widget_parametres.get_user_params()))
+        self.pushButton_run.clicked.connect(
+            lambda: self.runSelectedClust(self.comboBox_methode.get_selected_method_name(),
+                                          self.widget_parametres.get_user_params()))
         self.horizontalLayout_buttons.addWidget(self.pushButton_run)
 
         self.comboBox_3 = QtGui.QComboBox(self.widget_buttons)
@@ -559,7 +585,7 @@ class ClusteringView2(QtGui.QWidget):
         self.pushButton_back.clicked.connect(self.go_back)
         self.pushButton_back.setObjectName(_fromUtf8("pushButton_back"))
         self.horizontalLayout_buttons.addWidget(self.pushButton_back)
-        #InfoButton(get_selected_clustering_info()['algo_info'],self.widget_buttons,self.horizontalLayout_buttons)
+        # InfoButton(get_selected_clustering_info()['algo_info'],self.widget_buttons,self.horizontalLayout_buttons)
         self.verticalLayout_dataAndResult.addWidget(self.widget_buttons)
         self.widget_result = QtGui.QWidget(Form)
         self.widget_result.setMinimumSize(QtCore.QSize(700, 0))
@@ -595,11 +621,10 @@ class ClusteringView2(QtGui.QWidget):
         self.verticalLayout_dataAndResult.addWidget(self.widget_result)
         self.horizontalLayout.addLayout(self.verticalLayout_dataAndResult)
 
-
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
-        #self.tableWidget.cellPressed.connect(self.addinclust)
+        # self.tableWidget.cellPressed.connect(self.addinclust)
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(_translate("Form", "Form", None))

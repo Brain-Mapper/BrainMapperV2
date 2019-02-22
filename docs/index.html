@@ -136,21 +136,21 @@
   <div class="column-right">
     <div id="Global_presentation">
       <h1> Global presentation </h1>
-      Brain-Mapper is the product of a 5-month collaboration between the Central Hospital of Nancy, France (CHRU in french) and Computer Science and Engineering students at TELECOM Nancy<br/><br/>
+      BrainMapper is the product of a 2-year collaboration between the Central Hospital of Nancy, France (CHRU in french) and Computer Science and Engineering students at TELECOM Nancy<br/><br/>
 
       The aim of this project was to simplify the treatment chain of neurosurgeon Dr. Fabien Rech, who had to use several librairies, software and methods to extract interesting data from NIfTI files.<br/>
       The workchain of NIfTI processing and information extraction carried out by Dr. Rech for his thesis work was the following one :
       <div style="padding-left: 24%; padding-top:3%; padding-bottom:3%">
        <img src="imgs/chaine.jpg" style="width:60%">
      </div>
-      Our aim was to simplify this work chain and offer the possibility to manage NIfTI, extract the interesting data from them to use it for calculations and clustering algorithms
+      Our aim was to simplify this workchain and offer the possibility to manage NIfTI, extract the interesting data from them to use it for calculations and clustering algorithms
       <br/><br/>
       <h2> Software usecase</h2>
       This software is written in Python. Its user interface is written in PyQt 4.<br>
       It can be used to create several sets and image collections associated with brain responses or patients, that will contain different images, in the NIfTI format and standards.
       The user can then extract data from the loaded NIfTI files to perform basic calculations or apply clustering algorithms to this data.<br>
       Calculations and clustering results can be exported as NIfTI or CSV files, as well as the original NIfTI files. Data can be imported as well as NIfTI or Excel files and the user can specify
-       a workspace directory from which files will be automatically imported
+       a workspace directory from which files will be automatically imported.
        <div style="padding-left: 12%; padding-top:3%; padding-bottom:3%">
          <div class="alert alert-info" role="alert">
          <h5 style="color:#f66;">WARNING</h5>
@@ -166,18 +166,18 @@
 
       Thus, the current version of this software allows the user to : <br>
       <ul>
-        <li><b>Open</b> NIfTI files (<em><b>'.nii'</b></em> or in compressed format <em><b>'.nii.gz'</b></em>) and put them in
+        <li><b>Open</b> NIfTI files (<em><b>'.nii'</b></em> or in compressed format <em><b>'.nii.gz'</b></em>) or .csv files or Excel files and put them in
           <b>Sets</b>, which are associated with a brain response and <b>Image Collections</b>, associated mostly to patients </li>
         <li>Import and export the workspace from/into a directory, whose structure will reflect that of the application (set folders, image collections subfolders...) </li>
-        <li>Edit the content of sets and image collections, and change their names</li>
+        <li>Edit the content of sets and image collections (change their names, add or delete an image collection or a set)</li>
         <li>Visualize in a 3D graph the contents of a NIfTI image from the edition page </li>
         <li>Select several image collections, across all sets, containing the images to which calculations and clustering algorithms will be applied </li>
         <li>Perform several calculations on selected NIfTI files</li>
-        <li>Extract data from selected NIfTI files and perform clustering methods on this data (KMeans, KMedoids, AgglomerativeClustering)</li>
-        <li>Visualize cluster assignment proportions and samples silhouette through graphical representations in clustering page</li>
+        <li>Extract data from selected NIfTI files and perform clustering methods on this data (KMeans, KMedoids, AgglomerativeClustering, DBscan, Fuzzy CMeans)</li>
+        <li>Visualize clusters in a 3D graphic, on cross sections, the silhouette graphic or a dendogramm through graphical representations in clustering page</li>
         <li>Calculate <em><b>internal validation indexes</b></em> for clustering results, such as Silhouettes, Mean Silhouette, Calinski-Habaraz score and Davis-Boulin index</li>
         <li>Save clustering and calculation results as sets and image collections within the application</li>
-        <li>Export clustering assignments data table as a CSV file and clustering validation indexes as a Text file</li>
+        <li>Export clustering assignments data table as a CSV file</li>
         <li>Export whole image collections or sets as NIfTI files</li>
 
       </ul>
@@ -190,30 +190,42 @@
       </div>
 
 
+<!--
       <h2> Install </h2>
-        <em>brainMapper</em> is written in <b>Python 2.7</b>. In this section, we present a tutorial to use the latest version of brainMapper in your computer
+        <em>BrainMapper</em> is written in <b>Python 3.6</b>. In this section, we present a tutorial to use the latest version of BrainMapper in your computer.
         <br>
+-->
+
+      <h2> Desktop application </h2>
+        Thank to an executable file, we can have a desktop application. It allows the user to easily execute <em>BrainMapper</em> without having to install all librairies.
+        We use CxFreeze to create this desktop application.
+
         <div style="padding-left: 12%; padding-top:3%; padding-bottom:3%">
           <div class="alert alert-info" role="alert">
           <h5 style="color:#f66;">WARNING</h5>
-          <b>The desktop application of this software is not available yet </b>
+          <b>The desktop application is only available for Windows</b>
+          <!--
           <br><br>
-          This install tutorial will allow the user to easily <b>execute</b> <em>brainMapper</em> but will not install a compiled version of it on the machine.<br>
+          This install tutorial will allow the user to easily <b>execute</b> <em>BrainMapper</em> but will not install a compiled version of it on the machine.<br>
           <br>
           We will include compiled desktop applications in the near future.
+        -->
         </div>
        </div>
 
-
+       <!--
         <h3> Dependencies </h3>
         Our software uses the following Python libraries :
         <ul>
-          <li>PyQt 4 (>= 4.0.0)</li>
-          <li>NiBabel (>= 2.0.0 )</li>
-          <li>Numpy (>= 1.8.2)</li>
-          <li>scikit-learn</li>
-          <li>pyqtgraph</li>
-          <li>pyopengl</li>
+          <li>matplotlib (==3.0.2)</li>
+          <li>neupy (==0.8.0)</li>
+          <li>nibabel (==2.3.1)</li>
+          <li>nilearn (==0.5.0)</li>
+          <li>numpy (==1.15.4)</li>
+          <li>pandas (==0.23.4)</li>
+          <li>PyOpenGL (==3.1.0)</li>
+          <li>pyqtgraph (==0.10.0)</li>
+          <li>scikit-learn (=0.20.0)</li>
         </ul>
 
         <h3> Ubuntu (GNU/Linux)</h3>
@@ -279,14 +291,16 @@
 
     </div>
   </div>
-</div>
+</div
+-->
 
 	<footer class="w3-container w3-dark-grey w3-padding-32 w3-margin-top">
     <div class="column-left">
 	     <p>Source code available on <a href="https://github.com/Brain-Mapper/brainMapper" target="_blank">GitHub repository</a></p>
     </div>
     <div>
-      <p> <b>Authors</b>: R. Agathon (@yoshcraft), M. Cluchague (@maximeCluchague), G. Husson (@Graziella-Husson), V. Zelaya (@vz-chameleon)
+      <p> <b>Authors</b>: R. Agathon (@yoshcraft), M. Cluchague (@maximeCluchague), G. Husson (@Graziella-Husson), V. Zelaya (@vz-chameleon),
+      M. Adler (@MarieAdler), A. Benoit (@BenAur), T. Grassellini (@GrasselliniThomas), L. Martin (@MartinLucie)
     </div>
 	</footer>
   </body>
