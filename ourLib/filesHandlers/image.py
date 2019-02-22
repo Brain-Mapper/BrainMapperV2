@@ -21,6 +21,10 @@ class Image(ABC):
         """
         copy2(self.filename, dest_path)
 
+    def to_nifti_image(self):
+        data_img = self.extract()
+
+
     @abstractmethod
     def extract(self):
         pass
