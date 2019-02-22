@@ -197,7 +197,7 @@ class ClusteringView2(QtGui.QWidget):
                     self.tableResults.item(k, j).setBackground(QtGui.QColor(255, 255, 255))
 
     def createResultView(self, param_dict, selectedMethod):
-        if "i_iters" not in param_dict.keys() or param_dict["i_iter"] == "1":
+        if "i_iter" not in param_dict.keys() or param_dict["i_iter"] == "1":
             for i in reversed(range(self.verticalLayout_result.count())):
                 self.verticalLayout_result.itemAt(i).widget().setParent(None)
             self.info_panel = QtGui.QTextEdit()
