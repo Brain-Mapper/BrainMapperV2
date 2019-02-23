@@ -722,7 +722,7 @@ class CalculationView(QtGui.QWidget):
         arguments = []
         nifti_selected = []
 
-        for collection in selected:
+        for collection in selected_images_collections:
             for nifti in collection.nifimage_dict.values():
                 #COPIE nifti_selected.append(nifti.filename)
                 nifti_selected.append(nifti)

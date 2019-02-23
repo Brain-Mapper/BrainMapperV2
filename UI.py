@@ -9,10 +9,10 @@ from UI_builder import resources
 from UI_builder.mainView2 import MainView2
 from UI_builder.ClusteringView2 import ClusteringView2
 # from UI_builder.clusteringView import ClusteringView
-#from UI_builder.editCollectionsView import EditCollectionsView
+# from UI_builder.editCollectionsView import EditCollectionsView
 from UI_builder.EditView2 import EditView2
 from UI_builder.exportView import ExportView
-#from UI_builder.calculationView import CalculationView
+# from UI_builder.calculationView import CalculationView
 from UI_builder.calculationView2 import calculationView2
 from UI_builder.SOMView import SOMView
 
@@ -112,11 +112,11 @@ class HomePage(QWidget):
         # Here are the custom widgets we will put on the stack
         self.mainview = MainView2()
         self.clustering = ClusteringView2()
-        #self.clustering = ClusteringView()
-        #self.calculation = CalculationView()
+        # self.clustering = ClusteringView()
+        # self.calculation = CalculationView()
         self.calculation = calculationView2()
         self.edit_colls = EditView2()
-        #self.edit_colls = EditCollectionsView()
+        # self.edit_colls = EditCollectionsView()
         self.export = ExportView()
         self.SOM = SOMView()
         # -- Add them to stack widget
@@ -142,7 +142,7 @@ class HomePage(QWidget):
         # -- when collection edition widget emits signal showMain, change current Widget in stack to main view widget
         self.edit_colls.showMain.connect(partial(self.stack.setCurrentWidget, self.mainview))
         self.edit_colls.showMain.connect(self.updateMainColumn)
-        #self.edit_colls.showMain.connect(self.updateMain)
+        # self.edit_colls.showMain.connect(self.updateMain)
 
         self.mainview.showExport.connect(self.updateExportView)
         self.export.showMain.connect(partial(self.stack.setCurrentWidget, self.mainview))
@@ -162,7 +162,7 @@ class HomePage(QWidget):
         self.stack.setCurrentWidget(self.mainview)
 
     def updateSOMView(self):
-        self.SOM.fill_table(self.mainview.list_entete,self.mainview.list_data)
+        self.SOM.fill_table(self.mainview.list_entete, self.mainview.list_data)
         self.stack.setCurrentWidget(self.SOM)
 
     def updateClusteringView(self):
@@ -172,8 +172,7 @@ class HomePage(QWidget):
         self.clustering.pushButton_save.setEnabled(False)
         self.clustering.pushButton_export.setEnabled(False)
         self.clustering.comboBox_3.setEnabled(False)
-        #self.clustering.comboBox_3.item(3).setEnabled(False)
-
+        # self.clustering.comboBox_3.item(3).setEnabled(False)
 
     def updateEditView(self):
         self.edit_colls.fill_coll()
@@ -221,8 +220,8 @@ class UI(QtGui.QMainWindow):
         rec = QApplication.desktop().availableGeometry()
         screenHeight = rec.height()
         screenWidth = rec.width()
-        #self.setGeometry(300, 200, screenWidth / 1.5, screenHeight / 1.4)
-        self.setGeometry(300, 200, 500,200)
+        # self.setGeometry(300, 200, screenWidth / 1.5, screenHeight / 1.4)
+        self.setGeometry(300, 200, 500, 200)
         self.setWindowTitle('BrainMapper')
         self.setWindowIcon(QtGui.QIcon(':ressources/logo.png'))
 
@@ -284,8 +283,8 @@ class UI(QtGui.QMainWindow):
             # TODO put the try/except
             # try:
             collec = do_image_collection(file)
-            #homepage.mainview.show_coll(collec)
-            #homepage.edit_colls.fill_coll() #rapport a editview2
+            # homepage.mainview.show_coll(collec)
+            # homepage.edit_colls.fill_coll() #rapport a editview2
             # except Error as error:
             #     print(error)
             #     err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. Maybe you tried to open a non-NIfTI file")
@@ -298,8 +297,8 @@ class UI(QtGui.QMainWindow):
             # try:
             collec = simple_import(file, os.path.join(os.path.dirname(__file__),
                                                       'ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii'))
-            #homepage.mainview.show_coll(collec)
-            #homepage.edit_colls.fill_coll() #rapport a editview2
+            # homepage.mainview.show_coll(collec)
+            # homepage.edit_colls.fill_coll() #rapport a editview2
             # except:
             #     err = QtGui.QMessageBox.critical(self, "Error",
             #                                      "An error has occured. Maybe you tried to open a non-CSV file")
@@ -312,7 +311,7 @@ class UI(QtGui.QMainWindow):
         if test is None:
             general_workspace_import(folder_path)
             for key in get_workspace_set():
-                if not key in temp :
+                if not key in temp:
                     homepage.mainview.show_set(key)
                     temp.append(key)
                     for i in key.get_all_subsets_subsubsets():

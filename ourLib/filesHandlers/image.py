@@ -21,10 +21,6 @@ class Image(ABC):
         """
         copy2(self.filename, dest_path)
 
-    def to_nifti_image(self):
-        data_img = self.extract()
-
-
     @abstractmethod
     def extract(self):
         pass
@@ -53,13 +49,13 @@ class ExcelImage(Image):
 
 def simple_import(file_path, currentSet):
     """
-    Allow the user to import a csv file inside
+    Allow the user to import a file and return an Image
     Arguments:
         csv_file_path {[type]} -- path to the csv file, must not contains accents
         currentSet {[type]} -- [description]
     
     Returns:
-        [type] -- [description]
+        [Image]
     """
     extension = file_path.split(".")[-1].lower()
 

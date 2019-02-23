@@ -36,7 +36,7 @@ import pandas as pd
 
 # --- global variables ---
 current_collec = None  # The current collection shown in edit view
-selected = []  # All image collections selected by the user in main page (usefull for all views that use data)
+selected_images_collections = []  # All image collections selected by the user in main page (usefull for all views that use data)
 toRM = []  # Contains all images to remove in edit view (can be used somewhere else)
 currentUsableDataset = None
 
@@ -122,11 +122,11 @@ def rm_coll(coll):
         coll -- ImageCollection instance
     """
     found = False
-    for i in selected:
+    for i in selected_images_collections:
         if i.name == coll.name:
             found = True
     if found:
-        selected.remove(coll)
+        selected_images_collections.remove(coll)
 
 
 def get_selected():
@@ -444,7 +444,7 @@ def exists_selected(name):
     Return :
         Boolean
     """
-    for i in selected:
+    for i in selected_images_collections:
         if (i.name == name):
             return True
     return False
@@ -492,7 +492,7 @@ def delete_current_coll():
     add_toRM(coll)  # We use toRM this time with a collection (toRM is rested just after used)
     set_current_coll(None)  # The current collection become None
     this_set.remove_collection(coll.name)
-    print("selected", selected)
+    print("selected", selected_images_collections)
     print("collshow", collshow)
 
 

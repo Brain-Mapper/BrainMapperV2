@@ -1,8 +1,6 @@
-import copy
 import os
 import numpy as np
 import nibabel as nib
-import warnings
 
 class NifImage(object):
     """
@@ -14,7 +12,7 @@ class NifImage(object):
         self.nib_image = nibabel_image
 
     @classmethod
-    def from_file(cls,one_filename):
+    def from_file(cls, one_filename):
         """
         Create a new NifImage from file path
         Nibabel chooses automatically to create a Spatial Image of class NIfTI1 or NIfTI2
