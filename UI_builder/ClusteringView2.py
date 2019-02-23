@@ -187,9 +187,17 @@ class ClusteringView2(QtGui.QWidget):
         self.fill_clust_labels(self.history_iterations[i].get("labels"), self.tableWidget)
         self.label = self.history_iterations[i].get("labels")
         self.centroids = self.history_iterations[i].get("centers")
+        for k in range(self.tableResults.rowCount()):
+            for j in range(self.tableResults.columnCount()):
+                if k==ligne :
+                    self.tableResults.item(k, j).setBackground(QtGui.QColor(168,255 , 250))
+                elif k==self.the_best_iteration.get("iteration"):
+                    self.tableResults.item(k, j).setBackground(QtGui.QColor(255, 250, 168))
+                else:
+                    self.tableResults.item(k, j).setBackground(QtGui.QColor(255, 255, 255))
 
     def createResultView(self, param_dict, selectedMethod):
-        if "i_iters" not in param_dict.keys() or param_dict["i_iter"] == "1":
+        if "i_iter" not in param_dict.keys() or param_dict["i_iter"] == "1":
             for i in reversed(range(self.verticalLayout_result.count())):
                 self.verticalLayout_result.itemAt(i).widget().setParent(None)
             self.info_panel = QtGui.QTextEdit()

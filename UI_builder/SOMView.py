@@ -193,6 +193,8 @@ class SOMView(QtGui.QWidget):
                     indice = l
             data_neuron_index.append(indice)
 
+        QtGui.QMessageBox.information(self, "Training done", "The training is done you can visualize by clicking on the show button.")
+
     def showmap(self):
         global GRID_WIDTH
         global GRID_HEIGHT
