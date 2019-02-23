@@ -28,7 +28,7 @@
           	   <li><a href="#41"><strong>4.1. Data extracted for calculation</strong></a></li>
           	    <ul>
           		      <li><a href="#411">4.1.1. How data is extracted</a></li>
-          		      
+
           	      </ul>
               	<li><a href="#42"><strong>4.2. Optimization of calculations</strong></a></li>
               	  <ul>
@@ -64,16 +64,16 @@
         <div id="Calculations">
           <h1> Perform calculations on NIfTI data</h1>
           <p>
-          One of the fundamental points of this project is to be able to apply several calculations and operations on one or a set of nifti files. These operations can aim to establish statistics between different files (Average, linear combinations), or to cross information between different files (Intersection, union), to extract information more easily in a file (calculation centers of gravity or entropy) or to apply transformations on a file to improve the quality of the data and to suppress the noise for example (Mathematical Morphologies)
+          One of the fundamental points of this project is to be able to apply several calculations and operations on one or a set of NIfTI files. Those operations can establish statistics between different files (average, linear combinations), or to cross information between different files (intersection, union), to extract information more easily in a file (calculation centers of gravity or entropy) or to apply transformations on a file to improve the quality of the data and to suppress the noise for example (Mathematical Morphologies).
           </p>
 	<h2 id="41">4.1. Data extracted for calculation</h2>
 		<h3 id="411">4.1.1. How data is extracted</h3>
-<p>The data contained in the nifti files are extracted using the NiBabel library which retrieves the 3D matrix do voxels. Then we store in a table all the voxels whose intensity is strictly positive. We thus succeed in reducing all the voxels considered. This table is a numpy.array of dimension 4 (x, y, z, i) where x, y, z are the coordinates of the voxels in the matrix and i the intensity of the voxel</p>
+<p>The data contained in the NIfTI files are extracted using the NiBabel library which retrieves the 3D matrix do voxels. Then we store in a table all the voxels whose intensity is strictly positive. We thus succeed in reducing all the voxels considered. This table is a numpy.array of dimension 4 (x, y, z, i) where x, y, z are the coordinates of the voxels in the matrix and i the intensity of the voxel</p>
 	<h2 id="42">4.2. Optimization of calculations</h2>
 		<h3 id="421">4.2.1. Adapted library</h3>
 <p>To optimize the speed of computation, we use the numpy library which makes it possible to reduce by a ratio 100 the execution time of the calculations thanks to a parralelization procedure which makes it possible to distribute the computations to each processor of the computer in question.</p>
 		<h3 id="422">4.2.2. Reduction of search space in data extraction</h3>
-<p>To further improve the results we decrease the search space related to the extraction of positive voxels. To be done instead of running a bare course in the 3 dimensiosn that are x, y and z in the dataset of the Nifti file which would be about 4,000,000 voxels to visit we reduce this to a cube that includes all of them voxels whose intensity is strictly positive. Thus the extraction process becomes much faster. We go from an extraction that lasts more than 2 minutes to an instantaneous extraction of less than half a second</p>
+<p>To further improve the results we decrease the search space related to the extraction of positive voxels. To be done instead of running a bare course in the 3 dimensiosn that are x, y and z in the dataset of the NIfTI file which would be about 4,000,000 voxels to visit we reduce this to a cube that includes all of them voxels whose intensity is strictly positive. Thus the extraction process becomes much faster. We go from an extraction that lasts more than 2 minutes to an instantaneous extraction of less than half a second</p>
 
 <div style="padding-left: 15%; padding-top: 1%;padding-bottom: 1%;">
               <img src="imgs/calculation/optimisationCalcul.png" style="width:50%">
@@ -114,7 +114,7 @@
             </div>
 
 		<h3 id="443">4.4.3. Execute the algorithm and save it in the calculation tab</h3>
-<p>Once the user has selected a calculation and initialized all the parameters, he can execute it using the "Calculate" button located at the bottom right of the calculation view.</p>	
+<p>Once the user has selected a calculation and initialized all the parameters, he can execute it using the "Calculate" button located at the bottom right of the calculation view.</p>
 
 <div style="padding-left: 15%; padding-top: 1%;padding-bottom: 1%;">
               <img src="imgs/calculation/capture.png" style="width:80%">

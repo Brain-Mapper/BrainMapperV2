@@ -61,9 +61,11 @@
         <div id="Clustering">
           <h1> Clustering on NIfTI data</h1>
           <p>
-          brain-Mapper aims to allow the user to use the interesting data from NIfTI files to perform clustering algorithms and thus determine the different groups of voxels.<br/>
-          To accomplish this, brain-Mapper extracts the data from NIfTI files and allows you to select the method you would like to apply. Clustering results can be exported as a CSV file or
-          saved in the application, and thus be exported as new NIfTI files.<br/><br/>
+          BrainMapper allows the user to use the interesting data from NIfTI files to perform clustering algorithms and thus determine the different groups of voxels.<br/>
+          To accomplish this, BrainMapper extracts the data from NIfTI files and allows you to select the clustering method you would like to apply. Clustering results can be exported as a CSV file or
+          saved in the application.
+          <!-- TODO : EXPORT DES CLUSTERS A REVOIR-->
+          <!--, and thus be exported as new NIfTI files.--><br/><br/>
           In this section we explain the main functionalities of our software around clustering
           </p>
 
@@ -77,17 +79,14 @@
         	<h3 id="extract">3.1.1 How data is extracted</h3>
         	<p>
             From the main view page, where all collections are accessible, the user can click on 'clustering' button at the bottom right, once he has selected some image collections.<br/>
-            <div style="padding-left: 22%; padding-top: 1%;padding-bottom: 1%;">
-        		    <img src="imgs/access_clustering.png" style="width:70%">
-            </div>
+
+            <img src="imgs/clustering/access_clustering.png" style="width:80%">
             <br><br>
             A pop up dialog window will appear. It shows the number of image collections selected as well as the total number of NIfTI images to be treated.<br/>
-            <div style="padding-left: 22%; padding-top: 1%;padding-bottom: 1%;">
-              <img src="imgs/select_extraction_mode.png" style="width:70%">
-            </div>
+            <img src="imgs/clustering/select_extraction_mode.png" style="width:80%">
             <br/><br/>
             In this windows, the user can select between two ways of extracting the image's information before the clustering view is loaded : our software creates a
-            list of <em>interesting></em> voxels by extracting the coordinates of all the voxels that have an intensity greater than 0 or by calculating the image's centroid
+            list of <em>interesting</em> voxels by extracting the coordinates of all the voxels that have an intensity greater than 0 or by calculating the image's centroid
             (each image will be represented by a single point).
 
         	</p>
@@ -95,9 +94,7 @@
         	<p>
             When all points are selected by choosing 'Use all region points for each file', the data used for clustering is the list of all voxels whose intensity is greater than 0. <br/>
             The clustering view thus contains a data table with several data entries <br/>
-            <div style="padding-left: 22%; padding-top: 1%;padding-bottom: 1%;">
-              <img src="imgs/clust_allp.png" style="width:70%">
-            </div>
+            <img src="imgs/clustering/clust_all_pts.png" style="width:80%">
             <br/>
 
           </p>
@@ -105,34 +102,33 @@
         	<p>
             By choosing 'Use centroids as file representation', the data used for clustering is the a list of a single voxel per file, which represents the <em>mean voxel</em> or <em>center</em>
             of all the voxels in the image. This type of extraction might take a while longer than the simple extraction, because several calculations are done.
+            <!-- TODO : définir le centroide-->
             <br/>
             The clustering view thus contains a data table with a single data entries per selected file : if a total of 4 files in 2 different image collections were selected, the data table
               will display 4 data entries <br>
-              <div style="padding-left: 22%; padding-top: 1%;padding-bottom: 1%;">
-                <img src="imgs/clust_centroids.png" style="width:70%">
-              </div>
+            <img src="imgs/clustering/clust_centroids.png" style="width:80%">
             <br>
           </p>
 
           <h2 id="methods">3.2 Apply clustering algorithms on extracted data</h2>
-        	<p> Once you have extracted the data from the selected images, you can choose which algorithm clustering to apply by clicking on the yellow bar at the top left ont the clustering view.</p>
+        	<p> Once you have extracted the data from the selected images, you can choose which clustering algorithm to apply by clicking on "Choose a clustering algorithm" at the top left in the clustering view.</p>
           <br>
-          <div style="padding-left: 22%; padding-top: 1%;padding-bottom: 1%;">
-            <img src="imgs/clust_chooser.png" style="width:70%">
-          </div>
+          <!-- TODO : revoir sélection des colonnes avant le choix de l'algo-->
+          <img src="imgs/clustering/clust_chooser.png" style="width:80%">
           <br>
           <br>
-          The current version of <em>brainMapper</em> has 3 clustering methods the user can choose from : <em><b>KMeans</b></em>, <em><b>KMedoids</b></em> and <em><b>Agglomerative Clustering</b></em>. <br>
-          <em><b>KMeans</b></em> and <em><b>Agglomerative Clustering</b></em> come from the library for machine learning in Python, <em><b>scikit-learn</b></em>
-          (for more details click <a href="http://scikit-learn.org/stable/modules/clustering.html#clustering" target="_blank" style="color : #5577ee">here</a> ) <br>
+          The current version of <em>BrainMapper</em> has 5 clustering methods the user can choose from : <em><b>KMeans</b></em>, <em><b>KMedoids</b></em>, <em><b>Agglomerative Clustering</b></em>, <em><b>DBscan</b></em> and <em><b>Fuzzy CMeans</b></em>. <br>
+          <em><b>KMeans</b></em>, <em><b>Agglomerative Clustering</b></em> and <em><b>DBscan</b></em> come from the library for machine learning in Python, <em><b>scikit-learn</b></em>
+          (for more details click <a href="http://scikit-learn.org/stable/modules/clustering.html#clustering" target="_blank" style="color : #5577ee">here</a> ).
+          <em><b>Fuzzy CMeans</b></em> comes from an another library, <em><b>skfuzzy</b></em>
+          (for more details click <a href="https://pythonhosted.org/scikit-fuzzy/api/skfuzzy.cluster.html#cmeans" target="_blank" style="color : #5577ee">here</a> ).<br>
           An implementation of <em><b>KMedoids</b></em> was made available by the developping team.
           <br><br>
-          Once an algorithm is selected, information and the algorithm's parameters page will appear on the left section of clustering view.
+          Once an algorithm is selected, algorithm's parameters will appear on the left section of clustering view.
           You can select and enter the parameters for the clustering algorithm here.
-          <div style="padding-left: 35%; padding-top: 1%;padding-bottom: 1%;">
-            <img src="imgs/clust_params.png" style="height:20%">
-          </div>
-
+          <br>
+          <img src="imgs/clustering/clust_params.png" style="width:80%">
+          <br>
           <h3 id="kmeans">3.2.1 KMeans</h3>
         	<p> The KMeans algorithm is a classic clustering algorithm. <br><br>
             We used the implementation from the <em><b>scikit-learn</b></em> library.<br>
