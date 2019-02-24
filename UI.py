@@ -12,7 +12,6 @@ from UI_builder.ClusteringView2 import ClusteringView2
 # from UI_builder.editCollectionsView import EditCollectionsView
 from UI_builder.EditView2 import EditView2
 from UI_builder.exportView import ExportView
-# from UI_builder.calculationView import CalculationView
 from UI_builder.calculationView2 import calculationView2
 from UI_builder.SOMView import SOMView
 

@@ -109,42 +109,43 @@ def mean_operation(list_of_images):
     return addition_operation(list_of_images) / len(list_of_images)
 
 
-def image_operation(list_of_images, argument: int, operation):
+def image_operation(list_of_images, iterations_number: int, operation):
     """
-    :param list_of_images:
-    :param argument:
-    :return: eroded image
+    :param list_of_images: list of image
+    :param iterations_number: number of time the operation is effected
+    :param operation: function to be executed on each nifti file
+    :return: list of operated images
     """
     result = []
     for img in list_of_images:
         if isinstance(img, NifImage):
             data = img.get_img_data()
-            eroded_img = operation(data, iterations=argument)
+            eroded_img = operation(data, iterations=iterations_number)
             img.uncache()
         else:  # instance of Image
             data = np.zeros(SHAPE_MNI)
             for x, y, z, intensity in img.extract():
                 i, j, k = convert_from_mni_to_matrix(x, y, z)
                 data[i, j, k] = data[i, j, k] + intensity
-            eroded_img = operation(data, iterations=argument)
+            eroded_img = operation(data, iterations=iterations_number)
         result.append(eroded_img.astype(dtype='f'))
     return result
 
 
-def erosion_operation(list_of_images, argument):
-    image_operation(list_of_images, argument, ndimage.binary_erosion)
+def erosion_operation(list_of_images, iterations_number):
+    image_operation(list_of_images, iterations_number, ndimage.binary_erosion)
 
 
-def dilation_operation(list_of_images, argument):
-    image_operation(list_of_images, argument, ndimage.binary_dilation)
+def dilation_operation(list_of_images, iterations_number):
+    image_operation(list_of_images, iterations_number, ndimage.binary_dilation)
 
 
-def opening_operation(list_of_images, argument):
-    image_operation(list_of_images, argument, ndimage.binary_erosion)
+def opening_operation(list_of_images, iterations_number):
+    image_operation(list_of_images, iterations_number, ndimage.binary_erosion)
 
 
-def closing_operation(list_of_images, argument):
-    image_operation(list_of_images, argument, ndimage.binary_closing)
+def closing_operation(list_of_images, iterations_number):
+    image_operation(list_of_images, iterations_number, ndimage.binary_closing)
 
 
 def or_operation(list_of_images):
@@ -232,20 +233,20 @@ def image_centroid(a_nifti_image):
 
 # TODO entropy ?
 
-def threshold_operation(list_of_images, min, max):
+def threshold_operation(list_of_images, threshold_min, threshold_max):
     result = []
     shape = max_shape(list_of_images)
     for img in list_of_images:
         if isinstance(img, NifImage):
             data = img.get_img_data()
-            thresholded = [i if min <= i <= max else 0 for i in data.flat]
+            thresholded = [i if threshold_min <= i <= threshold_max else 0 for i in data.flat]
             thresholded = np.matrix(thresholded).reshape(img.get_shape())
             img.uncache()
         else:  # Image
             thresholded = np.zeros(shape, dtype='f')
             for x, y, z, intensity in img.extract():
                 i, j, k = convert_from_mni_to_matrix(x, y, z)
-                if min <= intensity <= max:
+                if threshold_min <= intensity <= threshold_max:
                     thresholded[i, j, k] = intensity
         result.append(thresholded)
     return result
