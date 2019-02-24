@@ -12,13 +12,11 @@
 #       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
 import os
-import csv
-import nibabel as nib
-import numpy as np
-from ourLib.filesHandlers.imagecollection import ImageCollection
-from nibabel import Nifti1Image,load
 
-def export_control(name,path):
+from qtconsole.qt import QtGui
+
+
+def export_control(name, path):
     """
     Verify that the path and the name of file to be exported are correct
 
@@ -28,9 +26,9 @@ def export_control(name,path):
     """
     if name == '':
         QtGui.QMessageBox.critical(None,
-         "Error",
-         "Please enter a file name"
-        )
+                                   "Error",
+                                   "Please enter a file name"
+                                   )
         return False
     elif path == '':
         QtGui.QMessageBox.critical(
@@ -59,7 +57,8 @@ def export_control(name,path):
             )
             return False
 
-def export(name:str, path:str, a_usable_dataset, labels=None):
+
+def export(name: str, path: str, a_usable_dataset, labels=None):
     """
     Export some data from an usable dataset
     
@@ -83,13 +82,13 @@ def export(name:str, path:str, a_usable_dataset, labels=None):
             u'Intensity',
         ]
 
-        if with_labels :
+        if with_labels:
             header.append("Assigned cluster")
             row_cont = 0
 
         f = open(file_path, 'w')
         f.write(','.join(header) + "\n")
-        
+
         for udcoll in a_usable_dataset.get_usable_data_list():
 
             extracted_data_dictionary = udcoll.get_extracted_data_dict()
@@ -97,21 +96,18 @@ def export(name:str, path:str, a_usable_dataset, labels=None):
             for origin_file in extracted_data_dictionary.keys():
                 data_array = extracted_data_dictionary[origin_file]
                 for data_rows in range(0, data_array.shape[0]):
-                    elements_to_put_on_line = []
+                    elements_to_put_on_line = [os.path.split(str(origin_file.filename))[1],
+                                               str(data_array[data_rows, 0]),
+                                               str(data_array[data_rows, 1]),
+                                               str(data_array[data_rows, 2]),
+                                               str(data_array[data_rows, 3]),
+                                               ]
                     # put the file name at the first place
-                    elements_to_put_on_line.append(os.path.split(str(origin_file.filename))[1])
                     # put the coordinates and the intensity
-                    elements_to_put_on_line.append(str(data_array[data_rows, 0])) # X
-                    elements_to_put_on_line.append(str(data_array[data_rows, 1])) # Y
-                    elements_to_put_on_line.append(str(data_array[data_rows, 2])) # Z
-                    elements_to_put_on_line.append(str(data_array[data_rows, 3])) # Intensity
 
-                    if with_labels :
+                    if with_labels:
                         elements_to_put_on_line.append(str(labels[row_cont]))
                         row_cont += 1
 
                     f.write(','.join(elements_to_put_on_line) + '\n')
         f.close()
-
-
-                

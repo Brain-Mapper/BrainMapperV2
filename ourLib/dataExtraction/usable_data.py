@@ -14,16 +14,17 @@
 #
 #       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
 #       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
+import sys
 
 import numpy as np
 from numpy import zeros
+from nibabel import Nifti1Image, load
 
-from nibabel import Nifti1Image,load
 if __package__ is None:
-    sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-    from filesHandlers.imagecollection import ImageCollection
-    from filesHandlers.nifimage import NifImage
-    from filesHandlers.set import Set
+    sys.path.append(sys.path.dirname(sys.path.dirname(sys.path.abspath(__file__))))
+    from ourLib.filesHandlers.imagecollection import ImageCollection
+    from ourLib.filesHandlers.nifimage import NifImage
+    from ourLib.filesHandlers.set import Set
 else:
     from ..filesHandlers.nifimage import NifImage
     from ..filesHandlers.imagecollection import ImageCollection
@@ -35,6 +36,7 @@ class UsableDataCollection(object):
     A data structure for containing all relevant information in a usable format for calculations and clustering
     from ImageCollection instances
     """
+
     def __init__(self, an_imgcollection_name):
 
         # The image coll ID from which the data comes
@@ -52,7 +54,7 @@ class UsableDataCollection(object):
         :return:
         """
         # Check whether the given array passed in argument has 4 columns (X,Y,Z, Intensity)
-        colnum=(usable_data_array.shape)[1]
+        colnum = (usable_data_array.shape)[1]
         if (colnum > 4) or (colnum < 4):
             raise ValueError('UsableDataCollection.addExtracted_data_entry : array given as argument'
                              ' has more or less than 4 columns')
@@ -96,7 +98,8 @@ class UsableDataSet(object):
     """
     A data structure for keeping extracted data to be used in calculations and clustering
     """
-    def __init__(self,dataset_name):
+
+    def __init__(self, dataset_name):
         self.dataset_name = dataset_name
         # A dictionary to contain the pair key: name of ImageCollection of origin, value : UsableDataCollection instance
         self.usable_data_list = []
@@ -132,7 +135,7 @@ class UsableDataSet(object):
         return clusterizable
 
     def extract_set_images_by_cluster(self, label, template_mni_path):
-        new_set = Set("Clust",0)
+        new_set = Set("Clust", 0)
         setName = str(new_set).split("0x")
         setName = setName[1]
         setName = "Clust" + setName[:-1]
@@ -150,11 +153,12 @@ class UsableDataSet(object):
             for origin_file in extracted_data_dictionary.keys():
                 data_array = extracted_data_dictionary[origin_file]
                 for data_rows in range(0, data_array.shape[0]):
-                    point = [int(float(data_array[data_rows, 0])), int(float(data_array[data_rows, 1])), int(float(data_array[data_rows, 2])), int(float(data_array[data_rows, 3]))]
-                    coll_name= str(label[row_cont])
+                    point = [int(float(data_array[data_rows, 0])), int(float(data_array[data_rows, 1])),
+                             int(float(data_array[data_rows, 2])), int(float(data_array[data_rows, 3]))]
+                    coll_name = str(label[row_cont])
                     row_cont = row_cont + 1
                     for i in colls:
-                        if(i.name == coll_name):
+                        if (i.name == coll_name):
                             found = True
                             point_dict[coll_name].append(point)
                     if not found:
@@ -177,14 +181,14 @@ class UsableDataSet(object):
             ni_image = NifImage(key + ".nii", recreate_image)
 
             for c in colls:
-                if(str(key) == c.name):
+                if (str(key) == c.name):
                     # put nifti images into a imageCollection
                     c.add(ni_image)
 
         for i in colls:
             new_name = str(i).split("0x")
             new_name = new_name[1]
-            new_name = str(i.name)+"_"+ new_name[:-1]
+            new_name = str(i.name) + "_" + new_name[:-1]
             i.set_name(new_name)
             new_set.add_collection(i)
         return new_set
@@ -194,21 +198,25 @@ class UsableDataSet(object):
             import random
             col_dict = dict()
             for i in range(0, n):
-                col= (random.uniform(0, 1),random.uniform(0, 1),random.uniform(0, 1),1)
+                col = (random.uniform(0, 1), random.uniform(0, 1), random.uniform(0, 1), 1)
                 col_dict[str(i)] = col
             return col_dict
+
         colors = make_colors(len(label))
         l = len(label)
         pos = np.empty((l, 3))
         size = np.empty((l))
-        color = np.empty((l,4))
+        color = np.empty((l, 4))
         for udcoll in self.get_usable_data_list():
             extracted_data_dictionary = udcoll.get_extracted_data_dict()
             row_cont = 0
             for origin_file in extracted_data_dictionary.keys():
                 data_array = extracted_data_dictionary[origin_file]
                 for data_rows in range(0, data_array.shape[0]):
-                    pos[row_cont] = (int(float(data_array[data_rows, 0])), int(float(data_array[data_rows, 1])), int(float(data_array[data_rows, 2]))); size[row_cont] =5 ; color[row_cont] = colors[str(label[row_cont])]
+                    pos[row_cont] = (int(float(data_array[data_rows, 0])), int(float(data_array[data_rows, 1])),
+                                     int(float(data_array[data_rows, 2])));
+                    size[row_cont] = 5;
+                    color[row_cont] = colors[str(label[row_cont])]
                     row_cont = row_cont + 1
-        res = [pos,size,color]
+        res = [pos, size, color]
         return res

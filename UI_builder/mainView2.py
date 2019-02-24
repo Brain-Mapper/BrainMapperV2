@@ -5,7 +5,7 @@
 # Created by: PyQt4 UI code generator 4.12.1
 #
 # WARNING! All changes made in this file will be lost!
-
+import nibabel
 from PyQt4 import QtCore, QtGui
 from PyQt4.Qt import *
 from PyQt4.QtCore import pyqtSignal
@@ -13,6 +13,8 @@ from PyQt4.QtCore import pyqtSignal
 from datetime import *
 import sys
 from os import path
+
+import ourLib.calculations2 as calculations
 
 sys.path.append(path.dirname(path.dirname(path.dirname(path.abspath(__file__)))))
 from BrainMapper import *
@@ -29,34 +31,38 @@ except AttributeError:
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
+
+
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
+
 class SelectedButton(QtGui.QPushButton):
 
     def __init__(self, coll, num, setname, date, parent=None):
         super(SelectedButton, self).__init__(parent=parent)
         self.coll = coll
-        self.setname=setname
+        self.setname = setname
 
-        self.setText("Set name : "+ str(self.setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + num + "\nLast modified : " + date )
+        self.setText("Set name : " + str(self.setname) + "\nName : " + str(
+            self.coll.name) + "\nNIfTI : " + num + "\nLast modified : " + date)
 
 
 class CollButton(QtGui.QCheckBox):
     # -- The CollButton class is a QCheckBox that show all collection info
 
-    def __init__(self, coll, setname, selected_zone, checkBox,parent=None):
+    def __init__(self, coll, setname, selected_zone, checkBox, parent=None):
         super(CollButton, self).__init__(parent=parent)
         self.coll = coll
         self.setname = setname
-        self.selected_zone=selected_zone
+        self.selected_zone = selected_zone
         self.checkBox = checkBox
         self.toggle()
         self.setChecked(False)
-        self.stateChanged.connect(lambda : self.selectColl(self.setname))
+        self.stateChanged.connect(lambda: self.selectColl(self.setname))
 
         self.list = self.coll.get_img_list()
 
@@ -68,7 +74,8 @@ class CollButton(QtGui.QCheckBox):
             self.d = datetime.fromtimestamp(int(round(date))).strftime('%Y-%m-%d')
         except:
             self.d = datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d')
-        label = "Set name : "+ str(self.setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + str(len(self.list)) + "\nLast modified : " + str(self.d)
+        label = "Set name : " + str(self.setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + str(
+            len(self.list)) + "\nLast modified : " + str(self.d)
         self.setText(label)
         self.setStyleSheet(
             "CollButton { spacing: 5px;border: 2px solid #000000;border-radius: 8px;padding: 1px 18px 1px 3px;};")
@@ -78,9 +85,9 @@ class CollButton(QtGui.QCheckBox):
         sizePolicy.setHeightForWidth(0)
         self.setSizePolicy(sizePolicy)
 
-    def selectColl(self,setname):
+    def selectColl(self, setname):
         # -- This selectColl will add or delete the collection from the selected ones
-        #self.selected_zone.addWidget(SelectedButton(self.coll,str(len(self.coll.get_img_list())),str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
+        # self.selected_zone.addWidget(SelectedButton(self.coll,str(len(self.coll.get_img_list())),str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
         if (self.isChecked()):
             if self.coll not in collshow:
                 collshow.append(self.coll)
@@ -89,7 +96,9 @@ class CollButton(QtGui.QCheckBox):
         for i in reversed(range(self.selected_zone.count())):
             self.selected_zone.itemAt(i).widget().setParent(None)
         for coll in collshow:
-            self.selected_zone.addWidget(SelectedButton(coll,str(len(coll.get_img_list())),coll.getSetName().get_name(),str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
+            self.selected_zone.addWidget(
+                SelectedButton(coll, str(len(coll.get_img_list())), coll.getSetName().get_name(),
+                               str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
 
     def update(self):
         # -- This update will update the information of the collection if they have changed in the edit collection view
@@ -105,89 +114,90 @@ class CollButton(QtGui.QCheckBox):
                 d = datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d')
         except:
             d = datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d')
-        self.setText("Set name : "+ str(self.setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + str(len(list)) + "\nLast modified : " + str(d))
+        self.setText("Set name : " + str(self.setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + str(
+            len(list)) + "\nLast modified : " + str(d))
+
 
 class SetButton(QtGui.QWidget):
 
-    #styler = "SetButton {background-color: white; border-bottom: 1px solid black;} " \
-      # "SetButton:hover {background-color : #ccff99;}"
+    # styler = "SetButton {background-color: white; border-bottom: 1px solid black;} " \
+    # "SetButton:hover {background-color : #ccff99;}"
 
     def __init__(self, my_set, image_zone, selected_zone, checkbox, parent=None):
-      # -- Will create all objects we need
-      super(SetButton, self).__init__( parent=parent)
+        # -- Will create all objects we need
+        super(SetButton, self).__init__(parent=parent)
 
-      self.my_set = my_set
-      self.image_zone = image_zone
-      self.selected_zone = selected_zone
-      self.treeWidget = parent
-      self.checkBox = checkbox
+        self.my_set = my_set
+        self.image_zone = image_zone
+        self.selected_zone = selected_zone
+        self.treeWidget = parent
+        self.checkBox = checkbox
 
-      hbox = QtGui.QHBoxLayout()
+        hbox = QtGui.QHBoxLayout()
 
-      self.check = QtGui.QCheckBox()
-      self.check.setText(my_set.name)
-      self.check.stateChanged.connect(self.state_changed)
-      hbox.addWidget(self.check)
+        self.check = QtGui.QCheckBox()
+        self.check.setText(my_set.name)
+        self.check.stateChanged.connect(self.state_changed)
+        hbox.addWidget(self.check)
 
-      SSButton = QtGui.QPushButton()
-      SSButton.setText("+")
-      SSButton.clicked.connect(self.addSubet)
-      SSButton.setStatusTip("Add sub set")
-      SSButton.setFixedSize(QSize(20, 20))
-      hbox.addWidget(SSButton)
+        SSButton = QtGui.QPushButton()
+        SSButton.setText("+")
+        SSButton.clicked.connect(self.addSubet)
+        SSButton.setStatusTip("Add sub set")
+        SSButton.setFixedSize(QSize(20, 20))
+        hbox.addWidget(SSButton)
 
-      SupprButton = QtGui.QPushButton()
-      SupprButton.setText("-")
-      SupprButton.clicked.connect(self.deleteSet)
-      SupprButton.setStatusTip("Delete this set or subset")
-      SupprButton.setFixedSize(QSize(20, 20))
-      hbox.addWidget(SupprButton)
+        SupprButton = QtGui.QPushButton()
+        SupprButton.setText("-")
+        SupprButton.clicked.connect(self.deleteSet)
+        SupprButton.setStatusTip("Delete this set or subset")
+        SupprButton.setFixedSize(QSize(20, 20))
+        hbox.addWidget(SupprButton)
 
-      NameButton = QtGui.QPushButton()
-      NameButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/writing.png'))
-      NameButton.clicked.connect(self.changeName)
-      NameButton.setStatusTip("Change Set Name")
-      NameButton.setFixedSize(QSize(20, 20))
-      hbox.addWidget(NameButton)
+        NameButton = QtGui.QPushButton()
+        NameButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/writing.png'))
+        NameButton.clicked.connect(self.changeName)
+        NameButton.setStatusTip("Change Set Name")
+        NameButton.setFixedSize(QSize(20, 20))
+        hbox.addWidget(NameButton)
 
-      ImportButton = QtGui.QPushButton()
-      ImportButton.setText("Import")
-      ImportButton.clicked.connect(self.importdata)
-      ImportButton.setStatusTip("Import Data inside this set")
-      ImportButton.setFixedSize(QSize(50, 20))
-      hbox.addWidget(ImportButton)
+        ImportButton = QtGui.QPushButton()
+        ImportButton.setText("Import")
+        ImportButton.clicked.connect(self.importdata)
+        ImportButton.setStatusTip("Import Data inside this set")
+        ImportButton.setFixedSize(QSize(50, 20))
+        hbox.addWidget(ImportButton)
 
-      self.setLayout(hbox)
+        self.setLayout(hbox)
 
     def fromNiFile(self):
         # -- We create a collection with the list of images the user selected and give it to the main view and the edit view
 
         file = QFileDialog.getOpenFileNames(self, "Choose one file or more",
-                                                 "./", 'NifTI(*.nii *.nii.gz)')
-        if (len(file) !=0):
+                                            "./", 'NifTI(*.nii *.nii.gz)')
+        if (len(file) != 0):
             # TODO put the try/except
             # try:
-            collec = do_image_collection(file,self.my_set)
+            collec = do_image_collection(file, self.my_set)
             self.check.setChecked(True)
-            #homepage.mainview.show_coll(collec)
-            #homepage.edit_colls.fill_coll() #rapport a editview2
+            # homepage.mainview.show_coll(collec)
+            # homepage.edit_colls.fill_coll() #rapport a editview2
             # except Error as error:
             #     print(error)
             #     err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. Maybe you tried to open a non-NIfTI file")
-
 
         # -- We create a collection with the list of images the user selected and give it to the main view and the edit view
 
     def fromExcel(self):
         file_name = QFileDialog.getOpenFileName(self, "Choose one file",
-                                                 "./", 'CSV(*.csv);;Excel files(*.xlsx *.xls)')
-        if (len(file_name) !=0):
-
+                                                "./", 'CSV(*.csv);;Excel files(*.xlsx *.xls)')
+        if (len(file_name) != 0):
             # try:
-            collec = simple_import(file_name,'ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii',self.my_set)
+            collec = simple_import(file_name, 'ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii',
+                                   self.my_set)
             self.check.setChecked(True)
-            #homepage.mainview.show_coll(collec)
-            #homepage.edit_colls.fill_coll() #rapport a editview2
+            # homepage.mainview.show_coll(collec)
+            # homepage.edit_colls.fill_coll() #rapport a editview2
             # except:
             #     err = QtGui.QMessageBox.critical(self, "Error",
             #                                      "An error has occured. Maybe you tried to open a non-CSV file")
@@ -228,37 +238,39 @@ class SetButton(QtGui.QWidget):
 
             elif excel_opt.isChecked():
                 self.fromExcel()
-        
 
     def state_changed(self):
-        global selected
+        global selected_images_collections
         global collshow
-        dict=self.my_set.get_all_nifti_set()
+        dict = self.my_set.get_all_nifti_set()
         if self.check.isChecked():
             for d in dict:
-                if d not in selected:
-                    selected.append(d)
-                    self.image_zone.addWidget(CollButton(d,d.getSetName().get_name(),self.selected_zone,self.checkBox))
+                if d not in selected_images_collections:
+                    selected_images_collections.append(d)
+                    self.image_zone.addWidget(
+                        CollButton(d, d.getSetName().get_name(), self.selected_zone, self.checkBox))
         else:
             for d in dict:
-                selected.remove(d)
-                trouve= False
-                i=0
+                selected_images_collections.remove(d)
+                trouve = False
+                i = 0
                 while trouve == False and i < self.image_zone.count():
-                # #for i in reversed(range(self.image_zone.count())):
-                    if self.image_zone.itemAt(i).widget().coll == d and self.image_zone.itemAt(i).widget().setname == self.my_set.name:
+                    # #for i in reversed(range(self.image_zone.count())):
+                    if self.image_zone.itemAt(i).widget().coll == d and self.image_zone.itemAt(
+                            i).widget().setname == self.my_set.name:
                         trouve = True
                     else:
-                        i=i+1
+                        i = i + 1
                 if trouve == True:
                     self.image_zone.itemAt(i).widget().setParent(None)
-                trouve= False
-                i=0
+                trouve = False
+                i = 0
                 while trouve == False and i < self.selected_zone.count():
-                    if self.selected_zone.itemAt(i).widget().coll == d and self.selected_zone.itemAt(i).widget().setname == self.my_set.name:
+                    if self.selected_zone.itemAt(i).widget().coll == d and self.selected_zone.itemAt(
+                            i).widget().setname == self.my_set.name:
                         trouve = True
                     else:
-                        i=i+1
+                        i = i + 1
                 if trouve == True:
                     self.selected_zone.itemAt(i).widget().setParent(None)
                     collshow.remove(d)
@@ -279,7 +291,7 @@ class SetButton(QtGui.QWidget):
         #         if trouve == False:
         #             self.image_zone.addWidget(CollButton(coll,coll.getSetName().get_name(),self.selected_zone))
 
-        #BUG A CORRIGER QUAND ON CLIQUE SUR ALL ET QU IL Y A PLUS D UN ITEM
+        # BUG A CORRIGER QUAND ON CLIQUE SUR ALL ET QU IL Y A PLUS D UN ITEM
         # for coll in collshow:
         #     self.selected_zone.addWidget(SelectedButton(coll,str(len(coll.get_img_list())),my_set.get_name(),str(datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d'))))
 
@@ -302,7 +314,7 @@ class SetButton(QtGui.QWidget):
                         self.my_set.getParent().add_subset(self.my_set)
                     else:
                         self.my_set.set_name(str(text))
-                    #print(self.my_set.get_name())
+                    # print(self.my_set.get_name())
                     self.check.setText(str(text))
                     add_set(self.my_set)
                 else:
@@ -324,51 +336,56 @@ class SetButton(QtGui.QWidget):
                     if i in str(text):
                         new_ok = False
                 if new_ok and not exists_set(str(text)):
-                    #print("test")
+                    # print("test")
                     ss = self.my_set.add_empty_subset(str(text))
-                    #print(ss.name)
+                    # print(ss.name)
                     position = ss.getPosition()
-                    #print(position)
+                    # print(position)
                     p = self.treeWidget.topLevelItem(position[0])
                     position.pop(0)
-                    for i in range(len(position)-1):
+                    for i in range(len(position) - 1):
                         p = p.child(position[i])
                     item_0 = QtGui.QTreeWidgetItem(p)
-                    item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
-                    #print(self.my_set.number_of_subset()-1)
-                    self.treeWidget.setItemWidget(p.child(position[-1]), 0, SetButton(ss,self.image_zone,self.selected_zone,self.treeWidget,self.checkBox))
+                    item_0.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                    # print(self.my_set.number_of_subset()-1)
+                    self.treeWidget.setItemWidget(p.child(position[-1]), 0,
+                                                  SetButton(ss, self.image_zone, self.selected_zone, self.treeWidget,
+                                                            self.checkBox))
 
-                    #self.SSList.addItem(str(text))
-                    #ssSet = self.my_set.get_sub_set(str(text))
+                    # self.SSList.addItem(str(text))
+                    # ssSet = self.my_set.get_sub_set(str(text))
                     self.my_set.get_sub_set(str(text)).setParent(self.my_set)
                     add_set(ss)
                     set_current_set(ss)
-                    #self.parent().parent().parent().parent().parent().parent().parent().add(ss)
-                else :
-                    err = QtGui.QMessageBox.critical(self, "Error", "The name you entered is not valid (empty, invalid caracter or already exists)")
+                    # self.parent().parent().parent().parent().parent().parent().parent().add(ss)
+                else:
+                    err = QtGui.QMessageBox.critical(self, "Error",
+                                                     "The name you entered is not valid (empty, invalid caracter or already exists)")
             except TypeError as e:
                 print(e)
-                err = QtGui.QMessageBox.critical(self, "Error", "The name you entered is not valid ("+str(sys.exc_info()[0])+")")
+                err = QtGui.QMessageBox.critical(self, "Error",
+                                                 "The name you entered is not valid (" + str(sys.exc_info()[0]) + ")")
 
     def deleteSet(self):
-        global selected
+        global selected_images_collections
         global collshow
-        choice = QtGui.QMessageBox.question(self, 'Delete', "Are you sure to delete this set and all its sub-sets ?",QtGui.QMessageBox.Yes |QtGui.QMessageBox.No)
+        choice = QtGui.QMessageBox.question(self, 'Delete', "Are you sure to delete this set and all its sub-sets ?",
+                                            QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
         if choice == QtGui.QMessageBox.Yes:
             position = self.my_set.getPosition()
-            print("position",position)
+            print("position", position)
             p = self.treeWidget.topLevelItem(position[0])
             position.pop(0)
-            for i in range(len(position)-1):
+            for i in range(len(position) - 1):
                 p = p.child(position[i])
             p.removeChild(p.child(position[-1]))
 
             for d in self.my_set.get_all_nifti_set_and_subset():
-                if d in selected:
-                    selected.remove(d)
+                if d in selected_images_collections:
+                    selected_images_collections.remove(d)
                 if d in collshow:
                     collshow.remove(d)
-            #lorsqu'on supprimer un set il faut changer l'affichage graphique
+            # lorsqu'on supprimer un set il faut changer l'affichage graphique
             for i in reversed(range(self.image_zone.count())):
                 if self.image_zone.itemAt(i).widget().setname == self.my_set.name:
                     self.image_zone.itemAt(i).widget().setParent(None)
@@ -378,21 +395,19 @@ class SetButton(QtGui.QWidget):
             # for coll in selected:
             #         self.image_zone.addWidget((CollButton(coll,coll.getSetName().get_name(),self.selected_zone)))
 
-            if self.my_set.getParent()!=None:
+            if self.my_set.getParent() != None:
                 self.my_set.getParent().remove_subset(self.my_set.name)
                 for set in self.my_set.getParent().getAllSubSets():
-                    if set!=self and set.position>self.my_set.position:
-                        set.position-=1
+                    if set != self and set.position > self.my_set.position:
+                        set.position -= 1
             else:
                 globalSets[0].remove(self.my_set)
-                for s in globalSets[0] :
-                    s.position-=1
+                for s in globalSets[0]:
+                    s.position -= 1
             sets.remove(self.my_set)
 
 
-
 class MainView2(QtGui.QWidget):
-
     showClust = pyqtSignal()
     showEdit = pyqtSignal()
     showExport = pyqtSignal()
@@ -405,7 +420,7 @@ class MainView2(QtGui.QWidget):
         self.setupUi(self)
 
     def setupUi(self, Form):
-        #Form.setObjectName(_fromUtf8("Form"))
+        # Form.setObjectName(_fromUtf8("Form"))
         Form.setObjectName(_fromUtf8("Form"))
         Form.resize(1000, 650)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
@@ -434,7 +449,7 @@ class MainView2(QtGui.QWidget):
         self.verticalLayout_list_of_sets.addWidget(self.label_list_of_sets)
         self.treeWidget = QtGui.QTreeWidget(self.widget_list_of_sets)
         self.treeWidget.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"
-        "border-color: rgb(255, 255, 255);"))
+                                                "border-color: rgb(255, 255, 255);"))
         self.treeWidget.setObjectName(_fromUtf8("treeWidget"))
         font = QtGui.QFont()
         font.setPointSize(12)
@@ -493,7 +508,6 @@ class MainView2(QtGui.QWidget):
         self.checkclustering.stateChanged.connect(self.checkclusteringall)
         itemLayout.addWidget(self.checkclustering)
         self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(2), 0, item)
-
 
         self.treeWidget.header().setVisible(False)
         self.treeWidget.header().setHighlightSections(False)
@@ -570,7 +584,6 @@ class MainView2(QtGui.QWidget):
         self.label_selected.setObjectName(_fromUtf8("label_selected"))
         self.verticalLayout_selected_view.addWidget(self.label_selected)
 
-
         self.scrollArea_2 = QtGui.QScrollArea(self.widget_selected)
         self.scrollArea_2.setWidgetResizable(True)
         self.widget_selected_view = QtGui.QWidget()
@@ -580,7 +593,6 @@ class MainView2(QtGui.QWidget):
         self.scrollArea_2.setWidget(self.widget_selected_view)
         self.verticalLayout_selected_view.addWidget(self.scrollArea_2)
         self.verticalLayout_selected.addWidget(self.widget_selected)
-
 
         self.horizontalLayout_buttons = QtGui.QHBoxLayout()
         self.horizontalLayout_buttons.setSpacing(6)
@@ -610,16 +622,17 @@ class MainView2(QtGui.QWidget):
 
         default_name = datetime.fromtimestamp(int(round(time.time()))).strftime('--%m-%d %H-%M')
 
-        my_set = newSet(default_name[2:],0)
-        #set_current_set(my_set)
-        #print(get_current_set().get_name())
+        my_set = newSet(default_name[2:], 0)
+        # set_current_set(my_set)
+        # print(get_current_set().get_name())
 
         item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(0))
-        item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
-        self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(0), 0, SetButton(my_set,self.verticalLayout_image_collections_show,self.verticalLayout_widget_selected_view,self.checkBox,self.treeWidget))
+        item_0.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+        self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(0), 0,
+                                      SetButton(my_set, self.verticalLayout_image_collections_show,
+                                                self.verticalLayout_widget_selected_view, self.checkBox,
+                                                self.treeWidget))
         globalSets[0].append(my_set)
-
-
 
         self.pushButton_clustering.clicked.connect(self.extract_and_cluster)
         self.pushButton_edit.clicked.connect(self.edit_pannel)
@@ -627,72 +640,81 @@ class MainView2(QtGui.QWidget):
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
-
     def checkselected(self):
-            for i in range(0,self.verticalLayout_image_collections_show.rowCount()):
-                self.verticalLayout_image_collections_show.itemAt(i).widget().setChecked(self.checkBox.isChecked())
+        for i in range(0, self.verticalLayout_image_collections_show.rowCount()):
+            self.verticalLayout_image_collections_show.itemAt(i).widget().setChecked(self.checkBox.isChecked())
 
     def checkimportedall(self):
         imported = self.treeWidget.topLevelItem(0)
-        it=QTreeWidgetItemIterator(self.treeWidget.topLevelItem(0))
+        it = QTreeWidgetItemIterator(self.treeWidget.topLevelItem(0))
         while it.value():
             if it.value().parent() is not None and it.value().parent() == imported:
-                self.treeWidget.itemWidget(it.value(),0).check.setChecked(self.checkimported.isChecked())
-            it+=1
+                self.treeWidget.itemWidget(it.value(), 0).check.setChecked(self.checkimported.isChecked())
+            it += 1
 
     def checkclusteringall(self):
         clustering = self.treeWidget.topLevelItem(2)
-        it=QTreeWidgetItemIterator(self.treeWidget.topLevelItem(2))
+        it = QTreeWidgetItemIterator(self.treeWidget.topLevelItem(2))
         while it.value():
             if it.value().parent() is not None and it.value().parent() == clustering:
-                self.treeWidget.itemWidget(it.value(),0).check.setChecked(self.checkclustering.isChecked())
-            it+=1
+                self.treeWidget.itemWidget(it.value(), 0).check.setChecked(self.checkclustering.isChecked())
+            it += 1
 
     def checkcalculationall(self):
         calculation = self.treeWidget.topLevelItem(1)
-        it=QTreeWidgetItemIterator(self.treeWidget.topLevelItem(1))
+        it = QTreeWidgetItemIterator(self.treeWidget.topLevelItem(1))
         while it.value():
             if it.value().parent() is not None and it.value().parent() == calculation:
-                self.treeWidget.itemWidget(it.value(),0).check.setChecked(self.checkcalculation.isChecked())
-            it+=1
+                self.treeWidget.itemWidget(it.value(), 0).check.setChecked(self.checkcalculation.isChecked())
+            it += 1
 
     def createSet(self):
         text, ok = QInputDialog.getText(self, 'Create a set',
-                                        "Enter a new name for your new set :" )
-        #default_name = datetime.fromtimestamp(int(round(time.time()))).strftime('--%m-%d %H-%M-%S')
-        if ok :
+                                        "Enter a new name for your new set :")
+        # default_name = datetime.fromtimestamp(int(round(time.time()))).strftime('--%m-%d %H-%M-%S')
+        if ok:
             new_ok = True
             not_ok = ['^', '[', '<', '>', ':', ';', ',', '?', '"', '*', '|', '/', ']', '+', '$']
             for i in not_ok:
                 if i in str(text):
                     new_ok = False
             if new_ok and not exists_set(str(text)):
-                my_set = newSet(text,len(globalSets[0]))
-                #print(my_set.name)
+                my_set = newSet(text, len(globalSets[0]))
+                # print(my_set.name)
 
                 item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(0))
-                item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
-                self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(len(globalSets[0])), 0, SetButton(my_set,self.verticalLayout_image_collections_show,self.verticalLayout_widget_selected_view,self.checkBox,self.treeWidget))
+                item_0.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(len(globalSets[0])), 0,
+                                              SetButton(my_set, self.verticalLayout_image_collections_show,
+                                                        self.verticalLayout_widget_selected_view, self.checkBox,
+                                                        self.treeWidget))
 
                 globalSets[0].append(my_set)
-                #print(len(globalSets[0]))
-            else :
+                # print(len(globalSets[0]))
+            else:
                 err = QtGui.QMessageBox.critical(self, "Error",
-                                                     "The name you entered is not valid (empty, invalid caracter or already exists)")
+                                                 "The name you entered is not valid (empty, invalid caracter or already exists)")
 
     def updateTreeView(self):
-        for s in setToAdd :
+        for s in setToAdd:
             item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(s[1]))
-            item_0.setFlags(QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
-            self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(s[1]).child(len(globalSets[s[1]])), 0, SetButton(s[0],self.verticalLayout_image_collections_show,self.verticalLayout_widget_selected_view,self.checkBox,self.treeWidget))
+            item_0.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+            self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(s[1]).child(len(globalSets[s[1]])), 0,
+                                          SetButton(s[0], self.verticalLayout_image_collections_show,
+                                                    self.verticalLayout_widget_selected_view, self.checkBox,
+                                                    self.treeWidget))
             globalSets[s[1]].append(s[0])
             setToAdd.remove(s)
 
     def updateColumn(self):
-        global selected
+        global selected_images_collections
         global collshow
         for i in reversed(range(self.verticalLayout_image_collections_show.count())):
-            label = "Set name : "+ str(self.verticalLayout_image_collections_show.itemAt(i).widget().setname) + "\nName : " + str(self.verticalLayout_image_collections_show.itemAt(i).widget().coll.name) + "\nNIfTI : " + str(len(self.verticalLayout_image_collections_show.itemAt(i).widget().list)) + "\nLast modified : " + str(self.verticalLayout_image_collections_show.itemAt(i).widget().d)
+            label = "Set name : " + str(
+                self.verticalLayout_image_collections_show.itemAt(i).widget().setname) + "\nName : " + str(
+                self.verticalLayout_image_collections_show.itemAt(i).widget().coll.name) + "\nNIfTI : " + str(
+                len(self.verticalLayout_image_collections_show.itemAt(i).widget().list)) + "\nLast modified : " + str(
+                self.verticalLayout_image_collections_show.itemAt(i).widget().d)
             self.verticalLayout_image_collections_show.itemAt(i).widget().setText(label)
             self.verticalLayout_image_collections_show.itemAt(i).widget().setChecked(False)
         for i in reversed(range(self.verticalLayout_widget_selected_view.count())):
@@ -700,14 +722,12 @@ class MainView2(QtGui.QWidget):
         # del selected[:]
         del collshow[:]
         self.checkBox.setChecked(False)
-        
-        print("cc")
 
+        print("cc")
 
     def show_coll(self, coll):
         # -- This show_coll will add a collection to the current vizu
         get_current_vizu().add(coll)
-
 
     def export(self):
         if get_selected():
@@ -741,8 +761,25 @@ class MainView2(QtGui.QWidget):
 
                 if nifti_opt.isChecked():
 
-                    folder_path = str(QFileDialog.getExistingDirectory())
-                    image_recreation_from_list(folder_path, selected)
+                    # save an addition of all the file as one (and only one) nifti file
+
+                    # get the path where we will save the file
+                    save_path: str = QFileDialog.getSaveFileName(self, "Save the nifti file")
+
+                    if save_path is not None:
+                        if "." not in save_path:
+                            save_path = save_path + ".nii"
+                        # put all the images in a single list
+                        list_of_images: list = []
+                        for image_collection in selected_images_collections:
+                            for key in image_collection.nifimage_dict.keys():
+                                list_of_images.append(image_collection.nifimage_dict[key])
+                        # make an addition of all the image
+                        result_matrix = calculations.addition_opperation(list_of_images)
+                        # get the result in an nibabel image with an mni affine
+                        img: nibabel.nifti1.Nifti1Image = calculations.create_mni_nibabel_image_from_matrix(result_matrix)
+                        # save the image
+                        nibabel.save(img, save_path)
 
                 elif excel_opt.isChecked():
                     type_choice = QtGui.QMessageBox()
@@ -840,16 +877,16 @@ class MainView2(QtGui.QWidget):
         print()
 
     def SOM(self):
-        self.list_entete=["test1","test2","test3"]
-        self.list_data=["bla1","bla2","bla3","bla4","bla5","bla6"]
+        self.list_entete = ["test1", "test2", "test3"]
+        self.list_data = ["bla1", "bla2", "bla3", "bla4", "bla5", "bla6"]
         self.showSOM.emit()
 
     def edit_pannel(self):
-        global selected
+        global selected_images_collections
         global collshow
         # -- This edit_pannel will show the edit view if selected is not empty
-        #print("mv selected",selected)
-        #print("mv collshow",collshow)
+        # print("mv selected",selected)
+        # print("mv collshow",collshow)
         if (get_selected()):
             self.showEdit.emit()
         else:
@@ -888,13 +925,12 @@ class MainView2(QtGui.QWidget):
         print()
 
     def updateClusterRes(self):
-        #self.setAccessBox.add2()
+        # self.setAccessBox.add2()
         print()
 
     def updateCalculRes(self):
-        #self.setAccessBox.add3()
+        # self.setAccessBox.add3()
         print()
-
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(_translate("Form", "Form", None))
@@ -902,9 +938,9 @@ class MainView2(QtGui.QWidget):
         self.treeWidget.headerItem().setText(0, _translate("Form", "List of set and subset", None))
         __sortingEnabled = self.treeWidget.isSortingEnabled()
         self.treeWidget.setSortingEnabled(False)
-        #self.treeWidget.topLevelItem(0).setText(0, _translate("Form", "Imported", None))
-        #self.treeWidget.topLevelItem(1).setText(0, _translate("Form", "Calculation", None))
-        #self.treeWidget.topLevelItem(2).setText(0, _translate("Form", "Clustering", None))
+        # self.treeWidget.topLevelItem(0).setText(0, _translate("Form", "Imported", None))
+        # self.treeWidget.topLevelItem(1).setText(0, _translate("Form", "Calculation", None))
+        # self.treeWidget.topLevelItem(2).setText(0, _translate("Form", "Clustering", None))
         self.treeWidget.setSortingEnabled(__sortingEnabled)
         self.label_image_collections.setText(_translate("Form", "Image collections", None))
         self.checkBox.setText(_translate("Form", "Select all", None))

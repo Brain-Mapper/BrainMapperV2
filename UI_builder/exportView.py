@@ -1,4 +1,3 @@
-
 # NAME
 #
 #        exportView
@@ -14,13 +13,14 @@
 
 from PyQt4 import QtGui
 from PyQt4.Qt import *
-from PyQt4.QtCore import pyqtSignal,QCoreApplication
+from PyQt4.QtCore import pyqtSignal, QCoreApplication
 from PyQt4 import QtCore
 
 import sys
 import os
 from os import path
-sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
+
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 import ourLib.ExcelExport.excelExport as ee
 
 
@@ -85,7 +85,8 @@ class ExportView(QtGui.QWidget):
         runExportButton = QtGui.QPushButton('Run')
         runExportButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/play.png'))
         runExportButton.setStatusTip("Run the export")
-        runExportButton.clicked.connect(lambda: ee.export(self.fileNameEdit.text(), self.directoryEdit.text(), self.export_usable_dataset))
+        runExportButton.clicked.connect(
+            lambda: ee.export(self.fileNameEdit.text(), self.directoryEdit.text(), self.export_usable_dataset))
 
         selectButton = QtGui.QPushButton('browse')
         selectButton.clicked.connect(lambda: self.select_directory())
@@ -111,5 +112,5 @@ class ExportView(QtGui.QWidget):
         file = str(QFileDialog.getExistingDirectory(self, "Browse Directory"))
         self.directoryEdit.setText(file)
 
-    def set_usable_data_set(self,a_usable_dataset_instance):
+    def set_usable_data_set(self, a_usable_dataset_instance):
         self.export_usable_dataset = a_usable_dataset_instance
