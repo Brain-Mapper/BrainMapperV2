@@ -6,8 +6,8 @@ from PyQt4.Qt import *
 from nibabel import Nifti1Image, load
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-from BrainMapper import *
-
+import BrainMapper
+from BrainMapper import calcul
 import time
 
 from PyQt4 import QtCore
@@ -55,7 +55,7 @@ class calculationView2(QtGui.QWidget):
         # Operations which return only one matrix
         self.leftlist.addItem('addition')
         self.leftlist.addItem('division')
-        self.leftlist.addItem('linear combinaison')
+        self.leftlist.addItem('linear combination')
         self.leftlist.addItem('mean')
         self.leftlist.addItem('multiplication')
         self.leftlist.addItem('and')
@@ -179,7 +179,7 @@ class calculationView2(QtGui.QWidget):
 
     def display(self):
         """
-        Update the displayed information
+        Update the displayed information when the user click on a row
         """
         item = self.leftlist.currentItem().text()
 
@@ -187,39 +187,217 @@ class calculationView2(QtGui.QWidget):
             self.argument_name.setText("No argument")
             self.set_arguments_editable(False)
             self.textBrowser.setText(
-                ""
+                "Result: a unique image\n"
+                "Addition all the images in input."
             )
 
         elif item == "division":
             self.argument_name.setText("Coefficient")
-            self.set_arguments_editable(True, "1")
+            self.set_arguments_editable(True, "1.0")
             self.textBrowser.setText(
-                ""
+                "Result: a unique image\n"
+                "Addition all the images in input, and then divide all the intensity by the coefficient."
             )
 
-        elif item == "linear combinaison":
+        elif item == "linear combination":
             self.argument_name.setText("Coefficients")
-            basic_coefficients =
-            self.set_arguments_editable(True)
+            basic_coefficients = ",".join(["1.0"] * self.count_images())
+            self.set_arguments_editable(True, basic_coefficients)
+            filenames = []
+            for i, name in enumerate(self.get_images_names()):
+                filenames.append(str(i)+": "+name)
             self.textBrowser.setText(
-                ""
+                "Result: a unique image\n"
+                "Addition all the images in input, but each image having all its intensity multiplied by the "
+                "corresponding coefficient.\n"
+                "List of filename:\n\t"
+                + "\n\t".join(filenames)
+            )
+
+        elif item == "mean":
+            self.argument_name.setText("No argument")
+            self.set_arguments_editable(False)
+            self.textBrowser.setText(
+                "Result: a unique image\n"
+                "Addition all the images in input, and then divide all the intensity by the number of images."
             )
 
         elif item == "multiplication":
             self.argument_name.setText("Coefficient")
-            self.set_arguments_editable(True)
+            self.set_arguments_editable(True, "1.0")
             self.textBrowser.setText(
-                ""
+                "Result: a unique image\n"
+                "Addition all the images in input, and then multiply al the intensity by a coefficient"
             )
 
-    def count_nifti(selfs) -> int:
+        elif item == "and":
+            self.argument_name.setText("No argument")
+            self.set_arguments_editable(False)
+            self.textBrowser.setText(
+                "Result: a unique image\n"
+                "Realize the boolean intersection of the images in input. Each voxel with an intensity strictly "
+                "superior to 0 is considered true. The result is a unique image with intersected voxels with an "
+                "intensity of 1. "
+            )
+
+        elif item == "or":
+            self.argument_name.setText("No argument")
+            self.set_arguments_editable(False)
+            self.textBrowser.setText(
+                "Result: a unique image\n"
+                "Realize the boolean union of the images in input. Each voxel with an intensity strictly "
+                "superior to 0 is considered true. The result is a unique image with voxels at the union with an "
+                "intensity of 1."
+            )
+
+        elif item == "closing":
+            self.argument_name.setText("Number of iterations")
+            self.set_arguments_editable(True, "1")
+            self.textBrowser.setText(
+                "Result : one image by image in input\n"
+                "In mathematical morphology, the closing of a set (binary image) A by a structuring element B is the "
+                "erosion of the dilation of that set, A * B = ( A (+) B ) (-) B, denote the dilation and erosion, "
+                "respectively. In image processing, closing is, together with opening, the basic workhorse of "
+                "morphological noise removal. Opening removes small objects, while closing removes small holes."
+            )
+
+        elif item == "dilation":
+            self.argument_name.setText("Number of iterations")
+            self.set_arguments_editable(True, "1")
+            self.textBrowser.setText(
+                "Result : one image by image in input\n"
+                "Dilation (usually represented by (+)) is one of the basic operations in mathematical morphology. "
+                "Originally developed for binary images, it has been expanded first to grayscale images, and then to "
+                "complete lattices. The dilation operation usually uses a structuring element for probing and "
+                "expanding the shapes contained in the input image."
+            )
+
+        elif item == "erosion":
+            self.argument_name.setText("Number of iterations")
+            self.set_arguments_editable(True, "1")
+            self.textBrowser.setText(
+                "Result : one image by image in input\n"
+                "Erosion (usually represented by (-)) is one of two fundamental operations (the other being dilation) "
+                "in morphological image processing from which all other morphological operations are based. It was "
+                "originally defined for binary images, later being extended to grayscale images, and subsequently to "
+                "complete lattices."
+            )
+
+        elif item == "opening":
+            self.argument_name.setText("Number of iterations")
+            self.set_arguments_editable(True, "1")
+            self.textBrowser.setText(
+                "Result : one image by image in input\n"
+                "In morphological opening ( A (-) B ) (+) B, erosion operation removes objects that are smaller than "
+                "structuring element B and dilation operation restores the shape of remaining objects. However, "
+                "restoring accuracy in dilation operation highly depends on the type of structuring element and the "
+                "shape of restoring objects. The opening by reconstruction method is able to restore the objects "
+                "completely after erosion applied."
+            )
+
+        elif item == "threshold":
+            self.argument_name.setText("min,max")
+            self.set_arguments_editable(True, "0.0,1.0")
+            self.textBrowser.setText(
+                "Result : one image by image in input\n"
+                "The threshold operation allows you to store only voxels whose intensity value is between the min and "
+                "max parameters (min <= intensity <= max). All voxels that do not meet this criterion have their "
+                "intensity that becomes zero. "
+                "If no value is assigned to min and max then their values will be less the infinite and the less "
+                "infinite respectively."
+            )
+
+    def run_calculation(self):
+        algorithm = self.leftlist.currentItem().text()
+        arguments = self.arguments_line.text()
+
         img_selected = []
-        for collection in collshow:
+        for collection in BrainMapper.collshow:
             for img in collection.nifimage_dict.values():
                 img_selected.append(img)
-        return len(img)
 
+        if algorithm == "addition":
+            result = [BrainMapper.calcul.addition_operation(img_selected)]
+            self.popUpSaveFileResultCalculation(algorithm, result)
 
+        elif algorithm == "division":
+            try:
+                coefficient = float(arguments)
+            except ValueError:
+                self.give_argument_error()
+            else:
+                result = [BrainMapper.calcul.division_operation(img_selected, coefficient)]
+                self.popUpSaveFileResultCalculation(algorithm, result)
+
+        elif algorithm == "linear combination":
+            try:
+                coefficients = [float(i) for i in arguments.split(",")]
+            except ValueError:
+                self.give_argument_error()
+            else:
+                result = [BrainMapper.calcul.linear_combination_operation(img_selected, coefficients)]
+                self.popUpSaveFileResultCalculation(algorithm, result)
+
+        elif algorithm == "mean":
+            result = [BrainMapper.calcul.mean_operation(img_selected)]
+            self.popUpSaveFileResultCalculation(algorithm, result)
+
+        elif algorithm == "multiplication":
+            try:
+                coefficient = float(arguments)
+            except ValueError:
+                self.give_argument_error()
+            else:
+                result = [BrainMapper.calcul.multiplication_operation(img_selected, coefficient)]
+                self.popUpSaveFileResultCalculation(algorithm, result)
+
+        elif algorithm == "and":
+            result = [BrainMapper.calcul.and_operation(img_selected)]
+            self.popUpSaveFileResultCalculation(algorithm, result)
+
+        elif algorithm == "or":
+            result = [BrainMapper.calcul.or_operation(img_selected)]
+            self.popUpSaveFileResultCalculation(algorithm, result)
+
+        elif algorithm in ["closing", "dilation", "erosion", "opening"]:
+            try:
+                number_of_iterations = int(arguments)
+            except ValueError:
+                self.give_argument_error()
+            else:
+                result = BrainMapper.calcul.image_operation_from_str(
+                    img_selected, number_of_iterations, algorithm)
+                self.popUpSaveFileResultCalculation(algorithm, result)
+
+        elif algorithm == "threshold":
+            try:
+                list_of_arguments = arguments.split(",")
+                threshold_min = float(list_of_arguments[0])
+                threshold_max = float(list_of_arguments[1])
+            except ValueError:
+                self.give_argument_error()
+            else:
+                result = BrainMapper.calcul.threshold_operation(img_selected, threshold_min, threshold_max )
+                self.popUpSaveFileResultCalculation(algorithm, result)
+
+    def give_argument_error(self):
+        QtGui.QMessageBox.warning(self, "Error", "Given argument aren't corrects.")
+
+    # noinspection PyMethodMayBeStatic,PyMethodMayBeStatic
+    def count_images(self) -> int:
+        img_selected = []
+        for collection in BrainMapper.collshow:
+            for img in collection.nifimage_dict.values():
+                img_selected.append(img)
+        return len(img_selected)
+
+    # noinspection PyMethodMayBeStatic,PyMethodMayBeStatic
+    def get_images_names(self) -> list:
+        img_selected = []
+        for collection in BrainMapper.collshow:
+            for img in collection.nifimage_dict.values():
+                img_selected.append(img.filename)
+        return img_selected
 
     def go_back(self):
         self.showMain.emit()
@@ -239,3 +417,29 @@ class calculationView2(QtGui.QWidget):
                                             None))
         self.label_4.setText(_translate("Form", "Example", None))
         self.pushButton_2.setText(_translate("Form", "Go back", None))
+
+    def popUpSaveFileResultCalculation(self, algorithm, result):
+        choice = QtGui.QMessageBox()
+        choice.setWindowTitle('Success !')
+        l = choice.layout()
+        l.setContentsMargins(20, 10, 10, 20)
+        l.addWidget(QLabel(
+            algorithm + " algorithm has been correctly applicated on nifti(s) file(s)\n\n\n\nDo you want save the algorithm's result as Set ?"),
+            l.rowCount() - 3, 0, 1, l.columnCount() - 2, Qt.AlignCenter)
+        choice.setStandardButtons(QMessageBox.Cancel | QMessageBox.Save)
+        wantToSave = choice.exec_()
+        if wantToSave == QtGui.QMessageBox.Save:
+            setCalculation = BrainMapper.Set("calc_", 1)
+            setCalculation.set_name("calc_" + algorithm + "_" + str(id(setCalculation)))
+            coll = BrainMapper.ImageCollection("coll_", setCalculation)
+            coll.set_name("coll_" + algorithm + "_" + str(id(coll)))
+            for matrixData in result:
+                template_mni_path = 'ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii'
+                template_data = load(template_mni_path)
+                template_affine = template_data.affine
+                recreate_image = Nifti1Image(matrixData, template_affine)
+                ni_image = BrainMapper.NifImage("" + str(time.time() * 1000), recreate_image)
+                ni_image.set_filename("file_" + str(algorithm) + "_" + str(id(ni_image)) + ".nii")
+                coll.add(ni_image)
+            setCalculation.add_collection(coll)
+            BrainMapper.makeCalculResultSet(setCalculation)

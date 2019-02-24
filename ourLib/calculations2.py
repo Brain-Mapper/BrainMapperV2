@@ -44,7 +44,7 @@ def convert_from_mni_to_matrix(x, y, z):
     :param z: z in MNI coordinates
     :return: i,j,k in matrix coordinates
     """
-    return x + 98, y + 134, z + 72
+    return int(x + 98), int(y + 134), int(z + 72)
 
 
 def create_mni_nibabel_image_from_matrix(data):
@@ -88,13 +88,13 @@ def addition_operation(list_of_images, coefficient: float = 1):
     for img in list_of_images:
         if isinstance(img, NifImage):
             data = img.get_img_data()
-            result_matrix = result_matrix + data * coefficient
+            result_matrix = result_matrix + data
             img.uncache()
         else:  # instance of Image
             for x, y, z, intensity in img.extract():
                 i, j, k = convert_from_mni_to_matrix(x, y, z)
-                result_matrix[i, j, k] = result_matrix[i, j, k] + intensity * coefficient
-    return result_matrix
+                result_matrix[i, j, k] = result_matrix[i, j, k] + intensity
+    return result_matrix * coefficient
 
 
 def multiplication_operation(list_of_images, coefficient: float):
@@ -146,6 +146,16 @@ def opening_operation(list_of_images, iterations_number):
 
 def closing_operation(list_of_images, iterations_number):
     image_operation(list_of_images, iterations_number, ndimage.binary_closing)
+
+
+def image_operation_from_str(list_of_images: list, iterations_number: int, operation: str):
+    operations = {
+        "erosion": erosion_operation,
+        "dilation": dilation_operation,
+        "opening": opening_operation,
+        "closing": closing_operation,
+    }
+    return operations[operation](list_of_images, iterations_number)
 
 
 def or_operation(list_of_images):
@@ -237,17 +247,11 @@ def threshold_operation(list_of_images, threshold_min, threshold_max):
     result = []
     shape = max_shape(list_of_images)
     for img in list_of_images:
-        if isinstance(img, NifImage):
-            data = img.get_img_data()
-            thresholded = [i if threshold_min <= i <= threshold_max else 0 for i in data.flat]
-            thresholded = np.matrix(thresholded).reshape(img.get_shape())
-            img.uncache()
-        else:  # Image
-            thresholded = np.zeros(shape, dtype='f')
-            for x, y, z, intensity in img.extract():
-                i, j, k = convert_from_mni_to_matrix(x, y, z)
-                if threshold_min <= intensity <= threshold_max:
-                    thresholded[i, j, k] = intensity
+        thresholded = np.zeros(shape, dtype='f')
+        for x, y, z, intensity in extract(img):
+            i, j, k = convert_from_mni_to_matrix(x, y, z)
+            if threshold_min <= intensity <= threshold_max:
+                thresholded[i, j, k] = intensity
         result.append(thresholded)
     return result
 
