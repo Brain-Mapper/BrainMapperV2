@@ -27,7 +27,7 @@
             <ul class="toc_list">
           	   <li><a href="#data"><strong>3.1 Data extraction for clustering</strong></a></li>
           	    <ul>
-          		      <li><a href="#extract">3.1.1 How data is extracted</a></li>
+          		      <li><a href="#extract">3.1.1 How data are extracted</a></li>
           		      <li><a href="#all_points">3.1.2 Use all points of an image</a></li>
           		      <li><a href="#as_centroid">3.1.3 Use the image's points centroid as data</a></li>
           	      </ul>
@@ -36,21 +36,23 @@
               		<li><a href="#kmeans">3.2.1 KMeans</a></li>
               		<li><a href="#kmedoids">3.2.2 KMedoids</a></li>
                   <li><a href="#agglo">3.2.3 Agglomerative Clustering</a></li>
+                  <li><a href="#dbscan">3.2.4 DBscan</a></li>
+                  <li><a href="#fuzzyCmeans">3.2.3 Fuzzy Cmeans</a></li>
               	  </ul>
-              	<li><a href="#script_env"><strong>3.3 Execute custom functions : user script environment</strong></a></li>
-                <li><a href="#clust_results"><strong>3.4 Clustering results </strong></a></li>
+
+                <li><a href="#clust_results"><strong>3.3 Clustering results </strong></a></li>
                 <ul>
-                  <li><a href="#clust_assign">3.4.1 Cluster assignment</a></li>
+                  <li><a href="#clust_assign">3.3.1 Cluster assignment</a></li>
                   <ul>
-                    <li><a href="#as_set"><small>3.4.1.1 Save results as set</small></a></li>
-                    <li><a href="#to_csv"><small>3.4.1.2 Export as CSV file</small></a></li>
+                    <li><a href="#as_set"><small>3.3.1.1 Save results as set</small></a></li>
+                    <li><a href="#to_csv"><small>3.3.1.2 Export as CSV file</small></a></li>
                   </ul>
-                  <li><a href="#visu">3.4.2 Graphic Visualisation</a></li>
-                  <li><a href="#val_index">3.4.3 Internal Validation Indexes</a></li>
+                  <li><a href="#visu">3.3.2 Graphic Visualisation</a></li>
+                  <li><a href="#val_index">3.3.3 Internal Validation Indexes</a></li>
                   <ul>
-                    <li><a href="#mean_silhouette"><small>3.4.3.1 Mean Silhouette</small></a></li>
-                    <li><a href="#ch_index"><small>3.4.3.2 Calinski-Habaraz Index</small></a></li>
-                    <li><a href="#db_index"><small>3.4.3.3 Davies Boulin index</small></a></li>
+                    <li><a href="#mean_silhouette"><small>3.3.3.1 Mean Silhouette</small></a></li>
+                    <li><a href="#ch_index"><small>3.3.3.2 Calinski-Habaraz Index</small></a></li>
+                    <li><a href="#db_index"><small>3.3.3.3 Davies Boulin index</small></a></li>
                   </ul>
                 </ul>
               </ul>
@@ -76,7 +78,7 @@
             Our software extracts the data of your selected image collections before applying clustering algorithms on it.
 
         	</p>
-        	<h3 id="extract">3.1.1 How data is extracted</h3>
+        	<h3 id="extract">3.1.1 How data are extracted</h3>
         	<p>
             From the main view page, where all collections are accessible, the user can click on 'clustering' button at the bottom right, once he has selected some image collections.<br/>
 
@@ -126,41 +128,101 @@
           <br><br>
           Once an algorithm is selected, algorithm's parameters will appear on the left section of clustering view.
           You can select and enter the parameters for the clustering algorithm here.
+
           <br>
           <img src="imgs/clustering/clust_params.png" style="width:80%">
           <br>
           <h3 id="kmeans">3.2.1 KMeans</h3>
-        	<p> The KMeans algorithm is a classic clustering algorithm. <br><br>
-            We used the implementation from the <em><b>scikit-learn</b></em> library.<br>
+        	<p>
+            The KMeans algorithm is a classic clustering algorithm. <br>
+            The aim is to group objects into groups centered on centroids.The objects are created using attributes.
+            For this algorithm, it is necessary to choose the number of groups, the function of distance between two objects and the stopping condition. This algorithm has the advantage of being fast. However, the results depend on the initialization.<br>
+            <br>We used the implementation from the <em><b>scikit-learn</b></em> library.<br>
             For more details on the algorithm and its parameters click <a href="http://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html#sklearn.cluster.KMeansl" target="_blank" style="color : #5577ee">here</a>
           </p>
+          <p>
+            <img src="imgs/clustering/Kmeans.png" style="width:70%">
+          </p>
           <h3 id="kmedoids">3.2.2 KMedoids</h3>
-        	<p> The KMedoids algorithm is an alternative to KMeans when you want the centroid of each cluster is the median point of each cluster.
+        	<p>
+            The KMedoids algorithm is an alternative to KMeans.<br>
+            The aim is to group objects into groups centered on medoids.
+            For this algorithm, it is necessary to choose the number of groups, the function of distance between two objects and the stopping condition.
+            This algorithm has the advantage of being fast. However, the results depend on the initialization.<br>
+
+            A configuration has a cost that is defined as the sum of distance between each point et the medoid of the group.
+            At each iteration, we calculate if an another configuration (with another medoid) has a lower cost.<br>
+
+            The Kmedoid algorithm is more resistant to noise than the Kmeans algorithm.
+            But the number of calculations can be high if the number of points is high.
+          </p>
+          <p>
+            <img src="imgs/clustering/Kmedoid.png" style="width:70%">
           </p>
           <h3 id="agglo">3.2.3 Agglomerative Clustering</h3>
         	<p>
-            Agglomerative clustering, specially Ward Linkage, is sometimes used in neuroimaging. It is a Hierarchical clustering algorithm. <br><br>
-              We used the implementation of this type of algorithm from the <em><b>scikit-learn</b></em> library.<br>
-              For more details on its parameters click <a href="http://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html#sklearn.cluster.KMeansl" target="_blank" style="color : #5577ee">here</a>
+            Agglomerative clustering is hierarchical clustering algorithm. <br><br>
+            <br>
+            At initialization, each object is in group composed only of itself.
+            The algorithm iterates until a stopping condition is met (for example, the number of groups).
+            At each iteration, the algorithm merges the two most similar groups.
+            <br>
+            The important parameter are the stopping condition and how to calculate the similarity between two groups.
+            Three similarity mesures are often used :
+            <ul>
+              <li> Ward, variance after merging the two groups</li>
+              <li> Average, average distance between objects in two groups</li>
+              <li> Complete, maximum distance between objects in two groups</li>
+            </ul>
+            We prefer to use Ward in cases where groups are supposed of the same size.
+            <br>
+            This algorithm had the advantage of allowing the construction of a dendogramm.
+            Nevertheless, it is very heavy in terms of calculations and can not manage non-convexe groups.
+            <br><br>
+            We used the implementation of this type of algorithm from the <em><b>scikit-learn</b></em> library.<br>
+            For more details on its parameters click <a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.AgglomerativeClustering.html#sklearn.cluster.AgglomerativeClustering" target="_blank" style="color : #5577ee">here</a>
+          </p>
+          <p>
+            <img src="imgs/clustering/Agglo.png" style="width:70%">
           </p>
 
-          <h2 id="script_env">3.3 Execute custom functions : user script environment</h2>
-        	<p> In the clustering method chooser, you may see the option 'Custom user script'. <br>
-            By selecting it the user can write the algorithm she/he would like to apply to the extracted data.
-            <div style="padding-left: 12%; padding-top:3%; padding-bottom:3%">
-              <div class="alert note-info" role="alert">
-              <h5 style="color:#306499;">INFORMATION</h5>
-              <b>This functionality, although incorporated to the user interface, is not functional in the current version.</b>
-              <br><br>
-              As interesting as this option was in the beginning of our project, we could not yet implement the necessary controls to make it a reality given the little time we had.
-              <br>
-              It is intended that this functionality will be worked on later on.
-            </div>
-           </div>
+          <h3 id="dbscan">3.2.4 DBscan</h3>
+          <p>
+            This algorithm needs two inputs :
+            <ul>
+                      <li> ε, a positive real </li>
+                      <li> min, a positive integer</li>
+            </ul>
+            An object is classified in one of those categories :
+            <ul>
+              <li> heart, id there are at least min objects in a radius ε aroud this object</li>
+              <li> border, if there are fewer than min objects in a radius ε aroud this object and if there is at least a cluster core in a radius ε aroud this object</li>
+              <li> noise, otherwise </li>
+            </ul>
+            This algorithm performs on many data. It allows to find groups complex and has a very good resistance to noise.
+            The problem with this algorithm is that it is difficult to configure the parameters ε and min.
+            <br><br>
+            We used the implementation of this type of algorithm from the <em><b>scikit-learn</b></em> library.<br>
+            For more details on its parameters click <a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.DBSCAN.html" target="_blank" style="color : #5577ee">here</a>
+         </p>
+         <p>
+           <img src="imgs/clustering/DBscan.png" style="width:70%">
+         </p>
 
+          <h3 id="fuzzyCmeans">3.2.5 Fuzzy CMeans</h3>
+          <p>
+            The principle is similar to that Kmeans.
+            The difference is the value of belonging to a group that is not a binary value but a value between 0 and 1.
+            The points can belong to several groups, which allows for more tailored results for groups with unclear boundaries.
+            <br><br>
+            We used the implementation of this type of algorithm from the <em><b>scikit-fuzzy</b></em> library.<br>
+            For more details on its parameters click <a href="https://pythonhosted.org/scikit-fuzzy/api/skfuzzy.cluster.html#cmeans" target="_blank" style="color : #5577ee">here</a>
+          </p>
+          <p>
+            <img src="imgs/clustering/Fuzzy.png" style="width:70%">
           </p>
 
-          <h2 id="clust_results">3.4 Clustering results</h2>
+          <h2 id="clust_results">3.3 Clustering results</h2>
         	<p> Once the selected clustering method parameters have been correctly set, you can launch the algorithm by clicking on the 'Run' button
             <div style="padding-left: 22%; padding-top: 1%;padding-bottom: 1%;">
               <img src="imgs/clust_run.png" style="width:60%">
@@ -168,7 +230,7 @@
             <br><br>
             Cluster assignments will appear on the data table and graphic visualisations of the results will appear.
           </p>
-          <h3 id="clust_assign">3.4.1 Cluster assignment</h3>
+          <h3 id="clust_assign">3.3.1 Cluster assignment</h3>
         	<p>
             The data table will be modified to display which data entry belongs to which cluster.
             <div style="padding-left: 22%; padding-top: 1%;padding-bottom: 1%;">
@@ -179,17 +241,17 @@
             the results as a CSV file.
           </p>
 
-          <h4 id="as_set">3.4.1.1 Save as set</h4>
+          <h4 id="as_set">3.3.1.1 Save as set</h4>
         	<p>
             By clicking on the <em><b>'Save as set'</b></em> button, a NIfTI file containing all points from a given cluster will be recreated,
             for each cluster obtained. A set containing this results will be added in the main page, in the 'Clustering' tab. <br>
             <br>
             They can be exported as NIfTI files from there.
           </p>
-          <h4 id="to_csv">3.4.1.2 Export as CSV file</h4>
+          <h4 id="to_csv">3.3.1.2 Export as CSV file</h4>
         	<p> By clicking on the 'Export' button, a CSV file containing the data table can be saved on the disk</p>
 
-          <h3 id="visu">3.4.2 Graphic visualisation</h3>
+          <h3 id="visu">3.3.2 Graphic visualisation</h3>
         	<p> Two graphic visualisations can give additional information on clustering results.
             <br><br>
             One of these graphs represents the proportion of data entries assigned to each cluster with an histogram (the graph in blue).<br>
@@ -200,50 +262,69 @@
             </div>
 
           </p>
-          <h3 id="val_index">3.4.3 Internal Validation indexes</h3>
-        	<p> Internal validation indexes can be useful when one needs to determine which clustering execution is to be retained as conclusive. <br><br>
-            In this version of <em>brainMapper</em>, validation indexes are calculated automatically after a clustering algorithm is applied on data.<br>
+          <h3 id="val_index">3.3.3 Internal Validation indexes</h3>
+        	<p> Internal validation indexes can be useful when one needs to determine which clustering execution is to be retained as conclusive or which number of clusters is the most conclusive. <br><br>
+            In this version of <em>BrainMapper</em>, validation indexes are calculated automatically after a clustering algorithm is applied on data.<br>
             The internal validation indexes of the current version are :
             <ul>
-              <li>The mean of sample's Silhouette index</li>
+              <li>Mean Silhouette</li>
               <li>Calinski-Habaraz score</li>
               <li>Davis-Boulin index</li>
             </ul>
-            <br><br>
-            To visualize their values, click on the <em style="font-size : 14px"><b>'Result Details'</b></em> button on the top bar.
-            <div style="padding-left: 22%; padding-top: 1%;padding-bottom: 1%;">
-              <img src="imgs/result_details.png" style="width:40%">
-            </div>
-            A pop-up window containing parameters, cluster centers and indexes values will appear.
-            <div style="padding-left: 22%; padding-top: 1%;padding-bottom: 1%;">
-              <img src="imgs/result_details_popup.png" style="width:40%">
-            </div>
-             Its contents can be saved in a .txt file by clicking on <em style="font-size : 14px"><b>'Save as text file'</b></em>.
-             <div style="padding-left: 22%; padding-top: 1%;padding-bottom: 1%;">
-               <img src="imgs/export_save.png" style="width:40%">
-             </div>
-          </p>
 
-          <h4 id="mean_silhouette">3.4.3.1 Mean Silhouette</h4>
+          <h4 id="mean_silhouette">3.3.3.1 Mean Silhouette</h4>
+          <p>
+            The aim of this method is to calculate for each point the similarity between him and his group by relation to the similarity between him and the other groups.
+            Those data are displayed on a graph, sorting them by group and value.
+            The closer the shape of each group is to a rectangle, the more the grouping represents the data.
+            The silhouette value is between -1 and 1.
+            The silhouette is correct if it respects the following criteria:
+            <ul>
+              <li>The average silhouette value is close to 1</li>
+              <li>The groups are of equivalent size</li>
+              <li>There are no objects with negative values</li>
+              <li>The shape of a silhouette of a group is rectangular</li>
+            </ul>
+          </p>
+          <p>
+            <img src="imgs/clustering/MeanSilhouette.png" style="width:70%">
+          </p>          
         	<p> Mean silhouette index is calculated with the according function from <em><b>scikit-learn</b></em> library.
             For more details click <a href="http://scikit-learn.org/stable/modules/generated/sklearn.metrics.silhouette_score.html" target="_blank" style="color : #5577ee">here</a>
           </p>
-          <h4 id="ch_index">3.4.3.2 Calinski-Habaraz score</h4>
-        	<p>
+          <h4 id="ch_index">3.3.3.2 Calinski-Habaraz score</h4>
+          <p>
+            The Calinski-Harabasz index is based on the comparison of the sum of squares between clusters relative to the sum of the squares within a cluster.
+            The aim is to maximize the measurement of cluster separation and minimize proximity measurement of points in a cluster.
+            The index of Calinski-Harabasz is defined as follows :
+            <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default'></script>
+            $$ {CH =\frac{N-K}{K-1} * \frac{SS_B}{SS_W} } $$
+            <br>
+            with K the number of clusters, N the number of points, SS<sub>B</sub> the variance within a group and SS<sub>W</sub> between groups.
+            <br>
+            The higher the Calinski-Harabasz index, the better the number of groups.
+          </p>
+          <p>
             Calinski-Habaraz score is computed with the according function from <em><b>scikit-learn</b></em> library.
-              For more details click <a href="http://scikit-learn.org/stable/modules/generated/sklearn.metrics.calinski_harabaz_score.html" target="_blank" style="color : #5577ee">here</a>
+            For more details click <a href="http://scikit-learn.org/stable/modules/generated/sklearn.metrics.calinski_harabaz_score.html" target="_blank" style="color : #5577ee">here</a>
           </p>
-          <h4 id="db_index">3.4.3.3 Davis-Boulin index</h4>
-        	<p>
-            Davis-Boulin index is a way to evaluate clustering algorithms using the features of the dataset.
-            <div style="padding-left: 12%; padding-top:3%; padding-bottom:3%">
-               <div class="alert note-info" role="alert">
-               <h5 style="color:#306499;">NOTE</h5>
-               <b>A good value of Davis-Boulin index does not imply the best information retrieval.</b>
-             </div>
-            </div>
+          <h4 id="db_index">3.3.3.3 Davis-Boulin index</h4>
+          <p>
+            Davies Bouldin index compares intra-cluster distances with inter-cluster distances.
+            The principle is to have low inter-cluster distances and distances high inter-clusters. The Davies-Bouldin index is defined as follows:
+            <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default'></script>
+            $$ {DB =\frac{1}{K} \sum^K_{k=1}max \frac{I(c_i)+I(c_j)}{I(c_i,c_j)} } $$
+            <br>
+            with I(c<sub>i</sub>) the average of the distances between the objects of the group C<sub>i</sub> and its center,
+            I(c<sub>i</sub>, c<sub>j</sub>) the distance between the centers of groups C<sub>i</sub> and C<sub>j</sub> and K the number of clusters
+            <br>
+            The lower the Davies Bouldin index, the better the number of groups.
           </p>
-        </div>
+          <p>
+            Davies Bouldin index score is computed with the according function from <em><b>scikit-learn</b></em> library.
+            For more details click <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.davies_bouldin_score.html" target="_blank" style="color : #5577ee">here</a>
+          </p>
+          </div>
       </div>
     </div>
   </div>
