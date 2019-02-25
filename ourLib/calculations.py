@@ -226,7 +226,6 @@ def erosion_opperation(list_of_NifImage_obj, argument):
     (lx, ly, lz) = max_shape(list_of_NifImage_obj)
     result = []
     for file in list_of_NifImage_obj:
-        file_Nifti_clusterised = np.zeros(shape=(lx, ly, lz), dtype='f')
         data = file.get_img_data()
         file_Nifti_clusterised = ndimage.binary_erosion(data, iterations=int(argument))
         result.append(file_Nifti_clusterised.astype(dtype='f'))

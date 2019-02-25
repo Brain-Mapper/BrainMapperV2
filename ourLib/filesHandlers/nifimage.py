@@ -1,8 +1,6 @@
-import copy
 import os
 import numpy as np
 import nibabel as nib
-import warnings
 
 class NifImage(object):
     """
@@ -14,7 +12,7 @@ class NifImage(object):
         self.nib_image = nibabel_image
 
     @classmethod
-    def from_file(cls,one_filename):
+    def from_file(cls, one_filename):
         """
         Create a new NifImage from file path
         Nibabel chooses automatically to create a Spatial Image of class NIfTI1 or NIfTI2
@@ -67,7 +65,7 @@ class NifImage(object):
 
     def uncache(self):
         """
-        THis function free the memory usage of the image. Use it when you don't need the image data anymore.
+        This function free the memory usage of the image. Use it when you don't need the image data anymore.
         """
         # warnings.warn("You have freed some memory", RuntimeWarning)
         self.nib_image.uncache()
@@ -91,4 +89,8 @@ class NifImage(object):
         return self.filename
 
     def get_image(self):
+        """
+        Use this function carefully as it can leads to data leak
+        :return: the nibabel image contained
+        """
         return self.nib_image

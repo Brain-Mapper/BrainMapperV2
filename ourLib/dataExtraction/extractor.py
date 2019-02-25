@@ -23,7 +23,7 @@ from ..filesHandlers.image import Image
 
 if __package__ is None:
     sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-    from usable_data import UsableDataCollection, UsableDataSet
+    from ourLib.dataExtraction.usable_data import UsableDataCollection, UsableDataSet
     from ..calculations import image_centroid
 else:
     from ..dataExtraction.usable_data import UsableDataCollection, UsableDataSet
@@ -94,22 +94,6 @@ def extract(obj):
 
     else:
         RuntimeWarning(str(type(obj)) + "not currently extractable")
-
-
-# # This version is 0.01 seconds slower than the first one
-# def extract2(obj):
-#     # Safe copy the data so you won't modify the original image data (see NifImage class)
-#     # finite=True is given as an argument to replace NaN or Inf values by zeros
-#     img_data = obj.get_copy_img_data(True)
-
-#     # img_data>0 returns a boolean mask the same size as the image with :
-#     #     False if voxel value is not >0, True if it is
-#     mask = img_data > 0
-#     del img_data    # saves a LOT of memory
-
-#     usable_data = np.nonzero(mask)
-
-#     return usable_data
 
 
 def extract_from_collection(a_nifti_imgcoll_obj):

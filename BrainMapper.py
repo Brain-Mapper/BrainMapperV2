@@ -20,7 +20,7 @@ from ourLib.dataExtraction import extractor as xt
 from ourLib.dataExtraction.usable_data import UsableDataSet as uds
 from ourLib.dataExtraction.image_recreation import image_recreation
 from ourLib import clustering
-from ourLib import calculations as calcul
+from ourLib import calculations2 as calcul
 from ourLib.Import import excelImport as imp
 import ourLib.filesHandlers.image as csvImage
 from ourLib.Import import workspaceImport as ws
@@ -36,7 +36,7 @@ import pandas as pd
 
 # --- global variables ---
 current_collec = None  # The current collection shown in edit view
-selected = []  # All image collections selected by the user in main page (usefull for all views that use data)
+selected_images_collections = []  # All image collections selected by the user in main page (usefull for all views that use data)
 toRM = []  # Contains all images to remove in edit view (can be used somewhere else)
 currentUsableDataset = None
 
@@ -122,11 +122,11 @@ def rm_coll(coll):
         coll -- ImageCollection instance
     """
     found = False
-    for i in selected:
+    for i in selected_images_collections:
         if i.name == coll.name:
             found = True
     if found:
-        selected.remove(coll)
+        selected_images_collections.remove(coll)
 
 
 def get_selected():
@@ -295,59 +295,44 @@ def compute_sample_silhouettes(labels):
 # ------------------------ CLUSTERING FUNCTIONS END HERE ---------------------------------------------------------
 
 
-def run_calculation(selectedAlgorithm, nifti_collection, arguments):
-    """
-    Method to choose the operation
-
-    Arguments :
-        selectedAlgorithm -- operation selected
-        nifti_collection -- collection selected
-        arguments -- arguments for the operation
-
-    Return :
-        file_result
-        output
-    """
-    if selectedAlgorithm == "Addition":
-        file_result, output = calcul.addition_opperation(nifti_collection)
-    if selectedAlgorithm == "Boolean Intersection":
-        file_result, output = calcul.and_opperation(nifti_collection)
-    if selectedAlgorithm == "Boolean Union":
-        file_result, output = calcul.or_opperation(nifti_collection)
-    if selectedAlgorithm == "Centroide":
-        file_result, output = calcul.baricentre_opperation(nifti_collection, arguments)
-    if selectedAlgorithm == "Linear combination":
-        file_result, output = calcul.linear_combination_opperation(nifti_collection, arguments)
-    if selectedAlgorithm == "Mask":
-        file_result, output = calcul.mask_opperation(nifti_collection)
-    if selectedAlgorithm == "Mean":
-        file_result, output = calcul.mean_opperation(nifti_collection)
-    if selectedAlgorithm == "Normalization":
-        file_result, output = calcul.normalization_opperation(nifti_collection)
-    if selectedAlgorithm == "Entropy":
-        file_result, output = calcul.entropie_opperation(nifti_collection)
-    if selectedAlgorithm == "Erosion":
-        file_result, output = calcul.erosion_opperation(nifti_collection, arguments)
-    if selectedAlgorithm == "Dilation":
-        file_result, output = calcul.dilation_opperation(nifti_collection, arguments)
-    if selectedAlgorithm == "Opening":
-        file_result, output = calcul.opening_opperation(nifti_collection, arguments)
-    if selectedAlgorithm == "Closing":
-        file_result, output = calcul.closing_opperation(nifti_collection, arguments)
-    if selectedAlgorithm == "Threshold":
-        min = arguments[0]
-        max = arguments[1]
-        if min == "":
-            min = "-100000.0"
-        if max == "":
-            max = "100000.0"
-        file_result, output = calcul.threshold_opperation(nifti_collection, [min, max])
-    if selectedAlgorithm == "Multiplication":
-        file_result, output = calcul.multiplication_opperation(nifti_collection, arguments)
-    if selectedAlgorithm == "Division":
-        file_result, output = calcul.division_opperation(nifti_collection, arguments)
-    return file_result, output
-
+# def run_calculation(algorithm, list_of_images, arguments):
+#     """
+#     Method to choose the operation
+#
+#     Arguments :
+#         selectedAlgorithm -- operation selected
+#         nifti_collection -- collection selected
+#         arguments -- arguments for the operation
+#
+#     Return :
+#         file_result
+#         output
+#     """
+#     if algorithm == "addition":
+#         file_result = calcul.addition_operation(list_of_images)
+#     if algorithm == "and":
+#         file_result, output = calcul.and_operation(list_of_images)
+#     if algorithm == "or":
+#         file_result, output = calcul.or_opperation(list_of_images)
+#     if algorithm == "linear combination":
+#         file_result, output = calcul.linear_combination_opperation(list_of_images, arguments)
+#     if algorithm == "mean":
+#         file_result, output = calcul.mean_opperation(list_of_images)
+#     if algorithm == "erosion":
+#         file_result, output = calcul.erosion_opperation(list_of_images, arguments)
+#     if algorithm == "Dilation":
+#         file_result, output = calcul.dilation_opperation(list_of_images, arguments)
+#     if algorithm == "Opening":
+#         file_result, output = calcul.opening_opperation(list_of_images, arguments)
+#     if algorithm == "Closing":
+#         file_result, output = calcul.closing_opperation(list_of_images, arguments)
+#     if algorithm == "Threshold":
+#         file_result, output = calcul.threshold_opperation(list_of_images, arguments[0], arguments[1])
+#     if algorithm == "Multiplication":
+#         file_result, output = calcul.multiplication_opperation(list_of_images, arguments)
+#     if algorithm == "Division":
+#         file_result, output = calcul.division_opperation(list_of_images, arguments)
+#     return file_result
 
 def get_selected_from_name(name):
     """
@@ -444,7 +429,7 @@ def exists_selected(name):
     Return :
         Boolean
     """
-    for i in selected:
+    for i in selected_images_collections:
         if (i.name == name):
             return True
     return False
@@ -492,7 +477,7 @@ def delete_current_coll():
     add_toRM(coll)  # We use toRM this time with a collection (toRM is rested just after used)
     set_current_coll(None)  # The current collection become None
     this_set.remove_collection(coll.name)
-    print("selected", selected)
+    print("selected", selected_images_collections)
     print("collshow", collshow)
 
 

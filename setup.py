@@ -30,7 +30,7 @@ os.environ['TCL_LIBRARY'] = os.path.join(PYTHON_INSTALL_DIR, 'tcl', 'tcl8.6')
 os.environ['TK_LIBRARY'] = os.path.join(PYTHON_INSTALL_DIR, 'tcl', 'tk8.6')
 
 # Dependencies are automatically detected, but it might need fine tuning.
-# './UI/mainView.py'
+# './UI/mainView_old.py'
 # ("C:\Users\thoma\Desktop\LOG\brainMapper/UI/resources.py","C:\Users\thoma\Desktop\LOG\brainMapper\build\exe.win-amd64-2.7\lib\resources.py")
 includefiles = ["UI.bat", './ressources', os.path.join(PYTHON_INSTALL_DIR, 'DLLs', 'tk86t.dll'),
                 os.path.join(PYTHON_INSTALL_DIR, 'DLLs', 'tcl86t.dll'),
