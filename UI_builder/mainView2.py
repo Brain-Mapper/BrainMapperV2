@@ -199,7 +199,7 @@ class SetButton(QtGui.QWidget):
 
         self.check.setChecked(False)
 
-        nifti_opt = QRadioButton("Import from Nifti")
+        nifti_opt = QRadioButton("Import from NIfTI")
         excel_opt = QRadioButton("Import from Excel")
         nifti_opt.setChecked(True)
 
@@ -228,7 +228,7 @@ class SetButton(QtGui.QWidget):
 
             elif excel_opt.isChecked():
                 self.fromExcel()
-        
+
 
     def state_changed(self):
         global selected
@@ -700,7 +700,7 @@ class MainView2(QtGui.QWidget):
         # del selected[:]
         del collshow[:]
         self.checkBox.setChecked(False)
-        
+
         print("cc")
 
 
@@ -714,7 +714,7 @@ class MainView2(QtGui.QWidget):
             export_choice = QtGui.QMessageBox()
             export_choice.setWindowTitle('Export dataSet')
 
-            nifti_opt = QRadioButton("Export to Nifti")
+            nifti_opt = QRadioButton("Export to NIfTI")
             excel_opt = QRadioButton("Export to CSV")
             nifti_opt.setChecked(True)
 

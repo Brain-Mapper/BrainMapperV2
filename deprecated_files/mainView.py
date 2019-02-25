@@ -572,7 +572,7 @@ class MainView(QtGui.QWidget):
             export_choice = QtGui.QMessageBox()
             export_choice.setWindowTitle('Export dataSet')
 
-            nifti_opt = QRadioButton("Export to Nifti")
+            nifti_opt = QRadioButton("Export to NIfTI")
             excel_opt = QRadioButton("Export to CSV")
             nifti_opt.setChecked(True)
 
