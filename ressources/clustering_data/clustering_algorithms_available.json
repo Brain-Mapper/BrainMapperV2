@@ -22,11 +22,6 @@
           "type" : ["Calinski-Harabasz", "Davies-Bouldin", "Mean silhouette"],
           "default" : "Mean silhouette"
         },
-        "n_init" : {
-          "param_info" : "Number of time the k-means algorithm will be run with different centroid seeds. The final results will be the best output of n_init consecutive runs in terms of inertia.",
-          "type" : "int",
-          "default" : "1"
-        },
         "max_iter" : {
           "param_info": "Maximum number of iterations of the k-means algorithm for a single run",
           "type" : "int",
@@ -125,6 +120,16 @@
               "type" : "int",
               "default" : "1"
             },
+            "n_clusters" : {
+                "param_info" : "The number of clusters you wish to obtain",
+                "type" : "int",
+                "default" : 3
+            },
+            "score" : {
+              "param_info" : "The score choose to calculate the best number of clusters. Calinski-Habaraz score is the relation between the sum of distances squared intergroup and the sum of distances squared intragroup. Whereas, Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the Davies-Bouldin index and bigger is the Calinski-Habaraz score, better is the number of clusters. Mean silhouette value is between -1 and 1 and the best value is around 1.",
+              "type" : ["Calinski-Harabasz", "Davies-Bouldin", "Mean silhouette","Fuzzy partition coefficient"],
+              "default" : "Mean silhouette"
+            },
             "m" : {
                 "param_info" : "m is the weighting exponent. It controls the relative weights placed on each of the squared errors. The best value is between 1,5 and 3.",
                 "type" : "float",
@@ -139,16 +144,6 @@
                 "param_info" : "maxiter is the maximum number of iterations allowed",
                 "type" : "int",
                 "default" : 1000
-            },
-            "n_clusters" : {
-                "param_info" : "The number of clusters you wish to obtain",
-                "type" : "int",
-                "default" : 3
-            },
-            "score" : {
-              "param_info" : "The score choose to calculate the best number of clusters. Calinski-Habaraz score is the relation between the sum of distances squared intergroup and the sum of distances squared intragroup. Whereas, Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the Davies-Bouldin index and bigger is the Calinski-Habaraz score, better is the number of clusters. Mean silhouette value is between -1 and 1 and the best value is around 1.",
-              "type" : ["Calinski-Harabasz", "Davies-Bouldin", "Mean silhouette","Fuzzy partition coefficient"],
-              "default" : "Mean silhouette"
             }
         }
     }

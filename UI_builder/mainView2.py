@@ -125,7 +125,7 @@ class SetButton(QtGui.QWidget):
     # styler = "SetButton {background-color: white; border-bottom: 1px solid black;} " \
     # "SetButton:hover {background-color : #ccff99;}"
 
-    def __init__(self, my_set, image_zone, selected_zone, checkbox, checkimported, parent=None):
+    def __init__(self, my_set, image_zone, selected_zone, checkbox, checkimported, checkcalculation, checkclustering, parent=None):
         # -- Will create all objects we need
         super(SetButton, self).__init__(parent=parent)
 
@@ -135,6 +135,9 @@ class SetButton(QtGui.QWidget):
         self.treeWidget = parent
         self.checkBox = checkbox
         self.checkimported = checkimported
+        self.checkcalculation = checkcalculation
+        self.checkclustering = checkclustering
+        self.parent = parent
 
         hbox = QtGui.QHBoxLayout()
 
@@ -247,6 +250,7 @@ class SetButton(QtGui.QWidget):
         global selected_images_collections
         global collshow
         dict = self.my_set.get_all_nifti_set()
+
         if self.check.isChecked():
             for d in dict:
                 if d not in selected_images_collections:
@@ -278,6 +282,25 @@ class SetButton(QtGui.QWidget):
                 if trouve == True:
                     self.selected_zone.itemAt(i).widget().setParent(None)
                     collshow.remove(d)
+
+
+        pos = self.my_set.getPosition()[1]
+        imported = self.parent.topLevelItem(pos)
+        it = QTreeWidgetItemIterator(self.treeWidget.topLevelItem(pos))
+        trouve = False
+        while it.value():
+            if it.value().parent() is not None and it.value().parent() == imported:
+               if self.treeWidget.itemWidget(it.value(), 0).check.isChecked():
+                trouve = True
+            it += 1
+        print(pos)
+        if trouve == False:
+            if pos == 0:
+                self.checkimported.setChecked(False)
+            elif pos == 1:
+                self.checkcalculation.setChecked(False)
+            elif pos == 2:
+                self.checkclustering.setChecked(False)
 
         # for i in reversed(range(self.image_zone.count())):
         #     print("boucle widget",self.image_zone.itemAt(i).widget().coll)
@@ -332,8 +355,8 @@ class SetButton(QtGui.QWidget):
         # -- This addSubet will add a subset to the set selected.
         text, ok = QInputDialog.getText(self, 'Create a Sub Set',
                                         "Enter a name for your sub set of set named " + str(self.my_set.name) + ":")
-        self.checkBox.setChecked(False)
-        self.checkimported.setChecked(False)
+        #self.checkBox.setChecked(False)
+        #self.checkimported.setChecked(False)
         if (str(text) != ""):
             try:
                 new_ok = True
@@ -356,7 +379,8 @@ class SetButton(QtGui.QWidget):
                     # print(self.my_set.number_of_subset()-1)
                     self.treeWidget.setItemWidget(p.child(position[-1]), 0,
                                                   SetButton(ss, self.image_zone, self.selected_zone,
-                                                            self.checkBox,self.checkimported,self.treeWidget))
+                                                            self.checkBox,self.checkimported,self.checkcalculation,
+                                                            self.checkclustering,self.treeWidget))
 
                     # self.SSList.addItem(str(text))
                     # ssSet = self.my_set.get_sub_set(str(text))
@@ -644,7 +668,8 @@ class MainView2(QtGui.QWidget):
         self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(0), 0,
                                       SetButton(my_set, self.verticalLayout_image_collections_show,
                                                 self.verticalLayout_widget_selected_view, self.checkBox,
-                                                self.checkimported,self.treeWidget))
+                                                self.checkimported,self.checkcalculation,
+                                                            self.checkclustering,self.treeWidget))
         globalSets[0].append(my_set)
 
         self.pushButton_clustering.clicked.connect(self.extract_and_cluster)
@@ -702,11 +727,12 @@ class MainView2(QtGui.QWidget):
                 self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(len(globalSets[0])), 0,
                                               SetButton(my_set, self.verticalLayout_image_collections_show,
                                                         self.verticalLayout_widget_selected_view, self.checkBox,
-                                                        self.checkimported,self.treeWidget))
+                                                        self.checkimported,self.checkcalculation,
+                                                            self.checkclustering,self.treeWidget))
 
                 globalSets[0].append(my_set)
-                self.checkBox.setChecked(False)
-                self.checkimported.setChecked(False)
+                #self.checkBox.setChecked(False)
+                #self.checkimported.setChecked(False)
                 # print(len(globalSets[0]))
             else:
                 err = QtGui.QMessageBox.critical(self, "Error",
@@ -719,7 +745,8 @@ class MainView2(QtGui.QWidget):
             self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(s[1]).child(len(globalSets[s[1]])), 0,
                                           SetButton(s[0], self.verticalLayout_image_collections_show,
                                                     self.verticalLayout_widget_selected_view, self.checkBox,
-                                                    self.checkimported,self.treeWidget))
+                                                    self.checkimported,self.checkcalculation,
+                                                            self.checkclustering,self.treeWidget))
             globalSets[s[1]].append(s[0])
             setToAdd.remove(s)
 
