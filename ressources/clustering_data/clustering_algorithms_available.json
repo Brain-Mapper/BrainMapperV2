@@ -22,11 +22,6 @@
           "type" : ["Calinski-Harabasz", "Davies-Bouldin", "Mean silhouette"],
           "default" : "Mean silhouette"
         },
-        "n_init" : {
-          "param_info" : "Number of time the k-means algorithm will be run with different centroid seeds. The final results will be the best output of n_init consecutive runs in terms of inertia.",
-          "type" : "int",
-          "default" : "1"
-        },
         "max_iter" : {
           "param_info": "Maximum number of iterations of the k-means algorithm for a single run",
           "type" : "int",
