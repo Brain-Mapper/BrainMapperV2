@@ -189,9 +189,9 @@ class ClusteringView2(QtGui.QWidget):
         self.centroids = self.history_iterations[i].get("centers")
         for k in range(self.tableResults.rowCount()):
             for j in range(self.tableResults.columnCount()):
-                if k==ligne :
-                    self.tableResults.item(k, j).setBackground(QtGui.QColor(168,255 , 250))
-                elif k==self.the_best_iteration.get("iteration"):
+                if k == ligne:
+                    self.tableResults.item(k, j).setBackground(QtGui.QColor(168, 255, 250))
+                elif k == self.the_best_iteration.get("iteration"):
                     self.tableResults.item(k, j).setBackground(QtGui.QColor(255, 250, 168))
                 else:
                     self.tableResults.item(k, j).setBackground(QtGui.QColor(255, 255, 255))
@@ -265,21 +265,29 @@ class ClusteringView2(QtGui.QWidget):
 
     def runSelectedClust(self, selectedMethod, param_dict):
 
-        column_selected = []
+        columns_selected = []
         columns = self.tableWidget.selectedItems()
         rownumber = self.tableWidget.rowCount()
+        columns_index = {
+            2: "X",
+            3: "Y",
+            4: "Z",
+        }
         if len(columns) != 0:
             for i in range(0, len(columns), rownumber):
-                column_selected.append(columns[i].column())
+                if columns[i].column() in columns_index.keys():
+                    columns_selected.append(columns_index[columns[i].column()])
+        else:
+            columns_selected = ['X', 'Y', 'Z']
 
         if selectedMethod == "DBSCAN":
-            clustering_results = run_clustering(selectedMethod, param_dict)
+            clustering_results = run_clustering(selectedMethod, param_dict, columns_selected)
             self.n_selected = "DBSCAN"
             param_dict["score"] = "DBSCAN"
             self.scores = []
         else:
             i_iter = int(param_dict["i_iter"])
-            print(column_selected)
+            print(columns_selected)
             self.history_iterations = []
             self.the_best_iteration = {}
             self.the_best_iteration["iteration"] = 0
@@ -299,7 +307,7 @@ class ClusteringView2(QtGui.QWidget):
 
                     copy_param_dict = deepcopy(param_dict)
                     copy_param_dict["n_clusters"] = n
-                    clustering_results = run_clustering(selectedMethod, copy_param_dict)
+                    clustering_results = run_clustering(selectedMethod, copy_param_dict, columns_selected)
 
                     if clustering_results["silhouette_score"] > self.the_best_iteration["silhouette_score"] \
                             and clustering_results["calinski_harabaz_score"] > self.the_best_iteration[
