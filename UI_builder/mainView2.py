@@ -93,6 +93,8 @@ class CollButton(QtGui.QCheckBox):
                 collshow.append(self.coll)
         else:
             collshow.remove(self.coll)
+            if len(collshow) ==0:
+                self.checkBox.setChecked(False)
         for i in reversed(range(self.selected_zone.count())):
             self.selected_zone.itemAt(i).widget().setParent(None)
         for coll in collshow:
@@ -645,7 +647,8 @@ class MainView2(QtGui.QWidget):
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def checkselected(self):
-        for i in range(0, self.verticalLayout_image_collections_show.rowCount()):
+        print(self.verticalLayout_image_collections_show.rowCount())
+        for i in range(0, self.verticalLayout_image_collections_show.rowCount()-1):
             self.verticalLayout_image_collections_show.itemAt(i).widget().setChecked(self.checkBox.isChecked())
 
     def checkimportedall(self):
