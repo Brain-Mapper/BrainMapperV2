@@ -123,7 +123,7 @@ class SetButton(QtGui.QWidget):
     # styler = "SetButton {background-color: white; border-bottom: 1px solid black;} " \
     # "SetButton:hover {background-color : #ccff99;}"
 
-    def __init__(self, my_set, image_zone, selected_zone, checkbox, parent=None):
+    def __init__(self, my_set, image_zone, selected_zone, checkbox, checkimported, parent=None):
         # -- Will create all objects we need
         super(SetButton, self).__init__(parent=parent)
 
@@ -132,6 +132,7 @@ class SetButton(QtGui.QWidget):
         self.selected_zone = selected_zone
         self.treeWidget = parent
         self.checkBox = checkbox
+        self.checkimported = checkimported
 
         hbox = QtGui.QHBoxLayout()
 
@@ -329,6 +330,8 @@ class SetButton(QtGui.QWidget):
         # -- This addSubet will add a subset to the set selected.
         text, ok = QInputDialog.getText(self, 'Create a Sub Set',
                                         "Enter a name for your sub set of set named " + str(self.my_set.name) + ":")
+        self.checkBox.setChecked(False)
+        self.checkimported.setChecked(False)
         if (str(text) != ""):
             try:
                 new_ok = True
@@ -350,8 +353,8 @@ class SetButton(QtGui.QWidget):
                     item_0.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
                     # print(self.my_set.number_of_subset()-1)
                     self.treeWidget.setItemWidget(p.child(position[-1]), 0,
-                                                  SetButton(ss, self.image_zone, self.selected_zone, self.treeWidget,
-                                                            self.checkBox))
+                                                  SetButton(ss, self.image_zone, self.selected_zone,
+                                                            self.checkBox,self.checkimported,self.treeWidget))
 
                     # self.SSList.addItem(str(text))
                     # ssSet = self.my_set.get_sub_set(str(text))
@@ -632,7 +635,7 @@ class MainView2(QtGui.QWidget):
         self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(0), 0,
                                       SetButton(my_set, self.verticalLayout_image_collections_show,
                                                 self.verticalLayout_widget_selected_view, self.checkBox,
-                                                self.treeWidget))
+                                                self.checkimported,self.treeWidget))
         globalSets[0].append(my_set)
 
         self.pushButton_clustering.clicked.connect(self.extract_and_cluster)
@@ -670,6 +673,7 @@ class MainView2(QtGui.QWidget):
             it += 1
 
     def createSet(self):
+
         text, ok = QInputDialog.getText(self, 'Create a set',
                                         "Enter a new name for your new set :")
         # default_name = datetime.fromtimestamp(int(round(time.time()))).strftime('--%m-%d %H-%M-%S')
@@ -688,9 +692,11 @@ class MainView2(QtGui.QWidget):
                 self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(len(globalSets[0])), 0,
                                               SetButton(my_set, self.verticalLayout_image_collections_show,
                                                         self.verticalLayout_widget_selected_view, self.checkBox,
-                                                        self.treeWidget))
+                                                        self.checkimported,self.treeWidget))
 
                 globalSets[0].append(my_set)
+                self.checkBox.setChecked(False)
+                self.checkimported.setChecked(False)
                 # print(len(globalSets[0]))
             else:
                 err = QtGui.QMessageBox.critical(self, "Error",
@@ -703,7 +709,7 @@ class MainView2(QtGui.QWidget):
             self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(s[1]).child(len(globalSets[s[1]])), 0,
                                           SetButton(s[0], self.verticalLayout_image_collections_show,
                                                     self.verticalLayout_widget_selected_view, self.checkBox,
-                                                    self.treeWidget))
+                                                    self.checkimported,self.treeWidget))
             globalSets[s[1]].append(s[0])
             setToAdd.remove(s)
 
