@@ -379,27 +379,21 @@ class SetButton(QtGui.QWidget):
                                             QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
         if choice == QtGui.QMessageBox.Yes:
             position = self.my_set.getPosition()
-            print("position", position)
+            #print("position", position)
             p = self.treeWidget.topLevelItem(position[0])
             position.pop(0)
             for i in range(len(position) - 1):
                 p = p.child(position[i])
             p.removeChild(p.child(position[-1]))
 
+            
             for d in self.my_set.get_all_nifti_set_and_subset():
                 if d in selected_images_collections:
                     selected_images_collections.remove(d)
                 if d in collshow:
                     collshow.remove(d)
-            # lorsqu'on supprimer un set il faut changer l'affichage graphique
-            for i in reversed(range(self.image_zone.count())):
-                if self.image_zone.itemAt(i).widget().setname == self.my_set.name:
-                    self.image_zone.itemAt(i).widget().setParent(None)
-            for i in reversed(range(self.selected_zone.count())):
-                if self.selected_zone.itemAt(i).widget().setname == self.my_set.name:
-                    self.selected_zone.itemAt(i).widget().setParent(None)
-            # for coll in selected:
-            #         self.image_zone.addWidget((CollButton(coll,coll.getSetName().get_name(),self.selected_zone)))
+
+            listes = self.my_set.get_all_nifti_set_and_subset()
 
             if self.my_set.getParent() != None:
                 self.my_set.getParent().remove_subset(self.my_set.name)
@@ -411,6 +405,19 @@ class SetButton(QtGui.QWidget):
                 for s in globalSets[0]:
                     s.position -= 1
             sets.remove(self.my_set)
+
+            # lorsqu'on supprimer un set il faut changer l'affichage graphique
+            for i in reversed(range(self.image_zone.count())):
+                for elem in listes:
+                    if self.image_zone.itemAt(i)!= None:
+                        if self.image_zone.itemAt(i).widget().coll.name == elem.get_name():
+                            self.image_zone.itemAt(i).widget().setParent(None)
+            for i in reversed(range(self.selected_zone.count())):
+                for elem in listes:
+                    if self.image_zone.itemAt(i)!= None:
+                        if self.selected_zone.itemAt(i).widget().coll.name == elem.get_name():
+                            self.selected_zone.itemAt(i).widget().setParent(None)
+
 
 
 class MainView2(QtGui.QWidget):
@@ -448,7 +455,7 @@ class MainView2(QtGui.QWidget):
         font = QtGui.QFont()
         font.setPointSize(12)
         font.setBold(False)
-        font.setWeight(50)
+        font.setWeight(50) 
         self.label_list_of_sets.setFont(font)
         self.label_list_of_sets.setAlignment(QtCore.Qt.AlignCenter)
         self.label_list_of_sets.setObjectName(_fromUtf8("label_list_of_sets"))
