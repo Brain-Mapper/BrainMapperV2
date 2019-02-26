@@ -7,7 +7,6 @@ from nibabel import Nifti1Image, load
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 import BrainMapper
-from BrainMapper import calcul
 import time
 
 from PyQt4 import QtCore

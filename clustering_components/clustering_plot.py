@@ -22,7 +22,7 @@ import numpy as np
 from scipy.cluster.hierarchy import dendrogram
 
 
-def plot_silhouette(labels, colors = None):
+def plot_silhouette(labels, colors=None):
     """
     Method to make the silhouette plot
 
@@ -47,26 +47,30 @@ def plot_silhouette(labels, colors = None):
 
     plt.figure()
     plt.xlim([np.min(sample_silhouettes), 1])
-    plt.ylim([0,len(sample_silhouettes) + 1 + len(set(labels))]) # There is len(sample_silhouettes) and 1+len(set(labels)) blanks
+    plt.ylim([0, len(sample_silhouettes) + 1 + len(
+        set(labels))])  # There is len(sample_silhouettes) and 1+len(set(labels)) blanks
     # Add the bars
     for label in sorted(labels_dict.keys()):
-        color=colors[label]
-        y = sorted(labels_dict[label]+[np.min(labels_dict[label])]) # [np.min(labels_dict[label])] is here beacuse of step='pre' (we need 2 y to create a bar)
+        color = colors[label]
+        y = sorted(labels_dict[label] + [np.min(labels_dict[
+                                                    label])])  # [np.min(labels_dict[label])] is here beacuse of step='pre' (we need 2 y to create a bar)
         plt.fill_betweenx(np.arange(graph_offset, graph_offset + len(y)),
-                             0, y,
-                             facecolor=color, edgecolor=color, alpha=0.7, step="pre")
+                          0, y,
+                          facecolor=color, edgecolor=color, alpha=0.7, step="pre")
         # plt.scatter(np.arange(graph_offset, graph_offset + len(y)),y, facecolor=color)
         plt.text(0.95, graph_offset + int(0.5 * len(y)), str(label), color=color)
         graph_offset += len(y)
     # Add the average silhouette
-    plt.axvline(x=average, ymin=0, ymax=graph_offset, color='red', linestyle='--', label='average = {:.2f}'.format(average))
+    plt.axvline(x=average, ymin=0, ymax=graph_offset, color='red', linestyle='--',
+                label='average = {:.2f}'.format(average))
 
     plt.title("The silhouette plot for the various clusters.")
     plt.xlabel("The silhouette coefficient values")
     plt.legend()
-    #plt.ylabel("Cluster label",labelpad=0.10)
+    # plt.ylabel("Cluster label",labelpad=0.10)
     plt.yticks([])
     plt.show()
+
 
 def plot_3d_fuzzy(labels: list, belong, centroids: list):
     """
@@ -77,23 +81,40 @@ def plot_3d_fuzzy(labels: list, belong, centroids: list):
         belong{list} -- list of affiliations of each point to a cluster
     """
 
-    points_list, colors_list = get_points_list_colors_list(labels)
-    colors_bis = []
-    for i in range (len(colors_list)):
-        colors_bis_0 = colors_list[i][0] * belong[i]
-        colors_bis_1 = colors_list[i][1] * belong[i]
-        colors_bis_2 = colors_list[i][2] * belong[i]
-        colors_bis_3 = colors_list[i][3]
-        colors_bis.append((colors_bis_0, colors_bis_1, colors_bis_2, colors_bis_3))
-        #print("plot_3d_fuzzy -> colors[i] APRES", colors_bis[i])
-
     color_dict = get_color(sorted(set(labels)))
-    centroids_colors = [color_dict[i] for i in sorted(set(labels))]
+    points_list, _ = get_points_list_colors_list(labels)
 
-    view = view_markers(points_list, labels=labels, colors=colors_bis, marker_size=5, centers= centroids, centers_colors=centroids_colors)
+    colors_bis = []
+
+    for i in range(len(points_list)):
+        color = [0, 0, 0, 1]
+        for label in set(labels):
+            color[0] = color[0] + color_dict[label][0] * belong[i][label]
+            color[1] = color[1] + color_dict[label][1] * belong[i][label]
+            color[2] = color[2] + color_dict[label][2] * belong[i][label]
+        colors_bis.append(tuple(color))
+        # print("plot_3d_fuzzy -> colors[i] APRES", colors_bis[i])
+
+    if len(centroids[0]) == 3:
+        centroids_colors = [color_dict[i] for i in sorted(set(labels))]
+        view = view_markers(points_list,
+                            labels=labels,
+                            colors=colors_bis,
+                            marker_size=5,
+                            centers=centroids,
+                            centers_colors=centroids_colors
+                            )
+    else:
+        view = view_markers(points_list,
+                            labels=labels,
+                            colors=colors_bis,
+                            marker_size=5,
+                            )
+
     view.open_in_browser()
 
-def plot_3d_clusters(labels: list, centroids:list = None, marker_size=5.):
+
+def plot_3d_clusters(labels: list, centroids: list = None, marker_size=5.):
     """
     Method to make the 3d plot used for FuzzyCMeans clustering
 
@@ -104,15 +125,20 @@ def plot_3d_clusters(labels: list, centroids:list = None, marker_size=5.):
 
     points_list, colors_list = get_points_list_colors_list(labels)
 
+    unique_labels, counts = np.unique(labels, return_counts=True)
+    # label_counts = dict(zip(unique_labels, counts))
+
     centroids_colors = None
     if centroids is not None:
         # To print the centers we need the list of centers and the color of each cluster
-        color_dict = get_color(sorted(set(labels)))
-        centroids_colors = [color_dict[i] for i in sorted(set(labels))]
+        color_dict = get_color(sorted(unique_labels))
+        centroids_colors = [color_dict[i] for i in sorted(unique_labels)]
 
-    view = view_markers(points_list, labels=labels, colors=colors_list, marker_size=marker_size, centers = centroids, centers_colors=centroids_colors)
-    #view.save_as_html("Affichage.html")
+    view = view_markers(points_list, labels=labels, colors=colors_list, marker_size=marker_size, centers=centroids,
+                        centers_colors=centroids_colors)
+    # view.save_as_html("Affichage.html")
     view.open_in_browser()
+
 
 def plot_3d(points, marker_size=5.):
     """plot a 3d view of the points
@@ -123,11 +149,12 @@ def plot_3d(points, marker_size=5.):
     Keyword Arguments:
         marker_size {[type]} -- size of a marker (default: {5.})
     """
-    labels = [0]*len(points)
+    labels = [0] * len(points)
     view = view_markers(points, labels=labels, colors=None, marker_size=marker_size, centers=None, centers_colors=None)
     view.open_in_browser()
 
-def plot_cross_section(labels: list,coordinates):
+
+def plot_cross_section(labels: list, coordinates):
     """
     Method to make three cross-section of the brain
 
@@ -136,14 +163,17 @@ def plot_cross_section(labels: list,coordinates):
     """
     points_list, colors_list = get_points_list_colors_list(labels)
     display = plotting.plot_anat(cut_coords=coordinates)
-    for point,color in zip(points_list, colors_list):
+    for point, color in zip(points_list, colors_list):
         display.add_markers([point], marker_color=[color])
     plotting.show()
 
+
 def plot_glass_brain(labels: list):
     points_list, colors_list = get_points_list_colors_list(labels)
-    plotting.plot_connectome(np.zeros((len(colors_list), len(colors_list))),np.array(points_list), node_color=colors_list)
+    plotting.plot_connectome(np.zeros((len(colors_list), len(colors_list))), np.array(points_list),
+                             node_color=colors_list)
     plotting.show()
+
 
 def plot_dendrogram(model):
     """
@@ -155,14 +185,14 @@ def plot_dendrogram(model):
 
     # Children of hierarchical clustering
     children = model.children_
-    labels=list(model.labels_)
+    labels = list(model.labels_)
 
     # Distances between each pair of children
     # Since we don't have this information, we can use a uniform one for plotting
     distance = np.arange(children.shape[0])
 
     # The number of observations contained in each cluster level
-    no_of_observations = np.arange(2, children.shape[0]+2)
+    no_of_observations = np.arange(2, children.shape[0] + 2)
 
     # Create linkage matrix and then plot the dendrogram
     linkage_matrix = np.column_stack([children, distance, no_of_observations]).astype(float)
@@ -172,9 +202,9 @@ def plot_dendrogram(model):
     colors[-1] = (83, 135, 2)
     number_of_clusters = len(set(labels))
 
-    for i in range(0,linkage_matrix.shape[0]-number_of_clusters+1):
+    for i in range(0, linkage_matrix.shape[0] - number_of_clusters + 1):
         labels.append(labels[int(linkage_matrix[i][0])])
-    for i in range(0,number_of_clusters-1):
+    for i in range(0, number_of_clusters - 1):
         labels.append(-1)
 
     lis = []
@@ -183,9 +213,9 @@ def plot_dendrogram(model):
         color = colors[labels[k]]
         string = '#'
         lis.append(k)
-        for c in color :
+        for c in color:
             cl = format(c, 'x')
-            if len(cl)==1:
+            if len(cl) == 1:
                 cl = "0" + cl
             string = string + cl
         return string
@@ -197,7 +227,7 @@ def plot_dendrogram(model):
     plt.show()
 
 
-def get_points_list_colors_list(labels : list, in_int: bool = False) -> (list, list):
+def get_points_list_colors_list(labels: list, in_int: bool = False) -> (list, list):
     """
     Obtains the points list and colors list from labels.
     It is used in the function that are based on nilearn plotting.
@@ -208,14 +238,13 @@ def get_points_list_colors_list(labels : list, in_int: bool = False) -> (list, l
     Returns:
         points list, colors list
     """
-    X = get_current_usableDataset().export_as_clusterizable()
-    X = pd.DataFrame(X, columns=['X','Y','Z','Intensity'])
+    points = get_current_usableDataset().export_as_clusterizable()
 
-    color_dict = get_color(sorted(set(labels)), in_int = in_int)
+    color_dict = get_color(sorted(set(labels)), in_int=in_int)
     colors_list = []
     points_list = []
     for i in range(len(labels)):
-        points_list.append([X['X'][i], X['Y'][i], X['Z'][i]])
+        points_list.append([points[i, 0], points[i, 1], points[i, 2]])
         colors_list.append(color_dict[labels[i]])
     return points_list, colors_list
 
@@ -233,12 +262,12 @@ def get_color(distinct_labels: list, in_int: bool = False) -> dict:
 
     number_of_clusters = len(distinct_labels)
     color_dict = {}
-    if -1 in distinct_labels :
+    if -1 in distinct_labels:
         number_of_clusters = number_of_clusters - 1
-        if in_int == False :
-            color_dict[-1] = (1,0,0,1)
-        else :
-            color_dict[-1] = (255,0,0,1)
+        if in_int == False:
+            color_dict[-1] = (1, 0, 0, 1)
+        else:
+            color_dict[-1] = (255, 0, 0, 1)
         distinct_labels.remove(-1)
     for label in distinct_labels:
         color_dict[label] = cm.magma(float(label) / float(number_of_clusters), bytes=in_int)

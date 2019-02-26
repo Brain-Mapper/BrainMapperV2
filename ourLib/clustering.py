@@ -12,91 +12,139 @@
 #       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
 
-
 from sklearn.cluster import KMeans, AgglomerativeClustering, DBSCAN
 from sklearn.neighbors import DistanceMetric
-from sklearn.metrics import silhouette_score, silhouette_samples, calinski_harabaz_score, euclidean_distances,davies_bouldin_score
+from sklearn.metrics import silhouette_score, silhouette_samples, calinski_harabaz_score, euclidean_distances, \
+    davies_bouldin_score
 from sklearn.utils.extmath import row_norms, stable_cumsum
 from scipy.spatial import distance
-import pandas as pd
 import numpy as np
 import random
 import math
 import skfuzzy as fuzz
 
+COLUMNS_INDEX = {
+    'X': 0,
+    'Y': 1,
+    'Z': 2,
+}
 
-def format_to_dataframe(X, columns_to_keep=['X', 'Y', 'Z']) -> pd.DataFrame:
-    X = pd.DataFrame(X, columns=['X', 'Y', 'Z', 'Intensity'])
-    return X[columns_to_keep]
+
+def format_ndarray(points, columns_selected) -> np.ndarray:
+    columns_selected_index = [COLUMNS_INDEX[column] for column in columns_selected]
+    return points[:, columns_selected_index]
 
 
-def perform_kmeans(param_dict, X):
-    X = format_to_dataframe(X)
+def perform_kmeans(param_dict, points, columns_selected):
+    points_formatted = format_ndarray(points, columns_selected)
     clustering = KMeans(n_clusters=int(param_dict["n_clusters"]), random_state=None,
                         init=param_dict["init"],
-                        n_init=int(param_dict["n_init"]), max_iter=int(param_dict["max_iter"])).fit(X)
+                        n_init=int(param_dict["n_init"]), max_iter=int(param_dict["max_iter"])).fit(points_formatted)
+
+    unique_labels, counts = np.unique(clustering.labels_, return_counts=True)
+    label_counts = dict(zip(unique_labels, counts))
+
+    # Reformat centers to be in 3D
+    if len(columns_selected[0]) != 3:
+        # Create a new centroids list
+        centers = []
+        for _ in unique_labels:
+            centers.append([0, 0, 0])
+        # We addition all the coordinates in the centroids
+        for point_index, label in enumerate(clustering.labels_):
+            centers[label][0] = centers[label][0] + points[point_index][0]
+            centers[label][1] = centers[label][1] + points[point_index][1]
+            centers[label][2] = centers[label][2] + points[point_index][2]
+        # We divide by the number of points in each label for each centroid to obtain the barycenter
+        for i in label_counts.keys():
+            centers[i][0] = centers[i][0] / label_counts[i]
+            centers[i][1] = centers[i][1] / label_counts[i]
+            centers[i][2] = centers[i][2] / label_counts[i]
+    else:
+        centers = clustering.cluster_centers_
+
     return {
         "labels": clustering.labels_,
-        "centers": clustering.cluster_centers_
+        "centers": centers
     }
 
 
-def perform_agglomerative_clustering(param_dict, X):
-    X = format_to_dataframe(X)
+def perform_agglomerative_clustering(param_dict, points, columns_selected):
+    points = format_ndarray(points, columns_selected)
     clustering = AgglomerativeClustering(n_clusters=int(param_dict["n_clusters"]), affinity=param_dict["affinity"],
-                                         linkage=param_dict["linkage"]).fit(X.values)
+                                         linkage=param_dict["linkage"]).fit(points)
     return {
-        "labels" : clustering.labels_,
-        "hac" : clustering,
+        "labels": clustering.labels_,
+        "hac": clustering,
     }
 
 
-def perform_DBSCAN(param_dict, X):
-    X = format_to_dataframe(X)
+def perform_DBSCAN(param_dict, points, columns_selected):
+    points = format_ndarray(points, columns_selected)
     dbscan = DBSCAN(eps=float(param_dict["eps"]), min_samples=int(param_dict["min_samples"]),
-                    metric=param_dict["metric"]).fit(X)
+                    metric=param_dict["metric"]).fit(points)
     return {
-        "labels" : dbscan.labels_,
+        "labels": dbscan.labels_,
     }
 
 
-def perform_kmedoids(param_dict, X):
-    X = format_to_dataframe(X)
-    distances_matrix_pairwise = compute_distances(X.values, param_dict['metric'])
-    clustering_labels, clustering_medoids = kmedoids_cluster(str(param_dict["init"]), X.values, distances_matrix_pairwise,
-                                         int(param_dict["n_clusters"]))
+def perform_kmedoids(param_dict, points, columns_selected):
+    points_formatted = format_ndarray(points, columns_selected)
+    distances_matrix_pairwise = compute_distances(points, param_dict['metric'])
+    clustering_labels, clustering_medoids_index = kmedoids_cluster(str(param_dict["init"]), points_formatted,
+                                                             distances_matrix_pairwise,
+                                                             int(param_dict["n_clusters"]))
+
+    # Reformat centers to be in 3D
+    centers = []
+    for index in clustering_medoids_index:
+        centers.append(list(points[index, :3]))
+
     return {
-        "labels" : clustering_labels,
-        "centers" : clustering_medoids,
+        "labels": clustering_labels,
+        "centers": centers,
     }
 
-def perform_FuzzyCMeans(param_dict,X):
-    X = format_to_dataframe(X)
+
+def perform_FuzzyCMeans(param_dict, points, columns_selected):
+    points = format_ndarray(points, columns_selected)
     print("perform_FuzzyCMeans -> n_clusters : {}".format(int(param_dict["n_clusters"])))
-    pts = np.vstack(([X["X"].values, X["Y"].values, X["Z"].values]))
-    cntr, u, u0, d, jm, p, fpc = fuzz.cluster.cmeans(pts, int(param_dict["n_clusters"]), int(param_dict["m"]), error=float(param_dict["error"]),
-     maxiter=int(param_dict["maxiter"]), seed=None)
+
+    number_of_columns = len(columns_selected)
+
+    # format the data the way fuzz need them to be
+    to_stack = []
+    for i in range(number_of_columns):
+        to_stack.append(points[:, i])
+    pts = np.vstack(to_stack)
+
+    center, u, u0, d, jm, p, fpc = fuzz.cluster.cmeans(pts, int(param_dict["n_clusters"]), int(param_dict["m"]),
+                                                       error=float(param_dict["error"]),
+                                                       maxiter=int(param_dict["maxiter"]), seed=None)
 
     # Create a labels list for viewing purposes
     labels = []
     belong = []
     for col in range(len(u[0])):
+        points_belonging = []
         line_max = 0
         belong_max = 0
         for line in range(len(u)):
+            points_belonging.append(u[line][col])
             if u[line][col] > belong_max:
                 belong_max = u[line][col]
                 line_max = line
         labels.append(line_max)
-        belong.append(belong_max)
+        belong.append(points_belonging)
 
     return {
-        "labels" : labels,
-        "belong" : belong,
-        "centers" : cntr,
-        "u" : u,
-        "fpc" : fpc,
+        "labels": labels,
+        "belong": belong,
+        "centers": center,
+        "u": u,
+        "fpc": fpc,
     }
+
 
 # ------------------------------------- K Medoids implementation ------------------------------------------
 
@@ -133,7 +181,7 @@ def kmedoids_cluster(init_mode, data_matrix, distances, k=3):
         curr_medoids[c] = np.array(data_matrix[index])
         c = c + 1
 
-    print("First curr_medoids_index",curr_medoids_index)
+    print("First curr_medoids_index", curr_medoids_index)
 
     old_medoids_index = np.array([-1] * k)
     new_medoids_index = np.array([-1] * k)
@@ -163,8 +211,8 @@ def kmedoids_cluster(init_mode, data_matrix, distances, k=3):
         clusters_labels.append(int(clust_i))
         c = c + 1
 
-    print("curr_medoids ->", curr_medoids)
-    return clusters_labels, curr_medoids
+    # print("curr_medoids ->", curr_medoids)
+    return clusters_labels, curr_medoids_index
 
 
 def init_clusters(init_mode, data_matrix, k):
@@ -289,7 +337,7 @@ def compute_samples_silhouette(X, predicted_labels, metric='euclidean'):
     :param metric: metric used, euclidean by default
     :return: an array (size n_samples) of floats between -1 and +1
     """
-    X_filtered,predicted_labels = filter(X,predicted_labels)
+    X_filtered, predicted_labels = filter(X, predicted_labels)
     return silhouette_samples(X_filtered, labels=predicted_labels, metric=metric), predicted_labels
 
 
@@ -300,11 +348,11 @@ def compute_calinski_habaraz(X, predicted_labels):
     :param predicted_labels:
     :return:
     """
-    X_filtered,predicted_labels = filter(X,predicted_labels)
+    X_filtered, predicted_labels = filter(X, predicted_labels)
     return calinski_harabaz_score(X_filtered, labels=predicted_labels)
 
 
-def compute_db(X,predicted_labels):
+def compute_db(X, predicted_labels):
     """
     Compute the Davies-Bouldin score for a given clustering result
     :param X: The data matrix : a list of n_features-dimensional data (each row corresponds to a single data point)
@@ -312,8 +360,8 @@ def compute_db(X,predicted_labels):
     :return:
     """
 
-    X_filtered, predicted_labels = filter(X,predicted_labels)
-    return davies_bouldin_score(X_filtered,labels=predicted_labels)
+    X_filtered, predicted_labels = filter(X, predicted_labels)
+    return davies_bouldin_score(X_filtered, labels=predicted_labels)
 
 
 def compute_s(i, x, centroids, labels, cluster_number):

@@ -217,7 +217,7 @@ def read_n(n_clusters):
     return interval
 
 
-def run_clustering(selectedClusteringMethod, params_dict):
+def run_clustering(selectedClusteringMethod, params_dict, columns_selected):
     """
     A function to run a type of clustering algorithm, triggered by run button from interface
 
@@ -231,7 +231,7 @@ def run_clustering(selectedClusteringMethod, params_dict):
     clusterizable_dataset = currentUsableDataset.export_as_clusterizable()
     if selectedClusteringMethod in CLUSTERING_METHODS.keys():
 
-        result = CLUSTERING_METHODS[selectedClusteringMethod](params_dict, clusterizable_dataset)
+        result = CLUSTERING_METHODS[selectedClusteringMethod](params_dict, clusterizable_dataset, columns_selected)
 
         result["n"] = int(params_dict["n_clusters"]) if selectedClusteringMethod != "DBSCAN" else len(
             set(clustering.filter(clusterizable_dataset, result["labels"])[1]))

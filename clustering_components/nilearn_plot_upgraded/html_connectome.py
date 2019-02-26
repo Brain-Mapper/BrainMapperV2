@@ -10,7 +10,7 @@ from .js_plotting_utils import (add_js_lib, HTMLDocument, mesh_to_plotly,
 
 # symbols used for the nilearn plot
 SYMBOLS = ["circle", "square", "diamond", "x"]  # "diamond-open","circle-open","square-open"
-
+SYMBOLS_NUMBER = len(SYMBOLS)
 
 class ConnectomeView(HTMLDocument):
     pass
@@ -36,7 +36,7 @@ def _add_centers(connectome, centers_coords, centers_colors):
             np.asarray(coord, dtype='<f4')
         )
     connectome["centers_colors"] = to_color_strings(centers_colors)
-    connectome["centers_symbols"] = [SYMBOLS[i % 5] for i in range(len(centers_coords))]
+    connectome["centers_symbols"] = [SYMBOLS[i % SYMBOLS_NUMBER] for i in range(len(centers_coords))]
 
 
 def _add_noise(connectome, noise_coords, noise_colors):
@@ -138,7 +138,7 @@ def view_markers(coords, colors, labels, marker_size=5., centers=None, centers_c
     # connectome_info is a dictionnary that will be passed as JSON to html view
     # It contains all the necessary information
     connectome_info = _get_markers(coords, colors)
-    connectome_info["symbol"] = [SYMBOLS[i % 4] for i in labels]
+    connectome_info["symbol"] = [SYMBOLS[i % SYMBOLS_NUMBER] for i in labels]
 
     if centers is not None:
         # If we have centers , we add the data
