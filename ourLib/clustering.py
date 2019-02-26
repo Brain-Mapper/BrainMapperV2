@@ -39,6 +39,7 @@ def perform_kmeans(param_dict, points, columns_selected):
     points_formatted = format_ndarray(points, columns_selected)
     clustering = KMeans(n_clusters=int(param_dict["n_clusters"]), random_state=None,
                         init=param_dict["init"],
+                        #n_init=int(param_dict["n_init"]), 
                         max_iter=int(param_dict["max_iter"])).fit(points_formatted)
 
     unique_labels, counts = np.unique(clustering.labels_, return_counts=True)
