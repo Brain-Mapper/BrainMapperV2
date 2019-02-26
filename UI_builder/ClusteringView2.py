@@ -22,6 +22,7 @@ from clustering_components.clustering_results import ClusteringDataTable, Cluste
 from clustering_components.clustering_topbar import *
 from clustering_components.clustering_plot import get_color
 import clustering_components.clustering_plot as clustering_plot
+import BrainMapper
 
 from copy import deepcopy
 
@@ -78,12 +79,11 @@ class ClusteringView2(QtGui.QWidget):
         :param a_usable_dataset_instance: see UsableData for more details
         :return: Nothing"""
 
-        self.clustering_usable_dataset = usable_dataset_instance
         self.tableWidget.setRowCount(usable_dataset_instance.get_row_num())
 
         row_count = 0
 
-        for udcoll in self.clustering_usable_dataset.get_usable_data_list():
+        for udcoll in BrainMapper.current_extracted_usable_data_list:
 
             extracted_data_dictionary = udcoll.get_extracted_data_dict()
 
@@ -402,6 +402,7 @@ class ClusteringView2(QtGui.QWidget):
                                 "No algorithm has been applied, no indexes were computed ...")
 
         self.verticalLayout_result.addWidget(self.info_panel)
+        BrainMapper.current_extracted_clusterizable_data = None
         self.showMain.emit()
 
     def plot(self):
@@ -417,7 +418,7 @@ class ClusteringView2(QtGui.QWidget):
         elif type == "Dendrogram":
             clustering_plot.plot_dendrogram(self.hac)
         elif type == "Cross sections":
-            default = list(get_current_usableDataset().export_as_clusterizable()[0, 0:3])
+            default = list(BrainMapper.current_extracted_clusterizable_data[0, 0:3])
             default = [str(int(i)) for i in default]
             default = ",".join(default)
             text, ok = QtGui.QInputDialog.getText(self, 'Choice of the coordinates',

@@ -20,8 +20,6 @@ from ourLib.dataExtraction import extractor as xt
 from ourLib.dataExtraction.usable_data import UsableDataSet as uds
 from ourLib.dataExtraction.image_recreation import image_recreation
 from ourLib import clustering
-from ourLib import calculations2 as calcul
-from ourLib.Import import excelImport as imp
 import ourLib.filesHandlers.image as csvImage
 from ourLib.Import import workspaceImport as ws
 
@@ -38,7 +36,9 @@ import pandas as pd
 current_collec = None  # The current collection shown in edit view
 selected_images_collections = []  # All image collections selected by the user in main page (usefull for all views that use data)
 toRM = []  # Contains all images to remove in edit view (can be used somewhere else)
-currentUsableDataset = None
+current_extracted_clusterizable_data = None
+current_extracted_usable_data_list = None
+exportedDataset = None
 
 sets = []  # List of all sets (and sub sets) created (usefull to know if a name is already used)
 globalSets = [[], [], []]
@@ -228,7 +228,9 @@ def run_clustering(selectedClusteringMethod, params_dict, columns_selected):
     Return :
         a list of clustering labels (to which cluster does one individual belong to)
     """
-    clusterizable_dataset = currentUsableDataset.export_as_clusterizable()
+    clusterizable_dataset = BrainMapper.current_extracted_clusterizable_data
+    print("clusterizable_dataset ->",clusterizable_dataset)
+
     if selectedClusteringMethod in CLUSTERING_METHODS.keys():
 
         result = CLUSTERING_METHODS[selectedClusteringMethod](params_dict, clusterizable_dataset, columns_selected)
@@ -268,7 +270,7 @@ def clustering_validation_indexes(labels, centroids, cluster_num):
     Return :
         validation_indexes{list}
     """
-    clustering_datamatrix = currentUsableDataset.export_as_clusterizable()
+    clustering_datamatrix = BrainMapper.current_extracted_clusterizable_data
     validation_indexes = []
 
     # Mean silhouette
@@ -288,7 +290,7 @@ def compute_sample_silhouettes(labels):
     Arguments :
         labels{list} -- clustering label
     """
-    clustering_datamatrix = currentUsableDataset.export_as_clusterizable()
+    clustering_datamatrix = BrainMapper.current_extracted_clusterizable_data
     return clustering.compute_samples_silhouette(X=clustering_datamatrix, predicted_labels=labels)
 
 

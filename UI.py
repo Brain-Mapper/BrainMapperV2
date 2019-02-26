@@ -4,12 +4,8 @@ from PyQt4.Qt import *
 
 from functools import partial
 
-from UI_builder import resources
-
 from UI_builder.mainView2 import MainView2
 from UI_builder.ClusteringView2 import ClusteringView2
-# from UI_builder.clusteringView import ClusteringView
-# from UI_builder.editCollectionsView import EditCollectionsView
 from UI_builder.EditView2 import EditView2
 from UI_builder.exportView import ExportView
 from UI_builder.calculationView2 import calculationView2
@@ -27,6 +23,7 @@ if __name__ == '__main__':
     else:
         from ..BrainMapper import *
 
+import BrainMapper
 
 class Help(QMainWindow):
     def __init__(self):
@@ -165,7 +162,10 @@ class HomePage(QWidget):
         self.stack.setCurrentWidget(self.SOM)
 
     def updateClusteringView(self):
-        self.clustering.fill_table(get_current_usableDataset())
+        BrainMapper.current_extracted_clusterizable_data = BrainMapper.get_current_usableDataset().export_as_clusterizable()
+        BrainMapper.current_extracted_usable_data_list = BrainMapper.get_current_usableDataset().get_usable_data_list()
+        # replace it as None when you go back
+        self.clustering.fill_table(BrainMapper.get_current_usableDataset())
         self.stack.setCurrentWidget(self.clustering)
         self.clustering.pushButton_show.setEnabled(False)
         self.clustering.pushButton_save.setEnabled(False)

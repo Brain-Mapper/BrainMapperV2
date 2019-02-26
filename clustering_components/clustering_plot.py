@@ -13,9 +13,7 @@
 
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-from BrainMapper import compute_sample_silhouettes, get_current_usableDataset
-import numpy as np
-import pandas as pd
+import BrainMapper
 from nilearn import plotting
 from .nilearn_plot_upgraded import view_markers
 import numpy as np
@@ -30,7 +28,7 @@ def plot_silhouette(labels, colors=None):
         labels{list} -- list of labels after clustering
         colors -- clustering colors
     """
-    sample_silhouettes, labels = compute_sample_silhouettes(labels)
+    sample_silhouettes, labels = BrainMapper.compute_sample_silhouettes(labels)
     average = np.mean(sample_silhouettes)
 
     # Dict of the form {label:[list of silhouettes]}
@@ -238,7 +236,7 @@ def get_points_list_colors_list(labels: list, in_int: bool = False) -> (list, li
     Returns:
         points list, colors list
     """
-    points = get_current_usableDataset().export_as_clusterizable()
+    points = BrainMapper.current_extracted_clusterizable_data
 
     color_dict = get_color(sorted(set(labels)), in_int=in_int)
     colors_list = []
