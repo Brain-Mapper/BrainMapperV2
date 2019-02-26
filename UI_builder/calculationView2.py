@@ -190,6 +190,8 @@ class calculationView2(QtGui.QWidget):
                 "Result: a unique image\n"
                 "Addition all the images in input."
             )
+            self.textBrowser_2.setText("[5, 4, 0]     [0, 4, 0]    [5, 8, 0]\n[0, 0, 3] + [0, 7, 4] = [0, 7, 7]\n[1, "
+            "1, 2]     [3, 0, 0]    [4, 1, 2]")
 
         elif item == "division":
             self.argument_name.setText("Coefficient")
@@ -198,6 +200,8 @@ class calculationView2(QtGui.QWidget):
                 "Result: a unique image\n"
                 "Addition all the images in input, and then divide all the intensity by the coefficient."
             )
+            self.textBrowser_2.setText("[  6,   4,  0]           [3, 2, 0]\n[  0,   0,  4] / 2 = [0, 0, 2]\n[10, "
+            "10, 2]           [5, 5, 1]")
 
         elif item == "linear combination":
             self.argument_name.setText("Coefficients")
@@ -213,6 +217,9 @@ class calculationView2(QtGui.QWidget):
                 "List of filename:\n\t"
                 + "\n\t".join(filenames)
             )
+            self.textBrowser_2.setText("[0, 1, 0]           [0, 0, 0]           [0, 0, 1]           [0, 2, 3]\n"
+            "[1, 0, 1] * 2 + [0, 1, 1] * 1 + [1, 0, 0] * 3 = [5, 1, 3]\n"
+            "[0, 0, 0]           [1, 0, 0]           [0, 1, 1]           [1, 3, 3]")
 
         elif item == "mean":
             self.argument_name.setText("No argument")
@@ -221,14 +228,19 @@ class calculationView2(QtGui.QWidget):
                 "Result: a unique image\n"
                 "Addition all the images in input, and then divide all the intensity by the number of images."
             )
+            self.textBrowser_2.setText("            [0, 3, 0]     [0, 0, 0]    [0, 0, 3]        [0, 3, 0]     [0, 0, 0]    [0, 0, 3]             [0, 1, 1]\n"
+            "Mean([2, 0, 1] + [0, 9, 1] + [1, 0, 4]) = ( [2, 0, 1] + [0, 9, 1] + [1, 0, 4] ) / 3 = [1, 3, 2]\n"
+            "            [0, 5, 0]     [9, 0, 3]    [0, 4, 3]        [0, 5, 0]     [9, 0, 3]    [0, 4, 3]             [3, 3, 2]")
 
         elif item == "multiplication":
             self.argument_name.setText("Coefficient")
             self.set_arguments_editable(True, "1.0")
             self.textBrowser.setText(
                 "Result: a unique image\n"
-                "Addition all the images in input, and then multiply al the intensity by a coefficient"
+                "Addition all the images in input, and then multiply all the intensity by a coefficient"
             )
+            self.textBrowser_2.setText("[  6,   4,  0]           [12,   8,  0]\n[  0,   0,  4] * 2 = [  0,   0,  8]\n[10, "
+            "10, 2]           [20, 20, 4]")
 
         elif item == "and":
             self.argument_name.setText("No argument")
@@ -239,6 +251,9 @@ class calculationView2(QtGui.QWidget):
                 "superior to 0 is considered true. The result is a unique image with intersected voxels with an "
                 "intensity of 1. "
             )
+            self.textBrowser_2.setText("[5, 0, 0]           [2, 0, 2]     [1, 0, 0]\n"
+            "[0, 3, 0] AND [0, 0, 0] = [0, 0, 0]\n"
+            "[0, 0, 4]           [1, 0, 1]     [0, 0, 1]")
 
         elif item == "or":
             self.argument_name.setText("No argument")
@@ -249,6 +264,9 @@ class calculationView2(QtGui.QWidget):
                 "superior to 0 is considered true. The result is a unique image with voxels at the union with an "
                 "intensity of 1."
             )
+            self.textBrowser_2.setText("[5, 0, 0]        [2, 0, 2]     [1, 0, 1]\n"
+            "[0, 3, 0] OR [0, 0, 0] = [0, 1, 0]\n"
+            "[0, 0, 4]        [1, 0, 1]     [1, 0, 1]")
 
         elif item == "closing":
             self.argument_name.setText("Number of iterations")
@@ -306,6 +324,9 @@ class calculationView2(QtGui.QWidget):
                 "If no value is assigned to min and max then their values will be less the infinite and the less "
                 "infinite respectively."
             )
+            self.textBrowser_2.setText("                     [-5, 1, 0]  [2, 0, 2]       [0, 1, 0]  [0, 0, 0]\n"
+            "threshold([-1, 3, 0], [1, 1, 0]) = ([0, 0, 0], [1, 1, 0]) avec min = 0 et max = 1\n"
+            "                     [0, 1, 4]   [1, 0, 1]       [0, 1, 0]  [1, 0, 1]")
 
     def run_calculation(self):
         algorithm = self.leftlist.currentItem().text()
