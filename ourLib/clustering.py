@@ -27,7 +27,6 @@ COLUMNS_INDEX = {
     'X': 0,
     'Y': 1,
     'Z': 2,
-    'Intensity': 3,
 }
 
 
@@ -37,13 +36,36 @@ def format_ndarray(points, columns_selected) -> np.ndarray:
 
 
 def perform_kmeans(param_dict, points, columns_selected):
-    points = format_ndarray(points, columns_selected)
+    points_formatted = format_ndarray(points, columns_selected)
     clustering = KMeans(n_clusters=int(param_dict["n_clusters"]), random_state=None,
                         init=param_dict["init"],
-                        n_init=int(param_dict["n_init"]), max_iter=int(param_dict["max_iter"])).fit(points)
+                        n_init=int(param_dict["n_init"]), max_iter=int(param_dict["max_iter"])).fit(points_formatted)
+
+    unique_labels, counts = np.unique(clustering.labels_, return_counts=True)
+    label_counts = dict(zip(unique_labels, counts))
+
+    # Reformat centers to be in 3D
+    if len(columns_selected[0]) != 3:
+        # Create a new centroids list
+        centers = []
+        for _ in unique_labels:
+            centers.append([0, 0, 0])
+        # We addition all the coordinates in the centroids
+        for point_index, label in enumerate(clustering.labels_):
+            centers[label][0] = centers[label][0] + points[point_index][0]
+            centers[label][1] = centers[label][1] + points[point_index][1]
+            centers[label][2] = centers[label][2] + points[point_index][2]
+        # We divide by the number of points in each label for each centroid to obtain the barycenter
+        for i in label_counts.keys():
+            centers[i][0] = centers[i][0] / label_counts[i]
+            centers[i][1] = centers[i][1] / label_counts[i]
+            centers[i][2] = centers[i][2] / label_counts[i]
+    else:
+        centers = clustering.cluster_centers_
+
     return {
         "labels": clustering.labels_,
-        "centers": clustering.cluster_centers_
+        "centers": centers
     }
 
 
@@ -67,14 +89,20 @@ def perform_DBSCAN(param_dict, points, columns_selected):
 
 
 def perform_kmedoids(param_dict, points, columns_selected):
-    points = format_ndarray(points, columns_selected)
+    points_formatted = format_ndarray(points, columns_selected)
     distances_matrix_pairwise = compute_distances(points, param_dict['metric'])
-    clustering_labels, clustering_medoids = kmedoids_cluster(str(param_dict["init"]), points,
+    clustering_labels, clustering_medoids_index = kmedoids_cluster(str(param_dict["init"]), points_formatted,
                                                              distances_matrix_pairwise,
                                                              int(param_dict["n_clusters"]))
+
+    # Reformat centers to be in 3D
+    centers = []
+    for index in clustering_medoids_index:
+        centers.append(list(points[index, :3]))
+
     return {
         "labels": clustering_labels,
-        "centers": clustering_medoids,
+        "centers": centers,
     }
 
 
@@ -83,33 +111,36 @@ def perform_FuzzyCMeans(param_dict, points, columns_selected):
     print("perform_FuzzyCMeans -> n_clusters : {}".format(int(param_dict["n_clusters"])))
 
     number_of_columns = len(columns_selected)
-    if number_of_columns == 1:
-        pts = np.vstack(([points[:, 0]]))
-    elif number_of_columns == 2:
-        pts = np.vstack(([points[:, 0], points[:, 1]]))
-    else:
-        pts = np.vstack(([points[:, 0], points[:, 1], points[:, 2]]))
-    cntr, u, u0, d, jm, p, fpc = fuzz.cluster.cmeans(pts, int(param_dict["n_clusters"]), int(param_dict["m"]),
-                                                     error=float(param_dict["error"]),
-                                                     maxiter=int(param_dict["maxiter"]), seed=None)
+
+    # format the data the way fuzz need them to be
+    to_stack = []
+    for i in range(number_of_columns):
+        to_stack.append(points[:, i])
+    pts = np.vstack(to_stack)
+
+    center, u, u0, d, jm, p, fpc = fuzz.cluster.cmeans(pts, int(param_dict["n_clusters"]), int(param_dict["m"]),
+                                                       error=float(param_dict["error"]),
+                                                       maxiter=int(param_dict["maxiter"]), seed=None)
 
     # Create a labels list for viewing purposes
     labels = []
     belong = []
     for col in range(len(u[0])):
+        points_belonging = []
         line_max = 0
         belong_max = 0
         for line in range(len(u)):
+            points_belonging.append(u[line][col])
             if u[line][col] > belong_max:
                 belong_max = u[line][col]
                 line_max = line
         labels.append(line_max)
-        belong.append(belong_max)
+        belong.append(points_belonging)
 
     return {
         "labels": labels,
         "belong": belong,
-        "centers": cntr,
+        "centers": center,
         "u": u,
         "fpc": fpc,
     }
@@ -180,8 +211,8 @@ def kmedoids_cluster(init_mode, data_matrix, distances, k=3):
         clusters_labels.append(int(clust_i))
         c = c + 1
 
-    print("curr_medoids ->", curr_medoids)
-    return clusters_labels, curr_medoids
+    # print("curr_medoids ->", curr_medoids)
+    return clusters_labels, curr_medoids_index
 
 
 def init_clusters(init_mode, data_matrix, k):

@@ -81,21 +81,36 @@ def plot_3d_fuzzy(labels: list, belong, centroids: list):
         belong{list} -- list of affiliations of each point to a cluster
     """
 
-    points_list, colors_list = get_points_list_colors_list(labels)
+    color_dict = get_color(sorted(set(labels)))
+    points_list, _ = get_points_list_colors_list(labels)
+
     colors_bis = []
-    for i in range(len(colors_list)):
-        colors_bis_0 = colors_list[i][0] * belong[i]
-        colors_bis_1 = colors_list[i][1] * belong[i]
-        colors_bis_2 = colors_list[i][2] * belong[i]
-        colors_bis_3 = colors_list[i][3]
-        colors_bis.append((colors_bis_0, colors_bis_1, colors_bis_2, colors_bis_3))
+
+    for i in range(len(points_list)):
+        color = [0, 0, 0, 1]
+        for label in set(labels):
+            color[0] = color[0] + color_dict[label][0] * belong[i][label]
+            color[1] = color[1] + color_dict[label][1] * belong[i][label]
+            color[2] = color[2] + color_dict[label][2] * belong[i][label]
+        colors_bis.append(tuple(color))
         # print("plot_3d_fuzzy -> colors[i] APRES", colors_bis[i])
 
-    color_dict = get_color(sorted(set(labels)))
-    centroids_colors = [color_dict[i] for i in sorted(set(labels))]
+    if len(centroids[0]) == 3:
+        centroids_colors = [color_dict[i] for i in sorted(set(labels))]
+        view = view_markers(points_list,
+                            labels=labels,
+                            colors=colors_bis,
+                            marker_size=5,
+                            centers=centroids,
+                            centers_colors=centroids_colors
+                            )
+    else:
+        view = view_markers(points_list,
+                            labels=labels,
+                            colors=colors_bis,
+                            marker_size=5,
+                            )
 
-    view = view_markers(points_list, labels=labels, colors=colors_bis, marker_size=5, centers=centroids,
-                        centers_colors=centroids_colors)
     view.open_in_browser()
 
 
@@ -111,30 +126,10 @@ def plot_3d_clusters(labels: list, centroids: list = None, marker_size=5.):
     points_list, colors_list = get_points_list_colors_list(labels)
 
     unique_labels, counts = np.unique(labels, return_counts=True)
-    label_counts = dict(zip(unique_labels, counts))
+    # label_counts = dict(zip(unique_labels, counts))
 
     centroids_colors = None
     if centroids is not None:
-        if len(centroids[0]) != 3:
-            # If the clusters were made on one or two columns, the return of the clustering methods doesn't have the xyz
-            # coordinates. We have to calculate the centroids ourselves.
-
-            # Create a new centroids list
-            centroids = []
-            for _ in unique_labels:
-                centroids.append([0, 0, 0])
-            # We addition all the coordinates in the centroids
-            for point_index, label in enumerate(labels):
-                centroids[label][0] = centroids[label][0] + points_list[point_index][0]
-                centroids[label][1] = centroids[label][1] + points_list[point_index][1]
-                centroids[label][2] = centroids[label][2] + points_list[point_index][2]
-            print("centroids_before_division", centroids)
-            # We divide by the number of points in each label for each centroid to obtain the barycenter
-            for i in label_counts.keys():
-                centroids[i][0] = centroids[i][0] / label_counts[i]
-                centroids[i][1] = centroids[i][1] / label_counts[i]
-                centroids[i][2] = centroids[i][2] / label_counts[i]
-            print("centroids_after_division", centroids)
         # To print the centers we need the list of centers and the color of each cluster
         color_dict = get_color(sorted(unique_labels))
         centroids_colors = [color_dict[i] for i in sorted(unique_labels)]
