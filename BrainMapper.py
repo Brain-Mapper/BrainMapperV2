@@ -229,7 +229,7 @@ def run_clustering(selected_clustering_method, params_dict, columns_selected):
         a list of clustering labels (to which cluster does one individual belong to)
     """
     clusterizable_dataset = current_extracted_clusterizable_data
-    print("clusterizable_dataset ->", clusterizable_dataset)
+    # print("clusterizable_dataset ->", clusterizable_dataset)
 
     if selected_clustering_method in CLUSTERING_METHODS.keys():
 
@@ -259,7 +259,7 @@ def run_clustering(selected_clustering_method, params_dict, columns_selected):
     return result
 
 
-def clustering_validation_indexes(labels, centroids, cluster_num):
+def clustering_validation_indexes(labels):
     """
     Calculate the mean silhouette, the calinski harabaz score and the davies bouldin score
 
@@ -272,13 +272,12 @@ def clustering_validation_indexes(labels, centroids, cluster_num):
         validation_indexes{list}
     """
     clustering_datamatrix = current_extracted_clusterizable_data
-    validation_indexes = [clustering.compute_mean_silhouette(X=clustering_datamatrix, predicted_labels=labels),
+    try:
+        validation_indexes = [clustering.compute_mean_silhouette(X=clustering_datamatrix, predicted_labels=labels),
                           clustering.compute_calinski_habaraz(X=clustering_datamatrix, predicted_labels=labels),
                           clustering.compute_db(X=clustering_datamatrix, predicted_labels=labels)]
-
-    # Mean silhouette
-    # Calinski-Habaraz index
-    # Davies-Bouldin index
+    except ValueError:
+        validation_indexes = [None, None, None]
 
     return validation_indexes
 
