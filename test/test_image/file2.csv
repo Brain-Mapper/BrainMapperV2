@@ -1,0 +1,7 @@
+X,Y,Z,Latéralité,Sexe,Côté
+0,0,0,Right-hander,Homme,Droit
+1,1,1,Right-hander,Homme,Gauche
+2,2,2,Right-hander,Homme,Droit
+1,2,1,Left-hander,Femme,Gauche
+0,2,0,Left-hander,Femme,Droit
+1,1,1,Ambidextrous,Femme,Gauche
