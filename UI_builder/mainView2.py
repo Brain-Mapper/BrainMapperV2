@@ -330,6 +330,8 @@ class SetButton(QtGui.QWidget):
             try:
                 new_ok = True
                 not_ok = ['^', '[', '<', '>', ':', ';', ',', '?', '"', '*', '|', '/', ']', '+', '$']
+                if len(text) == 0:
+                    new_ok=False
                 for i in not_ok:
                     if i in str(text):
                         new_ok = False
@@ -360,7 +362,9 @@ class SetButton(QtGui.QWidget):
         if (str(text) != ""):
             try:
                 new_ok = True
-                not_ok = ['^', '[', '<', '>', ':', ';', ',', '?', '"', '*', '|', '/', ']', '+', '$','']
+                not_ok = ['^', '[', '<', '>', ':', ';', ',', '?', '"', '*', '|', '/', ']', '+', '$']
+                if len(text) == 0:
+                    new_ok=False
                 for i in not_ok:
                     if i in str(text):
                         new_ok = False
@@ -714,7 +718,9 @@ class MainView2(QtGui.QWidget):
         # default_name = datetime.fromtimestamp(int(round(time.time()))).strftime('--%m-%d %H-%M-%S')
         if ok:
             new_ok = True
-            not_ok = ['^', '[', '<', '>', ':', ';', ',', '?', '"', '*', '|', '/', ']', '+', '$','']
+            not_ok = ['^', '[', '<', '>', ':', ';', ',', '?', '"', '*', '|', '/', ']', '+', '$']
+            if len(text) == 0:
+                new_ok=False
             for i in not_ok:
                 if i in str(text):
                     new_ok = False
@@ -770,7 +776,7 @@ class MainView2(QtGui.QWidget):
         imported = self.treeWidget.topLevelItem(0)
         clustering = self.treeWidget.topLevelItem(2)
         calculation = self.treeWidget.topLevelItem(1)
-        
+
         it = QTreeWidgetItemIterator(self.treeWidget.topLevelItem(0))
         while it.value():
             if it.value().parent() is not None and it.value().parent() == imported:
