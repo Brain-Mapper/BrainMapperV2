@@ -26,36 +26,39 @@
             <a href="index.html" style="color : #5577ee"> Go back to home page </a>
             <ul class="toc_list">
           	   <li><a href="#41"><strong>4.1. Data extracted for calculation</strong></a></li>
-          	    <ul>
-          		      <li><a href="#411">4.1.1. How data is extracted</a></li>
+          	       <ul>
+          		         <li><a href="#411">4.1.1. How data is extracted</a></li>
+          	       </ul>
 
-          	      </ul>
-              	<li><a href="#42"><strong>4.2. Optimization of calculations</strong></a></li>
+                <li><a href="#42"><strong>4.2. Optimization of calculations</strong></a></li>
               	  <ul>
-              		<li><a href="#421">4.2.1. Adapted library</a></li>
-              		<li><a href="#422">4.2.2. Reduction of search space in data extraction</a></li>
+                  		<li><a href="#421">4.2.1. Adapted library</a></li>
+                  		<li><a href="#422">4.2.2. Reduction of search space in data extraction</a></li>
               	  </ul>
-              	<li><a href="#43"><strong>4.3. List of implemented calcul</strong></a></li>
-		  <ul>
-              		<li><a href="#431">4.3.1. Addition</a></li>
-            			<li><a href="#432">4.3.2. Division</a></li>
-                  <li><a href="#433">4.3.3. Linear combination</a></li>
-            			<li><a href="#434">4.3.4. Mean</a></li>
-            			<li><a href="#435">4.3.5. Multiplication</a></li>
-            			<li><a href="#436">4.3.6. And</a></li>
-            			<li><a href="#437">4.3.7. Or</a></li>
-            			<li><a href="#438">4.3.8. Closing</a></li>
-            			<li><a href="#439">4.3.9. Dilation</a></li>
-            			<li><a href="#4310">4.3.10. Erosion</a></li>
-            			<li><a href="#4311">4.3.11. Opening</a></li>
-            			<li><a href="#4312">4.3.12. Threshold</a></li>
 
-              	  </ul>
-		<li><a href="#script_env"><strong>4.4. Procedure to apply a calculation</strong></a></li>
-			<li><a href="#441">4.4.1. Load and select a set of nifti collection</a></li>
-			<li><a href="#442">4.4.2. Select a calculation and the parameters</a></li>
-              		<li><a href="#443">4.4.3. Execute the algorithm and save it in the calculation tab</a></li>
-                	<li><a href="#444">4.4.4. Have an overview of the results in the Edit view</a></li>
+                <li><a href="#43"><strong>4.3. List of implemented calcul</strong></a></li>
+		              <ul>
+                  		<li><a href="#431">4.3.1. Addition</a></li>
+                			<li><a href="#432">4.3.2. Division</a></li>
+                      <li><a href="#433">4.3.3. Linear combination</a></li>
+                			<li><a href="#434">4.3.4. Mean</a></li>
+                			<li><a href="#435">4.3.5. Multiplication</a></li>
+                			<li><a href="#436">4.3.6. And</a></li>
+                			<li><a href="#437">4.3.7. Or</a></li>
+                			<li><a href="#438">4.3.8. Closing</a></li>
+                			<li><a href="#439">4.3.9. Dilation</a></li>
+                			<li><a href="#4310">4.3.10. Erosion</a></li>
+                			<li><a href="#4311">4.3.11. Opening</a></li>
+                			<li><a href="#4312">4.3.12. Threshold</a></li>
+                  </ul>
+
+               <li><a href="#44"><strong>4.4. Procedure to apply a calculation</strong></a></li>
+                <ul>
+                    <li><a href="#441">4.4.1. Load and select a set of nifti collection</a></li>
+                    <li><a href="#442">4.4.2. Select a calculation and the parameters</a></li>
+                    <li><a href="#443">4.4.3. Execute the algorithm and save it in the calculation tab</a></li>
+                </ul>
+
               </ul>
         	</div>
         </div>
@@ -80,61 +83,174 @@
             </div>
 
 	<h2 id="43">4.3. List of implemented calcul</h2>
+    <p>All examples in this part are in 2D whereas all calculations in BrainMapper are in 3D. </p>
+
 		<h3 id="431">4.3.1. Addition</h3>
-			<p>The Addition algorithm make a addition with a collection of nifti makes the term some term of each voxel</p>
-		<h3 id="432">4.3.2. Boolean Intersection</h3>
-			<p>The Boolean intersection takes a set of files and returns a binary file of 0 and 1. A voxel with 1 value means that for every file this voxels have strictely positive intensity</p>
-		<h3 id="433">4.3.3. Boolean Union</h3>
-<p>The Boolean union takes a set of files and returns a binary file of 0 and 1. A voxel with 1 value means that there exists in at least some files nifti a voxel whose intensity is strictly positive</p>
-		<h3 id="434">4.3.4. Centroide</h3>
-			<p>This algorithm calculates the centroid of each cluster present in one or a set of nifti files</p>
-		<h3 id="435">4.3.5. Closing</h3>
-<p>In mathematical morphology, the closing of a set (binary image) A by a structuring element B is the erosion of the dilation of that set, A * B = ( A (+) B ) (-) B, denote the dilation and erosion, respectively. In image processing, closing is, together with opening, the basic workhorse of morphological noise removal. Opening removes small objects, while closing removes small holes.</p>
-		<h3 id="436">4.3.6. Dilatation</h3>
-<p>Dilation (usually represented by (+)) is one of the basic operations in mathematical morphology. Originally developed for binary images, it has been expanded first to grayscale images, and then to complete lattices. The dilation operation usually uses a structuring element for probing and expanding the shapes contained in the input image.</p>
-		<h3 id="437">4.3.7. Entropy</h3>
-<p>The entropy of an image is a decimal value that allows to characterize the degree of disorganization, or unpredictability of the information content of a system.</p>
-		<h3 id="438">4.3.8. Erosion</h3>
-<p>Erosion (usually represented by (-)) is one of two fundamental operations (the other being dilation) in morphological image processing from which all other morphological operations are based. It was originally defined for binary images, later being extended to grayscale images, and subsequently to complete lattices.</p>
-		<h3 id="439">4.3.9. Mean</h3>
-<p>The Mean process averages a set of nifti files. The algorithm performs the sum for all voxels present in each file the divides the value obtained by the number of files</p>
-		<h3 id="4310">4.3.10. Normalization</h3>
-<p>The normalization algorithm creates one nifti file result for each input nifti file. This algorithm create a file where the values for each voxel are between 0 and 1. Different ways exit to normalize a nifti file, you can select in the options panel the desired method</p>
-		<h3 id="4311">4.3.11. Opening</h3>
-<p>In morphological opening ( A (-) B ) (+) B, erosion operation removes objects that are smaller than structuring element B and dilation operation restores the shape of remaining objects. However, restoring accuracy in dilation operation highly depends on the type of structuring element and the shape of restoring objects. The opening by reconstruction method is able to restore the objects completely after erosion applied.</p>
-		<h3 id="4312">4.3.12. Threshold</h3>
-<p>The threshold operation allows you to store only voxels whose intensity value is between the min and max parameters. All voxels that do not meet this criterion have their intensity that becomes zero. If no value is assigned to min and max then their values will be less the infinite and the less infinite respectively.</p>
-	<h2>4.4. Procedure to apply a calculation</h2>
-		<h3 id="441">4.4.1. Load and select a set of nifti collection</h3>
-<p>Select one or more colifenings from nifti in the home view. Note that you need at least one collection to access the calculation view</p>
-		<h3 id="442">4.4.2. Select a calculation and the parameters</h3>
-<p>For each algorithm there is a brief description of it to allow the user to know exactly what each algorithm corresponds to. Finally for some algorithm there are parameters that must be entered and can be modified to allow the user to have more flexibility in the use of these.</p>
-<div style="padding-left: 15%; padding-top: 1%;padding-bottom: 1%;">
-              <img src="imgs/calculation/SelectionAlgorithme.png" style="width:80%">
-            </div>
+			<p>The addition algorithm make an addition of all the input images</p>
+      <p>In the following example, we realize an addition on 3 images. Each value corresponds to the intensity of a point.</p>
 
-		<h3 id="443">4.4.3. Execute the algorithm and save it in the calculation tab</h3>
-<p>Once the user has selected a calculation and initialized all the parameters, he can execute it using the "Calculate" button located at the bottom right of the calculation view.</p>
+      <pre>
+      [5, 4, 0]     [0, 4, 0]     [0, 0, 2]   [5,  8, 2]
+      [0, 0, 3]  +  [0, 7, 4]  +  [3, 4, 2] = [3, 11, 9]
+      [1, 1, 2]     [3, 0, 0]     [0, 1, 2]   [4,  2, 2]
+      </pre>
 
-<div style="padding-left: 15%; padding-top: 1%;padding-bottom: 1%;">
-              <img src="imgs/calculation/capture.png" style="width:80%">
-            </div>
+		<h3 id="432">4.3.2. Division</h3>
+			<p>The division algorithm adds the intensity of all input images and then divides this value by a coefficient</p>
 
-<p>When the calculation has successfully run the user to a console return that allows him to have a summary of the calculation that was done with all the input file, the parameters, the nature of the file or output. .. etc. Finally, it is proposed to the user to record or not the calculation result (s).</p>
+      <p>In the following example, we realize a division by 2 on 3 images. Each value corresponds to the intensity of a point.</p>
 
-<div style="padding-left: 15%; padding-top: 1%;padding-bottom: 1%;">
-              <img src="imgs/calculation/OngletCalculationsEtResultats.png" style="width:80%">
-            </div>
+      <pre>
+       [5, 4, 0]     [0, 4, 0]     [0, 0, 2]        [2.5,   4,   1]
+      ([0, 0, 3]  +  [0, 7, 4]  +  [3, 4, 2]) / 2 = [1.5, 5.5, 4.5]
+       [1, 1, 2]     [3, 0, 0]     [0, 1, 2]        [  2,   1,   1]
+      </pre>
 
-		<h3 id="444">4.4.4. Have an overview of the results in the Edit view</h3>
-<p>Once you have saved your calculation result as a set, you can access it by returning to the home view in the calculation tab. You can then, for example, view the rendering in the edition view. Like the two pictures below :</p>
-<div style="padding-left: 15%; padding-top: 1%;padding-bottom: 1%;">
-              <img src="imgs/calculation/Vue3D.png" style="width:80%">
-            </div>
-<div style="padding-left: 15%; padding-top: 1%;padding-bottom: 1%;">
-              <img src="imgs/calculation/cerveauMorphologie.png" style="width:80%">
-            </div>
+    <h3 id="433">4.3.3. Linear combination</h3>
+      <p>The linear combination algorithm adds the intensity of all input images but each image has all its intensity multiplied by a corresponding coefficient.</p>
+
+      <p>In the following example, we realize a linear combination on 3 images. Each value corresponds to the intensity of a point.</p>
+
+      <pre>
+      [5, 4, 0]       [0, 4, 0]        [0, 0, 2]      [10, 20,  4]
+      [0, 0, 3] *2 +  [0, 7, 4] *3  +  [3, 4, 2] *2 = [ 6, 29, 22]
+      [1, 1, 2]       [3, 0, 0]        [0, 1, 2]      [11,  4,  4]
+      </pre>
+
+  	<h3 id="434">4.3.4. Mean</h3>
+			<p>The mean algorithm adds the intensity of all the input images, and then divides this value by the number of images</p>
+
+      <p>In the following example, we realize a mean on 3 images. Each value corresponds to the intensity of a point.</p>
+
+      <pre>
+       [5, 4, 0]     [0, 4, 0]     [0, 0, 2]       [5/3,  8/3, 2/3]
+      ([0, 0, 3]  +  [0, 7, 4]  +  [3, 4, 2]) /3 = [  1, 11/3,   3]
+       [1, 1, 2]     [3, 0, 0]     [0, 1, 2]       [4/3,  2/3, 2/3]
+      </pre>
+
+		<h3 id="435">4.3.5. Multiplication</h3>
+      <p>The multiplication algorithm adds the intensity of all input images and then multiplies this value by a coefficient</p>
+
+      <p>In the following example, we realize a multiplication by 2 on 3 images. Each value corresponds to the intensity of a point.</p>
+
+      <pre>
+       [5, 4, 0]     [0, 4, 0]     [0, 0, 2]        [10, 16,  4]
+      ([0, 0, 3]  +  [0, 7, 4]  +  [3, 4, 2]) * 2 = [ 6, 22, 18]
+       [1, 1, 2]     [3, 0, 0]     [0, 1, 2]        [ 8,  4,  4]
+      </pre>
+
+    <h3 id="436">4.3.6. And</h3>
+      <p>The and algorithm realizes the boolean intersection of the input images. For each voxel in an image, if the intensity is superior to 0, this voxel is considered as true. The result is a unique image where each voxel is the intersection of voxels from the input images.</p>
+
+      <p>In the following example, we realize an intersection operation on 2 images. Each value corresponds to the intensity of a point.</p>
+
+      <pre>
+      [5, 4, 0]       [0, 4, 0]    [ true,  true, false]     [false,  true, false]   [false,  true, false]
+      [0, 0, 3]  AND  [0, 7, 4]  = [false, false,  true] AND [false,  true,  true] = [false, false,  true]
+      [1, 1, 2]       [3, 0, 0]    [ true,  true,  true]     [ true, false, false]   [ true, false, false]
+      </pre>
+
+    <h3 id="437">4.3.7. Or</h3>
+      <p>The or algorithm realizes the boolean union of the images in input. For each voxel in an image, if the intensity is superior to 0, this voxel is considered as true. The result is a unique image where each voxel is the union of voxels from the input images</p>
+
+      <p>In the following example, we realize an union operation on 2 images. Each value corresponds to the intensity of a point.</p>
+
+      <pre>
+      [5, 4, 0]      [0, 4, 0]    [ true,  true, false]    [false,  true, false]   [true,  true, false]
+      [0, 0, 3]  OR  [0, 7, 4]  = [false, false,  true] OR [false,  true,  true] = [false, true,  true]
+      [1, 1, 2]      [3, 0, 0]    [ true,  true,  true]    [ true, false, false]   [ true, true,  true]
+      </pre>
+
+    <h3 id="438">4.3.8. Closing</h3>
+      <p>This operation corresponds to a dilatation followed by an erosion.</p>
+
+      <p>In the following example, we realize a closing.</p>
+
+      <img src="imgs/calculation/ref.png" style="width:30%">
+      <img src="imgs/calculation/fermeture.png" style="width:30%">
+
+    <h3 id="439">4.3.9. Dilation</h3>
+      <p>Dilation has the effect of increasing the size of the objects, and to merge some of them, when the distance between them is smaller than the size of the structuring element.</p>
+
+      <p>In the following example, we realize a dilation.</p>
+
+      <img src="imgs/calculation/ref.png" style="width:30%">
+      <img src="imgs/calculation/dilation.png" style="width:30%">
+
+    <h3 id="4310">4.3.10. Erosion</h3>
+      <p>Erosion has the effect of eliminating objects or parts of objects whose size is smaller than that of the structuring element.</p>
+
+      <p>In the following example, we realize an erosion.</p>
+
+      <img src="imgs/calculation/ref.png" style="width:30%">
+      <img src="imgs/calculation/erosion.png" style="width:30%">
+
+    <h3 id="4311">4.3.11. Opening</h3>
+      <p>Opening is to remove detail smaller than a cross. This operation corresponds to an erosion followed by a dilatation.</p>
+
+      <p>In the following example, we realize an opening.</p>
+
+      <img src="imgs/calculation/ref.png" style="width:30%">
+      <img src="imgs/calculation/ouverture.png" style="width:30%">
+
+    <h3 id="4312">4.3.12. Threshold</h3>
+      <p>The threshold operation allows you to store only voxels whose intensity value is between the min and max parameters. All voxels that do not meet this criterion have their intensity that becomes zero. If no value is assigned to min and max then their values will be less the infinite and the less infinite respectively.</p>
+
+      <pre>
+                 [5, -4,  0]  [ 0,  2, 0]       [ 0, 0, 0]  [ 0, 2, 0]
+      Threshold( [0,  0,  2], [ 0, -7, 2] ) = ( [ 0, 0, 2], [ 0, 0, 2] ) avec min = 0 et max = 2
+                 [1,  1, -2]  [-3,  0, 1]       [ 1, 1, 0]  [ 0, 0, 1]
+      </pre>
+
+
+  	<h2 id="44">4.4. Procedure to apply a calculation</h2>
+  		<h3 id="441">4.4.1. Load and select a set of nifti collection</h3>
+        <p>Select one or more image collections in the home view and select the button "Calculate" to access to calculation operations.</p>
+
+        <div style="padding-left: 12%; padding-top:3%; padding-bottom:3%">
+           <div class="alert note-info" role="alert">
+           <h5 style="color:#306499;">NOTE</h5>
+           <p>Note that you need at least one collection to access the calculation view.</p>
+         </div>
         </div>
+
+      <h3 id="442">4.4.2. Select a calculation and the parameters</h3>
+        <p>For each algorithm there is a brief description of it to allow the user to know exactly what each algorithm corresponds to. For some algorithm, parameters must be entered and can be modified to allow the user to have more flexibility in the use of these.</p>
+
+        <div style="padding-left: 15%; padding-top: 1%;padding-bottom: 1%;">
+              <img src="imgs/calculation/calculationView.png" style="width:80%">
+        </div>
+
+        <p>In orange, you can algorithms that return a unique image and in pink, algorithms are applied images one after the other.</p>
+
+      <h3 id="443">4.4.3. Execute the algorithm and save it in the calculation tab</h3>
+        <p>Once the user has selected a calculation and initialized all the parameters, he can execute it using the "Calculate" button.</p>
+
+        <div style="padding-left: 15%; padding-top: 1%;padding-bottom: 1%;">
+              <img src="imgs/calculation/calculationButton.png" style="width:80%">
+        </div>
+
+        <p>If the calculation was successful, a new window appears and the message "Calculation successful" appears in the console.</p>
+
+        <div style="padding-left: 15%; padding-top: 1%;padding-bottom: 1%;">
+              <img src="imgs/calculation/calculationSuccess.png" style="width:80%">
+        </div>
+
+        <p>The new window proposes to save the result of calculation as a set. If you choose to save it as set, select the button "Save".
+        If the back-up is going well, you will have a new message such as "A new set has been created with the name :..." in the console.</p>
+
+        <div style="padding-left: 15%; padding-top: 1%;padding-bottom: 1%;">
+              <img src="imgs/calculation/calculationSaved.png" style="width:80%">
+        </div>
+
+        <p>If you return in the main view, you can see all calculation saved in the part "Calculation".</p>
+
+        <div style="padding-left: 15%; padding-top: 1%;padding-bottom: 1%;">
+              <img src="imgs/calculation/calculation.png" style="width:80%">
+        </div>
+
+
+          </div>
       </div>
     </div>
 
