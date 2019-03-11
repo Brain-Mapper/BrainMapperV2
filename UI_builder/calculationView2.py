@@ -278,6 +278,12 @@ class calculationView2(QtGui.QWidget):
                 "respectively. In image processing, closing is, together with opening, the basic workhorse of "
                 "morphological noise removal. Opening removes small objects, while closing removes small holes."
             )
+            self.textBrowser_2.setText("                [0,1,0,0,0,0,0,0]      [0,1,0,0,0,0,0,0]  \n"
+            "                [0,0,1,0,1,0,0,0]      [0,0,1,1,1,0,0,0]  \n"
+            "Closing([0,0,0,1,1,1,0,0]) = [0,0,0,1,1,1,0,0]  \n"
+            "                [0,0,1,1,1,1,1,0]      [0,0,1,1,1,1,1,0]  \n"
+            "                [0,0,0,1,1,1,0,0]      [0,0,0,1,1,1,0,0]  \n"
+            )
 
         elif item == "dilation":
             self.argument_name.setText("Number of iterations")
@@ -289,11 +295,12 @@ class calculationView2(QtGui.QWidget):
                 "complete lattices. The dilation operation usually uses a structuring element for probing and "
                 "expanding the shapes contained in the input image."
             )
-            self.textBrowser_2.setText("[0,1,0,0,0,0,0,0]  \n"
-            "[0,0,1,0,1,0,0,0]  \n"
-            "[0,0,0,1,1,1,0,0]  \n"
-            "[0,0,1,1,1,1,1,0]  \n"
-            "[0,0,0,1,1,1,0,0]  \n")
+            self.textBrowser_2.setText("                 [0,1,0,0,0,0,0,0]      [1,1,1,0,0,0,0,0]  \n"
+            "                 [0,0,1,0,1,0,0,0]      [0,1,1,1,1,1,0,0]  \n"
+            "Dilation([0,0,0,1,1,1,0,0]) = [0,0,1,1,1,1,1,0]  \n"
+            "                 [0,0,1,1,1,1,1,0]      [0,1,1,1,1,1,1,1]  \n"
+            "                 [0,0,0,1,1,1,0,0]      [0,0,1,1,1,1,1,0]  \n"
+            )
 
         elif item == "erosion":
             self.argument_name.setText("Number of iterations")
@@ -304,6 +311,12 @@ class calculationView2(QtGui.QWidget):
                 "in morphological image processing from which all other morphological operations are based. It was "
                 "originally defined for binary images, later being extended to grayscale images, and subsequently to "
                 "complete lattices."
+            )
+            self.textBrowser_2.setText("                [0,1,0,0,0,0,0,0]      [0,0,0,0,0,0,0,0]  \n"
+            "                [0,0,1,0,1,0,0,0]      [0,0,0,0,0,0,0,0]  \n"
+            "Erosion([0,0,0,1,1,1,0,0]) = [0,0,0,0,1,0,0,0]  \n"
+            "                [0,0,1,1,1,1,1,0]      [0,0,0,1,1,1,0,0]  \n"
+            "                [0,0,0,1,1,1,0,0]      [0,0,0,0,1,0,0,0]  \n"
             )
 
         elif item == "opening":
@@ -316,6 +329,12 @@ class calculationView2(QtGui.QWidget):
                 "restoring accuracy in dilation operation highly depends on the type of structuring element and the "
                 "shape of restoring objects. The opening by reconstruction method is able to restore the objects "
                 "completely after erosion applied."
+            )
+            self.textBrowser_2.setText("                  [0,1,0,0,0,0,0,0]      [0,0,0,0,0,0,0,0]  \n"
+            "                  [0,0,1,0,1,0,0,0]      [0,0,0,0,0,0,0,0]  \n"
+            "Opening([0,0,0,1,1,1,0,0]) = [0,0,0,1,1,1,0,0]  \n"
+            "                  [0,0,1,1,1,1,1,0]      [0,0,1,1,1,1,1,0]  \n"
+            "                  [0,0,0,1,1,1,0,0]      [0,0,0,1,1,1,0,0]  \n"
             )
 
         elif item == "threshold":
