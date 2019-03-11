@@ -336,6 +336,8 @@ class calculationView2(QtGui.QWidget):
             for img in collection.nifimage_dict.values():
                 img_selected.append(img)
 
+        self.console.setText("Calculation successful")
+        
         if algorithm == "addition":
             result = [BrainMapper.calcul.addition_operation(img_selected)]
             self.popUpSaveFileResultCalculation(algorithm, result)
@@ -399,6 +401,7 @@ class calculationView2(QtGui.QWidget):
             else:
                 result = BrainMapper.calcul.threshold_operation(img_selected, threshold_min, threshold_max )
                 self.popUpSaveFileResultCalculation(algorithm, result)
+
 
     def give_argument_error(self):
         QtGui.QMessageBox.warning(self, "Error", "Given argument aren't corrects.")
