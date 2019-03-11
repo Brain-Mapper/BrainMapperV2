@@ -360,7 +360,7 @@ class SetButton(QtGui.QWidget):
         if (str(text) != ""):
             try:
                 new_ok = True
-                not_ok = ['^', '[', '<', '>', ':', ';', ',', '?', '"', '*', '|', '/', ']', '+', '$']
+                not_ok = ['^', '[', '<', '>', ':', ';', ',', '?', '"', '*', '|', '/', ']', '+', '$','']
                 for i in not_ok:
                     if i in str(text):
                         new_ok = False
@@ -714,7 +714,7 @@ class MainView2(QtGui.QWidget):
         # default_name = datetime.fromtimestamp(int(round(time.time()))).strftime('--%m-%d %H-%M-%S')
         if ok:
             new_ok = True
-            not_ok = ['^', '[', '<', '>', ':', ';', ',', '?', '"', '*', '|', '/', ']', '+', '$']
+            not_ok = ['^', '[', '<', '>', ':', ';', ',', '?', '"', '*', '|', '/', ']', '+', '$','']
             for i in not_ok:
                 if i in str(text):
                     new_ok = False
@@ -913,16 +913,19 @@ class MainView2(QtGui.QWidget):
             QtGui.QMessageBox.information(self, "Selection empty", "There's no data to extract and clusterize.")
 
     def calcul(self):
-        if (get_selected()):
+        if get_selected():
             self.showCalcul.emit()
         else:
             QtGui.QMessageBox.information(self, "Selection empty", "There's no data to calculation.")
         print()
 
     def SOM(self):
-        self.list_entete = ["test1", "test2", "test3"]
-        self.list_data = ["bla1", "bla2", "bla3", "bla4", "bla5", "bla6"]
-        self.showSOM.emit()
+        if get_selected():
+            self.list_entete = ["test1", "test2", "test3"]
+            self.list_data = ["bla1", "bla2", "bla3", "bla4", "bla5", "bla6"]
+            self.showSOM.emit()
+        else:
+            QtGui.QMessageBox.information(self, "Selection empty", "There's no data to create SOM")
 
     def edit_pannel(self):
         global selected_images_collections
