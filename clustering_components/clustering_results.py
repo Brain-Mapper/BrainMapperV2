@@ -15,13 +15,12 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 
 import pyqtgraph as pg
-import pyqtgraph.opengl as gl
 
 from .clustering_plot import get_color
-from matplotlib import cm
 
 import os
 
+import BrainMapper
 
 # Inherits QTableWidget
 class ClusteringDataTable(QtGui.QTableWidget):
@@ -48,12 +47,11 @@ class ClusteringDataTable(QtGui.QTableWidget):
         Arguments :
             a_usable_dataset_instance -- see UsableData for more details
         """
-        self.clustering_usable_dataset = a_usable_dataset_instance
         self.setRowCount(a_usable_dataset_instance.get_row_num())
 
         row_count = 0
 
-        for udcoll in self.clustering_usable_dataset.get_usable_data_list():
+        for udcoll in BrainMapper.current_extracted_usable_data_list:
 
             extracted_data_dictionary = udcoll.get_extracted_data_dict()
 

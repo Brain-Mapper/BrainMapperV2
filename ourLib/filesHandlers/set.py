@@ -58,7 +58,7 @@ class Set(object):
             return self.subset_dict[name]
         else:
             print('The Subset name : %s already exist' % name)
-            return Null
+            return None
 
     def add_empty_collection(self, name, set_name):
         """

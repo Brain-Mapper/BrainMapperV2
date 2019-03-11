@@ -16,13 +16,13 @@ from ourLib.filesHandlers.nifimage import NifImage
 from ourLib.filesHandlers.imagecollection import ImageCollection
 from ourLib.filesHandlers.set import Set
 
+# noinspection PyUnresolvedReferences
+import ourLib.calculations2 as calcul
 from ourLib.dataExtraction import extractor as xt
 from ourLib.dataExtraction.usable_data import UsableDataSet as uds
 from ourLib.dataExtraction.image_recreation import image_recreation
 from ourLib import clustering
-from ourLib import calculations2 as calcul
-from ourLib.Import import excelImport as imp
-import ourLib.filesHandlers.image as csvImage
+import ourLib.filesHandlers.image as csv_image
 from ourLib.Import import workspaceImport as ws
 
 from sys import maxsize as MAX
@@ -32,13 +32,13 @@ import platform
 import time
 import json
 
-import pandas as pd
-
 # --- global variables ---
 current_collec = None  # The current collection shown in edit view
 selected_images_collections = []  # All image collections selected by the user in main page (usefull for all views that use data)
 toRM = []  # Contains all images to remove in edit view (can be used somewhere else)
-currentUsableDataset = None
+current_extracted_clusterizable_data = None
+current_extracted_usable_data_list = None
+exportedDataset = None
 
 sets = []  # List of all sets (and sub sets) created (usefull to know if a name is already used)
 globalSets = [[], [], []]
@@ -47,13 +47,12 @@ workspace_sets = []  # List of all sets (and sub sets) created by workspace impo
 clusteringsets = []  # List of sets created as a result for clustering, permit to remember wich one to create
 calculsets = []  # List of sets created as a result for calculation, permit to remember wich one to create
 currentSet = None  # The current set shown in main view
-currentVizu = None  # The current collections shown in main view
+current_vizu = None  # The current collections shown in main view
 
 collshow = []
 list_img = []
 
 # Dictionary of available clustering methods
-app_clustering_available = {}
 with open('ressources/clustering_data/clustering_algorithms_available.json', 'r') as fc:
     app_clustering_available = json.load(fc)
 
@@ -94,7 +93,8 @@ def do_image_collection(files, set_import):
     coll.set_name(name[:-1])
 
     for file in files:
-        # For french language, encode to latin1 -> to be able to take files with special characters of french in their file path
+        # For french language, encode to latin1 -> to be able to take files with special characters of french in
+        # their file path
         filename = file  # .toLatin1().data()
         image = open_nifti(filename)
         coll.add(image)
@@ -217,35 +217,38 @@ def read_n(n_clusters):
     return interval
 
 
-def run_clustering(selectedClusteringMethod, params_dict, columns_selected):
+def run_clustering(selected_clustering_method, params_dict, columns_selected):
     """
     A function to run a type of clustering algorithm, triggered by run button from interface
 
     Arguments :
-        selectedClusteringMethod{string} -- the name of the user selected clustering method
+        selected_clustering_method{string} -- the name of the user selected clustering method
         params_dict -- a dictionnary containing all necessary parameters for clustering and values given by the user
 
     Return :
         a list of clustering labels (to which cluster does one individual belong to)
     """
-    clusterizable_dataset = currentUsableDataset.export_as_clusterizable()
-    if selectedClusteringMethod in CLUSTERING_METHODS.keys():
+    clusterizable_dataset = current_extracted_clusterizable_data
+    # print("clusterizable_dataset ->", clusterizable_dataset)
 
-        result = CLUSTERING_METHODS[selectedClusteringMethod](params_dict, clusterizable_dataset, columns_selected)
+    if selected_clustering_method in CLUSTERING_METHODS.keys():
 
-        result["n"] = int(params_dict["n_clusters"]) if selectedClusteringMethod != "DBSCAN" else len(
+        result = CLUSTERING_METHODS[selected_clustering_method](params_dict, clusterizable_dataset, columns_selected)
+
+        result["n"] = int(params_dict["n_clusters"]) if selected_clustering_method != "DBSCAN" else len(
             set(clustering.filter(clusterizable_dataset, result["labels"])[1]))
         result["clusterizable_dataset"] = clusterizable_dataset
         try:
             result["silhouette_score"] = clustering.compute_mean_silhouette(clusterizable_dataset,
-                                                                        result["labels"])
+                                                                            result["labels"])
         except ValueError:
             result["silhouette_score"] = None
         try:
-            result["calinski_harabaz_score"] = clustering.compute_calinski_habaraz(clusterizable_dataset, result["labels"])
+            result["calinski_harabaz_score"] = clustering.compute_calinski_habaraz(clusterizable_dataset,
+                                                                                   result["labels"])
         except ValueError:
             result["calinski_harabaz_score"] = None
-        try :
+        try:
             result["davies_bouldin_score"] = clustering.compute_db(clusterizable_dataset, result["labels"])
         except ValueError:
             result["davies_bouldin_score"] = None
@@ -256,7 +259,7 @@ def run_clustering(selectedClusteringMethod, params_dict, columns_selected):
     return result
 
 
-def clustering_validation_indexes(labels, centroids, cluster_num):
+def clustering_validation_indexes(labels):
     """
     Calculate the mean silhouette, the calinski harabaz score and the davies bouldin score
 
@@ -268,15 +271,13 @@ def clustering_validation_indexes(labels, centroids, cluster_num):
     Return :
         validation_indexes{list}
     """
-    clustering_datamatrix = currentUsableDataset.export_as_clusterizable()
-    validation_indexes = []
-
-    # Mean silhouette
-    validation_indexes.append(clustering.compute_mean_silhouette(X=clustering_datamatrix, predicted_labels=labels))
-    # Calinski-Habaraz index
-    validation_indexes.append(clustering.compute_calinski_habaraz(X=clustering_datamatrix, predicted_labels=labels))
-    # Davies-Bouldin index
-    validation_indexes.append(clustering.compute_db(X=clustering_datamatrix, predicted_labels=labels))
+    clustering_datamatrix = current_extracted_clusterizable_data
+    try:
+        validation_indexes = [clustering.compute_mean_silhouette(X=clustering_datamatrix, predicted_labels=labels),
+                          clustering.compute_calinski_habaraz(X=clustering_datamatrix, predicted_labels=labels),
+                          clustering.compute_db(X=clustering_datamatrix, predicted_labels=labels)]
+    except ValueError:
+        validation_indexes = [None, None, None]
 
     return validation_indexes
 
@@ -288,7 +289,7 @@ def compute_sample_silhouettes(labels):
     Arguments :
         labels{list} -- clustering label
     """
-    clustering_datamatrix = currentUsableDataset.export_as_clusterizable()
+    clustering_datamatrix = current_extracted_clusterizable_data
     return clustering.compute_samples_silhouette(X=clustering_datamatrix, predicted_labels=labels)
 
 
@@ -430,7 +431,7 @@ def exists_selected(name):
         Boolean
     """
     for i in selected_images_collections:
-        if (i.name == name):
+        if i.name == name:
             return True
     return False
 
@@ -449,7 +450,7 @@ def exists_coll_in_sets(name):
     for s in sets:
         collecs = s.get_coll()
         for i in collecs.values():
-            if (i.name == name):
+            if i.name == name:
                 return True
     return False
 
@@ -502,7 +503,7 @@ def exists_set(name):
         Boolean
     """
     for i in sets:
-        if (i.name == name):
+        if i.name == name:
             return True
     return False
 
@@ -587,19 +588,19 @@ def get_current_vizu():
     Return :
         currentVizu
     """
-    global currentVizu
-    return currentVizu
+    global current_vizu
+    return current_vizu
 
 
-def set_current_vizu(collView):
+def set_current_vizu(coll_view):
     """
-    Set the current vizu with the vizu collView
+    Set the current vizu with the vizu coll_view
 
     Arguments :
-        collView
+        coll_view
     """
-    global currentVizu
-    currentVizu = collView
+    global current_vizu
+    current_vizu = coll_view
 
 
 def get_current_set():
@@ -714,7 +715,7 @@ def simple_import(csv_file_path, template_mni_path, set_import):
         coll -- the collection
     """
     # coll = imp.simple_import(csv_file_path, template_mni_path, currentSet)
-    coll = csvImage.simple_import(csv_file_path, currentSet)
+    coll = csv_image.simple_import(csv_file_path, currentSet)
     add_coll(coll)
     set_import.add_collection(coll)
     return coll
@@ -787,8 +788,8 @@ def general_workspace_import_control(folder_path):
         folder_path{string} -- path
     """
     sets_name = []
-    for set in sets:
-        sets_name.append(set.get_name())
+    for set_ in sets:
+        sets_name.append(set_.get_name())
     test = ws.recursive_import_control(folder_path, sets_name)
     return test
 
@@ -800,10 +801,10 @@ def general_workspace_save(folder_path):
     Arguments :
         folder_path{string} -- path
     """
-    for set in sets:
-        print("SET",set)
-        if set.getParent() is None:
-            recursive_workspace_save(folder_path, set)
+    for set_ in sets:
+        print("SET", set_)
+        if set_.getParent() is None:
+            recursive_workspace_save(folder_path, set_)
 
 
 def recursive_workspace_save(folder_path, usable_set):

@@ -7,7 +7,6 @@
 # WARNING! All changes made in this file will be lost!
 from PyQt4 import QtGui
 from PyQt4.Qt import *
-from PyQt4.QtCore import pyqtSignal,QCoreApplication
 from PyQt4 import QtCore
 from PyQt4.QtCore import pyqtSignal
 
@@ -18,13 +17,8 @@ from BrainMapper import *
 import clustering_components.clustering_plot as clustering_plot
 from ourLib.dataExtraction.extractor import *
 from ourLib.dataExtraction.usable_data import *
-from ourLib.calculations import *
+from deprecated_files.calculations import *
 
-import pyqtgraph as pg
-import pyqtgraph.opengl as gl
-
-import UI_builder.resources
-import re
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:

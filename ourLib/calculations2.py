@@ -133,19 +133,19 @@ def image_operation(list_of_images, iterations_number: int, operation):
 
 
 def erosion_operation(list_of_images, iterations_number):
-    image_operation(list_of_images, iterations_number, ndimage.binary_erosion)
+    return image_operation(list_of_images, iterations_number, ndimage.binary_erosion)
 
 
 def dilation_operation(list_of_images, iterations_number):
-    image_operation(list_of_images, iterations_number, ndimage.binary_dilation)
+    return image_operation(list_of_images, iterations_number, ndimage.binary_dilation)
 
 
 def opening_operation(list_of_images, iterations_number):
-    image_operation(list_of_images, iterations_number, ndimage.binary_erosion)
+    return image_operation(list_of_images, iterations_number, ndimage.binary_erosion)
 
 
 def closing_operation(list_of_images, iterations_number):
-    image_operation(list_of_images, iterations_number, ndimage.binary_closing)
+    return image_operation(list_of_images, iterations_number, ndimage.binary_closing)
 
 
 def image_operation_from_str(list_of_images: list, iterations_number: int, operation: str):

@@ -23,6 +23,8 @@ import random
 import math
 import skfuzzy as fuzz
 
+RANDMAX = 2**32 - 1
+
 COLUMNS_INDEX = {
     'X': 0,
     'Y': 1,
@@ -37,7 +39,7 @@ def format_ndarray(points, columns_selected) -> np.ndarray:
 
 def perform_kmeans(param_dict, points, columns_selected):
     points_formatted = format_ndarray(points, columns_selected)
-    clustering = KMeans(n_clusters=int(param_dict["n_clusters"]), random_state=None,
+    clustering = KMeans(n_clusters=int(param_dict["n_clusters"]), random_state=random.randint(0, RANDMAX),
                         init=param_dict["init"],
                         max_iter=int(param_dict["max_iter"])).fit(points_formatted)
 

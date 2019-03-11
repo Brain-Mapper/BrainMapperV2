@@ -818,7 +818,7 @@ class MainView2(QtGui.QWidget):
                             for key in image_collection.nifimage_dict.keys():
                                 list_of_images.append(image_collection.nifimage_dict[key])
                         # make an addition of all the image
-                        result_matrix = calculations.addition_opperation(list_of_images)
+                        result_matrix = calculations.addition_operation(list_of_images)
                         # get the result in an nibabel image with an mni affine
                         img: nibabel.nifti1.Nifti1Image = calculations.create_mni_nibabel_image_from_matrix(result_matrix)
                         # save the image
