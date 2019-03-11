@@ -20,6 +20,7 @@ from clustering_components.clustering_topbar import *
 from clustering_components.clustering_plot import get_color
 import clustering_components.clustering_plot as clustering_plot
 import BrainMapper
+from typing import List
 
 from copy import deepcopy
 
@@ -77,9 +78,12 @@ class ClusteringView2(QtGui.QWidget):
 
         self.results_popup = ClusteringResultsPopUp(':ressources/logo.png', ':ressources/app_icons_png/file-1.png')
 
-        self.label = None
-        self.centroids = None
+        self.label: List[int] = None
+        self.centroids: List[List[float]] = None
         self.belong = None
+        self.columns_selected: List[str] = None
+        self.number_of_points: int = None
+
 
         title_style = "QLabel { background-color : #ffcc33 ; color : black;  font-style : bold; font-size : 14px;}"
 
@@ -93,7 +97,7 @@ class ClusteringView2(QtGui.QWidget):
 
         self.tableWidget.setRowCount(usable_dataset_instance.get_row_num())
 
-        row_count = 0
+        self.number_of_points = 0
 
         for udcoll in BrainMapper.current_extracted_usable_data_list:
 
@@ -102,18 +106,18 @@ class ClusteringView2(QtGui.QWidget):
             for origin_file in extracted_data_dictionary.keys():
                 data_array = extracted_data_dictionary[origin_file]
                 for data_rows in range(0, data_array.shape[0]):
-                    self.tableWidget.setItem(row_count, 0, QtGui.QTableWidgetItem(udcoll.get_imgcoll_name()))
-                    self.tableWidget.setItem(row_count, 1, QtGui.QTableWidgetItem(str(origin_file.filename)))
-                    self.tableWidget.setItem(row_count, 2, QTableNumericWidgetItem(
+                    self.tableWidget.setItem(self.number_of_points, 0, QtGui.QTableWidgetItem(udcoll.get_imgcoll_name()))
+                    self.tableWidget.setItem(self.number_of_points, 1, QtGui.QTableWidgetItem(str(origin_file.filename)))
+                    self.tableWidget.setItem(self.number_of_points, 2, QTableNumericWidgetItem(
                         data_array[data_rows, 0]))  # X coordinate at column 0
-                    self.tableWidget.setItem(row_count, 3, QTableNumericWidgetItem(
+                    self.tableWidget.setItem(self.number_of_points, 3, QTableNumericWidgetItem(
                         data_array[data_rows, 1]))  # Y coordinate at column 1
-                    self.tableWidget.setItem(row_count, 4, QTableNumericWidgetItem(
+                    self.tableWidget.setItem(self.number_of_points, 4, QTableNumericWidgetItem(
                         data_array[data_rows, 2]))  # Z coordinate at column 2
-                    self.tableWidget.setItem(row_count, 5, QTableNumericWidgetItem(
+                    self.tableWidget.setItem(self.number_of_points, 5, QTableNumericWidgetItem(
                         data_array[data_rows, 3]))  # Intensity at column 3
-                    self.tableWidget.setItem(row_count, 6, QtGui.QTableWidgetItem("None yet"))
-                    row_count = row_count + 1
+                    self.tableWidget.setItem(self.number_of_points, 6, QtGui.QTableWidgetItem("None yet"))
+                    self.number_of_points = self.number_of_points + 1
 
     def fill_clust_labels(self, assigned_labels_array, tableWidget):
         """
@@ -138,6 +142,8 @@ class ClusteringView2(QtGui.QWidget):
 
         for param_name in user_values.keys():
             self.info_panel.insertPlainText(param_name + "\t\t\t " + str(user_values[param_name]) + "\n")
+
+        self.info_panel.insertPlainText(f"columns selected : {self.columns_selected}")
 
         # Search of the number of cluster
         if clustering_method != "DBSCAN":
@@ -285,7 +291,7 @@ class ClusteringView2(QtGui.QWidget):
 
     def runSelectedClust(self, selectedMethod, param_dict):
 
-        columns_selected = []
+        self.columns_selected = []
         columns = self.tableWidget.selectedItems()
         rownumber = self.tableWidget.rowCount()
         columns_index = {
@@ -296,18 +302,17 @@ class ClusteringView2(QtGui.QWidget):
         if len(columns) != 0:
             for i in range(0, len(columns), rownumber):
                 if columns[i].column() in columns_index.keys():
-                    columns_selected.append(columns_index[columns[i].column()])
+                    self.columns_selected.append(columns_index[columns[i].column()])
         else:
-            columns_selected = ['X', 'Y', 'Z']
+            self.columns_selected = ['X', 'Y', 'Z']
 
         if selectedMethod == "DBSCAN":
-            clustering_results = run_clustering(selectedMethod, param_dict, columns_selected)
+            clustering_results = run_clustering(selectedMethod, param_dict, self.columns_selected)
             self.n_selected = "DBSCAN"
             param_dict["score"] = "DBSCAN"
             self.scores = []
         else:
             i_iter = int(param_dict["i_iter"])
-            print(f"selected columns : {columns_selected}")
             self.history_iterations = []
 
             self.the_best_iteration = {
@@ -325,6 +330,13 @@ class ClusteringView2(QtGui.QWidget):
 
             range_of_cluster = read_n(param_dict["n_clusters"])
 
+            if range_of_cluster[1] > self.number_of_points:
+                QtGui.QMessageBox.information(self, "Number of clusters to high",
+                                              f"You asked for {range_of_cluster[1]} clusters but there is only "
+                                              f"{self.number_of_points}"
+                                              f"points.")
+                return
+
             for n in range(range_of_cluster[0], range_of_cluster[1] + 1):
                 for i in range(i_iter):
                     self.history_iterations.append({})
@@ -332,7 +344,14 @@ class ClusteringView2(QtGui.QWidget):
 
                     copy_param_dict = deepcopy(param_dict)
                     copy_param_dict["n_clusters"] = n
-                    clustering_results = run_clustering(selectedMethod, copy_param_dict, columns_selected)
+
+                    clustering_results = run_clustering(selectedMethod, copy_param_dict, self.columns_selected)
+
+                    if n < len(set(clustering_results["labels"])):
+                        QtGui.QMessageBox.information(self, "Less clusters founded",
+                                                      f"You asked for {n} clusters but the algorithm has stabilised at"
+                                                      f"{len(set(clustering_results['labels']))}"
+                                                      f"clusters.")
 
                     score_keys = {
                         "Mean silhouette": "silhouette_score",
