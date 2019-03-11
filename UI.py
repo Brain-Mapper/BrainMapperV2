@@ -202,7 +202,7 @@ class HomePage(QWidget):
 class UI(QtGui.QMainWindow):
     # ---------- Box Layout Set up with Widgets ---------
     # Since we cannot change the layout of a QtMainWindow, we will use a CENTRAL WIDGET (var homepage)
-    # This central widget is an instance of HomePage class here above, and represents a stack of widgets
+    # This central widget is an instance of HomePage class here above, and represents a stack of widgetsworkspace
     # This stack contains several custom widgets from and to we will change as the users clicks on buttons
 
     def __init__(self):
@@ -308,6 +308,7 @@ class UI(QtGui.QMainWindow):
     def fromWorkspace(self):
         folder_path = str(QFileDialog.getExistingDirectory())
         test = general_workspace_import_control(folder_path)
+        print('passage')
         temp = []
         # print test
         if test is None:
