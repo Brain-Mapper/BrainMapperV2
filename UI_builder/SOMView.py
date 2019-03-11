@@ -13,6 +13,7 @@ import pyqtgraph as pg
 import pyqtgraph.opengl as gl
 from PyQt4.Qt import QFileDialog
 from PyQt4.QtCore import Qt, QRect, pyqtSignal, QSize
+from BrainMapper import *
 
 import math
 import tkinter
@@ -65,10 +66,9 @@ class SOMView(QtGui.QWidget):
         self.setupUi(self)
 
 
-    def fill_table(self,list_entete,list_data):
-        print("bjr")
-        self.list_entete = list_entete
-        self.list_data = list_data
+    def fill_table(self,result_som):
+        print(result_som)
+        self.result_som=result_som
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("MS Shell Dlg 2"))
         font.setPointSize(8)
