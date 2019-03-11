@@ -254,8 +254,8 @@ class CollectionAccessButton(QtGui.QWidget):
         if choice == QtGui.QMessageBox.Yes:
             set_current_coll(coll)
             delete_current_coll()
-            self.parent.label_10.setText("")
-            self.parent.pushButton_4.setEnabled(False)
+            #self.parent.label_10.setText("")
+            #self.parent.pushButton_4.setEnabled(False)
             for i in reversed(range(self.parent.verticalLayout_3.count())):
                 self.parent.verticalLayout_3.itemAt(i).widget().setParent(None)
             for i in reversed(range(self.parent.verticalLayout_4.count())):

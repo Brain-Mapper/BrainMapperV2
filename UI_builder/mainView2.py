@@ -293,7 +293,7 @@ class SetButton(QtGui.QWidget):
                if self.treeWidget.itemWidget(it.value(), 0).check.isChecked():
                 trouve = True
             it += 1
-        print(pos)
+        #print(pos)
         if trouve == False:
             if pos == 0:
                 self.checkimported.setChecked(False)
@@ -679,7 +679,7 @@ class MainView2(QtGui.QWidget):
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def checkselected(self):
-        print(self.verticalLayout_image_collections_show.rowCount())
+        #print(self.verticalLayout_image_collections_show.rowCount())
         for i in range(0, self.verticalLayout_image_collections_show.rowCount()-1):
             self.verticalLayout_image_collections_show.itemAt(i).widget().setChecked(self.checkBox.isChecked())
 
@@ -753,20 +753,49 @@ class MainView2(QtGui.QWidget):
     def updateColumn(self):
         global selected_images_collections
         global collshow
-        for i in reversed(range(self.verticalLayout_image_collections_show.count())):
-            label = "Set name : " + str(
-                self.verticalLayout_image_collections_show.itemAt(i).widget().setname) + "\nName : " + str(
-                self.verticalLayout_image_collections_show.itemAt(i).widget().coll.name) + "\nNIfTI : " + str(
-                len(self.verticalLayout_image_collections_show.itemAt(i).widget().list)) + "\nLast modified : " + str(
-                self.verticalLayout_image_collections_show.itemAt(i).widget().d)
-            self.verticalLayout_image_collections_show.itemAt(i).widget().setText(label)
-            self.verticalLayout_image_collections_show.itemAt(i).widget().setChecked(False)
+        # for i in reversed(range(self.verticalLayout_image_collections_show.count())):
+        #     label = "Set name : " + str(
+        #         self.verticalLayout_image_collections_show.itemAt(i).widget().setname) + "\nName : " + str(
+        #         self.verticalLayout_image_collections_show.itemAt(i).widget().coll.name) + "\nNIfTI : " + str(
+        #         len(self.verticalLayout_image_collections_show.itemAt(i).widget().list)) + "\nLast modified : " + str(
+        #         self.verticalLayout_image_collections_show.itemAt(i).widget().d)
+        #     self.verticalLayout_image_collections_show.itemAt(i).widget().setText(label)
+        #     self.verticalLayout_image_collections_show.itemAt(i).widget().setChecked(False)
         for i in reversed(range(self.verticalLayout_widget_selected_view.count())):
             self.verticalLayout_widget_selected_view.itemAt(i).widget().setParent(None)
+
+        for i in reversed(range(self.verticalLayout_image_collections_show.count())):
+            self.verticalLayout_image_collections_show.itemAt(i).widget().setParent(None)
+
+        imported = self.treeWidget.topLevelItem(0)
+        clustering = self.treeWidget.topLevelItem(2)
+        calculation = self.treeWidget.topLevelItem(1)
+        
+        it = QTreeWidgetItemIterator(self.treeWidget.topLevelItem(0))
+        while it.value():
+            if it.value().parent() is not None and it.value().parent() == imported:
+                self.treeWidget.itemWidget(it.value(), 0).check.setChecked(not(self.treeWidget.itemWidget(it.value(), 0).check.isChecked()))
+                self.treeWidget.itemWidget(it.value(), 0).check.setChecked(not(self.treeWidget.itemWidget(it.value(), 0).check.isChecked()))
+            it += 1
+        
+        it = QTreeWidgetItemIterator(self.treeWidget.topLevelItem(2))
+        while it.value():
+            if it.value().parent() is not None and it.value().parent() == clustering:
+                self.treeWidget.itemWidget(it.value(), 0).check.setChecked(not(self.treeWidget.itemWidget(it.value(), 0).check.isChecked()))
+                self.treeWidget.itemWidget(it.value(), 0).check.setChecked(not(self.treeWidget.itemWidget(it.value(), 0).check.isChecked()))
+            it += 1
+        
+        it = QTreeWidgetItemIterator(self.treeWidget.topLevelItem(1))
+        while it.value():
+            if it.value().parent() is not None and it.value().parent() == calculation:
+                self.treeWidget.itemWidget(it.value(), 0).check.setChecked(not(self.treeWidget.itemWidget(it.value(), 0).check.isChecked()))
+                self.treeWidget.itemWidget(it.value(), 0).check.setChecked(not(self.treeWidget.itemWidget(it.value(), 0).check.isChecked()))
+            it += 1
+
         # del selected[:]
         del collshow[:]
-        self.checkBox.setChecked(False)
-        print("cc")
+        #self.checkBox.setChecked(False)
+        #print(label)
 
     def show_coll(self, coll):
         # -- This show_coll will add a collection to the current vizu
