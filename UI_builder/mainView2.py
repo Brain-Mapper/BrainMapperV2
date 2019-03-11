@@ -409,12 +409,13 @@ class SetButton(QtGui.QWidget):
             position = self.my_set.getPosition()
             #print("position", position)
             p = self.treeWidget.topLevelItem(position[0])
+            print("pos",position)
             position.pop(0)
             for i in range(len(position) - 1):
                 p = p.child(position[i])
             p.removeChild(p.child(position[-1]))
 
-            
+            print("globalSets 0", globalSets[0])
             for d in self.my_set.get_all_nifti_set_and_subset():
                 if d in selected_images_collections:
                     selected_images_collections.remove(d)
@@ -431,15 +432,20 @@ class SetButton(QtGui.QWidget):
             else:
                 globalSets[0].remove(self.my_set)
                 for s in globalSets[0]:
-                    s.position -= 1
+                    if s.position != 0:
+                        s.position -= 1
             sets.remove(self.my_set)
 
+            print("globalSets 0 after", globalSets[0])
+
             # lorsqu'on supprimer un set il faut changer l'affichage graphique
+
             for i in reversed(range(self.image_zone.count())):
                 for elem in listes:
                     if self.image_zone.itemAt(i)!= None:
                         if self.image_zone.itemAt(i).widget().coll.name == elem.get_name():
                             self.image_zone.itemAt(i).widget().setParent(None)
+
             for i in reversed(range(self.selected_zone.count())):
                 for elem in listes:
                     if self.image_zone.itemAt(i)!= None:
