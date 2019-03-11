@@ -141,7 +141,7 @@ def dilation_operation(list_of_images, iterations_number):
 
 
 def opening_operation(list_of_images, iterations_number):
-    return image_operation(list_of_images, iterations_number, ndimage.binary_erosion)
+    return image_operation(list_of_images, iterations_number, ndimage.binary_opening)
 
 
 def closing_operation(list_of_images, iterations_number):
