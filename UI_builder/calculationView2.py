@@ -138,6 +138,7 @@ class calculationView2(QtGui.QWidget):
         self.verticalLayout_5.addWidget(self.label_4)
         self.textBrowser_2 = QtGui.QTextBrowser(self.widget_3)
         self.textBrowser_2.setObjectName(_fromUtf8("textBrowser_2"))
+        self.textBrowser_2.setMinimumSize(QtCore.QSize(0, 100))
         self.verticalLayout_5.addWidget(self.textBrowser_2)
         self.verticalLayout_6.addWidget(self.widget_3)
         self.horizontalLayout.addLayout(self.verticalLayout_6)
@@ -458,7 +459,7 @@ class calculationView2(QtGui.QWidget):
         wantToSave = choice.exec_()
         if wantToSave == QtGui.QMessageBox.Save:
             setCalculation = BrainMapper.Set("calc_", 1)
-            setCalculation.set_name("calc_" + algorithm + "_" + str(id(setCalculation)))
+            setCalculation.set_name("calc_" + algorithm + "_" + str(id(setCalculation))[:5])
             coll = BrainMapper.ImageCollection("coll_", setCalculation)
             coll.set_name("coll_" + algorithm + "_" + str(id(coll)))
             for matrixData in result:
@@ -471,3 +472,4 @@ class calculationView2(QtGui.QWidget):
                 coll.add(ni_image)
             setCalculation.add_collection(coll)
             BrainMapper.makeCalculResultSet(setCalculation)
+            self.console.setText(self.console.toPlainText()+"\n \nA new set as been created with the name: %s" %(setCalculation.get_name()) )
