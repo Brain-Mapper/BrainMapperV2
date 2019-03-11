@@ -432,7 +432,7 @@ class SetButton(QtGui.QWidget):
             else:
                 globalSets[0].remove(self.my_set)
                 for s in globalSets[0]:
-                    if s.position != 0:
+                    if s.position > self.my_set.position:
                         s.position -= 1
             sets.remove(self.my_set)
 
