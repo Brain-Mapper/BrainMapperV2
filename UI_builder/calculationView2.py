@@ -246,26 +246,26 @@ class calculationView2(QtGui.QWidget):
             self.set_arguments_editable(False)
             self.textBrowser.setText(
                 "Result: a unique image\n"
-                "Realize the boolean intersection of the images in input. Each voxel with an intensity strictly "
-                "superior to 0 is considered true. The result is a unique image with intersected voxels with an "
-                "intensity of 1. "
+                "Realize the boolean intersection of the images in input. For each voxel in an image, if the intensity"
+                "is superior to 0, this voxel is considered as true. The result is a unique image where each voxel"
+                "is the intersection of voxels from the input images. "
             )
-            self.textBrowser_2.setText("[5, 0, 0]           [2, 0, 2]     [1, 0, 0]\n"
-            "[0, 3, 0] AND [0, 0, 0] = [0, 0, 0]\n"
-            "[0, 0, 4]           [1, 0, 1]     [0, 0, 1]")
+            self.textBrowser_2.setText("[5, 0, 0]        [2, 0, 2]     [ True, False, False]        [ True, False, True]      [ 1, 0, 0]\n"
+            "[0, 3, 0] OR [0, 0, 0] = [ False, True, False] OR [ False, False, False] = [ 0, 0, 0]\n"
+            "[0, 0, 4]        [1, 0, 1]     [ False, False, True]        [ True, False, True]      [ 0, 0, 1]")
 
         elif item == "or":
             self.argument_name.setText("No argument")
             self.set_arguments_editable(False)
             self.textBrowser.setText(
                 "Result: a unique image\n"
-                "Realize the boolean union of the images in input. Each voxel with an intensity strictly "
-                "superior to 0 is considered true. The result is a unique image with voxels at the union with an "
-                "intensity of 1."
+                "Realize the boolean union of the images in input. For each voxel in an image, if the intensity"
+                "is superior to 0, this voxel is considered as true. The result is a unique image where each voxel"
+                "is the union of voxels from the input images."
             )
-            self.textBrowser_2.setText("[5, 0, 0]        [2, 0, 2]     [1, 0, 1]\n"
-            "[0, 3, 0] OR [0, 0, 0] = [0, 1, 0]\n"
-            "[0, 0, 4]        [1, 0, 1]     [1, 0, 1]")
+            self.textBrowser_2.setText("[5, 0, 0]        [2, 0, 2]     [ True, False, False]        [ True, False, True]      [ 1, 0, 1]\n"
+            "[0, 3, 0] OR [0, 0, 0] = [ False, True, False] OR [ False, False, False] = [ 0, 1, 0]\n"
+            "[0, 0, 4]        [1, 0, 1]     [ False, False, True]        [ True, False, True]      [ 1, 0, 1]")
 
         elif item == "closing":
             self.argument_name.setText("Number of iterations")
@@ -288,6 +288,11 @@ class calculationView2(QtGui.QWidget):
                 "complete lattices. The dilation operation usually uses a structuring element for probing and "
                 "expanding the shapes contained in the input image."
             )
+            self.textBrowser_2.setText("[0,1,0,0,0,0,0,0]  \n"
+            "[0,0,1,0,1,0,0,0]  \n"
+            "[0,0,0,1,1,1,0,0]  \n"
+            "[0,0,1,1,1,1,1,0]  \n"
+            "[0,0,0,1,1,1,0,0]  \n")
 
         elif item == "erosion":
             self.argument_name.setText("Number of iterations")
@@ -337,7 +342,7 @@ class calculationView2(QtGui.QWidget):
                 img_selected.append(img)
 
         self.console.setText("Calculation successful")
-        
+
         if algorithm == "addition":
             result = [BrainMapper.calcul.addition_operation(img_selected)]
             self.popUpSaveFileResultCalculation(algorithm, result)
