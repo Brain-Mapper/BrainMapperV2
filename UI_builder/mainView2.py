@@ -960,12 +960,20 @@ class MainView2(QtGui.QWidget):
         print()
 
     def SOM(self):
-        if get_selected():
-            self.list_entete = ["test1", "test2", "test3"]
-            self.list_data = ["bla1", "bla2", "bla3", "bla4", "bla5", "bla6"]
-            self.showSOM.emit()
-        else:
-            QtGui.QMessageBox.information(self, "Selection empty", "There's no data to create SOM")
+            liste_col=get_selected()
+            list_img=[]
+            for col in liste_col:
+                for img in col.get_img_list().values():
+                    print(type(img)) #ourLib.filesHandlers.nifimage.NifImage
+                    if not(isinstance(img,NifImage)):
+                        list_img.append(img)
+            #print("list_img",list_img)
+            if len(list_img)>0:
+                self.list_entete = ["test1", "test2", "test3"]
+                self.list_data = ["bla1", "bla2", "bla3", "bla4", "bla5", "bla6"]
+                self.showSOM.emit()
+            else:
+                QtGui.QMessageBox.information(self, "Wrong data", "There's no correct data to create SOM")
 
     def edit_pannel(self):
         global selected_images_collections
