@@ -790,6 +790,7 @@ def general_workspace_import_control(folder_path):
     sets_name = []
     for set_ in sets:
         sets_name.append(set_.get_name())
+    print("setsname",sets_name)
     test = ws.recursive_import_control(folder_path, sets_name)
     return test
 

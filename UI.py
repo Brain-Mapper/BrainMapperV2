@@ -159,7 +159,7 @@ class HomePage(QWidget):
         self.stack.setCurrentWidget(self.mainview)
 
     def updateSOMView(self):
-        self.SOM.fill_table(self.mainview.list_entete, self.mainview.list_data)
+        self.SOM.fill_table(self.mainview.result_som)
         self.stack.setCurrentWidget(self.SOM)
 
     def updateClusteringView(self):
@@ -202,7 +202,7 @@ class HomePage(QWidget):
 class UI(QtGui.QMainWindow):
     # ---------- Box Layout Set up with Widgets ---------
     # Since we cannot change the layout of a QtMainWindow, we will use a CENTRAL WIDGET (var homepage)
-    # This central widget is an instance of HomePage class here above, and represents a stack of widgets
+    # This central widget is an instance of HomePage class here above, and represents a stack of widgetsworkspace
     # This stack contains several custom widgets from and to we will change as the users clicks on buttons
 
     def __init__(self):
@@ -308,17 +308,19 @@ class UI(QtGui.QMainWindow):
     def fromWorkspace(self):
         folder_path = str(QFileDialog.getExistingDirectory())
         test = general_workspace_import_control(folder_path)
+        print('passage')
         temp = []
         # print test
         if test is None:
             general_workspace_import(folder_path)
-            for key in get_workspace_set():
-                if not key in temp:
-                    homepage.mainview.show_set(key)
-                    temp.append(key)
-                    for i in key.get_all_subsets_subsubsets():
-                        temp.append(i)
-            rm_all_workspace_set()
+        #     print("workset",get_workspace_set())
+        #     for key in get_workspace_set():
+        #         if not key in temp:
+        #             homepage.mainview.show_set(key)
+        #             temp.append(key)
+        #             for i in key.get_all_subsets_subsubsets():
+        #                 temp.append(i)
+        #     rm_all_workspace_set()
         else:
             err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. " + test)
 
