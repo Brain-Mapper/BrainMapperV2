@@ -20,6 +20,7 @@ sys.path.append(path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
 from BrainMapper import *
 import UI_builder.resources
 import ourLib.ExcelExport.excelExport as ee
+import ourLib.filesHandlers.image as im
 import time
 from ourLib.dataExtraction.image_recreation import *
 
@@ -967,10 +968,8 @@ class MainView2(QtGui.QWidget):
                     print(type(img)) #ourLib.filesHandlers.nifimage.NifImage
                     if not(isinstance(img,NifImage)):
                         list_img.append(img)
-            #print("list_img",list_img)
             if len(list_img)>0:
-                self.list_entete = ["test1", "test2", "test3"]
-                self.list_data = ["bla1", "bla2", "bla3", "bla4", "bla5", "bla6"]
+                self.result_som=im.som_preparation(list_img)
                 self.showSOM.emit()
             else:
                 QtGui.QMessageBox.information(self, "Wrong data", "There's no correct data to create SOM")
@@ -985,14 +984,6 @@ class MainView2(QtGui.QWidget):
             self.showEdit.emit()
         else:
             QtGui.QMessageBox.information(self, "Selection empty", "There's no data to edit.")
-
-    def show_set(self, new_set):
-        # -- This show_set will add the new_set to the setAccessBox and display the current vizu that changed in the process
-        set_current_set(new_set)
-        self.treeWidget.addChild(QTreeWidgetItem(new_set))
-        set_current_set(new_set)
-        self.setAccessBox.add(new_set)
-        self.updateVizu(get_current_vizu())
 
     # def update(self):
     #     # -- This update will call the update function of collectionsDisplayBox
