@@ -50,7 +50,7 @@ class Buttonpath(QtGui.QWidget):
         hbox = QtGui.QHBoxLayout()
 
         self.buttonp= QtGui.QPushButton("   "+filna)
-        self.buttonp.clicked.connect(lambda: self.actionpath(filna,parent))
+        #self.buttonp.clicked.connect(lambda: self.actionpath(filna,parent))
         hbox.addWidget(self.buttonp)
 
         ShowButtoncoll = QtGui.QPushButton()
@@ -146,11 +146,11 @@ class Buttonpath(QtGui.QWidget):
             print("test")
 
 
-    def actionpath(self,filna,parent):
-        self.parent=parent
-        self.parent.label_10.setText(filna)
-        #self.parent.pushButton_3.setEnabled(True)
-        self.parent.pushButton_4.setEnabled(True)
+    # def actionpath(self,filna,parent):
+    #     self.parent=parent
+    #     self.parent.label_10.setText(filna)
+    #     self.parent.pushButton_3.setEnabled(True)
+    #     self.parent.pushButton_4.setEnabled(True)
 
 
 class CollectionAccessButton(QtGui.QWidget):
