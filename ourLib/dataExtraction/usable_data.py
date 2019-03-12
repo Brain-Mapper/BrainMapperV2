@@ -19,6 +19,7 @@ import sys
 import numpy as np
 from numpy import zeros
 from nibabel import Nifti1Image, load
+#from BrainMapper import globalSets
 
 if __package__ is None:
     sys.path.append(sys.path.dirname(sys.path.dirname(sys.path.abspath(__file__))))
@@ -29,6 +30,7 @@ else:
     from ..filesHandlers.nifimage import NifImage
     from ..filesHandlers.imagecollection import ImageCollection
     from ..filesHandlers.set import Set
+
 
 
 class UsableDataCollection(object):
@@ -134,8 +136,8 @@ class UsableDataSet(object):
 
         return clusterizable
 
-    def extract_set_images_by_cluster(self, label, template_mni_path):
-        new_set = Set("Clust", 2)
+    def extract_set_images_by_cluster(self, label, template_mni_path, globalSets):
+        new_set = Set("Clust", 2, [len(globalSets[2])] )
         setName = str(new_set).split("0x")
         setName = setName[1]
         setName = "Clust" + setName[:-1]
