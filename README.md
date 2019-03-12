@@ -3,6 +3,9 @@
 Nous conseillons l'utilisations d'environnement python via [virtualenv](https://virtualenv.pypa.io/en/latest/) ou  [venv](https://docs.python.org/3/library/venv.html)
 
 ## Installer qt pour python3
+## MacOS
+See the installation folder
+
 ### Linux
 
 ```bash
