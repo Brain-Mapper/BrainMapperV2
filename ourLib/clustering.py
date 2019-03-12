@@ -50,7 +50,7 @@ def perform_kmeans(param_dict, points, columns_selected):
     if len(columns_selected[0]) != 3:
         # Create a new centroids list
         centers = []
-        for _ in unique_labels:
+        for _ in range(param_dict["n_clusters"]):
             centers.append([0, 0, 0])
         # We addition all the coordinates in the centroids
         for point_index, label in enumerate(clustering.labels_):
