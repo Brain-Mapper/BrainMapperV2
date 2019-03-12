@@ -156,7 +156,7 @@ class ClusteringView2(QtGui.QWidget):
             length = range_of_cluster[1] - range_of_cluster[0] + 1
             if scores is not None:
                 self.info_panel.insertPlainText(
-                    "Different " + type_score + "scores for each value of clusters "
+                    "Different " + type_score + " scores for each value of clusters "
                                                 "number\n"
                                                 "-----------------------------------------------------------------------------\n")
                 self.info_panel.insertPlainText("n \t\t scores \n\n")
