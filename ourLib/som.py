@@ -105,9 +105,9 @@ for j in range (GRID_WIDTH):
 		if value in data_neuron_index :
 			index = data_neuron_index.index(value)
 			param = last_column[index][0]
-			if param == 1 :
+			if param == 1:
 				color = "#ff5f00"
-			else :
+			else:
 				color = "#000000"
 		#Cas où pas de neurones
 		temp.append(Terrain.create_rectangle(i*HEIGHT,j*WIDTH,(i+1)*HEIGHT,(j+1)*WIDTH,fill=color))

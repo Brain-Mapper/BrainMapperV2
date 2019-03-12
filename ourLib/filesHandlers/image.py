@@ -100,11 +100,11 @@ def som_preparation(img_list: List[Image]) -> pd.DataFrame:
         columns = list(columns)
 
         # Concatenate the data in one file
-        selected: pd.DataFrame = pd.concat([img.get_dataframe()[columns] for img in img_list])
+        selected: pd.DataFrame = pd.concat([img.get_dataframe()[columns] for img in img_list], ignore_index=True)
 
         # We don't want to obtains dummies on X,Y et Z
         columns.remove("X")
         columns.remove("Y")
         columns.remove("Z")
 
-        return pd.get_dummies(selected, columns=columns)
+        return pd.get_dummies(selected, columns=columns, prefix_sep="=")

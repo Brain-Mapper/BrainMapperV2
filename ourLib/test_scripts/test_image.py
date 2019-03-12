@@ -9,6 +9,7 @@ class MyTestCase(unittest.TestCase):
         print(f"columns b : {b.columns}")
         prepared = som_preparation([a, b])
         print(f"columns prepared : {prepared.columns}")
+        assert (len(prepared) == len(a.get_dataframe()) + len(b.get_dataframe()))
 
 if __name__ == '__main__':
     unittest.main()
