@@ -677,6 +677,7 @@ def makeClusterResultSet(a_usable_dataset, label):
     """
     new_set = uds.extract_set_images_by_cluster(a_usable_dataset, label,
                                                 'ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii')
+    #globalSets[2].append(new_set) 
     add_set(new_set)
     clusteringsets.append(new_set)
     setToAdd.append([new_set, 2])
@@ -790,7 +791,6 @@ def general_workspace_import_control(folder_path):
     sets_name = []
     for set_ in sets:
         sets_name.append(set_.get_name())
-    print("setsname",sets_name)
     test = ws.recursive_import_control(folder_path, sets_name)
     return test
 

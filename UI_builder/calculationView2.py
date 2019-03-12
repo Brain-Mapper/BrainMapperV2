@@ -491,4 +491,4 @@ class calculationView2(QtGui.QWidget):
                 coll.add(ni_image)
             setCalculation.add_collection(coll)
             BrainMapper.makeCalculResultSet(setCalculation)
-            self.console.setText(self.console.toPlainText()+"\n \nA new set as been created with the name: %s" %(setCalculation.get_name()) )
+            self.console.setText(self.console.toPlainText()+"\n \nA new set has been created with the name: %s" %(setCalculation.get_name()) )
