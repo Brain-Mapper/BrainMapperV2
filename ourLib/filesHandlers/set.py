@@ -22,7 +22,7 @@ import os
 class Set(object):
     """ A custom structure to contain several image collections """
 
-    def __init__(self, name, position):
+    def __init__(self, name, position, position_arbre):
         """
         Constructor of the Set Class.
 
@@ -40,9 +40,10 @@ class Set(object):
         self.collection_dict = dict()
         self.parent = None
         self.position = position
+        self.position_arbre = position_arbre
 
-    def add_empty_subset(self, name):
-        """
+    def add_empty_subset(self, name, position_arbre):
+        """ 
         Method to create a empty subset into the Set.
         Control if the name doesn't exist in subset_dict.
 
@@ -50,8 +51,7 @@ class Set(object):
             name{string} -- name of the new subset.
         """
         if name not in self.subset_dict.keys():
-            p = self.number_of_subset()
-            self.subset_dict[name] = Set(name,p)
+            self.subset_dict[name] = Set(name,0,position_arbre)
             print("t")
             self.subset_dict[name].setParent(self)
             print("t1")
