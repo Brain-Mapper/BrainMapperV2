@@ -980,14 +980,25 @@ class MainView2(QtGui.QWidget):
             list_img=[]
             for col in liste_col:
                 for img in col.get_img_list().values():
-                    print(type(img)) #ourLib.filesHandlers.nifimage.NifImage
-                    if not(isinstance(img,NifImage)):
+                    # print(type(img))
+                    if not(isinstance(img, NifImage)):
                         list_img.append(img)
-            if len(list_img)>0:
-                self.result_som=im.som_preparation(list_img)
-                self.showSOM.emit()
+                    else:
+                        QtGui.QMessageBox.critical(self, "Wrong data", "You can't use Nifti images for the SOM window.")
+                        return
+            if len(list_img) > 0:
+                self.input_som = im.som_preparation(list_img)
+                print(f"self.input_som.columns : {self.input_som.columns}")
+                if "X" not in self.input_som.columns or "Y" not in self.input_som.columns or "Z" not in self.input_som.columns:
+                    QtGui.QMessageBox.critical(self, "Wrong data", "The format of the data is not correct: there must "
+                                                                   "be an X, an Y and a Z column.")
+                elif len(self.input_som.columns) == 3:
+                    QtGui.QMessageBox.critical(self, "Wrong data",
+                                               "There is not additional information in the files.")
+                else:
+                    self.showSOM.emit()
             else:
-                QtGui.QMessageBox.information(self, "Wrong data", "There's no correct data to create SOM")
+                QtGui.QMessageBox.critical(self, "Wrong data", "You didn't chose any files.")
 
     def edit_pannel(self):
         global selected_images_collections

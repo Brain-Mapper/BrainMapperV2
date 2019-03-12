@@ -159,7 +159,7 @@ class HomePage(QWidget):
         self.stack.setCurrentWidget(self.mainview)
 
     def updateSOMView(self):
-        self.SOM.fill_table(self.mainview.result_som)
+        self.SOM.fill_table(self.mainview.input_som)
         self.stack.setCurrentWidget(self.SOM)
 
     def updateClusteringView(self):
