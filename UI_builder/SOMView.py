@@ -43,6 +43,7 @@ GRID_HEIGHT = 0
 GRID_WIDTH = 0
 data_neuron_index = []
 
+
 class InfoButton(QtGui.QPushButton):
     def __init__(self, widget):
         super(InfoButton, self).__init__(parent=widget)
@@ -88,18 +89,24 @@ class SOMView(QtGui.QWidget):
             item.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
             self.tableWidget.setHorizontalHeaderItem(i, item)
             item.setText(column_name)
-            self.comboBox.addItem(_fromUtf8(""))
-            self.comboBox.setItemText(i, column_name)
+            if column_name not in ["X", "Y", "Z"]:
+                self.comboBox.addItem(column_name)
+                # self.comboBox.setItemText(i, column_name)
         self.tableWidget.horizontalHeader().setVisible(True)
         for i in range(0, len(som_input)):
             for j, column_name in enumerate(som_input.columns):
-                self.tableWidget.setItem(i, j, QtGui.QTableWidgetItem(str(som_input.at[i, column_name])))
+                item = QtGui.QTableWidgetItem(str(som_input.at[i, column_name]))
+                item.setFlags(item.flags() ^ Qt.ItemIsEditable)
+                self.tableWidget.setItem(i, j, item)
 
+        self.pushButton_show.setEnabled(False)
 
     def go_back(self):
         self.showMain.emit()
 
     def train(self):
+        self.pushButton_show.setEnabled(True)
+
         global GRID_WIDTH
         global GRID_HEIGHT
         global data_neuron_index
@@ -113,17 +120,14 @@ class SOMView(QtGui.QWidget):
         GRID_HEIGHT = int(self.lineEdit_hauteur.text())
         GRID_WIDTH = int(self.lineEdit_largeur.text())
 
-
-
         sofm = algorithms.SOFM(
-            # Use only two features for the input
             n_inputs=3,
 
             # In clustering application we will prefer that
             # clusters will be updated independently from each
             # other. For this reason we set up learning radius
             # equal to zero
-            learning_radius=int(self.lineEdit_radius.text()),
+            learning_radius=float(self.lineEdit_radius.text()),
 
             # Parameters controls learning rate for each neighbour. The further neighbour neuron from the
             # winning neuron the smaller that learning rate for it. Learning rate scales based on the
@@ -131,9 +135,10 @@ class SOMView(QtGui.QWidget):
             # standard deviation specified as a parameter. The learning rate for the winning neuron is
             # always equal to the value specified in the step parameter and for neighbour neurons it’s
             # always lower.
-            std=int(self.lineEdit_std.text()),  # TODO : modifier
+            std=float(self.lineEdit_std.text()),  # TODO : modifier
 
-            # Feature grid defines shape of the output neurons. The new shape should be compatible with      #the number of outputs
+            # Feature grid defines shape of the output neurons. The new shape should be compatible with      #the
+            # number of outputs
             features_grid=(GRID_HEIGHT, GRID_WIDTH),
 
             # Defines connection type in feature grid
@@ -183,6 +188,8 @@ class SOMView(QtGui.QWidget):
                     best_neuron_index = neuron_index
             data_neuron_index.append(best_neuron_index)
 
+        self.pushButton_show.setEnabled(True)
+
         QtGui.QMessageBox.information(self, "Training done",
                                       "The training is done you can visualize by clicking on the show button.")
 
@@ -191,7 +198,9 @@ class SOMView(QtGui.QWidget):
         global GRID_HEIGHT
         global data_neuron_index
 
-        column_for_som = self.som_input[[self.comboBox.currentText()]].values
+        column_name = self.comboBox.currentText()
+
+        column_for_som = self.som_input[[column_name]].values
 
         print(f"data_neuron_index {data_neuron_index}")
 
@@ -201,23 +210,29 @@ class SOMView(QtGui.QWidget):
         img = np.zeros(shape=(GRID_HEIGHT, GRID_WIDTH))
 
         for neuron_index, column_value in zip(data_neuron_index, column_for_som):
-            neuron_i = int(neuron_index/GRID_WIDTH)
+            neuron_i = int(neuron_index / GRID_WIDTH)
             neuron_j = neuron_index % GRID_WIDTH
             img[neuron_i, neuron_j] = img[neuron_i, neuron_j] + 1 if column_value == 1 else img[neuron_i, neuron_j] - 1
 
         fig, ax = plt.subplots()
-        im = ax.imshow(img, cmap="inferno")
+        im = ax.imshow(img, cmap="inferno", origin="lower")
         # Set the ticks
         ax.set_xticks(x)
         ax.set_yticks(y)
-        # Set a colorbar
-        ax.figure.colorbar(im, ax=ax, ticks=list(range(int(np.min(img)), int(np.max(img)) + 1)))
-        # Add black contour
         ax.set_xticks(np.arange(img.shape[1] + 1) - .5, minor=True)
         ax.set_yticks(np.arange(img.shape[0] + 1) - .5, minor=True)
-        ax.grid(which="minor", color="black", linestyle='-', linewidth=2)
-        ax.set_title(f"SOM on {self.comboBox.currentText()}")
-        # fig.tight_layout()
+        ax.tick_params(length=0, width=0, which='both')
+        # Set a colorbar
+        cbar = ax.figure.colorbar(im,
+                                  ax=ax,
+                                  ticks=list(range(int(np.min(img)), int(np.max(img)) + 1)),
+                                  orientation="horizontal")
+        cbar_legend = f"Number of points with {column_name} - number of points with {column_name.replace('=','≠')}"
+        cbar.ax.set_xlabel(cbar_legend)
+        # Add black contour
+        #ax.grid(which="minor", color="black", linestyle='-', linewidth=1)
+        ax.set_title(f"SOM for {column_name}")
+        fig.tight_layout()
         plt.show()
 
     def setupUi(self, Form):
@@ -404,6 +419,7 @@ class SOMView(QtGui.QWidget):
         self.tableWidget.setRowCount(0)
         self.gridLayout_3.addWidget(self.tableWidget, 1, 0, 1, 1)
         self.gridLayout.addWidget(self.widget_table, 0, 1, 1, 1)
+
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)

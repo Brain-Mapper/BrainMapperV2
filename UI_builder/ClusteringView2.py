@@ -59,6 +59,7 @@ class QTableNumericWidgetItem(QtGui.QTableWidgetItem):
     def __init__(self, value, *__args):
         super().__init__(str(value), *__args)
         self.value = value
+        self.setFlags(self.flags() ^ Qt.ItemIsEditable)
 
     def __lt__(self, other) -> bool:
         return self.value < other.value
