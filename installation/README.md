@@ -74,7 +74,7 @@ $ python3 configure-ng.py --sip ../temp_sip/sip --no-stubs --bindir <Python3 fol
 $ make install
 $ cd ..
 ```
-Install other depensencies :
+Install other dependencies :
 
 ```shell
 $ python3 -m pip install -r requirement.txt
