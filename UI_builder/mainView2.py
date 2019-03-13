@@ -289,7 +289,7 @@ class SetButton(QtGui.QWidget):
                     collshow.remove(d)
 
 
-        pos = self.my_set.getPosition()[1]
+        pos = self.my_set.position
         imported = self.parent.topLevelItem(pos)
         it = QTreeWidgetItemIterator(self.treeWidget.topLevelItem(pos))
         trouve = False
