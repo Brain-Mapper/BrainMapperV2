@@ -107,4 +107,8 @@ def som_preparation(img_list: List[Image]) -> pd.DataFrame:
         columns.remove("Y")
         columns.remove("Z")
 
+        # To correct input problem
+        for column in columns:
+            selected[column] = selected[column].str.strip()
+
         return pd.get_dummies(selected, columns=columns, prefix_sep="=")

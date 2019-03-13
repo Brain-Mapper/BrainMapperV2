@@ -6,10 +6,10 @@ from scipy.spatial import distance
 
 utils.reproducible()
 
-GRID_HEIGHT = 20
-GRID_WIDTH = 20
-HEIGHT = 800/GRID_HEIGHT
-WIDTH = 800/GRID_WIDTH
+grid_height = 20
+grid_width = 20
+HEIGHT = 800 / grid_height
+WIDTH = 800 / grid_width
 
 data_raw = np.array([[-63.0, 7.0,30.0,1],
 	[-63.5,7.5,24.0,1],
@@ -38,7 +38,7 @@ sofm = algorithms.SOFM(
 	std = 1, #TODO : modifier
 
 	#Feature grid defines shape of the output neurons. The new shape should be compatible with 		#the number of outputs
-	features_grid=(GRID_HEIGHT, GRID_WIDTH),
+	features_grid=(grid_height, grid_width),
 
 	#Defines connection type in feature grid
 	grid_type = 'rect',
@@ -95,11 +95,11 @@ fenetre.title("SOM")
 Terrain=tkinter.Canvas(fenetre,height=800,width=800)
 Terrain.pack()
 carreau = []
-for j in range (GRID_WIDTH):
+for j in range (grid_width):
 	temp = []
-	for i in range (GRID_HEIGHT):
+	for i in range (grid_height):
 		color = "#cdcdcd"
-		value = j*GRID_HEIGHT + i +1
+		value = j * grid_height + i + 1
 
 
 		if value in data_neuron_index :
