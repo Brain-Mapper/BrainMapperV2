@@ -30,6 +30,7 @@ If python3 is not already install on your computer, you need to download it. Fol
 https://www.python.org/ftp/python/3.7.2/python-3.7.2-macosx10.6.pkg
 
 ### Install the dependencies
+Open a terminal in the MacOS folder.
 For the installation you will need to note the folders where python3 and python3 dependencies are installed :
 
 _Python3 folder_ :
@@ -65,12 +66,13 @@ $ cd ..
 Install PyQt4 from source :
 
 ```shell
-curl -L -O https://sourceforge.net/projects/pyqt/files/PyQt4/PyQt-4.12/PyQt4_gpl_mac-4.12.tar.gz
-tar -xvf PyQt4_gpl_mac-4.12.tar.gz
-QMAKESPEC=unsupported/macx-clang-libc++
-cd PyQt4_gpl_mac-4.12
-python3 configure-ng.py --sip ../temp_sip/sip --no-stubs --bindir <Python3 folder>  --destdir <Dependencies folder> --sip-incdir=../temp_sip
-make install
+$ curl -L -O https://sourceforge.net/projects/pyqt/files/PyQt4/PyQt-4.12/PyQt4_gpl_mac-4.12.tar.gz
+$ tar -xvf PyQt4_gpl_mac-4.12.tar.gz
+$ QMAKESPEC=unsupported/macx-clang-libc++
+$ cd PyQt4_gpl_mac-4.12
+$ python3 configure-ng.py --sip ../temp_sip/sip --no-stubs --bindir <Python3 folder>  --destdir <Dependencies folder> --sip-incdir=../temp_sip
+$ make install
+$ cd ..
 ```
 Install other depensencies :
 
