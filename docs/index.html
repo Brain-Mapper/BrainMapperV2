@@ -29,7 +29,12 @@
         <ul>
            <li><small><a href="index.html#usecase">1.1 Software usecase</a></small></li>
            <li><small><a href="index.html#installation">1.2 BrainMapper installation</a></small></li>
-           <li><small><a href="index.html#desktop_app">1.3 Desktop application</a></small></li>
+              <ul>
+                <li><small><a href="index.html#windows">1.2.1 Windows</a></small></li>
+                <li><small><a href="index.html#mac">1.2.2 OSX/Mac</a></small></li>
+                <li><small><a href="index.html#ubuntu">1.2.3 Ubuntu/GNU/Linux</a></small></li>
+                <li><small><a href="index.html#dependancies">1.2.4 Dependencies</a></small></li>
+              </ul>
 
          </ul>
 
@@ -181,6 +186,8 @@
   <div class="column-right">
     <div id="Global_presentation">
       <h1> Global presentation </h1>
+
+<!--
       BrainMapper is the product of a 2-year collaboration between the Central Hospital of Nancy, France (CHRU in french) and Computer Science and Engineering students at TELECOM Nancy<br/><br/>
 
       The aim of this project was to simplify the treatment chain of neurosurgeon Dr. Fabien Rech, who had to use several librairies, software and methods to extract interesting data from NIfTI files.<br/>
@@ -195,7 +202,10 @@
 
       Our aim was to simplify this workchain and offer the possibility to manage NIfTI, extract the interesting data from them to use it for calculations and clustering algorithms
       <br/><br/>
+
+    -->
       <h2 id="usecase">1.1 Software usecase</h2>
+<!--
       This software is written in Python. Its user interface is written in PyQt 4.<br>
       It can be used to create several sets and image collections associated with brain responses or patients, that will contain different images, in the NIfTI format and standards.
       The user can then extract data from the loaded NIfTI files to perform basic calculations or apply clustering algorithms to this data.<br>
@@ -238,46 +248,105 @@
           Our software can open compressed NIfTI formats ('.nii.gz').
        </div>
       </div>
+-->
 
+      <h2 id="installation">1.2 BrainMapper installation</h2>
 
-      <h2 id="installation">1.2 BrainMapper </h2>
-        <em>BrainMapper</em> is written in <b>Python 3.6</b>. In this section, we present a tutorial to use the latest version of BrainMapper in your computer.
-        <br>
+      <p>
+        <em>BrainMapper</em> is written in <b>Python 3.6</b>. In this section, we present a tutorial to use BrainMapper on your computer.
+      </p>
 
+      <p>If you are not familiar with informatics, we recommend running BrainMapper on Windows or Linux.
+        Since the installation procedure is not automated for MacOS, you may need to adapt the instructions to your own environment.
+      </p>
 
-      <h2 id="desktop_app">1.3 Desktop application</h2>
-        Thank to an executable file, we can have a desktop application. It allows the user to easily execute <em>BrainMapper</em> without having to install all librairies.
-        We use CxFreeze to create this desktop application.
+      <p>To begin an installation, you have to go in the installation folder.</p>
 
-        <div style="padding-left: 12%; padding-top:3%; padding-bottom:3%">
-          <div class="alert alert-info" role="alert">
-          <h5 style="color:#f66;">WARNING</h5>
-          <b>The desktop application is only available for Windows</b>
+      <h3 id="windows">1.1.1 Windows </h3>
+      <!--      <ul>
+         <li>Install Miniconda package manager for <b>Windows and Python 2.7</b>: <a href=https://conda.io/miniconda.html>Download the installer here</a>. </li>
+            When installing, tick the option <b><em>"Add Anaconda to my PATH variable".</em></b>
+            <br><br>
 
-          <br><br>
-          This install tutorial will allow the user to easily <b>execute</b> <em>BrainMapper</em> but will not install a compiled version of it on the machine.<br>
+         <li> In a Powershell terminal, type the following commands :</li>
+           <div style="padding-left: 1%; padding-top:1%; padding-bottom:1%">
+             <div class="command">
+                conda install python=2.7<br>
+                activate root<br>
+                conda install -c anaconda pyqt=4.11.4<br>
+                conda install numpy<br>
+                conda install scikit-learn<br>
+                conda install pyqtgraph<br>
+                conda install pyopengl<br>
+                conda install -c conda-forge nibabel<br>
+              </div>
+            </div>
+            <br>
+          <li>Download the .zip project on the <a href="https://github.com/TELECOMNancy/brainMapper" target="_blank">GitHub repository</a>. </li>
+          Decompress it, and create a .bat file (be careful with file extensions on Windows, sometimes a .txt will be added and you cannot see it.). <br>
           <br>
-          We will include compiled desktop applications in the near future.
+          <li>In the .bat file put in the following commands </li>
+          <div style="padding-left: 1%; padding-top:1%; padding-bottom:1%">
+            <div class="command">
+                cd brainMapper-master/UI<br>
+                python UI.py<br>
+            </div>
+          </div>
+          This file has to be in the same folder than the decompressed .zip. <br>
+          Finally, create a .bat shortcut (right click, 'Create shorcut') and put it on your Desktop : when you click on it, <b><em>brainMapper</em></b> will launch .
 
-        </div>
-       </div>
 
-        <h3> Dependencies </h3>
-        Our software uses the following Python libraries :
-        <ul>
-          <li>matplotlib (==3.0.2)</li>
-          <li>neupy (==0.8.0)</li>
-          <li>nibabel (==2.3.1)</li>
-          <li>nilearn (==0.5.0)</li>
-          <li>numpy (==1.15.4)</li>
-          <li>pandas (==0.23.4)</li>
-          <li>PyOpenGL (==3.1.0)</li>
-          <li>pyqtgraph (==0.10.0)</li>
-          <li>scikit-learn (=0.20.0)</li>
-        </ul>
+      -->
 
-        <h3> Ubuntu (GNU/Linux)</h3>
-        <ul>
+        <h3 id="mac">1.2.2 OSX/Mac</h3>
+
+        <p>
+          If python3 is not already install on your computer, you need to download it.
+          To download the installer, click
+          <a href="https://www.python.org/ftp/python/3.7.2/python-3.7.2-macosx10.6.pkg" target="_blank" style="color : #5577ee">here</a>
+        </p>
+
+        <p>
+          To install the dependencies, open a terminal in the MacOS folder.
+          For the installation, you will need to note the folders where python3 and python3 dependencies are installed :
+          <br><br>
+          <b><i>Python3 folder :</i></b>
+          <br>
+          ```shell
+          <br>
+          $ which python3
+          <br>
+          ```
+
+        </p>
+
+        <h3 id="ubuntu">1.2.3 Ubuntu/GNU/Linux</h3>
+
+        <p>
+          To install the dependencies, you have to go in the Linux folder and to launch the installation script with the following instructions :
+          <br><br>
+          ```shell
+          <br>
+          $ chmod +x install.sh
+          <br>
+          $ ./install.sh
+          <br>
+          ```
+        </p>
+
+        <p>
+          Then you can launch BrainMapper with the following command from the root folder :
+          <br><br>
+          ```shell
+          <br>
+          $ python3 UI.py
+          <br>
+          ```
+        </p>
+
+        Now, you can use BrainMapper.
+  <!--
+          <ul>
           <li>Open a terminal and install all dependencies with the following commands :</li>
           <div style="padding-left: 1%; padding-top:1%; padding-bottom:1%">
             <div class="command">
@@ -301,41 +370,27 @@
           <br>
           <li>Create a shorcut to this <em>.sh</em> file and place it where you want to : this file will be the application's "launcher"</em></li>
         </ul>
+-->
 
-        <h3> OSX (Mac)</h3>
+      <h3 id="dependancies">1.2.4 Dependencies </h3>
 
-        <h3> Windows </h3>
+      <p>All dependencies are listed in the file named requirement.txt.</p>
+
+      <p>
+        Here are the main Python libraries used for BrainMapper :
         <ul>
-	         <li>Install Miniconda package manager for <b>Windows and Python 2.7</b>: <a href=https://conda.io/miniconda.html>Download the installer here</a>. </li>
-              When installing, tick the option <b><em>"Add Anaconda to my PATH variable".</em></b>
-              <br><br>
+          <li>matplotlib (==3.0.2)</li>
+          <li>neupy (==0.8.0)</li>
+          <li>nibabel (==2.3.1)</li>
+          <li>nilearn (==0.5.0)</li>
+          <li>numpy (==1.15.4)</li>
+          <li>pandas (==0.23.4)</li>
+          <li>PyOpenGL (==3.1.0)</li>
+          <li>pyqtgraph (==0.10.0)</li>
+          <li>scikit-learn (=0.20.0)</li>
+        </ul>
+      </p>
 
-           <li> In a Powershell terminal, type the following commands :</li>
-             <div style="padding-left: 1%; padding-top:1%; padding-bottom:1%">
-               <div class="command">
-                  conda install python=2.7<br>
-                  activate root<br>
-                  conda install -c anaconda pyqt=4.11.4<br>
-                  conda install numpy<br>
-                  conda install scikit-learn<br>
-                  conda install pyqtgraph<br>
-                  conda install pyopengl<br>
-                  conda install -c conda-forge nibabel<br>
-                </div>
-              </div>
-              <br>
-            <li>Download the .zip project on the <a href="https://github.com/TELECOMNancy/brainMapper" target="_blank">GitHub repository</a>. </li>
-            Decompress it, and create a .bat file (be careful with file extensions on Windows, sometimes a .txt will be added and you cannot see it.). <br>
-            <br>
-            <li>In the .bat file put in the following commands </li>
-            <div style="padding-left: 1%; padding-top:1%; padding-bottom:1%">
-              <div class="command">
-                  cd brainMapper-master/UI<br>
-                  python UI.py<br>
-              </div>
-            </div>
-            This file has to be in the same folder than the decompressed .zip. <br>
-            Finally, create a .bat shortcut (right click, 'Create shorcut') and put it on your Desktop : when you click on it, <b><em>brainMapper</em></b> will launch .
 
     </div>
   </div>
