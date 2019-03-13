@@ -47,9 +47,11 @@ class SelectedButton(QtGui.QPushButton):
         super(SelectedButton, self).__init__(parent=parent)
         self.coll = coll
         self.setname = setname
+        self.num=num
+        self.date = date
 
         self.setText("Set name : " + str(self.setname) + "\nName : " + str(
-            self.coll.name) + "\nNIfTI : " + num + "\nLast modified : " + date)
+            self.coll.name) + "\nNIfTI : " + self.num + "\nLast modified : " + self.date)
 
 
 class CollButton(QtGui.QCheckBox):
@@ -351,6 +353,31 @@ class SetButton(QtGui.QWidget):
                     # print(self.my_set.get_name())
                     self.check.setText(str(text))
                     add_set(self.my_set)
+
+                    #si on change le nom d'un set, il faut changer l'affichage graphique
+                    listes = self.my_set.get_all_nifti_set_and_subset()
+                    for i in reversed(range(self.image_zone.count())):
+                        for elem in listes:
+                            if self.image_zone.itemAt(i)!= None:
+                                if self.image_zone.itemAt(i).widget().coll.name == elem.get_name():
+                                    collbutton=self.image_zone.itemAt(i).widget()
+                                    collbutton.setname = str(text)
+                                    print(collbutton.coll.name)
+                                    label = "Set name : " + str(collbutton.setname) + "\nName : " + str(collbutton.coll.name) + "\nNIfTI : " + str(
+                                    len(collbutton.list)) + "\nLast modified : " + str(collbutton.d)
+                                    print("label",label)
+                                    collbutton.setText(label)
+
+                    for i in reversed(range(self.selected_zone.count())):
+                        for elem in listes:
+                            if self.selected_zone.itemAt(i)!= None:
+                                if self.selected_zone.itemAt(i).widget().coll.name == elem.get_name():
+                                    selectedbutton=self.selected_zone.itemAt(i).widget()
+                                    selectedbutton.setname = str(text)
+                                    label = "Set name : " + str(selectedbutton.setname) + "\nName : " + str(
+                                        selectedbutton.coll.name) + "\nNIfTI : " + selectedbutton.num + "\nLast modified : " + selectedbutton.date
+                                    selectedbutton.setText(label)
+
                 else:
                     err = QtGui.QMessageBox.critical(self, "Error",
                                                      "The name you entered is not valid (empty, invalid caracter or already exists)")
