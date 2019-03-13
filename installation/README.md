@@ -41,8 +41,8 @@ For exemple if you get /usr/bin/python3, python3 folder is /urs/bin/
 _Dependencies folder :_
 ```shell
 $ echo `pip3 show pip | grep "Location" | grep -oE "[^ ]+$"`
-(for exemple /usr/lib/python3/dist-packages)```
-
+```
+(for exemple /usr/lib/python3/dist-packages)
 
 Then install Qt4 (brew is needed):
 
