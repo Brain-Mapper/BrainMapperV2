@@ -1,27 +1,18 @@
 # How to install BrainMapper
 
 ## Linux
-```bash
-sudo apt-get install python3-pyqt4
-sudo apt-get install python3-pyqt4.qtopengl
+### Install the dependencies
+In the Linux folder, launch the installation script :
+```shell
+$ chmod +x install.sh
+$ ./install.sh
 ```
 
-Autres dépendances
+### Launch BrainMapper
+Then you can launch BrainMapper with the following command from the root folder:
 
-Vous pouvez les installer à la main :
-```bash
-python3 -m pip install nibabel
-python3 -m pip install -U numpy
-python3 -m pip install -U scikit-learn
-python3 -m pip install pyqtgraph
-python3 -m pip install pyopengl
-python3 -m pip install nilearn
-```
-
-Ou via le fichier requirement.txt
-
-```bash
-pip install -r requirement.txt
+```shell
+$ python3 UI.py
 ```
 
 ## MacOS
@@ -30,7 +21,7 @@ If python3 is not already install on your computer, you need to download it. Fol
 https://www.python.org/ftp/python/3.7.2/python-3.7.2-macosx10.6.pkg
 
 ### Install the dependencies
-In the installation folder, launch the installation script :
+In the MacOS folder, launch the installation script :
 ```shell
 $ chmod +x install.sh
 $ ./install.sh
