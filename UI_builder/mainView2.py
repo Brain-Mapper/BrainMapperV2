@@ -170,7 +170,7 @@ class SetButton(QtGui.QWidget):
         NameButton.setFixedSize(QSize(20, 20))
         hbox.addWidget(NameButton)
 
-        if self.my_set.position == 0: 
+        if self.my_set.position == 0:
             ImportButton = QtGui.QPushButton()
             ImportButton.setText("Import")
             ImportButton.clicked.connect(self.importdata)
@@ -289,7 +289,7 @@ class SetButton(QtGui.QWidget):
                     collshow.remove(d)
 
 
-        pos = self.my_set.getPosition()[1]
+        pos = self.my_set.position
         imported = self.parent.topLevelItem(pos)
         it = QTreeWidgetItemIterator(self.treeWidget.topLevelItem(pos))
         trouve = False
@@ -466,7 +466,7 @@ class SetButton(QtGui.QWidget):
                     globalSets[indice_racine].remove(self.my_set)
 
                 p.removeChild(p.child(position_arbre[0]))
-            
+
             for d in self.my_set.get_all_nifti_set_and_subset():
                 if d in selected_images_collections:
                     selected_images_collections.remove(d)
@@ -489,7 +489,7 @@ class SetButton(QtGui.QWidget):
                         set.position_arbre[indice_a_modif] = set.position_arbre[indice_a_modif]-1
                         print("set pos arbre apres",set.position_arbre)
                         changementindice(set,indice_a_modif)
-                    
+
 
                         #set.position -= 1
             # else:
@@ -497,7 +497,7 @@ class SetButton(QtGui.QWidget):
                 # for s in globalSets[indice_racine]:
                 #     if s.position > self.my_set.position:
                 #         s.position -= 1
-           
+
 
             #print("globalSets after", globalSets)
 
@@ -553,7 +553,7 @@ class MainView2(QtGui.QWidget):
         font = QtGui.QFont()
         font.setPointSize(12)
         font.setBold(False)
-        font.setWeight(50) 
+        font.setWeight(50)
         self.label_list_of_sets.setFont(font)
         self.label_list_of_sets.setAlignment(QtCore.Qt.AlignCenter)
         self.label_list_of_sets.setObjectName(_fromUtf8("label_list_of_sets"))
@@ -803,7 +803,7 @@ class MainView2(QtGui.QWidget):
                                                         self.verticalLayout_widget_selected_view, self.checkBox,
                                                         self.checkimported,self.checkcalculation,
                                                             self.checkclustering,self.treeWidget))
-                globalSets[0].append(my_set)    
+                globalSets[0].append(my_set)
             else:
                 err = QtGui.QMessageBox.critical(self, "Error",
                                                  "The name you entered is not valid (empty, invalid caracter or already exists)")
@@ -850,14 +850,14 @@ class MainView2(QtGui.QWidget):
                 self.treeWidget.itemWidget(it.value(), 0).check.setChecked(not(self.treeWidget.itemWidget(it.value(), 0).check.isChecked()))
                 self.treeWidget.itemWidget(it.value(), 0).check.setChecked(not(self.treeWidget.itemWidget(it.value(), 0).check.isChecked()))
             it += 1
-        
+
         it = QTreeWidgetItemIterator(self.treeWidget.topLevelItem(2))
         while it.value():
             if it.value().parent() is not None and it.value().parent() == clustering:
                 self.treeWidget.itemWidget(it.value(), 0).check.setChecked(not(self.treeWidget.itemWidget(it.value(), 0).check.isChecked()))
                 self.treeWidget.itemWidget(it.value(), 0).check.setChecked(not(self.treeWidget.itemWidget(it.value(), 0).check.isChecked()))
             it += 1
-        
+
         it = QTreeWidgetItemIterator(self.treeWidget.topLevelItem(1))
         while it.value():
             if it.value().parent() is not None and it.value().parent() == calculation:
