@@ -407,18 +407,45 @@ class SetButton(QtGui.QWidget):
 
     def deleteSet(self):
 
+        def changementindice(set,indice_a_modif):
+            print("len",len(set.getAllSubSets()))
+            if len(set.getAllSubSets()) == 0:
+                #print("subset pos arbre avant",set.position_arbre)
+                #set.position_arbre[indice_a_modif]=set.position_arbre[indice_a_modif]-1
+                #print("subset pos arbre apres",set.position_arbre)
+                pass
+            else:
+                for subset in set.getAllSubSets():
+                    #print("subset pos arbre avant",set.position_arbre)
+                    subset.position_arbre[indice_a_modif]=subset.position_arbre[indice_a_modif]-1
+                    #print("subset pos arbre apres",set.position_arbre)
+                    changementindice(subset,indice_a_modif)
+
+        def deletebackdata(set):
+            print("len",len(set.getAllSubSets()))
+            if len(set.getAllSubSets()) == 0:
+                sets.remove(set)
+            else:
+                for subset in set.getAllSubSets():
+                    if set in sets:
+                        sets.remove(set)
+                    deletebackdata(subset)
+
         global selected_images_collections
         global collshow
         choice = QtGui.QMessageBox.question(self, 'Delete', "Are you sure to delete this set and all its sub-sets ?",
                                             QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
         if choice == QtGui.QMessageBox.Yes:
-            position = self.my_set.getPosition()
             indice_racine = self.my_set.position
             p = self.treeWidget.topLevelItem(indice_racine)
+            position_arbre = self.my_set.position_arbre
+            print("position_arbre",position_arbre)
+            #position_arbre=list(position_arbre)
 
-            print("indice racine",indice_racine)
-            print("globalSets 0 before", globalSets[indice_racine])
-            if indice_racine ==1 or indice_racine ==2:
+            #print("indice racine",indice_racine)
+            #print("globalSets before", globalSets)
+
+            if indice_racine == 1 or indice_racine == 2:
                 it = QTreeWidgetItemIterator(p)
                 while it.value():
                     if it.value().parent() is not None and it.value().parent() == p:
@@ -427,29 +454,52 @@ class SetButton(QtGui.QWidget):
                             print("trouvé",button.my_set.name)
                             p.removeChild(it.value())
                     it += 1
+            elif indice_racine == 0:
+                if self.my_set.getParent() != None:
+                    for i in range(0,len(position_arbre)-1):
+                        #print("position_arbre avant", position_arbre)
+                        p=p.child(position_arbre[0])
+                        position_arbre.pop(0)
+                        #print("position_arbre apres", position_arbre)
+                        #print("p",p)
+                else:
+                    globalSets[indice_racine].remove(self.my_set)
 
-        
+                p.removeChild(p.child(position_arbre[0]))
+            
             for d in self.my_set.get_all_nifti_set_and_subset():
                 if d in selected_images_collections:
                     selected_images_collections.remove(d)
                 if d in collshow:
                     collshow.remove(d)
 
+            print("sets avant",sets)
+            deletebackdata(self.my_set)
+            print("sets apres",sets)
+
             listes = self.my_set.get_all_nifti_set_and_subset()
 
             if self.my_set.getParent() != None:
                 self.my_set.getParent().remove_subset(self.my_set.name)
+                indice_a_modif = len(position_arbre)
+                print("indice_a_modif",indice_a_modif)
                 for set in self.my_set.getParent().getAllSubSets():
-                    if set != self and set.position > self.my_set.position:
-                        set.position -= 1
-            else:
-                globalSets[indice_racine].remove(self.my_set)
-                for s in globalSets[indice_racine]:
-                    if s.position > self.my_set.position:
-                        s.position -= 1
-            sets.remove(self.my_set)
+                    if set != self and set.position_arbre[indice_a_modif] > position_arbre[0]:
+                        print("set pos arbre avant",set.position_arbre)
+                        set.position_arbre[indice_a_modif] = set.position_arbre[indice_a_modif]-1
+                        print("set pos arbre apres",set.position_arbre)
+                        changementindice(set,indice_a_modif)
+                    
 
-            print("globalSets after", globalSets)
+                        #set.position -= 1
+            # else:
+            #     globalSets[indice_racine].remove(self.my_set)
+                # for s in globalSets[indice_racine]:
+                #     if s.position > self.my_set.position:
+                #         s.position -= 1
+           
+
+            #print("globalSets after", globalSets)
 
             # lorsqu'on supprimer un set il faut changer l'affichage graphique
             #print("listes",listes)
