@@ -99,6 +99,10 @@ class SOMView(QtGui.QWidget):
                 item.setFlags(item.flags() ^ Qt.ItemIsEditable)
                 self.tableWidget.setItem(i, j, item)
 
+        # The columns are selectable
+        self.tableWidget.setSelectionBehavior(QtGui.QAbstractItemView.SelectColumns)
+
+        # The button show has to be disable while the som has not been trained
         self.pushButton_show.setEnabled(False)
 
     def go_back(self):
@@ -110,18 +114,29 @@ class SOMView(QtGui.QWidget):
         global GRID_WIDTH
         global GRID_HEIGHT
         global data_neuron_index
-        global last_column
 
         # You can use the below function when testing to eliminate the randomness
         # utils.reproducible()
 
-        training_data = self.som_input[["X", "Y", "Z"]].values
+        # Get the columns used to make the map
+        items = self.tableWidget.selectedItems()
+
+        columns = []
+
+        if len(items) != 0:
+            for i in range(0, len(items), self.tableWidget.rowCount()):
+                if self.tableWidget.horizontalHeaderItem(items[i].column()).text() in ["X", "Y", "Z"]:
+                    columns.append(self.tableWidget.horizontalHeaderItem(items[i].column()).text())
+        else:
+            columns = ["X", "Y", "Z"]
+
+        training_data = self.som_input[columns].values
 
         GRID_HEIGHT = int(self.lineEdit_hauteur.text())
         GRID_WIDTH = int(self.lineEdit_largeur.text())
 
         sofm = algorithms.SOFM(
-            n_inputs=3,
+            n_inputs=len(columns),
 
             # In clustering application we will prefer that
             # clusters will be updated independently from each
@@ -191,7 +206,8 @@ class SOMView(QtGui.QWidget):
         self.pushButton_show.setEnabled(True)
 
         QtGui.QMessageBox.information(self, "Training done",
-                                      "The training is done you can visualize by clicking on the show button.")
+                                      f"The training is done you can visualize by clicking on the show button. "
+                                      f"(You have used the columns: {columns})")
 
     def showmap(self):
         global GRID_WIDTH
