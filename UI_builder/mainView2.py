@@ -95,7 +95,8 @@ class CollButton(QtGui.QCheckBox):
             if self.coll not in collshow:
                 collshow.append(self.coll)
         else:
-            collshow.remove(self.coll)
+            if self.coll in collshow:
+                collshow.remove(self.coll)
             if len(collshow) ==0:
                 self.checkBox.setChecked(False)
         for i in reversed(range(self.selected_zone.count())):
@@ -853,19 +854,29 @@ class MainView2(QtGui.QWidget):
     def updateColumn(self):
         global selected_images_collections
         global collshow
+
         # for i in reversed(range(self.verticalLayout_image_collections_show.count())):
         #     label = "Set name : " + str(
         #         self.verticalLayout_image_collections_show.itemAt(i).widget().setname) + "\nName : " + str(
         #         self.verticalLayout_image_collections_show.itemAt(i).widget().coll.name) + "\nNIfTI : " + str(
         #         len(self.verticalLayout_image_collections_show.itemAt(i).widget().list)) + "\nLast modified : " + str(
         #         self.verticalLayout_image_collections_show.itemAt(i).widget().d)
+        #     print("label",label)
         #     self.verticalLayout_image_collections_show.itemAt(i).widget().setText(label)
         #     self.verticalLayout_image_collections_show.itemAt(i).widget().setChecked(False)
+
         for i in reversed(range(self.verticalLayout_widget_selected_view.count())):
             self.verticalLayout_widget_selected_view.itemAt(i).widget().setParent(None)
 
         for i in reversed(range(self.verticalLayout_image_collections_show.count())):
             self.verticalLayout_image_collections_show.itemAt(i).widget().setParent(None)
+
+        # for i in reversed(range(self.verticalLayout_image_collections_show.count())):
+        #     print(self.verticalLayout_image_collections_show.itemAt(i).widget())
+
+        # print("collshow",collshow)
+        del collshow[:]
+        del selected_images_collections[:]
 
         imported = self.treeWidget.topLevelItem(0)
         clustering = self.treeWidget.topLevelItem(2)
@@ -874,28 +885,41 @@ class MainView2(QtGui.QWidget):
         it = QTreeWidgetItemIterator(self.treeWidget.topLevelItem(0))
         while it.value():
             if it.value().parent() is not None and it.value().parent() == imported:
-                self.treeWidget.itemWidget(it.value(), 0).check.setChecked(not(self.treeWidget.itemWidget(it.value(), 0).check.isChecked()))
-                self.treeWidget.itemWidget(it.value(), 0).check.setChecked(not(self.treeWidget.itemWidget(it.value(), 0).check.isChecked()))
+                item = self.treeWidget.itemWidget(it.value(), 0)
+                if item.check.isChecked():
+                    dict = item.my_set.get_all_nifti_set()
+                    for d in dict:
+                        if d not in selected_images_collections:
+                            selected_images_collections.append(d)
+                            self.verticalLayout_image_collections_show.addWidget(
+                                CollButton(d, d.getSetName().get_name(), self.verticalLayout_widget_selected_view, self.checkBox))
             it += 1
 
         it = QTreeWidgetItemIterator(self.treeWidget.topLevelItem(2))
         while it.value():
             if it.value().parent() is not None and it.value().parent() == clustering:
-                self.treeWidget.itemWidget(it.value(), 0).check.setChecked(not(self.treeWidget.itemWidget(it.value(), 0).check.isChecked()))
-                self.treeWidget.itemWidget(it.value(), 0).check.setChecked(not(self.treeWidget.itemWidget(it.value(), 0).check.isChecked()))
+                item = self.treeWidget.itemWidget(it.value(), 0)
+                if item.check.isChecked():
+                    dict = item.my_set.get_all_nifti_set()
+                    for d in dict:
+                        if d not in selected_images_collections:
+                            selected_images_collections.append(d)
+                            self.verticalLayout_image_collections_show.addWidget(
+                                CollButton(d, d.getSetName().get_name(), self.verticalLayout_widget_selected_view, self.checkBox))
             it += 1
 
         it = QTreeWidgetItemIterator(self.treeWidget.topLevelItem(1))
         while it.value():
             if it.value().parent() is not None and it.value().parent() == calculation:
-                self.treeWidget.itemWidget(it.value(), 0).check.setChecked(not(self.treeWidget.itemWidget(it.value(), 0).check.isChecked()))
-                self.treeWidget.itemWidget(it.value(), 0).check.setChecked(not(self.treeWidget.itemWidget(it.value(), 0).check.isChecked()))
+                item = self.treeWidget.itemWidget(it.value(), 0)
+                if item.check.isChecked():
+                    dict = item.my_set.get_all_nifti_set()
+                    for d in dict:
+                        if d not in selected_images_collections:
+                            selected_images_collections.append(d)
+                            self.verticalLayout_image_collections_show.addWidget(
+                                CollButton(d, d.getSetName().get_name(), self.verticalLayout_widget_selected_view, self.checkBox))
             it += 1
-
-        # del selected[:]
-        del collshow[:]
-        #self.checkBox.setChecked(False)
-        #print(label)
 
     def show_coll(self, coll):
         # -- This show_coll will add a collection to the current vizu
