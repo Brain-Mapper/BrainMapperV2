@@ -24,7 +24,15 @@
       <div id="toc_container">
     	<p class="toc_title">Contents</p>
     	<ul class="toc_list">
-    	   <li><a href="#Global_presentation"><strong>1 Global presentation</strong></a></li>
+    	   <li><a href="index.html#Global_presentation"><strong>1 Global presentation</strong></a></li>
+
+        <ul>
+           <li><small><a href="index.html#usecase">1.1 Software usecase</a></small></li>
+           <li><small><a href="index.html#installation">1.2 BrainMapper installation</a></small></li>
+           <li><small><a href="index.html#desktop_app">1.3 Desktop application</a></small></li>
+
+         </ul>
+
     	   <li><a href="NIfTI_handling.html"><strong>2 NIfTI Handling</strong></a></li>
          <ul>
            <li><a href="NIfTI_handling.html#set">2.1 Set</a></li>
@@ -187,7 +195,7 @@
 
       Our aim was to simplify this workchain and offer the possibility to manage NIfTI, extract the interesting data from them to use it for calculations and clustering algorithms
       <br/><br/>
-      <h2> Software usecase</h2>
+      <h2 id="usecase">1.1 Software usecase</h2>
       This software is written in Python. Its user interface is written in PyQt 4.<br>
       It can be used to create several sets and image collections associated with brain responses or patients, that will contain different images, in the NIfTI format and standards.
       The user can then extract data from the loaded NIfTI files to perform basic calculations or apply clustering algorithms to this data.<br>
@@ -232,12 +240,12 @@
       </div>
 
 
-      <h2> Install </h2>
+      <h2 id="installation">1.2 BrainMapper </h2>
         <em>BrainMapper</em> is written in <b>Python 3.6</b>. In this section, we present a tutorial to use the latest version of BrainMapper in your computer.
         <br>
 
 
-      <h2> Desktop application </h2>
+      <h2 id="desktop_app">1.3 Desktop application</h2>
         Thank to an executable file, we can have a desktop application. It allows the user to easily execute <em>BrainMapper</em> without having to install all librairies.
         We use CxFreeze to create this desktop application.
 
