@@ -45,9 +45,13 @@ $ echo `pip3 show pip | grep "Location" | grep -oE "[^ ]+$"`
 ```
 (for exemple /usr/lib/python3/dist-packages)
 
-Then install Qt4 (brew is needed):
+Install brew following the official website : https://brew.sh/
+
+Then install Qt4 :
 
 ```shell
+$ brew tap cartr/qt4
+$ brew tap-pin cartr/qt4
 $ brew install qt@4
 ```
 Install sip from source:
