@@ -32,16 +32,18 @@ https://www.python.org/ftp/python/3.7.2/python-3.7.2-macosx10.6.pkg
 ### Install the dependencies
 For the installation you will need to note the folders where python3 and python3 dependencies are installed :
 
-__Python3 folder :__
+_Python3 folder_ :
 ```shell
 $ which python3
 ```
 For exemple if you get /usr/bin/python3, python3 folder is /urs/bin/
 
-__Dependencies folder :__
+_Dependencies folder :_
 ```shell
 $ echo `pip3 show pip | grep "Location" | grep -oE "[^ ]+$"`
-```
+(for exemple /usr/lib/python3/dist-packages)```
+
+
 Then install Qt4 (brew is needed):
 
 ```shell
