@@ -508,7 +508,7 @@ def exists_set(name):
     return False
 
 
-def newSet(name, position):
+def newSet(name, position, position_arbre):
     """
     Creates a new set a the name "name" and add it into the set list. Also change the current set with the new one
 
@@ -519,7 +519,7 @@ def newSet(name, position):
         Set instance
     """
     global currentSet
-    new_set = Set(name, position)
+    new_set = Set(name, position, position_arbre)
     sets.append(new_set)
     currentSet = new_set
     return new_set
@@ -676,7 +676,7 @@ def makeClusterResultSet(a_usable_dataset, label):
         label -- cluster label
     """
     new_set = uds.extract_set_images_by_cluster(a_usable_dataset, label,
-                                                'ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii')
+                                                'ressources/template_mni/mni_icbm152_t1_tal_nlin_asym_09a.nii', globalSets)
     add_set(new_set)
     clusteringsets.append(new_set)
     setToAdd.append([new_set, 2])
@@ -790,7 +790,6 @@ def general_workspace_import_control(folder_path):
     sets_name = []
     for set_ in sets:
         sets_name.append(set_.get_name())
-    print("setsname",sets_name)
     test = ws.recursive_import_control(folder_path, sets_name)
     return test
 

@@ -205,6 +205,7 @@ class ClusteringResultsPopUp(QtGui.QWidget):
 
         self.setLayout(vbox)
 
+    """
     def update_details(self, clustering_method, user_values, centroids, validation_values, n_selected, n, scores):
         self.info_panel.setText("")
 
@@ -238,7 +239,7 @@ class ClusteringResultsPopUp(QtGui.QWidget):
         self.info_panel.insertPlainText("Calinski-Habaraz score: \t " + str(validation_values[1]) + "\n\n")
         self.info_panel.insertPlainText("Davies-Bouldin index: \t\t " + str(validation_values[2]) + "\n\n")
         self.info_panel.insertPlainText("Calinski-Habaraz score is the relation between the sum of distances squared intergroup and the sum of distances squared intragroup. Whereas, Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the Davies-Bouldin index and bigger is the Calinski-Habaraz score, better is the number of clusters.\n\n")
-
+    """
 
     def export_as_textfile(self):
         browser = QtGui.QMessageBox()

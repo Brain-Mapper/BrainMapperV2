@@ -268,5 +268,5 @@ def get_color(distinct_labels: list, in_int: bool = False) -> dict:
             color_dict[-1] = (255, 0, 0, 1)
         distinct_labels.remove(-1)
     for label in distinct_labels:
-        color_dict[label] = cm.magma(float(label) / float(number_of_clusters), bytes=in_int)
+        color_dict[label] = cm.inferno(float(label) / float(number_of_clusters), bytes=in_int)
     return color_dict

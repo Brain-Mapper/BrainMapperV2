@@ -59,6 +59,7 @@ class QTableNumericWidgetItem(QtGui.QTableWidgetItem):
     def __init__(self, value, *__args):
         super().__init__(str(value), *__args)
         self.value = value
+        self.setFlags(self.flags() ^ Qt.ItemIsEditable)
 
     def __lt__(self, other) -> bool:
         return self.value < other.value
@@ -156,7 +157,7 @@ class ClusteringView2(QtGui.QWidget):
             length = range_of_cluster[1] - range_of_cluster[0] + 1
             if scores is not None:
                 self.info_panel.insertPlainText(
-                    "Different " + type_score + "scores for each value of clusters "
+                    "Different " + type_score + " scores for each value of clusters "
                                                 "number\n"
                                                 "-----------------------------------------------------------------------------\n")
                 self.info_panel.insertPlainText("n \t\t scores \n\n")
@@ -304,6 +305,8 @@ class ClusteringView2(QtGui.QWidget):
                     self.columns_selected.append(columns_index[columns[i].column()])
         else:
             self.columns_selected = ['X', 'Y', 'Z']
+
+        print(f"selected_columns : {self.columns_selected}")
 
         if selectedMethod == "DBSCAN":
             clustering_results = run_clustering(selectedMethod, param_dict, self.columns_selected)
