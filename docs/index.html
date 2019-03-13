@@ -32,7 +32,7 @@
              <li><small><a href="NIfTI_handling.html#new_set">2.1.1 Create a new set</a></small></li>
              <li><small><a href="NIfTI_handling.html#delete_set">2.1.2 Delete a set</a></small></li>
              <li><small><a href="NIfTI_handling.html#rename_set">2.1.3 Rename a set</a></small></li>
-             <li><small><a href="NIfTI_handling.html#add_sub_set">2.1.4 Add a sub set</a></small></li>
+             <li><small><a href="NIfTI_handling.html#add_sub_set">2.1.4 Add a subset</a></small></li>
            </ul>
          <li><a href="NIfTI_handling.html#collection">2.2 Collection</a></li>
            <ul>
@@ -55,37 +55,51 @@
 
               <li><a href="clustering.html#data">3.1 Data extraction for clustering</a></li>
                 <ul>
-                 <li><a href="clustering.html#extract"><small>3.1.1 How data is extracted</small></a></li>
+                 <li><a href="clustering.html#extract"><small>3.1.1 How data are extracted</small></a></li>
                  <li><a href="clustering.html#all_points"><small>3.1.2 Use all points of an image</small></a></li>
                  <li><a href="clustering.html#as_centroid"><small>3.1.3 Use the image's points centroid as data</small></a></li>
                  </ul>
 
-               <li><a href="clustering.html#methods">3.2 Perform clustering algorithms on extracted data</a></li>
+               <li><a href="clustering.html#methods">3.2 Apply clustering algorithms on extracted data</a></li>
                  <ul>
-                 <li><a href="clustering.html#kmeans"><small>3.2.1 KMeans</small></a></li>
-                 <li><a href="clustering.html#kmedoids"><small>3.2.2 KMedoids</small></a></li>
-                 <li><a href="clustering.html#agglo"><small>3.2.3 Agglomerative Clustering</small></a></li>
+                   <li><a href="clustering.html#kmeans">3.2.1 KMeans</a></li>
+                   <li><a href="clustering.html#kmedoids">3.2.2 KMedoids</a></li>
+                   <li><a href="clustering.html#agglo">3.2.3 Agglomerative Clustering</a></li>
+                   <li><a href="clustering.html#dbscan">3.2.4 DBscan</a></li>
+                   <li><a href="clustering.html#fuzzyCmeans">3.2.3 Fuzzy Cmeans</a></li>
                  </ul>
 
-               <li><a href="clustering.html#script_env">3.3 Execute custom functions : user script environment</a></li>
-
-               <li><a href="clustering.html#clust_results"> 3.4 Visualize clustering results </a></li>
+               <li><a href="clustering.html#clust_results"> 3.3 Clustering results</a></li>
                   <ul>
-                 <li><a href="clustering.html#clust_assign"><small>3.4.1 Cluster assignment</small></a></li>
+                 <li><a href="clustering.html#clust_assign"><small>3.3.1 Cluster assignment</small></a></li>
 
                   <ul>
-                   <li><a href="clustering.html#as_set"><small>3.4.1.1 Save results as set</small></a></li>
-                   <li><a href="clustering.html#to_csv"><small>3.4.1.2 Export as CSV file</small></a></li>
+                   <li><a href="clustering.html#as_set"><small>3.3.1.1 Save results as set</small></a></li>
+                   <li><a href="clustering.html#to_csv"><small>3.3.1.2 Export as CSV file</small></a></li>
                   </ul>
 
-                 <li><a href="clustering.html#visu"><small>3.4.2 Graphic Visualisation</small></a></li>
-                 <li><a href="clustering.html#val_index"><small>3.4.3 Internal Validation Indexes</small></a></li>
+                 <li><a href="clustering.html#val_index"><small>3.3.2 Internal Validation Indexes</small></a></li>
+                   <ul>
+                     <li><a href="clustering.html#mean_silhouette"><small>3.3.2.1 Mean Silhouette</small></a></li>
+                     <li><a href="clustering.html#ch_index"><small>3.3.2.2 Calinski-Habaraz Index</small></a></li>
+                     <li><a href="clustering.html#db_index"><small>3.3.2.3 Davies Boulin index</small></a></li>
+                     <li><a href="clustering.html#fpc"><small>3.3.2.4 Fuzzy Partition Coefficient</small></a></li>
+                   </ul>
 
-                 <ul>
-                   <li><a href="clustering.html#mean_silhouette"><small>3.4.3.1 Mean Silhouette</small></a></li>
-                   <li><a href="clustering.html#ch_index"><small>3.4.3.2 Calinski-Habaraz Index</small></a></li>
-                   <li><a href="clustering.html#db_index"><small>3.4.3.3 Davies Boulin index</small></a></li>
-                 </ul>
+
+                  <li><a href="clustering.html#visu"><small>3.3.3 Graphic Visualisation</small></a></li>
+                  <ul>
+                    <li><a href="clustering.html#silhouette_graph"><small>3.3.3.1 Silhouette graph</small></a></li>
+                    <li><a href="clustering.html#3d_view"><small>3.3.3.2 3D view</small></a></li>
+                    <li><a href="clustering.html#cross_sections"><small>3.3.3.3 Cross sections</small></a></li>
+                    <li><a href="clustering.html#glass_brain"><small>3.3.3.4 Glass brain</small></a></li>
+                    <li><a href="clustering.html#dendrogramm"><small>3.3.3.5 Dendrogramm</small></a></li>
+                  </ul>
+
+                  <li><a href="clustering.html#nb_clusters">3.3.4 Choice the number of clusters</a></li>
+
+                  <li><a href="clustering.html#iteration">3.3.5 Iteration</a></li>
+
                </ul>
             </ul>
 
@@ -136,8 +150,7 @@
              <li><a href="import_export.html#workspace">5.1 Workspace</a></li>
         			 <ul>
       				 <li><a href="import_export.html#what"><small>5.1.1 What is it?</small></a></li>
-      				 <li><a href="import_export.html#import_workspace"><small>5.1.2 Import workspace</small></a></li>
-      				 <li><a href="import_export.html#export_workspace"><small>5.1.3 Export workspace</small></a></li>
+      				 <li><a href="import_export.html#export_workspace"><small>5.1.2 Export a workspace</small></a></li>
                 </ul>
 
              <li><a href="import_export.html#export">5.2 Export an Image Collection</a></li>
@@ -146,6 +159,13 @@
       				 <li><a href="import_export.html#export_csv"><small>5.2.2 As a CSV file</small></a></li>
               </ul>
            </ul>
+
+           <li><a href="som.html"><strong>6 Self-organizing map</strong></a></li>
+
+            <ul>
+             <li><a href="som.html#61">6.1 TEST</a></li>
+            </ul>
+
         	</ul>
     	</div>
     </div>
@@ -158,7 +178,7 @@
       The aim of this project was to simplify the treatment chain of neurosurgeon Dr. Fabien Rech, who had to use several librairies, software and methods to extract interesting data from NIfTI files.<br/>
       The workchain of NIfTI processing and information extraction carried out by Dr. Rech for his thesis work was the following one :
       <div style="padding-left: 24%; padding-top:3%; padding-bottom:3%">
-       <img src="imgs/chaine.jpg" style="width:60%">
+       <img src="imgs/index/chaine.jpg" style="width:60%">
      </div>
       Our aim was to simplify this workchain and offer the possibility to manage NIfTI, extract the interesting data from them to use it for calculations and clustering algorithms
       <br/><br/>

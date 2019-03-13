@@ -47,13 +47,28 @@
                     <li><a href="#as_set"><small>3.3.1.1 Save results as set</small></a></li>
                     <li><a href="#to_csv"><small>3.3.1.2 Export as CSV file</small></a></li>
                   </ul>
-                  <li><a href="#visu">3.3.2 Graphic Visualisation</a></li>
-                  <li><a href="#val_index">3.3.3 Internal Validation Indexes</a></li>
+
+                  <li><a href="#val_index">3.3.2 Internal Validation Indexes</a></li>
                   <ul>
-                    <li><a href="#mean_silhouette"><small>3.3.3.1 Mean Silhouette</small></a></li>
-                    <li><a href="#ch_index"><small>3.3.3.2 Calinski-Habaraz Index</small></a></li>
-                    <li><a href="#db_index"><small>3.3.3.3 Davies Boulin index</small></a></li>
+                    <li><a href="#mean_silhouette"><small>3.3.2.1 Mean Silhouette</small></a></li>
+                    <li><a href="#ch_index"><small>3.3.2.2 Calinski-Habaraz Index</small></a></li>
+                    <li><a href="#db_index"><small>3.3.2.3 Davies Boulin index</small></a></li>
+                    <li><a href="#fpc"><small>3.3.2.4 Fuzzy Partition Coefficient</small></a></li>
                   </ul>
+
+                  <li><a href="#visu">3.3.3 Graphic Visualisation</a></li>
+                    <ul>
+                      <li><a href="#silhouette_graph"><small>3.3.3.1 Silhouette graph</small></a></li>
+                      <li><a href="#3d_view"><small>3.3.3.2 3D view</small></a></li>
+                      <li><a href="#cross_sections"><small>3.3.3.3 Cross sections</small></a></li>
+                      <li><a href="#glass_brain"><small>3.3.3.4 Glass brain</small></a></li>
+                      <li><a href="#dendrogramm"><small>3.3.3.5 Dendrogramm</small></a></li>
+                    </ul>
+
+                  <li><a href="#nb_clusters">3.3.4 Choice the number of clusters</a></li>
+
+                  <li><a href="#iteration">3.3.5 Iteration</a></li>
+
                 </ul>
               </ul>
         	</div>
@@ -64,11 +79,11 @@
           <h1> Clustering on NIfTI data</h1>
           <p>
           BrainMapper allows the user to use the interesting data from NIfTI files to perform clustering algorithms and thus determine the different groups of voxels.<br/>
-          To accomplish this, BrainMapper extracts the data from NIfTI files and allows you to select the clustering method you would like to apply. Clustering results can be exported as a CSV file or
-          saved in the application.
-          <!-- TODO : EXPORT DES CLUSTERS A REVOIR-->
-          <!--, and thus be exported as new NIfTI files.--><br/><br/>
-          In this section we explain the main functionalities of our software around clustering
+          To accomplish this, BrainMapper extracts the data from NIfTI files or from CSV files and allows you to select the clustering method you would like to apply. Clustering results can be exported as a CSV file or
+          saved in the application as a set.
+          </p>
+          <p>
+          In this section we explain the main functionalities of our software around clustering.
           </p>
 
           <h2 id="data">3.1 Data extraction for clustering</h2>
@@ -80,7 +95,7 @@
         	</p>
         	<h3 id="extract">3.1.1 How data are extracted</h3>
         	<p>
-            From the main view page, where all collections are accessible, the user can click on 'clustering' button at the bottom right, once he has selected some image collections.<br/>
+            From the main view page, where all collections are accessible, the user can click on 'Clustering' button at the bottom right, once he has selected some image collections.<br/>
 
             <img src="imgs/clustering/access_clustering.png" style="width:80%">
             <br><br>
@@ -113,9 +128,18 @@
           </p>
 
           <h2 id="methods">3.2 Apply clustering algorithms on extracted data</h2>
-        	<p> Once you have extracted the data from the selected images, you can choose which clustering algorithm to apply by clicking on "Choose a clustering algorithm" at the top left in the clustering view.</p>
-          <br>
-          <!-- TODO : revoir sélection des colonnes avant le choix de l'algo-->
+        	<p> Once you have extracted the data from the selected images, you can choose on which coordinates you want to apply a clustering algorithm.
+            To be done, you have to select the columns on which you want work.
+          </p>
+
+          <p>On this following example, we have selected the coordinates X and Y.</p>
+
+          <img src="imgs/clustering/selectColumns.png" style="width:80%">
+
+          <p>
+            Then, you can choose which clustering algorithm to apply by clicking on "Choose a clustering algorithm" at the top left in the clustering view.
+          </p>
+
           <img src="imgs/clustering/clust_chooser.png" style="width:80%">
           <br>
           <br>
@@ -129,9 +153,22 @@
           Once an algorithm is selected, algorithm's parameters will appear on the left section of clustering view.
           You can select and enter the parameters for the clustering algorithm here.
 
-          <br>
+          <p>
           <img src="imgs/clustering/clust_params.png" style="width:80%">
-          <br>
+          </p>
+
+          <p>If you need more information about the parameters, you can click on the "?" button.</p>
+
+          <p>
+            <img src="imgs/clustering/help.png" style="width:80%">
+          </p>
+
+          <p>A new window will appear to give more information about the parameter you have selected.</p>
+          <p>
+            <img src="imgs/clustering/parameters_information.png" style="width:80%">
+          </p>
+
+
           <h3 id="kmeans">3.2.1 KMeans</h3>
         	<p>
             The KMeans algorithm is a classic clustering algorithm. <br>
@@ -143,6 +180,7 @@
           <p>
             <img src="imgs/clustering/Kmeans.png" style="width:70%">
           </p>
+
           <h3 id="kmedoids">3.2.2 KMedoids</h3>
         	<p>
             The KMedoids algorithm is an alternative to KMeans.<br>
@@ -223,46 +261,70 @@
           </p>
 
           <h2 id="clust_results">3.3 Clustering results</h2>
-        	<p> Once the selected clustering method parameters have been correctly set, you can launch the algorithm by clicking on the 'Run' button
-            <div style="padding-left: 22%; padding-top: 1%;padding-bottom: 1%;">
-              <img src="imgs/clust_run.png" style="width:60%">
-            </div>
-            <br><br>
-            Cluster assignments will appear on the data table and graphic visualisations of the results will appear.
+        	<p> Once the selected clustering method parameters have been correctly set, you can launch the algorithm by clicking on the 'Run' button.</p>
+
+          <img src="imgs/clustering/run.png" style="width:80%">
+
+          <p>
+            Cluster assignments will appear on the data table. Then, you could show graphics you want.
           </p>
+
+          <div style="padding-left: 12%; padding-top:3%; padding-bottom:3%">
+             <div class="alert note-info" role="alert">
+             <h5 style="color:#306499;">NOTE</h5>
+             <p>The final number of clusters can be inferior to the number of clusters chosen. That means that the algorithm has stopped
+             before the end.</p>
+           </div>
+          </div>
+
           <h3 id="clust_assign">3.3.1 Cluster assignment</h3>
         	<p>
             The data table will be modified to display which data entry belongs to which cluster.
-            <div style="padding-left: 22%; padding-top: 1%;padding-bottom: 1%;">
-              <img src="imgs/clust_assign.png" style="width:70%">
-            </div>
-            <br>
+          </p>
+
+          <p>
+            <img src="imgs/clustering/assignment.png" style="width:80%">
+          </p>
+
+          <p>
+            After launching a clustering algorithm, you have results in the result panel.
+            In this panel, you have a reminder of the chosen parameters such as the value of max_iter, the score chosen, the number of clusters (n_clusters), the value of i_iter, the type of initialization and the coordinates selected.
+            You also have the value of cluster centroids and the value of scores (Davies-Bouldin score, Calinski-Harabasz score and the mean silhouette).
+          </p>
+
+          <p>
+            <img src="imgs/clustering/result_panel.png" style="width:80%">
+          </p>
+
+          <p>
             This assignment results can be saved in two ways : either by saving them as a new set in the application or by exporting
             the results as a CSV file.
           </p>
 
           <h4 id="as_set">3.3.1.1 Save as set</h4>
         	<p>
-            By clicking on the <em><b>'Save as set'</b></em> button, a NIfTI file containing all points from a given cluster will be recreated,
-            for each cluster obtained. A set containing this results will be added in the main page, in the 'Clustering' tab. <br>
-            <br>
-            They can be exported as NIfTI files from there.
+            By clicking on the "Save as set" button, a NIfTI file containing all points from a given cluster will be recreated,
+            for each cluster obtained.
           </p>
+
+          <p>
+            <img src="imgs/clustering/save_as_set.png" style="width:80%">
+          </p>
+
+          <p>A set containing this results will be added in the main page, in the "Clustering" tab.</p>
+
+          <p>
+            <img src="imgs/clustering/clustering_main_view.png" style="width:80%">
+          </p>
+
           <h4 id="to_csv">3.3.1.2 Export as CSV file</h4>
-        	<p> By clicking on the 'Export' button, a CSV file containing the data table can be saved on the disk</p>
+        	<p> By clicking on the "Export" button, a CSV file containing the data table can be saved on the disk.</p>
 
-          <h3 id="visu">3.3.2 Graphic visualisation</h3>
-        	<p> Two graphic visualisations can give additional information on clustering results.
-            <br><br>
-            One of these graphs represents the proportion of data entries assigned to each cluster with an histogram (the graph in blue).<br>
-            The second graph plots the Silhouette values for each data entry after cluster assignment (the graph in green).
-
-            <div style="padding-left: 22%; padding-top: 1%;padding-bottom: 1%;">
-              <img src="imgs/clust_graphs.png" style="width:70%">
-            </div>
-
+          <p>
+            <img src="imgs/clustering/export.png" style="width:80%">
           </p>
-          <h3 id="val_index">3.3.3 Internal Validation indexes</h3>
+
+          <h3 id="val_index">3.3.2 Internal Validation indexes</h3>
         	<p> Internal validation indexes can be useful when one needs to determine which clustering execution is to be retained as conclusive or which number of clusters is the most conclusive. <br><br>
             In this version of <em>BrainMapper</em>, validation indexes are calculated automatically after a clustering algorithm is applied on data.<br>
             The internal validation indexes of the current version are :
@@ -272,7 +334,7 @@
               <li>Davis-Boulin index</li>
             </ul>
 
-          <h4 id="mean_silhouette">3.3.3.1 Mean Silhouette</h4>
+          <h4 id="mean_silhouette">3.3.2.1 Mean Silhouette</h4>
           <p>
             The aim of this method is to calculate for each point the similarity between him and his group by relation to the similarity between him and the other groups.
             Those data are displayed on a graph, sorting them by group and value.
@@ -288,11 +350,11 @@
           </p>
           <p>
             <img src="imgs/clustering/MeanSilhouette.png" style="width:70%">
-          </p>          
-        	<p> Mean silhouette index is calculated with the according function from <em><b>scikit-learn</b></em> library.
-            For more details click <a href="http://scikit-learn.org/stable/modules/generated/sklearn.metrics.silhouette_score.html" target="_blank" style="color : #5577ee">here</a>
           </p>
-          <h4 id="ch_index">3.3.3.2 Calinski-Habaraz score</h4>
+        	<p> Mean silhouette index is calculated with the according function from <em><b>scikit-learn</b></em> library.
+            For more details click <a href="http://scikit-learn.org/stable/modules/generated/sklearn.metrics.silhouette_score.html" target="_blank" style="color : #5577ee">here</a>.
+          </p>
+          <h4 id="ch_index">3.3.2.2 Calinski-Habaraz score</h4>
           <p>
             The Calinski-Harabasz index is based on the comparison of the sum of squares between clusters relative to the sum of the squares within a cluster.
             The aim is to maximize the measurement of cluster separation and minimize proximity measurement of points in a cluster.
@@ -306,9 +368,9 @@
           </p>
           <p>
             Calinski-Habaraz score is computed with the according function from <em><b>scikit-learn</b></em> library.
-            For more details click <a href="http://scikit-learn.org/stable/modules/generated/sklearn.metrics.calinski_harabaz_score.html" target="_blank" style="color : #5577ee">here</a>
+            For more details click <a href="http://scikit-learn.org/stable/modules/generated/sklearn.metrics.calinski_harabaz_score.html" target="_blank" style="color : #5577ee">here</a>.
           </p>
-          <h4 id="db_index">3.3.3.3 Davis-Boulin index</h4>
+          <h4 id="db_index">3.3.2.3 Davis-Boulin index</h4>
           <p>
             Davies Bouldin index compares intra-cluster distances with inter-cluster distances.
             The principle is to have low inter-cluster distances and distances high inter-clusters. The Davies-Bouldin index is defined as follows:
@@ -322,8 +384,169 @@
           </p>
           <p>
             Davies Bouldin index score is computed with the according function from <em><b>scikit-learn</b></em> library.
-            For more details click <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.davies_bouldin_score.html" target="_blank" style="color : #5577ee">here</a>
+            For more details click <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.davies_bouldin_score.html" target="_blank" style="color : #5577ee">here</a>.
           </p>
+
+          <h4 id="fpc">3.3.2.3 Fuzzy Partition Coefficient</h4>
+          <p>
+            The Fuzzy Partition Coefficient (FPC) tells us how cleanly our data is described by the algorithm with the number of clusters chosen.
+            This metric is defined between 0 and 1, with 1 being the best.
+          </p>
+          <p>
+            FPC is a value returned by the Fuzzy CMeans algorithm from <em><b>scikit-fuzzy</b></em> library.
+            For more details click <a href="https://pythonhosted.org/scikit-fuzzy/api/skfuzzy.cluster.html#cmeans" target="_blank" style="color : #5577ee">here</a>.
+          </p>
+
+          <div style="padding-left: 12%; padding-top:3%; padding-bottom:3%">
+             <div class="alert note-info" role="alert">
+             <h5 style="color:#306499;">NOTE</h5>
+             <p>This metric can only be used with the Fuzzy CMeans algorithm.</p>
+           </div>
+          </div>
+
+
+          <h3 id="visu">3.3.3 Graphic visualisation</h3>
+        	<p>After launching a clustering algorithm, you can show different graphics.</p>
+          <p>To show a graphic, you have to choose the graphic you want in the combo-box. Then, you have to select the button "Show".</p>
+
+          <p>
+            <img src="imgs/clustering/choose_graphic.png" style="width:80%">
+          </p>
+
+          <p>In this part, we describe all available graphics.</p>
+
+            <h4 id="silhouette_graph">3.3.3.1 Silhouette graphic</h4>
+
+            <p>If you select in the combo-box "Silhouette", you have the silhouette graphic.</p>
+            <p>For all clustering algorithms, you can show the silhouette graphic. This one reprents the mean silhouette.</p>
+            <p>For more detail about the mean silhouette, click <a href="#mean_silhouette">here</a>.</p>
+
+            <p>
+              <img src="imgs/clustering/silhouette.png" style="width:50%">
+            </p>
+
+            <h4 id="3d_view">3.3.3.2 3D view</h4>
+
+            <p>If you select in the combo-box "3D view", you have a representation of clusters in 3D.</p>
+            <p>Each cluster is represented by a different color and a different form. The centroid in each cluster is bigger than other points.</p>
+            <p>In the following example, three clusters are represented in 3D.</p>
+
+            <p>
+              <img src="imgs/clustering/3d_view.png" style="width:60%">
+            </p>
+
+            <div style="padding-left: 12%; padding-top:3%; padding-bottom:3%">
+               <div class="alert note-info" role="alert">
+               <h5 style="color:#306499;">NOTE</h5>
+               <p>This graphic is available for all clustering algorithms but for the Fuzzy CMeans algorithm, the color of points is the mix of clusters colors in terms of affiliations of those points to the different clusters.</p>
+             </div>
+            </div>
+
+            <p>This following example shows the 3D view for the Fuzzy CMeans algorithm.</p>
+
+            <p>
+              <img src="imgs/clustering/3d_view_fuzzy.png" style="width:60%">
+            </p>
+
+            <h4 id="cross_sections">3.3.3.3 Cross sections</h4>
+
+            <p>If you select in the combo-box "Cross sections", you have a representation of clusters in 2D.</p>
+            <p>Each point is represented in 2D on a brain cross section. Each cluster has a different color.</p>
+
+            <p>
+              <img src="imgs/clustering/cross_sections.png" style="width:50%">
+            </p>
+
+            <p>For all clustering algorithms, you can show the silhouette graphic.</p>
+
+            <h4 id="glass_brain">3.3.3.4 Glass brain</h4>
+
+            <p>If you select in the combo-box "Glass brain", you have a representation of clusters in 2D on a glass brain cross section.</p>
+            <p>Each point is represented in 2D on a brain cross section. Each cluster has a different color. Contrary to the cross section graphic, with the glass brain, you can see more points on the brain.</p>
+
+            <p>
+              <img src="imgs/clustering/glass_brain.png" style="width:50%">
+            </p>
+
+            <p>For all clustering algorithms, you can show the silhouette graphic.</p>
+
+            <h4 id="dendrogramm">3.3.3.5 Dendrogram</h4>
+
+            <p>The dendrogram helps in choosing the number of clusters. The higher is the division, the greater is the distance between the groups.</p>
+            <p>On the following example, we could decide to create two or three clusters.</p>
+
+            <p>
+              <img src="imgs/clustering/dendro.png" style="width:70%">
+            </p>
+
+            <p>In the following example, you decided to make only two clusters (one in pink, one in purple).</p>
+
+            <p>
+              <img src="imgs/clustering/dendogram.png" style="width:50%">
+            </p>
+
+            <div style="padding-left: 12%; padding-top:3%; padding-bottom:3%">
+              <div class="alert alert-info" role="alert">
+              <h5 style="color:#f66;">WARNING</h5>
+              <p>The dendrogram is only available for the agglomerative clustering.</p>
+              </div>
+            </div>
+
+        <h3 id="nb_clusters">3.3.4 Choice of the number of clusters</h3>
+
+        <p>BrainMapper can suggest a number of clusters for all clustering algorithms.</p>
+
+        <p>To do, you have to mention an interval for the parameter n_clusters and to choose a score.
+          Then, you have to select the buttoon "Run". And for this score, the algorithm returns the best value of clusters.</p>
+        <p>In the following example, you have chosen the interval "3-6" for n_clusters and the Calinski-Harabasz score.</p>
+
+        <p>
+          <img src="imgs/clustering/choice_nb.png" style="width:80%">
+        </p>
+
+        <p>The result appers in the result panel.</p>
+        <p>In the following example, the result is next to "n_selected". For this data, with the interval "3-6" for n_clusters and the Calinski Harabasz score,
+          the best value for number of clusters is 4.
+        </p>
+
+        <p>
+          <img src="imgs/clustering/result_nb.png" style="width:80%">
+        </p>
+
+        <div style="padding-left: 12%; padding-top:3%; padding-bottom:3%">
+           <div class="alert note-info" role="alert">
+           <h5 style="color:#306499;">NOTE</h5>
+           <p>If we had chosen an other score, the result would have been different.</p>
+         </div>
+        </div>
+
+        <p>We have redone the test changing only the score. With Davies Bouldin score, the best value is 3.</p>
+        <p>
+          <img src="imgs/clustering/diff_result.png" style="width:80%">
+        </p>
+
+        <h3 id="iteration">3.3.5 Iteration</h3>
+
+        <p>With BrainMapper, you can launch a clustering algorithm several times.</p>
+        <p>To do, you have to mention a value in i_iter. Then, you have to select the buttoon "Run".</p>
+        <p>In the following example, we choose 3 for the value of i_iter and launch the algorithm. In this case, the Fuzzy CMeans algorithm will
+        be launched thre times for each value of clusters (3 to 6) with Davies-Boulin score.</p>
+
+        <p>
+          <img src="imgs/clustering/iter.png" style="width:80%">
+        </p>
+
+        <p>In the result panel, we have the result of launching the Fuzzy CMeans algorithm three times.
+        The yellow line shows the best result. And the blue line shows the result which is displayed in the part "Data inside the collection".
+        If you select a column header ("I_number", "Clusters", "Mean silhouette", "Calinski-Harabasz", "Davies-Boulin" or "Fuzzy partition coefficient"),
+        the rows will be ordered on their values in this column.
+        </p>
+
+        <p>
+          <img src="imgs/clustering/result_iter.png" style="width:80%">
+        </p>
+
+
           </div>
       </div>
     </div>

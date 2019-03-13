@@ -144,7 +144,7 @@ class ClusteringView2(QtGui.QWidget):
         for param_name in user_values.keys():
             self.info_panel.insertPlainText(param_name + "\t\t\t " + str(user_values[param_name]) + "\n")
 
-        self.info_panel.insertPlainText(f"columns selected : {self.columns_selected}")
+        self.info_panel.insertPlainText(f"columns selected  \t\t{self.columns_selected} \n")
 
         # Search of the number of cluster
         if clustering_method != "DBSCAN":
@@ -189,8 +189,7 @@ class ClusteringView2(QtGui.QWidget):
         self.info_panel.insertPlainText("This mean is between -1 and 1 and the best value is around 1." + "\n\n")
         self.info_panel.insertPlainText("Calinski-Habaraz score: \t " + str(validation_values[1]) + "\n\n")
         self.info_panel.insertPlainText("Davies-Bouldin index: \t\t " + str(validation_values[2]) + "\n\n")
-        self.info_panel.insertPlainText(
-            "Calinski-Habaraz score is the relation between the sum of distances squared intergroup and the sum of distances squared intragroup. Whereas, Davies-Bouldin index is the relation between the sum of distances squared intragroup and the sum of distances squared intergroup. The aim is to minimize the sum of distances squared intragroup and to maximize the sum of distances squared intergroup. Smaller is the Davies-Bouldin index and bigger is the Calinski-Habaraz score, better is the number of clusters.\n\n")
+
 
     def clicked_table(self):
         ligne = self.tableResults.selectedIndexes()[0].row()
@@ -470,7 +469,7 @@ class ClusteringView2(QtGui.QWidget):
     def plot(self):
         type = self.comboBox_3.currentText()
         # print("plot -> type",type)
-        if type == "Sihouette":
+        if type == "Silhouette":
             clustering_plot.plot_silhouette(self.label, None)
         elif type == "3D view":
             if self.comboBox_methode.get_selected_method_name() == "FuzzyCMeans":
@@ -720,7 +719,7 @@ class ClusteringView2(QtGui.QWidget):
         item.setText(_translate("Form", "Assigned cluster", None))
         self.pushButton_run.setText(_translate("Form", "Run", None))
         self.pushButton_export.setText(_translate("Form", "Export", None))
-        self.comboBox_3.setItemText(0, _translate("Form", "Sihouette", None))
+        self.comboBox_3.setItemText(0, _translate("Form", "Silhouette", None))
         self.comboBox_3.setItemText(1, _translate("Form", "3D view", None))
         self.comboBox_3.setItemText(2, _translate("Form", "Cross sections", None))
         self.comboBox_3.setItemText(3, _translate("Form", "Dendrogram", None))
