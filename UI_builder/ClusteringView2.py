@@ -307,6 +307,8 @@ class ClusteringView2(QtGui.QWidget):
         else:
             self.columns_selected = ['X', 'Y', 'Z']
 
+        print(f"selected_columns : {self.columns_selected}")
+
         if selectedMethod == "DBSCAN":
             clustering_results = run_clustering(selectedMethod, param_dict, self.columns_selected)
             self.n_selected = "DBSCAN"
