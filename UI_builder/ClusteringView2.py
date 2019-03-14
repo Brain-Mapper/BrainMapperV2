@@ -198,6 +198,7 @@ class ClusteringView2(QtGui.QWidget):
         self.label = self.history_iterations[i].get("labels")
         self.centroids = self.history_iterations[i].get("centers")
         self.belong = self.history_iterations[i].get("belong")
+        self.hac = self.history_iterations[i].get("hac")
 
         for k in range(self.tableResults.rowCount()):
             for j in range(self.tableResults.columnCount()):
@@ -211,7 +212,7 @@ class ClusteringView2(QtGui.QWidget):
     def createResultView(self, param_dict, selectedMethod):
         """ Create the result panel at the bottom of the application """
         # If there is only one iteration
-        if "i_iter" not in param_dict.keys() or param_dict["i_iter"] == "1" and len(
+        if param_dict.get("i_iter", "1") == "1" and len(
                 param_dict["n_clusters"].split("-")) == 1:
             for i in reversed(range(self.verticalLayout_result.count())):
                 self.verticalLayout_result.itemAt(i).widget().setParent(None)
@@ -334,7 +335,7 @@ class ClusteringView2(QtGui.QWidget):
                 param_dict["score"] = "DBSCAN"
                 self.scores = []
             else:
-                i_iter = int(param_dict["i_iter"])
+                i_iter = int(param_dict.get("i_iter", "1"))
                 self.history_iterations = []
 
                 self.the_best_iteration = {
@@ -424,6 +425,14 @@ class ClusteringView2(QtGui.QWidget):
                             self.history_iterations[index]["belong"] = clustering_results["belong"]
                         else:
                             self.history_iterations[index]["fuzzy_partition_coefficient"] = None
+
+                        # HAC
+                        if selectedMethod == "AgglomerativeClustering":
+                            self.history_iterations[index]['hac'] = clustering_results['hac']
+                        else:
+                            self.history_iterations[index]['hac'] = None
+
+
 
                 self.n_selected = self.the_best_iteration["n_clusters"] if self.the_best_iteration[
                                                                                "n_clusters"] is not None else None

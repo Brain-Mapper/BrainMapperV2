@@ -64,11 +64,6 @@
   "AgglomerativeClustering" : { "algo_info" : "Recursively merges the pair of clusters that minimally increases a given linkage distance (see scikit-learn).",
     "algo_usecase" : "Many clusters, possibly connectivity constraints + \nLarge n_samples and n_clusters",
     "param_list" : {
-      "i_iter" : {
-        "param_info" : "The number of iterations you wish to obtain",
-        "type" : "int",
-        "default" : "1"
-      },
       "n_clusters" : {
           "param_info" : "The number of clusters you wish to obtain",
           "type" : "int",
