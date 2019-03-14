@@ -61,8 +61,6 @@ class SOMView(QtGui.QWidget):
         # Som results
         self.data_neuron_index: List[int] = None  # List of association date to neuron
         self.imgs_result: Dict[str: np.ndarray] = None  # Visualisation result
-        self.colormap_min: int = None
-        self.colormap_max: int = None
         self.setupUi(self)
 
     def fill_table(self, som_input: pd.DataFrame):
@@ -130,8 +128,7 @@ class SOMView(QtGui.QWidget):
 
         if len(items) != 0:
             for index in range(0, len(items), self.tableWidget.rowCount()):
-                if self.tableWidget.horizontalHeaderItem(items[index].column()).text() in ["X", "Y", "Z"]:
-                    columns.append(self.tableWidget.horizontalHeaderItem(items[index].column()).text())
+                columns.append(self.tableWidget.horizontalHeaderItem(items[index].column()).text())
         else:
             columns = ["X", "Y", "Z"]
 
@@ -240,10 +237,6 @@ class SOMView(QtGui.QWidget):
                     for column in self.features_columns:
                         self.imgs_result[column][i, j] = self.imgs_result[column][i, j] / number_of_data_in_neuron
 
-        # Calculate a unique colormap map
-        combined_data = np.array(list(self.imgs_result.values()))
-        self.colormap_min, self.colormap_max = 0, 1
-
         QtGui.QMessageBox.information(self, "Training done",
                                       f"The training is done you can visualize by clicking on the show button. "
                                       f"(You have used the columns: {columns})")
@@ -254,17 +247,13 @@ class SOMView(QtGui.QWidget):
     def showmap(self):
         column_name = self.comboBox.currentText()
 
-        # column_for_som = self.som_input[[column_name]].values
-
-        # print(f"data_neuron_index {self.data_neuron_index}")
-
         x = list(range(0, self.grid_width))
         y = list(range(0, self.grid_height))
 
         img = self.imgs_result[column_name]
 
         fig, ax = plt.subplots()
-        im = ax.imshow(img, cmap="inferno", origin="lower", vmin=self.colormap_min, vmax=self.colormap_max)
+        im = ax.imshow(img, cmap="inferno", origin="lower", vmin=0, vmax=1)
         # Set the ticks
         ax.set_xticks(x)
         ax.set_yticks(y)
@@ -327,7 +316,9 @@ class SOMView(QtGui.QWidget):
         self.gridLayout_5.addWidget(self.label_height, 0, 3, 1, 1)
 
         self.pushButton_5 = InfoButton(self.widget_param)
-        self.pushButton_5.setMessage("This is the learning rate.")
+        self.pushButton_5.setMessage("[positive real]\n"
+                                     "This is the learning rate. The lower this value is, the less the neurons are"
+                                     "modified at each step.")
         self.pushButton_5.setMaximumSize(QtCore.QSize(30, 16777215))
         self.pushButton_5.setObjectName(_fromUtf8("pushButton_5"))
         self.gridLayout_5.addWidget(self.pushButton_5, 6, 0, 1, 3)
@@ -338,7 +329,8 @@ class SOMView(QtGui.QWidget):
         self.gridLayout_5.addWidget(self.lineEdit_step, 6, 6, 1, 1)
 
         self.pushButton_7 = InfoButton(self.widget_param)
-        self.pushButton_7.setMessage("This parameter controls learning rate for each neighbor. Learning rate scales "
+        self.pushButton_7.setMessage("[positive real]\n"
+                                     "This parameter controls learning rate for each neighbor. Learning rate scales "
                                      "based on the factors produced by the normal distribution with center in the "
                                      "place of a winning neuron and standard deviation specified as a parameter. The "
                                      "learning rate for the winning neuron is always equal to the value specified in "
@@ -348,14 +340,16 @@ class SOMView(QtGui.QWidget):
         self.gridLayout_5.addWidget(self.pushButton_7, 11, 0, 1, 3)
 
         self.pushButton_3 = InfoButton(self.widget_param)
-        self.pushButton_3.setMessage("Feature grid defines shape of the output neurons. Width is the width of the "
-                                     "feature grid.")
+        self.pushButton_3.setMessage("[positive integer]\n"
+                                     "Width of the map."
+                                     )
         self.pushButton_3.setMaximumSize(QtCore.QSize(30, 16777215))
         self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
         self.gridLayout_5.addWidget(self.pushButton_3, 1, 0, 1, 2)
 
         self.pushButton_6 = InfoButton(self.widget_param)
-        self.pushButton_6.setMessage("Parameter defines radius within which we consider all neurons as neighbours to "
+        self.pushButton_6.setMessage("[positive integer]\n"
+                                     "Parameter defines radius within which we consider all neurons as neighbours to "
                                      "the winning neuron. The bigger the value the more neurons will be updated after"
                                      " each iteration.")
         self.pushButton_6.setMaximumSize(QtCore.QSize(30, 16777215))
@@ -372,8 +366,9 @@ class SOMView(QtGui.QWidget):
         self.gridLayout_5.addWidget(self.lineEdit_radius, 8, 6, 1, 1)
 
         self.pushButton_2 = InfoButton(self.widget_param)
-        self.pushButton_2.setMessage("Feature grid defines shape of the output neurons. Height is the height of the "
-                                     "feature grid.")
+        self.pushButton_2.setMessage("[positive integer]\n"
+                                     "Height of the map."
+                                     )
         self.pushButton_2.setMaximumSize(QtCore.QSize(30, 16777215))
         self.pushButton_2.setObjectName(_fromUtf8("pushButton_2"))
         self.gridLayout_5.addWidget(self.pushButton_2, 0, 0, 1, 3)
@@ -401,6 +396,7 @@ class SOMView(QtGui.QWidget):
 
         self.QPushButton_reduce_step_after_button = InfoButton(self.widget_param)
         self.QPushButton_reduce_step_after_button.setMessage(
+            "[positive integer]\n"
             "Defines reduction rate at which parameter step will be reduced using the following formula:"
             "\nstep = step / (1 + current_epoch / reduce_step_after)"
         )
@@ -410,6 +406,7 @@ class SOMView(QtGui.QWidget):
 
         self.pushButton_4 = InfoButton(self.widget_param)
         self.pushButton_4.setMessage(
+            "[positive integer]\n"
             "One epoch is when an entire dataset is passed forward and backward through the neural network only once.")
         self.pushButton_4.setMaximumSize(QtCore.QSize(30, 16777215))
         self.pushButton_4.setObjectName(_fromUtf8("pushButton_4"))
@@ -417,6 +414,7 @@ class SOMView(QtGui.QWidget):
 
         self.QPushButton_reduce_radius_after = InfoButton(self.widget_param)
         self.QPushButton_reduce_radius_after.setMessage(
+            "[positive integer]\n"
             "Every specified number of epochs learning_radius parameter will be reduced by 1."
         )
         self.QPushButton_reduce_radius_after.setMaximumSize(QtCore.QSize(30, 16777215))
@@ -425,6 +423,7 @@ class SOMView(QtGui.QWidget):
 
         self.QPushButton_reduce_std_after = InfoButton(self.widget_param)
         self.QPushButton_reduce_std_after.setMessage(
+            "[positive integer]\n"
             "Defines reduction rate at which parameter std will be reduced using the following formula:\n"
             "std = std / (1 + current_epoch / reduce_std_after)")
         self.QPushButton_reduce_std_after.setMaximumSize(QtCore.QSize(30, 16777215))

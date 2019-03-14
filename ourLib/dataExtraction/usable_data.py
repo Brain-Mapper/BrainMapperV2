@@ -19,18 +19,20 @@ import sys
 import numpy as np
 from numpy import zeros
 from nibabel import Nifti1Image, load
-#from BrainMapper import globalSets
+
+# from BrainMapper import globalSets
 
 if __package__ is None:
     sys.path.append(sys.path.dirname(sys.path.dirname(sys.path.abspath(__file__))))
     from ourLib.filesHandlers.imagecollection import ImageCollection
     from ourLib.filesHandlers.nifimage import NifImage
+    from ourLib.filesHandlers.image import TempImage
     from ourLib.filesHandlers.set import Set
 else:
     from ..filesHandlers.nifimage import NifImage
+    from ourLib.filesHandlers.image import TempImage
     from ..filesHandlers.imagecollection import ImageCollection
     from ..filesHandlers.set import Set
-
 
 
 class UsableDataCollection(object):
@@ -137,7 +139,7 @@ class UsableDataSet(object):
         return clusterizable
 
     def extract_set_images_by_cluster(self, label, template_mni_path, globalSets):
-        new_set = Set("Clust", 2, [len(globalSets[2])] )
+        new_set = Set("Clust", 2, [len(globalSets[2])])
         setName = str(new_set).split("0x")
         setName = setName[1]
         setName = "Clust" + setName[:-1]
@@ -146,7 +148,7 @@ class UsableDataSet(object):
         colls = []
         point_dict = dict()
         template_data = load(template_mni_path)
-        template_affine = template_data.affine
+        template_affine = np.identity(4)
         template_shape = template_data.shape
 
         for udcoll in self.get_usable_data_list():
@@ -157,7 +159,7 @@ class UsableDataSet(object):
                 for data_rows in range(0, data_array.shape[0]):
                     point = [int(float(data_array[data_rows, 0])), int(float(data_array[data_rows, 1])),
                              int(float(data_array[data_rows, 2])), int(float(data_array[data_rows, 3]))]
-                    coll_name = str(label[row_cont])
+                    coll_name = label[row_cont]
                     row_cont = row_cont + 1
                     for i in colls:
                         if (i.name == coll_name):
@@ -170,6 +172,18 @@ class UsableDataSet(object):
                         colls.append(c)
                     else:
                         found = False
+
+        print(f"point_dict.keys(): {point_dict.keys()}")
+
+        for key in point_dict.keys():
+            cluster_image = TempImage(point_dict[key], [key] * len(point_dict[key]), str(key))
+            for c in colls:
+                print(f"c.name: {c.name}")
+                if key == c.name:
+                    print(f"add_image")
+                    c.add(cluster_image)
+
+        """
         # recreate nifti image from this points
         for key in point_dict.keys():
             # print key
@@ -186,6 +200,7 @@ class UsableDataSet(object):
                 if (str(key) == c.name):
                     # put nifti images into a imageCollection
                     c.add(ni_image)
+        """
 
         for i in colls:
             new_name = str(i).split("0x")
