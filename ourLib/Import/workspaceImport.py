@@ -19,6 +19,10 @@ from ..filesHandlers import image
 
 
 def recursive_import(folder_path, actual_set, depth, globalSets):
+    name_folder = os.path.split(folder_path)[-1]
+    print("name folder",folder_path)
+    if actual_set.name=="Imported_Set":
+        actual_set.name=name_folder
     list = os.listdir(folder_path)
     print("list",list)
     for item in list:
