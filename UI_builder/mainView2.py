@@ -51,7 +51,7 @@ class SelectedButton(QtGui.QPushButton):
         self.date = date
 
         self.setText("Set name : " + str(self.setname) + "\nName : " + str(
-            self.coll.name) + "\nNIfTI : " + self.num + "\nLast modified : " + self.date)
+            self.coll.name) + "\nImage(s) : " + self.num + "\nLast modified : " + self.date)
 
 
 class CollButton(QtGui.QCheckBox):
@@ -77,7 +77,7 @@ class CollButton(QtGui.QCheckBox):
             self.d = datetime.fromtimestamp(int(round(date))).strftime('%Y-%m-%d')
         except:
             self.d = datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d')
-        label = "Set name : " + str(self.setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + str(
+        label = "Set name : " + str(self.setname) + "\nName : " + str(self.coll.name) + "\nImage(s) : " + str(
             len(self.list)) + "\nLast modified : " + str(self.d)
         self.setText(label)
         self.setStyleSheet(
@@ -120,7 +120,7 @@ class CollButton(QtGui.QCheckBox):
                 d = datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d')
         except:
             d = datetime.fromtimestamp(int(round(time.time()))).strftime('%Y-%m-%d')
-        self.setText("Set name : " + str(self.setname) + "\nName : " + str(self.coll.name) + "\nNIfTI : " + str(
+        self.setText("Set name : " + str(self.setname) + "\nName : " + str(self.coll.name) + "\nImage(s) : " + str(
             len(list)) + "\nLast modified : " + str(d))
 
 
@@ -364,7 +364,7 @@ class SetButton(QtGui.QWidget):
                                     collbutton=self.image_zone.itemAt(i).widget()
                                     collbutton.setname = str(text)
                                     print(collbutton.coll.name)
-                                    label = "Set name : " + str(collbutton.setname) + "\nName : " + str(collbutton.coll.name) + "\nNIfTI : " + str(
+                                    label = "Set name : " + str(collbutton.setname) + "\nName : " + str(collbutton.coll.name) + "\nImage(s) : " + str(
                                     len(collbutton.list)) + "\nLast modified : " + str(collbutton.d)
                                     print("label",label)
                                     collbutton.setText(label)
@@ -376,7 +376,7 @@ class SetButton(QtGui.QWidget):
                                     selectedbutton=self.selected_zone.itemAt(i).widget()
                                     selectedbutton.setname = str(text)
                                     label = "Set name : " + str(selectedbutton.setname) + "\nName : " + str(
-                                        selectedbutton.coll.name) + "\nNIfTI : " + selectedbutton.num + "\nLast modified : " + selectedbutton.date
+                                        selectedbutton.coll.name) + "\nImage(s) : " + selectedbutton.num + "\nLast modified : " + selectedbutton.date
                                     selectedbutton.setText(label)
 
                 else:
@@ -1198,7 +1198,7 @@ class MainView2(QtGui.QWidget):
             position_arbre=elem.position_arbre
             compteur=0
             insertionarbreimport(elem,position_arbre)
-                    
+
                     #self.my_set.get_sub_set(str(text)).setParent(self.my_set)
                     #add_set(ss)
                     #set_current_set(ss)
