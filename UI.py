@@ -313,14 +313,14 @@ class UI(QtGui.QMainWindow):
         # print test
         if test is None:
             general_workspace_import(folder_path)
-        #     print("workset",get_workspace_set())
-        #     for key in get_workspace_set():
-        #         if not key in temp:
-        #             homepage.mainview.show_set(key)
-        #             temp.append(key)
-        #             for i in key.get_all_subsets_subsubsets():
-        #                 temp.append(i)
-        #     rm_all_workspace_set()
+            # for key in get_workspace_set():
+            #     if not key in temp:
+            #         homepage.mainview.show_set(key)
+            #         temp.append(key)
+            #         for i in key.get_all_subsets_subsubsets():
+            #             temp.append(i)
+            # rm_all_workspace_set()
+            homepage.mainview.updateafterimport()
         else:
             err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. " + test)
 

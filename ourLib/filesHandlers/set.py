@@ -285,3 +285,16 @@ class Set(object):
                     return recursive_scan_of_subsets(subset_list, subset)
 
         return recursive_scan_of_subsets([], self)
+
+    def getPosition(self):
+        p = []
+        p.append(self.position)
+        parent = self.parent
+        while parent!= None:
+            print(parent.name)
+            p.append(parent.position)
+            parent = parent.parent
+        p.append(0)
+        p.reverse()
+        print(p)
+        return p

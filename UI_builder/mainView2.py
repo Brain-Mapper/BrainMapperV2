@@ -1113,6 +1113,74 @@ class MainView2(QtGui.QWidget):
     #     self.collectionsDisplayBox.update()
     #     print()
 
+    def updateafterimport(self):
+
+        def insertionarbreimport(set,position):
+            #print("len",len(set.getAllSubSets()))
+            compteur=0
+
+
+            if len(set.getAllSubSets()) == 0:
+                pass
+            else:
+                for subset in set.getAllSubSets():
+
+                    position_arbre = position
+                    position_arbre_nouveau=list(position_arbre)
+                    position_arbre_nouveau.append(compteur)
+                    subset.position_arbre=position_arbre_nouveau
+                    print("position_arbre_nouveau",position_arbre_nouveau)
+                    print("self.compteur",compteur)
+                    compteur=compteur+1
+                    print("self.compteur after",compteur)
+                    p = self.treeWidget.topLevelItem(0)
+                    for i in range(len(position_arbre_nouveau) - 1):
+                        p = p.child(position_arbre_nouveau[i])
+
+                    item_0 = QtGui.QTreeWidgetItem(p)
+                    item_0.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                    self.treeWidget.setItemWidget(p.child(position_arbre_nouveau[-1]), 0,
+                                                  SetButton(subset, self.verticalLayout_image_collections_show,
+                                                    self.verticalLayout_widget_selected_view, self.checkBox,
+                                                    self.checkimported,self.checkcalculation,
+                                                            self.checkclustering,self.treeWidget))
+                    #print("subset pos arbre avant",set.position_arbre)
+                    #print("subset pos arbre apres",set.position_arbre)
+                    insertionarbreimport(subset,position_arbre_nouveau)
+
+        for elem in get_workspace_set():
+            #print("parent",elem.getParent())
+            print("SET NAME",elem.name)
+            print('dic', elem.getAllSubSets())
+            for elem2 in elem.getAllSubSets():
+                print("SET NAME 2",elem2.name)
+                print('dic2', elem2.getAllSubSets())
+                for elem3 in elem2.getAllSubSets():
+                    print("SET NAME 3",elem3.name)
+                    print('dic3', elem3.getAllSubSets())
+                    for elem4 in elem3.getAllSubSets():
+                        print("SET NAME 4",elem4.name)
+                        print('dic4', elem4.getAllSubSets())
+
+
+
+            item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(0))
+            item_0.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+            self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(len(globalSets[0])), 0,
+                                      SetButton(elem, self.verticalLayout_image_collections_show,
+                                                self.verticalLayout_widget_selected_view, self.checkBox,
+                                                self.checkimported,self.checkcalculation,
+                                                            self.checkclustering,self.treeWidget))
+            elem.position_arbre=[len(globalSets[0])]
+            globalSets[0].append(elem)
+            position_arbre=elem.position_arbre
+            compteur=0
+            insertionarbreimport(elem,position_arbre)
+                    
+                    #self.my_set.get_sub_set(str(text)).setParent(self.my_set)
+                    #add_set(ss)
+                    #set_current_set(ss)
+
     def updateVizu(self, newVizu):
         # -- This updateVizu will display the newVizu but not delete the old one to be able to chow it again later
         newVizu.update()

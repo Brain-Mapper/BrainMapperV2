@@ -477,7 +477,7 @@ class calculationView2(QtGui.QWidget):
         choice.setStandardButtons(QMessageBox.Cancel | QMessageBox.Save)
         wantToSave = choice.exec_()
         if wantToSave == QtGui.QMessageBox.Save:
-            setCalculation = BrainMapper.Set("calc_", 1, [1])
+            setCalculation = BrainMapper.Set("calc_", 1, [len(globalSets[1])])
             setCalculation.set_name("calc_" + algorithm + "_" + str(id(setCalculation))[:5])
             coll = BrainMapper.ImageCollection("coll_", setCalculation)
             coll.set_name("coll_" + algorithm + "_" + str(id(coll)))

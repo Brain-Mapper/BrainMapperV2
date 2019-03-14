@@ -777,7 +777,14 @@ def general_workspace_import(folder_path):
     Arguments :
         folder_path{string} -- path
     """
-    ws.recursive_import(folder_path, currentSet, 0)
+    new_current_set = Set("Imported_Set",0,[len(globalSets[0])])
+    set_current_set(new_current_set)
+    print("current set ", currentSet.name)
+    ws.recursive_import(folder_path, currentSet, 0, globalSets)
+    print("\n==================================\n")
+    print("FIN DE LA RECURSION sets",sets)
+    workspace_sets.append(currentSet)
+    print("FIN DE LA RECURSION workspace sets",workspace_sets)
 
 
 def general_workspace_import_control(folder_path):
