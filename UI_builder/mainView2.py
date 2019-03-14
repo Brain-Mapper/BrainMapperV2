@@ -789,7 +789,7 @@ class MainView2(QtGui.QWidget):
         imported = self.treeWidget.topLevelItem(0)
         it = QTreeWidgetItemIterator(self.treeWidget.topLevelItem(0))
         while it.value():
-            if it.value().parent() is not None: 
+            if it.value().parent() is not None:
                 self.treeWidget.itemWidget(it.value(), 0).check.setChecked(self.checkimported.isChecked())
             it += 1
 
@@ -1109,7 +1109,7 @@ class MainView2(QtGui.QWidget):
                     if not(isinstance(img, NifImage)):
                         list_img.append(img)
                     else:
-                        QtGui.QMessageBox.critical(self, "Wrong data", "You can't use Nifti images for the SOM window.")
+                        QtGui.QMessageBox.critical(self, "Wrong data", "You can't use NIfTI images for the SOM window.")
                         return
             if len(list_img) > 0:
                 self.input_som = im.som_preparation(list_img)
