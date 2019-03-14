@@ -297,7 +297,7 @@ class SetButton(QtGui.QWidget):
         it = QTreeWidgetItemIterator(self.treeWidget.topLevelItem(pos))
         trouve = False
         while it.value():
-            if it.value().parent() is not None and it.value().parent() == imported:
+            if it.value().parent() is not None:
                if self.treeWidget.itemWidget(it.value(), 0).check.isChecked():
                 trouve = True
             it += 1
