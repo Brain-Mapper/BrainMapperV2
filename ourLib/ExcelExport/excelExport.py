@@ -12,6 +12,7 @@
 #       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
 import os
+from typing import List
 
 from qtconsole.qt import QtGui
 
@@ -111,3 +112,12 @@ def export(name: str, path: str, a_usable_dataset, labels=None):
 
                     f.write(','.join(elements_to_put_on_line) + '\n')
         f.close()
+
+
+"""
+def export_from_clustering(name: str, path:str, clusterizable_data:List[tuple], labels: List[str]):
+
+    if export_control(name, path):
+        header = [HEADER]
+        for point, label in zip(clusterizable_data, labels):
+"""

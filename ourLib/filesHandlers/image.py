@@ -2,7 +2,9 @@ import pandas as pd
 from ..filesHandlers.imagecollection import ImageCollection
 from abc import ABC, abstractmethod
 from shutil import copy2
-from typing import List, Set
+from typing import List, Set, Iterable
+import tempfile
+import numpy as np
 
 
 class Image(ABC):
@@ -61,6 +63,38 @@ class ExcelImage(Image):
         return pd.read_excel(self.filename, encoding="sys.getfilesystemencoding()").dropna()
 
 
+class TempImage(Image):
+    """ Image saved in a temporary file """
+
+    def __init__(self, data: Iterable, labels: List[int] = None, prefix = None):
+        f = tempfile.NamedTemporaryFile(prefix=prefix)
+        super().__init__(f.name)
+        self.file = f
+
+        if labels is not None:
+            self.columns = ["X", "Y", "Z", "Intensity", "Label"]
+            self.file.write("X,Y,Z,Intensity,Label\n".encode())
+            for row, label in zip(data, labels):
+                self.file.write(f"{','.join([str(row[0]), str(row[1]), str(row[2]), str(row[3]), str(label)])}\n".encode())
+
+        else:
+            self.columns = ["X", "Y", "Z", "Intensity"]
+            self.file.write("X,Y,Z,Intensity\n".encode())
+            for row in data:
+                self.file.write(f"{','.join([str(row[0]), str(row[1]), str(row[2]), str(row[3])])}\n".encode())
+
+    def __del__(self):
+        self.file.close()
+
+    def extract(self):
+        self.file.file.seek(0)
+        return pd.read_csv(self.file)[["X", "Y", "Z", "Intensity"]].dropna().values
+
+    def get_dataframe(self):
+        self.file.file.seek(0)
+        return pd.read_csv(self.file).dropna()
+
+
 def simple_import(file_path, current_set):
     """
     Allow the user to import a file and return an Image
@@ -106,5 +140,9 @@ def som_preparation(img_list: List[Image]) -> pd.DataFrame:
         columns.remove("X")
         columns.remove("Y")
         columns.remove("Z")
+
+        # To correct input problem
+        for column in columns:
+            selected[column] = selected[column].str.strip()
 
         return pd.get_dummies(selected, columns=columns, prefix_sep="=")

@@ -464,6 +464,7 @@ class SetButton(QtGui.QWidget):
         choice = QtGui.QMessageBox.question(self, 'Delete', "Are you sure to delete this set and all its sub-sets ?",
                                             QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
         if choice == QtGui.QMessageBox.Yes:
+            position = self.my_set.getPosition()
             indice_racine = self.my_set.position
             p = self.treeWidget.topLevelItem(indice_racine)
             position_arbre = self.my_set.position_arbre
@@ -530,7 +531,7 @@ class SetButton(QtGui.QWidget):
             #print("globalSets after", globalSets)
 
             # lorsqu'on supprimer un set il faut changer l'affichage graphique
-            #print("listes",listes)
+            # print("listes",listes)
             for i in reversed(range(self.image_zone.count())):
                 for elem in listes:
                     if self.image_zone.itemAt(i)!= None:
@@ -817,7 +818,7 @@ class MainView2(QtGui.QWidget):
             new_ok = True
             not_ok = ['^', '[', '<', '>', ':', ';', ',', '?', '"', '*', '|', '/', ']', '+', '$']
             if len(text) == 0:
-                new_ok=False
+                new_ok = False
             for i in not_ok:
                 if i in str(text):
                     new_ok = False
@@ -973,9 +974,19 @@ class MainView2(QtGui.QWidget):
                         # make an addition of all the image
                         result_matrix = calculations.addition_operation(list_of_images)
                         # get the result in an nibabel image with an mni affine
-                        img: nibabel.nifti1.Nifti1Image = calculations.create_mni_nibabel_image_from_matrix(result_matrix)
+                        img: nibabel.nifti1.Nifti1Image = calculations.create_mni_nibabel_image_from_matrix(
+                            result_matrix)
                         # save the image
-                        nibabel.save(img, save_path)
+                        try:
+                            nibabel.save(img, save_path)
+                        except FileExistsError as e:
+                            QtGui.QMessageBox.critical(self,
+                                                       "Error",
+                                                       f"Error while saving the file: {e}.")
+                        else:
+                            QtGui.QMessageBox.information(self,
+                                                          "Success",
+                                                          f"The export has been saved at {save_path}.")
 
                 elif excel_opt.isChecked():
                     type_choice = QtGui.QMessageBox()
@@ -1011,7 +1022,18 @@ class MainView2(QtGui.QWidget):
                         elif centroid_opt.isChecked():
                             extract_data_as_centroids_from_selected()
 
-                    ee.export(f_name, f_path, get_current_usableDataset())
+                    try:
+                        ee.export(f_name, f_path, get_current_usableDataset())
+                    except FileExistsError as e:
+                        QtGui.QMessageBox.critical(self,
+                                                   "Error",
+                                                   f"Error while saving the file: {e}.")
+                    else:
+                        QtGui.QMessageBox.information(self,
+                                                      "Success",
+                                                      f"The export has been saved at {os.path.join(f_name, f_path)}.")
+
+
 
                 else:
                     print("There was a problem in export options")

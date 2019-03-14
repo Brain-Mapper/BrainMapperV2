@@ -27,7 +27,7 @@ pip install C:\path\where\wheel\is\PyQt4-4.11.4-cp36-cp36m-win_amd64.whl  ( cett
 ## MacOS
 ### Install python 3
 If python3 is not already install on your computer, you need to download it. Folow this link:
-https://www.python.org/ftp/python/3.7.2/python-3.7.2-macosx10.6.pkg
+https://www.python.org/ftp/python/3.6.5/python-3.6.5-macosx10.9.pkg
 
 ### Install the dependencies
 Open a terminal in the MacOS folder.
@@ -45,9 +45,13 @@ $ echo `pip3 show pip | grep "Location" | grep -oE "[^ ]+$"`
 ```
 (for exemple /usr/lib/python3/dist-packages)
 
-Then install Qt4 (brew is needed):
+Install brew following the official website : https://brew.sh/
+
+Then install Qt4 :
 
 ```shell
+$ brew tap cartr/qt4
+$ brew tap-pin cartr/qt4
 $ brew install qt@4
 ```
 Install sip from source:
@@ -74,7 +78,7 @@ $ python3 configure-ng.py --sip ../temp_sip/sip --no-stubs --bindir <Python3 fol
 $ make install
 $ cd ..
 ```
-Install other depensencies :
+Install other dependencies :
 
 ```shell
 $ python3 -m pip install -r requirement.txt
