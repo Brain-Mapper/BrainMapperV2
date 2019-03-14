@@ -120,6 +120,13 @@ class SOMView(QtGui.QWidget):
         self.pushButton_show.setEnabled(False)
 
     def go_back(self):
+        self.som_input: pd.DataFrame = None  # Input of the SOM as a Dataframe
+        self.features_columns: List[str] = None  # Columns usable for the vizualisation
+        self.type_of_columns: Set[str] = None
+        self.grid_height: int = None
+        self.grid_width: int = None
+        self.data_neuron_index: List[int] = None  # List of association date to neuron
+        self.imgs_result: Dict[str: np.ndarray] = None  # Visualisation result
         self.showMain.emit()
 
     def train(self):
@@ -139,11 +146,59 @@ class SOMView(QtGui.QWidget):
                 columns.append(self.tableWidget.horizontalHeaderItem(items[index].column()).text())
         else:
             columns = ["X", "Y", "Z"]
-
         training_data = self.som_input[columns].values
 
-        self.grid_height = int(self.lineEdit_height.text())
-        self.grid_width = int(self.lineEdit_width.text())
+        # read the input
+
+        try:
+            wrong_input = "Height"
+            self.grid_height = int(self.lineEdit_height.text())
+            if self.grid_height < 1:
+                raise ValueError
+
+            wrong_input = "Width"
+            self.grid_width = int(self.lineEdit_width.text())
+            if self.grid_height < 1:
+                raise ValueError
+
+            wrong_input = "Radius"
+            learning_radius = int(self.lineEdit_radius.text())
+            if learning_radius < 0:
+                raise ValueError
+
+            wrong_input = "Reduce_radius_after"
+            reduce_radius_after = int(self.lineEdit_reduce_radius_after.text())
+            if reduce_radius_after < 0:
+                raise ValueError
+
+            wrong_input = "Std"
+            std = float(self.lineEdit_std.text())
+            if std < 0:
+                raise ValueError
+
+            wrong_input = "Reduce_std_after"
+            reduce_std_after = int(self.lineEdit_reduce_std_after.text())
+            if reduce_std_after < 0:
+                raise ValueError
+
+            wrong_input = "Step"
+            step = float(self.lineEdit_step.text())
+            if step < 0:
+                raise ValueError
+
+            wrong_input = "Reduce_step_after"
+            reduce_step_after = int(self.lineEdit_reduce_std_after.text())
+            if reduce_step_after < 0:
+                raise ValueError
+
+            wrong_input = "Epochs"
+            number_of_epochs = int(self.lineEdit_nepochs.text())
+            if number_of_epochs < 1:
+                raise ValueError
+
+        except ValueError:
+            QtGui.QMessageBox.critical(self, "Wrong input", f"{wrong_input} is not correct")
+            return
 
         def on_epoch_start(optimizer):
             self.pushButton_train.setText(f"In training (epoch : {optimizer.last_epoch})")
@@ -156,8 +211,8 @@ class SOMView(QtGui.QWidget):
             # clusters will be updated independently from each
             # other. For this reason we set up learning radius
             # equal to zero
-            learning_radius=float(self.lineEdit_radius.text()),
-            reduce_radius_after=float(self.lineEdit_reduce_radius_after.text()),
+            learning_radius=learning_radius,
+            reduce_radius_after=reduce_radius_after,
 
             # Parameters controls learning rate for each neighbour. The further neighbour neuron from the
             # winning neuron the smaller that learning rate for it. Learning rate scales based on the
@@ -165,8 +220,8 @@ class SOMView(QtGui.QWidget):
             # standard deviation specified as a parameter. The learning rate for the winning neuron is
             # always equal to the value specified in the step parameter and for neighbour neurons it’s
             # always lower.
-            std=float(self.lineEdit_std.text()),
-            reduce_std_after=int(self.lineEdit_reduce_std_after.text()),
+            std=std,
+            reduce_std_after=reduce_std_after,
 
             # Feature grid defines shape of the output neurons. The new shape should be compatible with      #the
             # number of outputs
@@ -179,8 +234,8 @@ class SOMView(QtGui.QWidget):
             distance='euclid',
 
             # Training step size or learning rate
-            step=float(self.lineEdit_step.text()),
-            reduce_step_after=int(self.lineEdit_reduce_std_after.text()),
+            step=step,
+            reduce_step_after=reduce_step_after,
 
             # Shuffles dataset before every training epoch.
             shuffle_data=True,
@@ -191,8 +246,6 @@ class SOMView(QtGui.QWidget):
             # Signals
             signals=on_epoch_start,
         )
-
-        number_of_epochs = int(self.lineEdit_nepochs.text())
 
         sofm.train(training_data, number_of_epochs)
 
