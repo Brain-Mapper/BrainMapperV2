@@ -52,12 +52,12 @@ class Set(object):
         """
         if name not in self.subset_dict.keys():
             self.subset_dict[name] = Set(name,0,position_arbre)
-            print("t")
+            #print("t")
             self.subset_dict[name].setParent(self)
-            print("t1")
+            #print("t1")
             return self.subset_dict[name]
         else:
-            print('The Subset name : %s already exist' % name)
+            #print('The Subset name : %s already exist' % name)
             return None
 
     def add_empty_collection(self, name, set_name):
@@ -72,7 +72,8 @@ class Set(object):
         if name not in self.collection_dict.keys():
             self.collection_dict[name] = ImageCollection(name, set_name)
         else:
-            print('The Image Collection name : %s already exist' % name)
+            #print('The Image Collection name : %s already exist' % name)
+            pass
 
     def add_subset(self, subset):
         """
@@ -85,7 +86,8 @@ class Set(object):
         if subset.get_name not in self.subset_dict.keys():
             self.subset_dict[subset.get_name()] = subset
         else:
-            print('The Subset name : %s already exist' % subset.get_name)
+            #print('The Subset name : %s already exist' % subset.get_name)
+            pass
 
     def add_collection(self, collection):
         """
@@ -98,7 +100,8 @@ class Set(object):
         if collection.get_name() not in self.collection_dict.keys():
             self.collection_dict[collection.get_name()] = collection
         else:
-            print('The Image Collection name : %s already exist' % collection.get_name)
+            #print('The Image Collection name : %s already exist' % collection.get_name)
+            pass
 
     def batch_add_subset(self, subsets_array):
         """
@@ -291,10 +294,10 @@ class Set(object):
         p.append(self.position)
         parent = self.parent
         while parent!= None:
-            print(parent.name)
+            #print(parent.name)
             p.append(parent.position)
             parent = parent.parent
         p.append(0)
         p.reverse()
-        print(p)
+        #print(p)
         return p

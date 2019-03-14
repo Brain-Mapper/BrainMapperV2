@@ -55,11 +55,11 @@ imgc_list = [imgc_1, imgc_2, imgc_3, imgc_4]
 # ------ List of collection's extraction test-------------
 start_time = time.time()  # To time extraction
 extracted_dataset = xt.extract_from_collection_list_using_centroids(imgc_list)
-print("----------------------------------------------------------------------")
-print("Extraction from coll list (size : 4) in ---- %s seconds ----" % (time.time() - start_time))
-print("Obtained object : "+ str(extracted_dataset))
-print("Extracted data (clusterizable) using centroids: " + str(extracted_dataset.export_as_clusterizable()))
-print("----------------------------------------------------------------------")
+#print("----------------------------------------------------------------------")
+#print("Extraction from coll list (size : 4) in ---- %s seconds ----" % (time.time() - start_time))
+#print("Obtained object : "+ str(extracted_dataset))
+#print("Extracted data (clusterizable) using centroids: " + str(extracted_dataset.export_as_clusterizable()))
+#print("----------------------------------------------------------------------")
 
 
 # ------ Perform K_medoids ----------

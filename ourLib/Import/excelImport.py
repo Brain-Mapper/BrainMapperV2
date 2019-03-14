@@ -84,7 +84,7 @@ def simple_import(csv_file_path, template_mni_path, currentSet):
 
         # part for a simple import
         if row == simple_header:
-            print('Simple import')
+            #print('Simple import')
             point_dict = dict()
 
             coll = ImageCollection("default", currentSet)
@@ -120,7 +120,7 @@ def simple_import(csv_file_path, template_mni_path, currentSet):
 
         # pat for clustering import
         elif row == clustering_header:
-            print('Clustering import')
+            #print('Clustering import')
             point_dict = dict()
 
             coll = ImageCollection("default", currentSet)
@@ -157,7 +157,7 @@ def simple_import(csv_file_path, template_mni_path, currentSet):
                         coll.add(ni_image)
 
         else:
-            print('Please use a valid csv file')
+            #print('Please use a valid csv file')
 
     finally:
 

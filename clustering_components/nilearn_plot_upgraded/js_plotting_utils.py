@@ -168,10 +168,11 @@ class HTMLDocument(object):
         self._temp_file = file_name
         file_size = os.path.getsize(file_name) / 1e6
         if temp_file_lifetime is None:
-            print(("Saved HTML in temporary file: {}\n"
-                   "file size is {:.1f}M, delete it when you're done, "
-                   "for example by calling this.remove_temp_file").format(
-                       file_name, file_size))
+            pass
+            # print(("Saved HTML in temporary file: {}\n"
+            #       "file size is {:.1f}M, delete it when you're done, "
+            #       "for example by calling this.remove_temp_file").format(
+            #           file_name, file_size))
         else:
             _remove_after_n_seconds(self._temp_file, temp_file_lifetime)
         webbrowser.open('file://{}'.format(file_name))
@@ -185,7 +186,7 @@ class HTMLDocument(object):
         if not os.path.isfile(self._temp_file):
             return
         os.remove(self._temp_file)
-        print('removed {}'.format(self._temp_file))
+        #print('removed {}'.format(self._temp_file))
         self._temp_file = None
 
 

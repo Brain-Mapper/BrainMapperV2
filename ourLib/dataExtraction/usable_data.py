@@ -170,14 +170,14 @@ class UsableDataSet(object):
                     else:
                         found = False
 
-        # print(f"point_dict.keys(): {point_dict.keys()}")
+        # #print(f"point_dict.keys(): {point_dict.keys()}")
 
         for key in point_dict.keys():
             cluster_image = TempImage(point_dict[key], [key] * len(point_dict[key]), str(key))
             for c in colls:
-                # print(f"c.name: {c.name}")
+                # #print(f"c.name: {c.name}")
                 if key == c.name:
-                    # print(f"add_image")
+                    # #print(f"add_image")
                     c.add(cluster_image)
 
         for i in colls:

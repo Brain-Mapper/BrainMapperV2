@@ -110,7 +110,7 @@ def perform_kmedoids(param_dict, points, columns_selected):
 
 def perform_FuzzyCMeans(param_dict, points, columns_selected):
     points = format_ndarray(points, columns_selected)
-    print("perform_FuzzyCMeans -> n_clusters : {}".format(int(param_dict["n_clusters"])))
+    #print("perform_FuzzyCMeans -> n_clusters : {}".format(int(param_dict["n_clusters"])))
 
     number_of_columns = len(columns_selected)
 
@@ -183,7 +183,7 @@ def kmedoids_cluster(init_mode, data_matrix, distances, k=3):
         curr_medoids[c] = np.array(data_matrix[index])
         c = c + 1
 
-    print("First curr_medoids_index", curr_medoids_index)
+    #print("First curr_medoids_index", curr_medoids_index)
 
     old_medoids_index = np.array([-1] * k)
     new_medoids_index = np.array([-1] * k)
@@ -213,7 +213,7 @@ def kmedoids_cluster(init_mode, data_matrix, distances, k=3):
         clusters_labels.append(int(clust_i))
         c = c + 1
 
-    # print("curr_medoids ->", curr_medoids)
+    # #print("curr_medoids ->", curr_medoids)
     return clusters_labels, curr_medoids_index
 
 

@@ -150,7 +150,7 @@ class SetButton(QtGui.QWidget):
         self.check.setText(my_set.name)
         self.check.stateChanged.connect(self.state_changed)
         hbox.addWidget(self.check)
-        print("pos", self.my_set.position)
+        ##print("pos", self.my_set.position)
 
         if self.my_set.position == 0:
             SSButton = QtGui.QPushButton()
@@ -197,7 +197,7 @@ class SetButton(QtGui.QWidget):
             # homepage.mainview.show_coll(collec)
             # homepage.edit_colls.fill_coll() #rapport a editview2
             # except Error as error:
-            #     print(error)
+            #     ##print(error)
             #     err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. Maybe you tried to open a non-NIfTI file")
 
         # -- We create a collection with the list of images the user selected and give it to the main view and the edit view
@@ -299,7 +299,7 @@ class SetButton(QtGui.QWidget):
                 if self.treeWidget.itemWidget(it.value(), 0).check.isChecked():
                     trouve = True
             it += 1
-        # print(pos)
+        # ##print(pos)
         if trouve == False:
             if pos == 0:
                 self.checkimported.setChecked(False)
@@ -309,7 +309,7 @@ class SetButton(QtGui.QWidget):
                 self.checkclustering.setChecked(False)
 
         # for i in reversed(range(self.image_zone.count())):
-        #     print("boucle widget",self.image_zone.itemAt(i).widget().coll)
+        #     ##print("boucle widget",self.image_zone.itemAt(i).widget().coll)
         #     self.image_zone.itemAt(i).widget().setParent(None)
         # for i in reversed(range(self.selected_zone.count())):
         #     self.selected_zone.itemAt(i).widget().setParent(None)
@@ -349,7 +349,7 @@ class SetButton(QtGui.QWidget):
                         self.my_set.getParent().add_subset(self.my_set)
                     else:
                         self.my_set.set_name(str(text))
-                    # print(self.my_set.get_name())
+                    # ##print(self.my_set.get_name())
                     self.check.setText(str(text))
                     add_set(self.my_set)
 
@@ -361,11 +361,11 @@ class SetButton(QtGui.QWidget):
                                 if self.image_zone.itemAt(i).widget().coll.name == elem.get_name():
                                     collbutton = self.image_zone.itemAt(i).widget()
                                     collbutton.setname = str(text)
-                                    print(collbutton.coll.name)
+                                    ##print(collbutton.coll.name)
                                     label = "Set name : " + str(collbutton.setname) + "\nName : " + str(
                                         collbutton.coll.name) + "\nImage(s) : " + str(
                                         len(collbutton.list)) + "\nLast modified : " + str(collbutton.d)
-                                    print("label", label)
+                                    ##print("label", label)
                                     collbutton.setText(label)
 
                     for i in reversed(range(self.selected_zone.count())):
@@ -401,20 +401,20 @@ class SetButton(QtGui.QWidget):
                     if i in str(text):
                         new_ok = False
                 if new_ok and not exists_set(str(text)):
-                    # print("test")
-                    print("position du set courant dans l arbre", self.my_set.position_arbre)
+                    # ##print("test")
+                    ##print("position du set courant dans l arbre", self.my_set.position_arbre)
                     number_of_subset = len(self.my_set.subset_dict)
-                    print("number of subset", number_of_subset)
+                    ##print("number of subset", number_of_subset)
                     position_arbre = self.my_set.position_arbre
                     position_arbre_nouveau = list(position_arbre)
                     position_arbre_nouveau.append(number_of_subset)
                     ss = self.my_set.add_empty_subset(str(text), position_arbre_nouveau)
-                    print("position du subset", ss.position_arbre)
+                    ##print("position du subset", ss.position_arbre)
                     p = self.treeWidget.topLevelItem(0)
                     for i in range(len(position_arbre_nouveau) - 1):
                         p = p.child(position_arbre_nouveau[i])
 
-                    print(self.treeWidget.itemWidget(p, 0).my_set.name)
+                    ##print(self.treeWidget.itemWidget(p, 0).my_set.name)
 
                     item_0 = QtGui.QTreeWidgetItem(p)
                     item_0.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
@@ -429,28 +429,28 @@ class SetButton(QtGui.QWidget):
                     err = QtGui.QMessageBox.critical(self, "Error",
                                                      "The name you entered is not valid (empty, invalid caracter or already exists)")
             except TypeError as e:
-                print(e)
+                ##print(e)
                 err = QtGui.QMessageBox.critical(self, "Error",
                                                  "The name you entered is not valid (" + str(sys.exc_info()[0]) + ")")
 
     def deleteSet(self):
 
         def changementindice(set, indice_a_modif):
-            print("len", len(set.getAllSubSets()))
+            ##print("len", len(set.getAllSubSets()))
             if len(set.getAllSubSets()) == 0:
-                # print("subset pos arbre avant",set.position_arbre)
+                # ##print("subset pos arbre avant",set.position_arbre)
                 # set.position_arbre[indice_a_modif]=set.position_arbre[indice_a_modif]-1
-                # print("subset pos arbre apres",set.position_arbre)
+                # ##print("subset pos arbre apres",set.position_arbre)
                 pass
             else:
                 for subset in set.getAllSubSets():
-                    # print("subset pos arbre avant",set.position_arbre)
+                    # ##print("subset pos arbre avant",set.position_arbre)
                     subset.position_arbre[indice_a_modif] = subset.position_arbre[indice_a_modif] - 1
-                    # print("subset pos arbre apres",set.position_arbre)
+                    # ##print("subset pos arbre apres",set.position_arbre)
                     changementindice(subset, indice_a_modif)
 
         def deletebackdata(set):
-            print("len", len(set.getAllSubSets()))
+            ##print("len", len(set.getAllSubSets()))
             if len(set.getAllSubSets()) == 0:
                 sets.remove(set)
             else:
@@ -468,11 +468,11 @@ class SetButton(QtGui.QWidget):
             indice_racine = self.my_set.position
             p = self.treeWidget.topLevelItem(indice_racine)
             position_arbre = self.my_set.position_arbre
-            print("position_arbre", position_arbre)
+            ##print("position_arbre", position_arbre)
             # position_arbre=list(position_arbre)
 
-            # print("indice racine",indice_racine)
-            # print("globalSets before", globalSets)
+            # ##print("indice racine",indice_racine)
+            # ##print("globalSets before", globalSets)
 
             if indice_racine == 1 or indice_racine == 2:
                 it = QTreeWidgetItemIterator(p)
@@ -480,17 +480,17 @@ class SetButton(QtGui.QWidget):
                     if it.value().parent() is not None and it.value().parent() == p:
                         button = self.treeWidget.itemWidget(it.value(), 0)
                         if button.my_set == self.my_set:  # Si on trouve pas on doit parcourir les subset eventuels.
-                            print("trouvé", button.my_set.name)
+                            ##print("trouvé", button.my_set.name)
                             p.removeChild(it.value())
                     it += 1
             elif indice_racine == 0:
                 if self.my_set.getParent() != None:
                     for i in range(0, len(position_arbre) - 1):
-                        # print("position_arbre avant", position_arbre)
+                        # ##print("position_arbre avant", position_arbre)
                         p = p.child(position_arbre[0])
                         position_arbre.pop(0)
-                        # print("position_arbre apres", position_arbre)
-                        # print("p",p)
+                        # ##print("position_arbre apres", position_arbre)
+                        # ##print("p",p)
                 else:
                     globalSets[indice_racine].remove(self.my_set)
 
@@ -502,21 +502,21 @@ class SetButton(QtGui.QWidget):
                 if d in collshow:
                     collshow.remove(d)
 
-            print("sets avant", sets)
+            ##print("sets avant", sets)
             deletebackdata(self.my_set)
-            print("sets apres", sets)
+            ##print("sets apres", sets)
 
             listes = self.my_set.get_all_nifti_set_and_subset()
 
             if self.my_set.getParent() != None:
                 self.my_set.getParent().remove_subset(self.my_set.name)
                 indice_a_modif = len(position_arbre)
-                print("indice_a_modif", indice_a_modif)
+                ##print("indice_a_modif", indice_a_modif)
                 for set in self.my_set.getParent().getAllSubSets():
                     if set != self and set.position_arbre[indice_a_modif] > position_arbre[0]:
-                        print("set pos arbre avant", set.position_arbre)
+                        ###print("set pos arbre avant", set.position_arbre)
                         set.position_arbre[indice_a_modif] = set.position_arbre[indice_a_modif] - 1
-                        print("set pos arbre apres", set.position_arbre)
+                        ##print("set pos arbre apres", set.position_arbre)
                         changementindice(set, indice_a_modif)
 
                         # set.position -= 1
@@ -526,10 +526,10 @@ class SetButton(QtGui.QWidget):
             #     if s.position > self.my_set.position:
             #         s.position -= 1
 
-            # print("globalSets after", globalSets)
+            # ##print("globalSets after", globalSets)
 
             # lorsqu'on supprimer un set il faut changer l'affichage graphique
-            # print("listes",listes)
+            # ##print("listes",listes)
             for i in reversed(range(self.image_zone.count())):
                 for elem in listes:
                     if self.image_zone.itemAt(i) != None:
@@ -539,7 +539,7 @@ class SetButton(QtGui.QWidget):
             for i in reversed(range(self.selected_zone.count())):
                 for elem in listes:
                     if self.selected_zone.itemAt(i) != None:
-                        # print('name',self.selected_zone.itemAt(i).widget().coll.name)
+                        # ##print('name',self.selected_zone.itemAt(i).widget().coll.name)
                         if self.selected_zone.itemAt(i).widget().coll.name == elem.get_name():
                             self.selected_zone.itemAt(i).widget().setParent(None)
 
@@ -761,7 +761,7 @@ class MainView2(QtGui.QWidget):
 
         my_set = newSet(default_name[2:], 0, [0])
         # set_current_set(my_set)
-        # print(get_current_set().get_name())
+        # ##print(get_current_set().get_name())
 
         item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(0))
         item_0.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
@@ -821,7 +821,7 @@ class MainView2(QtGui.QWidget):
                     new_ok = False
             if new_ok and not exists_set(str(text)):
                 my_set = newSet(text, 0, [len(globalSets[0])])
-                print(my_set.name)
+                ##print(my_set.name)
                 item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(0))
                 item_0.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
                 self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(0).child(len(globalSets[0])), 0,
@@ -836,9 +836,9 @@ class MainView2(QtGui.QWidget):
 
     def updateTreeView(self):
         for s in setToAdd:
-            print("s", s[1])
-            print("len", len(globalSets[s[1]]))
-            print("global", globalSets)
+            ##print("s", s[1])
+            ##print("len", len(globalSets[s[1]]))
+            ##print("global", globalSets)
             item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(s[1]))
             item_0.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
             self.treeWidget.setItemWidget(self.treeWidget.topLevelItem(s[1]).child(len(globalSets[s[1]])), 0,
@@ -859,7 +859,7 @@ class MainView2(QtGui.QWidget):
         #         self.verticalLayout_image_collections_show.itemAt(i).widget().coll.name) + "\nNIfTI : " + str(
         #         len(self.verticalLayout_image_collections_show.itemAt(i).widget().list)) + "\nLast modified : " + str(
         #         self.verticalLayout_image_collections_show.itemAt(i).widget().d)
-        #     print("label",label)
+        #     ##print("label",label)
         #     self.verticalLayout_image_collections_show.itemAt(i).widget().setText(label)
         #     self.verticalLayout_image_collections_show.itemAt(i).widget().setChecked(False)
 
@@ -870,9 +870,9 @@ class MainView2(QtGui.QWidget):
             self.verticalLayout_image_collections_show.itemAt(i).widget().setParent(None)
 
         # for i in reversed(range(self.verticalLayout_image_collections_show.count())):
-        #     print(self.verticalLayout_image_collections_show.itemAt(i).widget())
+        #     ##print(self.verticalLayout_image_collections_show.itemAt(i).widget())
 
-        # print("collshow",collshow)
+        # ##print("collshow",collshow)
         del collshow[:]
         del selected_images_collections[:]
 
@@ -1036,11 +1036,12 @@ class MainView2(QtGui.QWidget):
 
 
                 else:
-                    print("There was a problem in export options")
+                    ##print("There was a problem in export options")
+                    pass
 
         else:
             QtGui.QMessageBox.information(self, "Selection empty", "There's nothing to export.")
-        print()
+        ##print()
 
     def extract_and_cluster(self):
         if get_selected():
@@ -1112,7 +1113,7 @@ class MainView2(QtGui.QWidget):
         list_img = []
         for col in liste_col:
             for img in col.get_img_list().values():
-                # print(type(img))
+                # ##print(type(img))
                 if not (isinstance(img, NifImage)):
                     list_img.append(img)
                 else:
@@ -1120,7 +1121,7 @@ class MainView2(QtGui.QWidget):
                     return
         if len(list_img) > 0:
             self.input_som = im.som_preparation(list_img)
-            print(f"self.input_som.columns : {self.input_som.columns}")
+            ##print(f"self.input_som.columns : {self.input_som.columns}")
             if "X" not in self.input_som.columns or "Y" not in self.input_som.columns or "Z" not in self.input_som.columns:
                 QtGui.QMessageBox.critical(self, "Wrong data", "The format of the data is not correct: there must "
                                                                "be an X, an Y and a Z column.")
@@ -1136,8 +1137,8 @@ class MainView2(QtGui.QWidget):
         global selected_images_collections
         global collshow
         # -- This edit_pannel will show the edit view if selected is not empty
-        # print("mv selected",selected)
-        # print("mv collshow",collshow)
+        # ##print("mv selected",selected)
+        # ##print("mv collshow",collshow)
         if (get_selected()):
             self.showEdit.emit()
         else:
@@ -1146,12 +1147,12 @@ class MainView2(QtGui.QWidget):
     # def update(self):
     #     # -- This update will call the update function of collectionsDisplayBox
     #     self.collectionsDisplayBox.update()
-    #     print()
+    #     ##print()
 
     def updateafterimport(self):
 
         def insertionarbreimport(set, position):
-            # print("len",len(set.getAllSubSets()))
+            # ##print("len",len(set.getAllSubSets()))
             compteur = 0
 
             if len(set.getAllSubSets()) == 0:
@@ -1163,10 +1164,10 @@ class MainView2(QtGui.QWidget):
                     position_arbre_nouveau = list(position_arbre)
                     position_arbre_nouveau.append(compteur)
                     subset.position_arbre = position_arbre_nouveau
-                    print("position_arbre_nouveau", position_arbre_nouveau)
-                    print("self.compteur", compteur)
+                    ##print("position_arbre_nouveau", position_arbre_nouveau)
+                    ##print("self.compteur", compteur)
                     compteur = compteur + 1
-                    print("self.compteur after", compteur)
+                    ##print("self.compteur after", compteur)
                     p = self.treeWidget.topLevelItem(0)
                     for i in range(len(position_arbre_nouveau) - 1):
                         p = p.child(position_arbre_nouveau[i])
@@ -1178,23 +1179,23 @@ class MainView2(QtGui.QWidget):
                                                             self.verticalLayout_widget_selected_view, self.checkBox,
                                                             self.checkimported, self.checkcalculation,
                                                             self.checkclustering, self.treeWidget))
-                    # print("subset pos arbre avant",set.position_arbre)
-                    # print("subset pos arbre apres",set.position_arbre)
+                    # ##print("subset pos arbre avant",set.position_arbre)
+                    # ##print("subset pos arbre apres",set.position_arbre)
                     insertionarbreimport(subset, position_arbre_nouveau)
 
         for elem in get_workspace_set():
-            # print("parent",elem.getParent())
-            # print("SET NAME",elem.name)
-            # print('dic', elem.getAllSubSets())
+            # ##print("parent",elem.getParent())
+            # ##print("SET NAME",elem.name)
+            # ##print('dic', elem.getAllSubSets())
             # for elem2 in elem.getAllSubSets():
-            #     print("SET NAME 2",elem2.name)
-            #     print('dic2', elem2.getAllSubSets())
+            #     ##print("SET NAME 2",elem2.name)
+            #     ##print('dic2', elem2.getAllSubSets())
             #     for elem3 in elem2.getAllSubSets():
-            #         print("SET NAME 3",elem3.name)
-            #         print('dic3', elem3.getAllSubSets())
+            #         ##print("SET NAME 3",elem3.name)
+            #         ##print('dic3', elem3.getAllSubSets())
             #         for elem4 in elem3.getAllSubSets():
-            #             print("SET NAME 4",elem4.name)
-            #             print('dic4', elem4.getAllSubSets())
+            #             ##print("SET NAME 4",elem4.name)
+            #             ##print('dic4', elem4.getAllSubSets())
 
             item_0 = QtGui.QTreeWidgetItem(self.treeWidget.topLevelItem(0))
             item_0.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
@@ -1230,15 +1231,18 @@ class MainView2(QtGui.QWidget):
         #     nb = limit - len(label) + 1
         #     label = label[:nb] + "-"
         # self.collectionsDisplayBox.update_label(label)
-        print()
+        ##print()
+        pass
 
     def updateClusterRes(self):
         # self.setAccessBox.add2()
-        print()
+        ##print()
+        pass
 
     def updateCalculRes(self):
         # self.setAccessBox.add3()
-        print()
+        ##print()
+        pass
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(_translate("Form", "Form", None))

@@ -19,7 +19,7 @@ cx_Freeze.hooks.load_matplotlib = hack
 # console application).
 
 path = sys.path
-# print(path)
+# #print(path)
 
 # Debug for Aurélien
 

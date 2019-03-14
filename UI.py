@@ -288,7 +288,7 @@ class UI(QtGui.QMainWindow):
             # homepage.mainview.show_coll(collec)
             # homepage.edit_colls.fill_coll() #rapport a editview2
             # except Error as error:
-            #     print(error)
+            #     #print(error)
             #     err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. Maybe you tried to open a non-NIfTI file")
 
         # -- We create a collection with the list of images the user selected and give it to the main view and the edit view
@@ -308,9 +308,9 @@ class UI(QtGui.QMainWindow):
     def fromWorkspace(self):
         folder_path = str(QFileDialog.getExistingDirectory())
         test = general_workspace_import_control(folder_path)
-        print('passage')
+        #print('passage')
         temp = []
-        # print test
+        # #print test
         if test is None:
             general_workspace_import(folder_path)
             # for key in get_workspace_set():

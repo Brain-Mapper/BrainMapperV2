@@ -45,7 +45,7 @@ def extract(obj):
     # shape : lines = number of voxels found for which intensity is superior to 0
     #           col = four columns : X,Y,Z and intensity (for now...)
 
-    # print("extractor: type obj ->", type(obj))
+    # #print("extractor: type obj ->", type(obj))
 
     if isinstance(obj, NifImage):
 
@@ -96,7 +96,7 @@ def extract(obj):
             return obj.temp_file.extract()
 
     elif isinstance(obj, Image):
-        # print("extractor -> in Image")
+        # #print("extractor -> in Image")
         return obj.extract()
 
     else:
@@ -131,8 +131,8 @@ def extract_from_collection_list(a_nifti_imgcoll_list):
     :return: An array of arrays [X,Y,Z,Intensity]
     """
     # # Check if all elements of list are ImageCollection class instances
-    # print(isinstance(x, ImageCollection) for x in a_nifti_imgcoll_list)
-    # print(all(ImageCollection is x.__class___ for x in a_nifti_imgcoll_list))
+    # #print(isinstance(x, ImageCollection) for x in a_nifti_imgcoll_list)
+    # #print(all(ImageCollection is x.__class___ for x in a_nifti_imgcoll_list))
     # if not all(isinstance(x, ImageCollection) for x in a_nifti_imgcoll_list):
     #     raise ValueError('extract_from_collection_list function takes an ImageCollection instances list : at least one '
     #                      'of given list elements is not an ImageCollection instance ! ')

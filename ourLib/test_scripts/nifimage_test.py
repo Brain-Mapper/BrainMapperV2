@@ -14,34 +14,34 @@ ni3 = NifImage.from_file('ImagesTest/P92_UL_M0_1.nii')
 ni4 = NifImage.from_file('ImagesTest/P92_UL_M0_1.nii')
 ni5 = NifImage.from_file('ImagesTest/P92_F_M0_1.nii')
 
-# print affine matrices
-print(ni1.get_affine_matrix())
-print(ni2.get_affine_matrix())
-print(ni3.get_affine_matrix())
-print(ni4.get_affine_matrix())
-print(ni_patient.get_affine_matrix())
-print(ni5.get_affine_matrix())
+# #print affine matrices
+#print(ni1.get_affine_matrix())
+#print(ni2.get_affine_matrix())
+#print(ni3.get_affine_matrix())
+#print(ni4.get_affine_matrix())
+#print(ni_patient.get_affine_matrix())
+#print(ni5.get_affine_matrix())
 
-# print NifTi class or format
-print(ni1.get_img_class())
-print(ni2.get_img_class())
-print(ni3.get_img_class())
-print(ni4.get_img_class())
-print(ni_patient.get_img_class())
+# #print NifTi class or format
+#print(ni1.get_img_class())
+#print(ni2.get_img_class())
+#print(ni3.get_img_class())
+#print(ni4.get_img_class())
+#print(ni_patient.get_img_class())
 
-#print data
-print(ni_patient.get_copy_img_data())
+##print data
+#print(ni_patient.get_copy_img_data())
 
 ## Testing if given image contains only 0 and 1
-print('patient binary ? '+ str(ni_patient.is_binary_image()))  #expected :false
+#print('patient binary ? '+ str(ni_patient.is_binary_image()))  #expected :false
 
-print('P92_UL_RMI1 binary ? '+ str(ni3.is_binary_image()))     #expected : true
+#print('P92_UL_RMI1 binary ? '+ str(ni3.is_binary_image()))     #expected : true
 
 # Masking and fast extraction
 mask = ni3.get_copy_img_data(True)>0
-print(mask)
+#print(mask)
 us_data=ni3.get_copy_img_data(True)[mask].T
-print(us_data)
+#print(us_data)
 
 
 

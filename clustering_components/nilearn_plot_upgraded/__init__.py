@@ -16,7 +16,7 @@ def _set_mpl_backend():
                      )):
             matplotlib.use('Agg')
     except ImportError:
-        print('matplotlib not installed')
+        #print('matplotlib not installed')
         raise
     else:
         from nilearn.version import (_import_module_with_version_check,

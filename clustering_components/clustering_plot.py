@@ -91,7 +91,7 @@ def plot_3d_fuzzy(labels: list, belong, centroids: list):
             color[1] = color[1] + color_dict[label][1] * belong[i][label]
             color[2] = color[2] + color_dict[label][2] * belong[i][label]
         colors_bis.append(tuple(color))
-        # print("plot_3d_fuzzy -> colors[i] APRES", colors_bis[i])
+        # #print("plot_3d_fuzzy -> colors[i] APRES", colors_bis[i])
 
     if len(centroids[0]) == 3:
         centroids_colors = [color_dict[i] for i in sorted(set(labels))]
@@ -128,7 +128,7 @@ def plot_3d_clusters(labels: list, centroids: list = None, marker_size=5.):
 
     centroids_colors = None
     if centroids is not None:
-        # To print the centers we need the list of centers and the color of each cluster
+        # To #print the centers we need the list of centers and the color of each cluster
         color_dict = get_color(sorted(unique_labels))
         centroids_colors = [color_dict[i] for i in sorted(unique_labels)]
 

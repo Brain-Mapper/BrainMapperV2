@@ -55,28 +55,28 @@ imgc_list = [imgc_1, imgc_2, imgc_3, imgc_4]
 start_time = time.time()  # To time extraction
 extracted_data_ni7 = xt.extract(ni7)
 extracted_data_ni7_2 = xt.extract2(ni7)
-print("----------------------------------------------------------------------")
-print("Extraction from single nifti file (Maxime's func) '" + ni7.filename +"' in ---- %s seconds ----" % (time.time() - start_time))
-print("Extracted data : "+ str(extracted_data_ni7))
-print("Extraction from single nifti file (valentina's func) '" + ni7.filename +"' in ---- %s seconds ----" % (time.time() - start_time))
-print("Extracted data : " + str(extracted_data_ni7_2))
-print("----------------------------------------------------------------------")
+#print("----------------------------------------------------------------------")
+#print("Extraction from single nifti file (Maxime's func) '" + ni7.filename +"' in ---- %s seconds ----" % (time.time() - start_time))
+#print("Extracted data : "+ str(extracted_data_ni7))
+#print("Extraction from single nifti file (valentina's func) '" + ni7.filename +"' in ---- %s seconds ----" % (time.time() - start_time))
+#print("Extracted data : " + str(extracted_data_ni7_2))
+#print("----------------------------------------------------------------------")
 
 # ------ Single collection extraction test -------------
 start_time = time.time()  # To time extraction
 extracted_data_coll4 = xt.extract_from_collection(imgc_4)
-print("----------------------------------------------------------------------")
-print("Extraction from collection (size : 2) in ---- %s seconds ----" % (time.time() - start_time))
-print("Obtained object : "+str(extracted_data_coll4))
-print("Extracted data (clusterizable): " + str(extracted_data_coll4.export_as_clusterizable()))
-print("----------------------------------------------------------------------")
+#print("----------------------------------------------------------------------")
+#print("Extraction from collection (size : 2) in ---- %s seconds ----" % (time.time() - start_time))
+#print("Obtained object : "+str(extracted_data_coll4))
+#print("Extracted data (clusterizable): " + str(extracted_data_coll4.export_as_clusterizable()))
+#print("----------------------------------------------------------------------")
 
 # ------ List of collection's extraction test -------------
 start_time = time.time()  # To time extraction
 extracted_dataset = xt.extract_from_collection_list(imgc_list)
-print("----------------------------------------------------------------------")
-print("Extraction from coll list (size : 4) in ---- %s seconds ----" % (time.time() - start_time))
-print("Obtained object : "+ str(extracted_dataset))
-print("Extracted data (clusterizable): " + str(extracted_dataset.export_as_clusterizable()))
-print("----------------------------------------------------------------------")
+#print("----------------------------------------------------------------------")
+#print("Extraction from coll list (size : 4) in ---- %s seconds ----" % (time.time() - start_time))
+#print("Obtained object : "+ str(extracted_dataset))
+#print("Extracted data (clusterizable): " + str(extracted_dataset.export_as_clusterizable()))
+#print("----------------------------------------------------------------------")
 

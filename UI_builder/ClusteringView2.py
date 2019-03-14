@@ -325,7 +325,7 @@ class ClusteringView2(QtGui.QWidget):
             else:
                 self.columns_selected = ['X', 'Y', 'Z']
 
-            # print(f"selected_columns : {self.columns_selected}")
+            # #print(f"selected_columns : {self.columns_selected}")
             self.pushButton_run.setText(f"Running on {self.columns_selected}")
             QtGui.qApp.processEvents()
 
@@ -488,7 +488,7 @@ class ClusteringView2(QtGui.QWidget):
             QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")
 
     def save(self):
-        print("save -> self.label", self.label)
+        #print("save -> self.label", self.label)
         if self.label is not None:
             makeClusterResultSet(get_current_usableDataset(), self.label)
             QtGui.QMessageBox.information(self, "Results saved!",
@@ -512,7 +512,7 @@ class ClusteringView2(QtGui.QWidget):
 
     def plot(self):
         type = self.comboBox_3.currentText()
-        # print("plot -> type",type)
+        # #print("plot -> type",type)
         if type == "Silhouette":
             clustering_plot.plot_silhouette(self.label, None)
         elif type == "3D view":

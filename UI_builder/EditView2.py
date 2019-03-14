@@ -44,7 +44,7 @@ class Buttonpath(QtGui.QWidget):
             f = i.filename.split("/")
             file = f[len(f)-1]
             if file==filna:
-                print(i)
+                #print(i)
                 self.image = i
 
         hbox = QtGui.QHBoxLayout()
@@ -107,7 +107,8 @@ class Buttonpath(QtGui.QWidget):
                 clustering_plot.plot_3d(points)
 
             else:
-                print("There was a problem in data extraction options")
+                pass
+                #print("There was a problem in data extraction options")
 
     def deleteImg(self,coll,name,parent):
     # -- This del_col will delete the current collection
@@ -118,32 +119,33 @@ class Buttonpath(QtGui.QWidget):
 
         if choice == QtGui.QMessageBox.Yes:
             dictcopy= dict(coll.get_img_list())
-            #print("dic avant",coll.get_img_list().values())
+            ##print("dic avant",coll.get_img_list().values())
             for i in dictcopy.values():
                 filname = i.filename.split("/")
-                #print(filname)
-                #print(name)
+                ##print(filname)
+                ##print(name)
                 find = filname[len(filname)-1]
                 if find==name:
                     #coll.get_img_list().remove(i)
-                    #print(coll.get_img_list().keys())
-                    #print(type(coll.get_img_list()))
+                    ##print(coll.get_img_list().keys())
+                    ##print(type(coll.get_img_list()))
                     del coll.get_img_list()[i.filename]
-            #print("dic final",coll.get_img_list().values())
-            #print(list_img)
+            ##print("dic final",coll.get_img_list().values())
+            ##print(list_img)
             list_img.remove(name)
-            #print(list_img)
+            ##print(list_img)
             for i in reversed(range(self.parent.verticalLayout_4.count())):
                 self.parent.verticalLayout_4.itemAt(i).widget().setParent(None)
             for i in range(0,len(list_img)):
-                print("cc")
+                #print("cc")
                 buttonpath=Buttonpath(list_img[i],coll,parent)
                 self.parent.verticalLayout_4.addWidget(buttonpath)
             #self.parent.label_10.setText("")
             #self.parent.pushButton_4.setEnabled(False)
 
         else:
-            print("test")
+            pass
+            #print("test")
 
 
     # def actionpath(self,filna,parent):
@@ -241,7 +243,8 @@ class CollectionAccessButton(QtGui.QWidget):
                 clustering_plot.plot_3d(points)
 
             else:
-                print("There was a problem in data extraction options")
+                pass
+                #print("There was a problem in data extraction options")
 
 
     def del_col(self,coll,parent):
@@ -264,7 +267,7 @@ class CollectionAccessButton(QtGui.QWidget):
             self.parent.label_5.setText("")
             del list_img[:]
             collshow.remove(coll)
-            print("collshow final",collshow)
+            #print("collshow final",collshow)
             self.parent.fill_coll()
 
 
@@ -326,18 +329,18 @@ class CollectionAccessButton(QtGui.QWidget):
                 add_image_coll(coll,path)
                 #self.redo(get_current_coll())
                 for i in coll.get_img_list().values():
-                    print("bjr")
+                    #print("bjr")
                     filname = i.filename.split("/")
                     filna = filname[len(filname)-1]
-                    print("cc")
+                    #print("cc")
                     if filna not in list_img:
                         list_img.append(filna)
-                        print("cc2")
+                        #print("cc2")
                         buttonpath=Buttonpath(filna,coll,parent)
                         self.parent.verticalLayout_4.addWidget(buttonpath)
             except:
                 err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. Maybe you tried to open a non-NIfTI file")
-                # print (sys.exc_info()[0])
+                # #print (sys.exc_info()[0])
 
 class EditView2(QtGui.QWidget):
 
@@ -539,7 +542,8 @@ class EditView2(QtGui.QWidget):
                 clustering_plot.plot_3d(points)
 
             else:
-                print("There was a problem in data extraction options")
+                pass
+                #print("There was a problem in data extraction options")
 
 
 
@@ -564,11 +568,11 @@ class EditView2(QtGui.QWidget):
         # old.deleteLater()
         colls = get_selected()
         #labels = []
-        print("colls",colls)
+        #print("colls",colls)
         for x in colls:
             #labels.append(x.name)
             topleft=CollectionAccessButton(x, self)
-        #print(labels)
+        ##print(labels)
         #topleft=CollectionsAccessBar(labels, self)
         # topleft=
         # for lab in labels_array :

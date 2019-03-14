@@ -99,7 +99,7 @@ def do_image_collection(files, set_import):
         image = open_nifti(filename)
         coll.add(image)
     add_coll(coll)  # We add the collection create to selected by default
-    print(set_import)
+    #print(set_import)
     set_import.add_collection(coll)  # We add the collection created in the current set
     return coll
 
@@ -136,7 +136,7 @@ def get_selected():
     Return :
         global variable 'selected'
     """
-    print("collshow", collshow)
+    #print("collshow", collshow)
     return collshow
 
 
@@ -229,7 +229,7 @@ def run_clustering(selected_clustering_method, params_dict, columns_selected):
         a list of clustering labels (to which cluster does one individual belong to)
     """
     clusterizable_dataset = current_extracted_clusterizable_data
-    # print("clusterizable_dataset ->", clusterizable_dataset)
+    # #print("clusterizable_dataset ->", clusterizable_dataset)
 
     if selected_clustering_method in CLUSTERING_METHODS.keys():
 
@@ -253,7 +253,7 @@ def run_clustering(selected_clustering_method, params_dict, columns_selected):
         except ValueError:
             result["davies_bouldin_score"] = None
     else:
-        print('clustering method not recognised')
+        #print('clustering method not recognised')
         result = ['']
 
     return result
@@ -478,8 +478,8 @@ def delete_current_coll():
     add_toRM(coll)  # We use toRM this time with a collection (toRM is rested just after used)
     set_current_coll(None)  # The current collection become None
     this_set.remove_collection(coll.name)
-    print("selected", selected_images_collections)
-    print("collshow", collshow)
+    #print("selected", selected_images_collections)
+    #print("collshow", collshow)
 
 
 def save_modifs():
@@ -779,12 +779,12 @@ def general_workspace_import(folder_path):
     """
     new_current_set = Set("Imported_Set",0,[len(globalSets[0])])
     set_current_set(new_current_set)
-    print("current set ", currentSet.name)
+    #print("current set ", currentSet.name)
     ws.recursive_import(folder_path, currentSet, 0, globalSets)
-    print("\n==================================\n")
-    print("FIN DE LA RECURSION sets",sets)
+    #print("\n==================================\n")
+    #print("FIN DE LA RECURSION sets",sets)
     workspace_sets.append(currentSet)
-    print("FIN DE LA RECURSION workspace sets",workspace_sets)
+    #print("FIN DE LA RECURSION workspace sets",workspace_sets)
 
 
 def general_workspace_import_control(folder_path):
@@ -809,7 +809,7 @@ def general_workspace_save(folder_path):
         folder_path{string} -- path
     """
     for set_ in sets:
-        print("SET", set_)
+        #print("SET", set_)
         if set_.getParent() is None:
             recursive_workspace_save(folder_path, set_)
 
