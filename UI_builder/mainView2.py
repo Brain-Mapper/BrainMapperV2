@@ -789,7 +789,7 @@ class MainView2(QtGui.QWidget):
         imported = self.treeWidget.topLevelItem(0)
         it = QTreeWidgetItemIterator(self.treeWidget.topLevelItem(0))
         while it.value():
-            if it.value().parent() is not None and it.value().parent() == imported:
+            if it.value().parent() is not None: 
                 self.treeWidget.itemWidget(it.value(), 0).check.setChecked(self.checkimported.isChecked())
             it += 1
 
