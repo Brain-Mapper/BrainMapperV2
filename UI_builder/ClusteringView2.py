@@ -85,7 +85,6 @@ class ClusteringView2(QtGui.QWidget):
         self.columns_selected: List[str] = None
         self.number_of_points: int = None
 
-
         title_style = "QLabel { background-color : #ffcc33 ; color : black;  font-style : bold; font-size : 14px;}"
 
         self.setupUi(self)
@@ -107,8 +106,10 @@ class ClusteringView2(QtGui.QWidget):
             for origin_file in extracted_data_dictionary.keys():
                 data_array = extracted_data_dictionary[origin_file]
                 for data_rows in range(0, data_array.shape[0]):
-                    self.tableWidget.setItem(self.number_of_points, 0, QtGui.QTableWidgetItem(udcoll.get_imgcoll_name()))
-                    self.tableWidget.setItem(self.number_of_points, 1, QtGui.QTableWidgetItem(str(origin_file.filename)))
+                    self.tableWidget.setItem(self.number_of_points, 0,
+                                             QtGui.QTableWidgetItem(udcoll.get_imgcoll_name()))
+                    self.tableWidget.setItem(self.number_of_points, 1,
+                                             QtGui.QTableWidgetItem(str(origin_file.filename)))
                     self.tableWidget.setItem(self.number_of_points, 2, QTableNumericWidgetItem(
                         data_array[data_rows, 0]))  # X coordinate at column 0
                     self.tableWidget.setItem(self.number_of_points, 3, QTableNumericWidgetItem(
@@ -190,7 +191,6 @@ class ClusteringView2(QtGui.QWidget):
         self.info_panel.insertPlainText("Calinski-Habaraz score: \t " + str(validation_values[1]) + "\n\n")
         self.info_panel.insertPlainText("Davies-Bouldin index: \t\t " + str(validation_values[2]) + "\n\n")
 
-
     def clicked_table(self):
         ligne = self.tableResults.selectedIndexes()[0].row()
         i = int(self.tableResults.item(ligne, 0).text())
@@ -211,7 +211,8 @@ class ClusteringView2(QtGui.QWidget):
     def createResultView(self, param_dict, selectedMethod):
         """ Create the result panel at the bottom of the application """
         # If there is only one iteration
-        if "i_iter" not in param_dict.keys() or param_dict["i_iter"] == "1" and len(param_dict["n_clusters"].split("-")) == 1:
+        if "i_iter" not in param_dict.keys() or param_dict["i_iter"] == "1" and len(
+                param_dict["n_clusters"].split("-")) == 1:
             for i in reversed(range(self.verticalLayout_result.count())):
                 self.verticalLayout_result.itemAt(i).widget().setParent(None)
             self.info_panel = QtGui.QTextEdit()
@@ -290,156 +291,185 @@ class ClusteringView2(QtGui.QWidget):
             self.verticalLayout_result.addWidget(self.tableResults)
 
     def runSelectedClust(self, selectedMethod, param_dict):
+        try:
+            self.pushButton_show.setEnabled(False)
+            self.pushButton_save.setEnabled(False)
+            self.pushButton_export.setEnabled(False)
+            self.comboBox_3.setEnabled(False)
 
-        self.columns_selected = []
-        columns = self.tableWidget.selectedItems()
-        rownumber = self.tableWidget.rowCount()
-        columns_index = {
-            2: "X",
-            3: "Y",
-            4: "Z",
-        }
-        if len(columns) != 0:
-            for i in range(0, len(columns), rownumber):
-                if columns[i].column() in columns_index.keys():
-                    self.columns_selected.append(columns_index[columns[i].column()])
-        else:
-            self.columns_selected = ['X', 'Y', 'Z']
-
-        # print(f"selected_columns : {self.columns_selected}")
-        self.pushButton_run.setText(f"Running on {self.columns_selected}")
-        QtGui.qApp.processEvents()
-
-        if selectedMethod == "DBSCAN":
-            clustering_results = run_clustering(selectedMethod, param_dict, self.columns_selected)
-            self.n_selected = "DBSCAN"
-            param_dict["score"] = "DBSCAN"
-            self.scores = []
-        else:
-            i_iter = int(param_dict["i_iter"])
-            self.history_iterations = []
-
-            self.the_best_iteration = {
-                "iteration": None,
-                "n_clusters": None,
-                "silhouette_score": None,
-                "calinski_harabaz_score": None,
-                "davies_bouldin_score": None,
-                "score": 100 if param_dict["score"] == "Davies-Bouldin" else 0,
-                "fpc": None,
-                "centers": None
-            }
-
-            self.scores = []
-
-            range_of_cluster = read_n(param_dict["n_clusters"])
-
-            if range_of_cluster[1] > self.number_of_points:
-                QtGui.QMessageBox.information(self, "Number of clusters to high",
-                                              f"You asked for {range_of_cluster[1]} clusters but there is only "
-                                              f"{self.number_of_points}"
-                                              f"points.")
+            if param_dict is None:
+                QtGui.QMessageBox.critical(self, "None algorithm chosen",
+                                           f"Chose an algorithm")
                 return
 
-            for n in range(range_of_cluster[0], range_of_cluster[1] + 1):
-                for i in range(i_iter):
-                    self.history_iterations.append({})
-                    index = len(self.history_iterations) - 1
+            self.columns_selected = []
+            columns = self.tableWidget.selectedItems()
+            rownumber = self.tableWidget.rowCount()
+            columns_index = {
+                2: "X",
+                3: "Y",
+                4: "Z",
+            }
+            if len(columns) != 0:
+                for i in range(0, len(columns), rownumber):
+                    if columns[i].column() in columns_index.keys():
+                        self.columns_selected.append(columns_index[columns[i].column()])
+                    else:
+                        QtGui.QMessageBox.critical(self, "Wrong column chose",
+                                                   f"The column {columns[i].column()} is invalid. You can "
+                                                   f"only cluster the columns X, Y and Z"
+                                                   )
+                        return
 
-                    copy_param_dict = deepcopy(param_dict)
-                    copy_param_dict["n_clusters"] = n
+            else:
+                self.columns_selected = ['X', 'Y', 'Z']
 
-                    clustering_results = run_clustering(selectedMethod, copy_param_dict, self.columns_selected)
+            # print(f"selected_columns : {self.columns_selected}")
+            self.pushButton_run.setText(f"Running on {self.columns_selected}")
+            QtGui.qApp.processEvents()
 
-                    if n < len(set(clustering_results["labels"])):
-                        QtGui.QMessageBox.information(self, "Less clusters founded",
-                                                      f"You asked for {n} clusters but the algorithm has stabilised at"
-                                                      f"{len(set(clustering_results['labels']))}"
-                                                      f"clusters.")
+            if selectedMethod == "DBSCAN":
+                clustering_results = run_clustering(selectedMethod, param_dict, self.columns_selected)
+                self.n_selected = "DBSCAN"
+                param_dict["score"] = "DBSCAN"
+                self.scores = []
+            else:
+                i_iter = int(param_dict["i_iter"])
+                self.history_iterations = []
 
-                    score_keys = {
-                        "Mean silhouette": "silhouette_score",
-                        "Calinski-Harabasz": "calinski_harabaz_score",
-                        "Davies-Bouldin": "davies_bouldin_score",
-                        "Fuzzy partition coefficient": "fpc",
-                    }
-                    score_methods = {
-                        "Mean silhouette": lambda x, y: x > y,
-                        "Calinski-Harabasz": lambda x, y: x > y,
-                        "Davies-Bouldin": lambda x, y: x < y,
-                        "Fuzzy partition coefficient": lambda x, y: x > y,
-                    }
-                    self.scores.append(clustering_results[score_keys[param_dict["score"]]])
+                self.the_best_iteration = {
+                    "iteration": None,
+                    "n_clusters": None,
+                    "silhouette_score": None,
+                    "calinski_harabaz_score": None,
+                    "davies_bouldin_score": None,
+                    "score": 100 if param_dict["score"] == "Davies-Bouldin" else 0,
+                    "fpc": None,
+                    "centers": None
+                }
 
-                    if score_methods[param_dict["score"]](clustering_results[score_keys[param_dict["score"]]]
-                                                          , self.the_best_iteration["score"]):
-                        self.the_best_iteration["iteration"] = index
-                        self.the_best_iteration["silhouette_score"] = clustering_results["silhouette_score"]
-                        self.the_best_iteration["calinski_harabaz_score"] = clustering_results["calinski_harabaz_score"]
-                        self.the_best_iteration["davies_bouldin_score"] = clustering_results["davies_bouldin_score"]
-                        self.the_best_iteration["score"] = clustering_results[score_keys[param_dict["score"]]]
-                        self.the_best_iteration["n_clusters"] = clustering_results["n"]
-                        self.the_best_iteration["centers"] = clustering_results[
+                self.scores = []
+
+                range_of_cluster = read_n(param_dict["n_clusters"])
+
+                if range_of_cluster[1] > self.number_of_points:
+                    QtGui.QMessageBox.critical(self, "Number of clusters to high",
+                                               f"You asked for {range_of_cluster[1]} clusters but there is only "
+                                               f"{self.number_of_points}"
+                                               f"points.")
+                    return
+
+                for n in range(range_of_cluster[0], range_of_cluster[1] + 1):
+                    for i in range(i_iter):
+
+                        self.pushButton_run.setText(f"Running n: {n}, i: {i}")
+                        QtGui.qApp.processEvents()
+
+                        self.history_iterations.append({})
+                        index = len(self.history_iterations) - 1
+
+                        copy_param_dict = deepcopy(param_dict)
+                        copy_param_dict["n_clusters"] = n
+
+                        clustering_results = run_clustering(selectedMethod, copy_param_dict, self.columns_selected)
+
+                        if i_iter == 1 and range_of_cluster[0] == range_of_cluster[1] and n < len(
+                                set(clustering_results["labels"])):
+                            QtGui.QMessageBox.information(self, "Less clusters founded",
+                                                          f"You asked for {n} clusters but the algorithm has stabilised at"
+                                                          f"{len(set(clustering_results['labels']))}"
+                                                          f"clusters.")
+
+                        score_keys = {
+                            "Mean silhouette": "silhouette_score",
+                            "Calinski-Harabasz": "calinski_harabaz_score",
+                            "Davies-Bouldin": "davies_bouldin_score",
+                            "Fuzzy partition coefficient": "fpc",
+                        }
+                        score_methods = {
+                            "Mean silhouette": lambda x, y: x > y,
+                            "Calinski-Harabasz": lambda x, y: x > y,
+                            "Davies-Bouldin": lambda x, y: x < y,
+                            "Fuzzy partition coefficient": lambda x, y: x > y,
+                        }
+                        self.scores.append(clustering_results[score_keys[param_dict["score"]]])
+
+                        if score_methods[param_dict["score"]](clustering_results[score_keys[param_dict["score"]]]
+                                , self.the_best_iteration["score"]):
+                            self.the_best_iteration["iteration"] = index
+                            self.the_best_iteration["silhouette_score"] = clustering_results["silhouette_score"]
+                            self.the_best_iteration["calinski_harabaz_score"] = clustering_results["calinski_harabaz_score"]
+                            self.the_best_iteration["davies_bouldin_score"] = clustering_results["davies_bouldin_score"]
+                            self.the_best_iteration["score"] = clustering_results[score_keys[param_dict["score"]]]
+                            self.the_best_iteration["n_clusters"] = clustering_results["n"]
+                            self.the_best_iteration["centers"] = clustering_results[
+                                "centers"] if "centers" in clustering_results.keys() else None
+
+                        # Add all the useful data in the history
+                        self.history_iterations[index]["method_used"] = selectedMethod
+                        self.history_iterations[index]["labels"] = clustering_results["labels"]
+                        self.history_iterations[index]["data"] = clustering_results["clusterizable_dataset"]
+                        self.history_iterations[index]["clusters"] = n
+                        self.history_iterations[index]["centers"] = clustering_results[
                             "centers"] if "centers" in clustering_results.keys() else None
 
-                    # Add all the useful data in the history
-                    self.history_iterations[index]["method_used"] = selectedMethod
-                    self.history_iterations[index]["labels"] = clustering_results["labels"]
-                    self.history_iterations[index]["data"] = clustering_results["clusterizable_dataset"]
-                    self.history_iterations[index]["clusters"] = n
-                    self.history_iterations[index]["centers"] = clustering_results[
-                        "centers"] if "centers" in clustering_results.keys() else None
+                        self.history_iterations[index]["silhouette_score"] = clustering_results["silhouette_score"]
+                        self.history_iterations[index]["calinski_harabaz_score"] = clustering_results[
+                            "calinski_harabaz_score"]
+                        self.history_iterations[index]["davies_bouldin_score"] = clustering_results["davies_bouldin_score"]
 
-                    self.history_iterations[index]["silhouette_score"] = clustering_results["silhouette_score"]
-                    self.history_iterations[index]["calinski_harabaz_score"] = clustering_results[
-                        "calinski_harabaz_score"]
-                    self.history_iterations[index]["davies_bouldin_score"] = clustering_results["davies_bouldin_score"]
+                        # Fuzzy partition coefficient
+                        if "fpc" in clustering_results.keys():
+                            self.history_iterations[index]["fuzzy_partition_coefficient"] = clustering_results["fpc"]
+                            self.history_iterations[index]["belong"] = clustering_results["belong"]
+                        else:
+                            self.history_iterations[index]["fuzzy_partition_coefficient"] = None
 
-                    # Fuzzy partition coefficient
-                    if "fpc" in clustering_results.keys():
-                        self.history_iterations[index]["fuzzy_partition_coefficient"] = clustering_results["fpc"]
-                        self.history_iterations[index]["belong"] = clustering_results["belong"]
-                    else:
-                        self.history_iterations[index]["fuzzy_partition_coefficient"] = None
+                self.n_selected = self.the_best_iteration["n_clusters"] if self.the_best_iteration[
+                                                                               "n_clusters"] is not None else None
 
-            self.n_selected = self.the_best_iteration["n_clusters"] if self.the_best_iteration[
-                                                                           "n_clusters"] is not None else None
+            # Update the params
+            self.label = clustering_results["labels"]
+            self.centroids = clustering_results["centers"] if "centers" in clustering_results.keys() else None
 
-        # Update the params
-        self.label = clustering_results["labels"]
-        self.centroids = clustering_results["centers"] if "centers" in clustering_results.keys() else None
+            self.n = param_dict["n_clusters"] if "n_clusters" in param_dict.keys() is not None else None
 
-        self.n = param_dict["n_clusters"] if "n_clusters" in param_dict.keys() is not None else None
+            # FuzzyCMeans
+            if selectedMethod == 'FuzzyCMeans':
+                self.belong = clustering_results["belong"]
+            else:
+                self.belong = None
 
-        # FuzzyCMeans
-        if selectedMethod == 'FuzzyCMeans':
-            self.belong = clustering_results["belong"]
-        else:
-            self.belong = None
+            # HAC
+            if selectedMethod == "AgglomerativeClustering":
+                self.hac = clustering_results['hac']
+                self.comboBox_3.model().item(3).setEnabled(True)
+            else:
+                self.hac = None
+                self.comboBox_3.model().item(3).setEnabled(False)
 
-        # HAC
-        if selectedMethod == "AgglomerativeClustering":
-            self.hac = clustering_results['hac']
-            self.comboBox_3.model().item(3).setEnabled(True)
-        else:
-            self.hac = None
-            self.comboBox_3.model().item(3).setEnabled(False)
+            self.fill_clust_labels(self.label, self.tableWidget)
 
-        self.fill_clust_labels(self.label, self.tableWidget)
+            validation_values = clustering_validation_indexes(self.label)
 
-        validation_values = clustering_validation_indexes(self.label)
+            self.update_details(selectedMethod, param_dict, self.centroids, validation_values, self.n_selected, self.n,
+                                self.scores, param_dict["score"])
+            self.pushButton_show.setEnabled(True)
+            self.pushButton_save.setEnabled(True)
+            self.pushButton_export.setEnabled(True)
+            self.comboBox_3.setEnabled(True)
 
-        self.update_details(selectedMethod, param_dict, self.centroids, validation_values, self.n_selected, self.n,
-                            self.scores, param_dict["score"])
-        self.pushButton_show.setEnabled(True)
-        self.pushButton_save.setEnabled(True)
-        self.pushButton_export.setEnabled(True)
-        self.comboBox_3.setEnabled(True)
+            self.createResultView(param_dict, selectedMethod)
 
-        self.createResultView(param_dict, selectedMethod)
+        except ValueError:
+            QtGui.QMessageBox.critical(self, "Error", "Error while clustering, verify that the parameters are corrects.")
 
-        self.pushButton_run.setText("Run")
-        QtGui.qApp.processEvents()
+        except UnboundLocalError:
+            QtGui.QMessageBox.critical(self, "Error", "Error while clustering, verify that the parameters are corrects.")
+
+        finally:
+            self.pushButton_run.setText("Run")
+            QtGui.qApp.processEvents()
 
     def export(self):
         if self.label is not None:

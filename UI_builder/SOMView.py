@@ -6,7 +6,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from typing import List, Dict
+from typing import List, Dict, Set
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -55,6 +55,7 @@ class SOMView(QtGui.QWidget):
         super(SOMView, self).__init__()
         self.som_input: pd.DataFrame = None  # Input of the SOM as a Dataframe
         self.features_columns: List[str] = None  # Columns usable for the vizualisation
+        self.type_of_columns: Set[str] = None
         # Som configuration
         self.grid_height: int = None
         self.grid_width: int = None
@@ -72,6 +73,7 @@ class SOMView(QtGui.QWidget):
 
         self.som_input = som_input
         self.features_columns = []
+        self.type_of_columns = set()
 
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("MS Shell Dlg 2"))
@@ -95,8 +97,13 @@ class SOMView(QtGui.QWidget):
             item.setText(column_name)
             if column_name not in ["X", "Y", "Z"]:
                 self.features_columns.append(column_name)
+                self.type_of_columns.add(column_name.split("=")[0])
                 self.comboBox.addItem(column_name)
         self.tableWidget.horizontalHeader().setVisible(True)
+
+        # Add the type of columns in the comboBox
+        for column_type in self.type_of_columns:
+            self.comboBox.addItem(column_type)
 
         # Add the data
         for i in range(0, len(som_input)):
@@ -248,30 +255,58 @@ class SOMView(QtGui.QWidget):
 
     def showmap(self):
         column_name = self.comboBox.currentText()
-
         x = list(range(0, self.grid_width))
         y = list(range(0, self.grid_height))
 
-        img = self.imgs_result[column_name]
+        if column_name in self.features_columns:
+            img = self.imgs_result[column_name]
 
-        fig, ax = plt.subplots()
-        im = ax.imshow(img, cmap="inferno", origin="lower", vmin=0, vmax=1)
-        # Set the ticks
-        ax.set_xticks(x)
-        ax.set_yticks(y)
-        ax.set_xticks(np.arange(img.shape[1] + 1) - .5, minor=True)
-        ax.set_yticks(np.arange(img.shape[0] + 1) - .5, minor=True)
-        ax.tick_params(length=0, width=0, which='both')
-        # Set a colorbar
-        cbar = ax.figure.colorbar(im,
-                                  ax=ax,
-                                  ticks=list([0, 0.25, 0.5, 0.75, 1]),
-                                  orientation="horizontal")
-        cbar_legend = f"Number of points with {column_name}/ Number of points"
-        cbar.ax.set_xlabel(cbar_legend)
-        ax.set_title(f"SOM for {column_name}")
-        fig.tight_layout()
-        plt.show()
+            fig, ax = plt.subplots()
+            im = ax.imshow(img, cmap="inferno", origin="lower", vmin=0, vmax=1)
+            # Set the ticks
+            ax.set_xticks(x)
+            ax.set_yticks(y)
+            ax.set_xticks(np.arange(img.shape[1] + 1) - .5, minor=True)
+            ax.set_yticks(np.arange(img.shape[0] + 1) - .5, minor=True)
+            ax.tick_params(length=0, width=0, which='both')
+            # Set a colorbar
+            cbar = ax.figure.colorbar(im,
+                                      ax=ax,
+                                      ticks=list([0, 0.25, 0.5, 0.75, 1]),
+                                      orientation="horizontal")
+            cbar_legend = f"Number of points with {column_name}/ Number of points"
+            cbar.ax.set_xlabel(cbar_legend)
+            ax.set_title(f"SOM for {column_name}")
+            fig.tight_layout()
+            plt.show()
+
+        elif column_name in self.type_of_columns:
+            img_names = []
+            for column in self.features_columns:
+                if column.split("=")[0] == column_name:
+                    img_names.append(column)
+
+            fig, axs = plt.subplots(1, len(img_names))
+
+            images = []
+            for index, img_name in enumerate(img_names):
+                img = self.imgs_result[img_name]
+                ax = axs[index]
+                images.append(ax.imshow(img, cmap="inferno", vmin=0, vmax=1))
+                ax.set_xticks(x)
+                ax.set_yticks(y)
+                ax.set_xticks(np.arange(img.shape[1] + 1) - .5, minor=True)
+                ax.set_yticks(np.arange(img.shape[0] + 1) - .5, minor=True)
+                ax.tick_params(length=0, width=0, which='both')
+                ax.set_title(f"{''.join(img_name.split('=')[1])}")
+
+            cbar = fig.colorbar(images[0], ax=axs, orientation='horizontal', ticks=list([0, 0.25, 0.5, 0.75, 1]))
+            cbar_legend = f"Number of points with the characteristic/ Number of points"
+            cbar.ax.set_xlabel(cbar_legend)
+
+            fig.suptitle(f"SOM for {column_name}")
+            # fig.tight_layout()
+            plt.show()
 
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))

@@ -1073,16 +1073,22 @@ class MainView2(QtGui.QWidget):
 
             if ret == QtGui.QMessageBox.Yes:
 
-                if all_points_opt.isChecked():
-                    extract_data_from_selected()
+                try:
 
-                elif centroid_opt.isChecked():
-                    extract_data_as_centroids_from_selected()
+                    if all_points_opt.isChecked():
+                        extract_data_from_selected()
 
-                else:
-                    print("There was a problem in data extraction options")
+                    elif centroid_opt.isChecked():
+                        extract_data_as_centroids_from_selected()
 
-                self.showClust.emit()
+                    self.showClust.emit()
+
+                except KeyError as k:
+                    QtGui.QMessageBox.critical(self, "Bad Data", f"Some of the files don't have one of"
+                                                                 f"the necessary columns :"
+                                                                 f"{(str(k).split(']')[0]+']')[1:]}")
+
+
 
         else:
             QtGui.QMessageBox.information(self, "Selection empty", "There's no data to extract and clusterize.")
@@ -1172,17 +1178,17 @@ class MainView2(QtGui.QWidget):
 
         for elem in get_workspace_set():
             #print("parent",elem.getParent())
-            print("SET NAME",elem.name)
-            print('dic', elem.getAllSubSets())
-            for elem2 in elem.getAllSubSets():
-                print("SET NAME 2",elem2.name)
-                print('dic2', elem2.getAllSubSets())
-                for elem3 in elem2.getAllSubSets():
-                    print("SET NAME 3",elem3.name)
-                    print('dic3', elem3.getAllSubSets())
-                    for elem4 in elem3.getAllSubSets():
-                        print("SET NAME 4",elem4.name)
-                        print('dic4', elem4.getAllSubSets())
+            # print("SET NAME",elem.name)
+            # print('dic', elem.getAllSubSets())
+            # for elem2 in elem.getAllSubSets():
+            #     print("SET NAME 2",elem2.name)
+            #     print('dic2', elem2.getAllSubSets())
+            #     for elem3 in elem2.getAllSubSets():
+            #         print("SET NAME 3",elem3.name)
+            #         print('dic3', elem3.getAllSubSets())
+            #         for elem4 in elem3.getAllSubSets():
+            #             print("SET NAME 4",elem4.name)
+            #             print('dic4', elem4.getAllSubSets())
 
 
 
