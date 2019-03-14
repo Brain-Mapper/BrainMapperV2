@@ -361,10 +361,15 @@ class calculationView2(QtGui.QWidget):
             for img in collection.nifimage_dict.values():
                 img_selected.append(img)
 
-        self.console.setText("Calculation successful")
+        self.console.setText("Calculation preparation")
+        QtGui.qApp.processEvents()
 
         if algorithm == "addition":
+            self.console.setText("Calculation running")
+            QtGui.qApp.processEvents()
             result = [BrainMapper.calcul.addition_operation(img_selected)]
+            self.console.setText("Calculation successul")
+            QtGui.qApp.processEvents()
             self.popUpSaveFileResultCalculation(algorithm, result)
 
         elif algorithm == "division":
@@ -373,7 +378,12 @@ class calculationView2(QtGui.QWidget):
             except ValueError:
                 self.give_argument_error()
             else:
+                self.console.setText("Calculation running")
+                QtGui.qApp.processEvents()
                 result = [BrainMapper.calcul.division_operation(img_selected, coefficient)]
+                self.console.setText("Calculation successul")
+                QtGui.qApp.processEvents()
+
                 self.popUpSaveFileResultCalculation(algorithm, result)
 
         elif algorithm == "linear combination":
@@ -382,11 +392,21 @@ class calculationView2(QtGui.QWidget):
             except ValueError:
                 self.give_argument_error()
             else:
+                self.console.setText("Calculation running")
+                QtGui.qApp.processEvents()
                 result = [BrainMapper.calcul.linear_combination_operation(img_selected, coefficients)]
+                self.console.setText("Calculation successul")
+                QtGui.qApp.processEvents()
+
                 self.popUpSaveFileResultCalculation(algorithm, result)
 
         elif algorithm == "mean":
+            self.console.setText("Calculation running")
+            QtGui.qApp.processEvents()
             result = [BrainMapper.calcul.mean_operation(img_selected)]
+            self.console.setText("Calculation successul")
+            QtGui.qApp.processEvents()
+
             self.popUpSaveFileResultCalculation(algorithm, result)
 
         elif algorithm == "multiplication":
@@ -395,15 +415,30 @@ class calculationView2(QtGui.QWidget):
             except ValueError:
                 self.give_argument_error()
             else:
+                self.console.setText("Calculation running")
+                QtGui.qApp.processEvents()
                 result = [BrainMapper.calcul.multiplication_operation(img_selected, coefficient)]
+                self.console.setText("Calculation successul")
+                QtGui.qApp.processEvents()
+
                 self.popUpSaveFileResultCalculation(algorithm, result)
 
         elif algorithm == "and":
+            self.console.setText("Calculation running")
+            QtGui.qApp.processEvents()
             result = [BrainMapper.calcul.and_operation(img_selected)]
+            self.console.setText("Calculation successul")
+            QtGui.qApp.processEvents()
+
             self.popUpSaveFileResultCalculation(algorithm, result)
 
         elif algorithm == "or":
+            self.console.setText("Calculation running")
+            QtGui.qApp.processEvents()
             result = [BrainMapper.calcul.or_operation(img_selected)]
+            self.console.setText("Calculation successul")
+            QtGui.qApp.processEvents()
+
             self.popUpSaveFileResultCalculation(algorithm, result)
 
         elif algorithm in ["closing", "dilation", "erosion", "opening"]:
@@ -412,8 +447,13 @@ class calculationView2(QtGui.QWidget):
             except ValueError:
                 self.give_argument_error()
             else:
+                self.console.setText("Calculation running")
+                QtGui.qApp.processEvents()
                 result = BrainMapper.calcul.image_operation_from_str(
                     img_selected, number_of_iterations, algorithm)
+                self.console.setText("Calculation successul")
+                QtGui.qApp.processEvents()
+
                 self.popUpSaveFileResultCalculation(algorithm, result)
 
         elif algorithm == "threshold":
@@ -424,8 +464,14 @@ class calculationView2(QtGui.QWidget):
             except ValueError:
                 self.give_argument_error()
             else:
+                self.console.setText("Calculation running")
+                QtGui.qApp.processEvents()
                 result = BrainMapper.calcul.threshold_operation(img_selected, threshold_min, threshold_max )
+                self.console.setText("Calculation successul")
+                QtGui.qApp.processEvents()
+
                 self.popUpSaveFileResultCalculation(algorithm, result)
+
 
 
     def give_argument_error(self):
