@@ -129,25 +129,27 @@ def som_preparation(img_list: List[Image]) -> pd.DataFrame:
     """
     # Obtain the columns that we can use on all the data
     columns = img_list[0].columns
-    try:
-        columns.remove("Intensity")
-    finally:
-        for img in img_list:
-            columns = columns.intersection(img.columns)
-        columns = list(columns)
 
-        # Concatenate the data in one file
-        selected: pd.DataFrame = pd.concat([img.get_dataframe()[columns] for img in img_list], ignore_index=True)
+    for column_name in ["Intensity", "Origin_file_name"]:
+        if column_name in columns:
+            columns.remove(column_name)
 
-        # We don't want to obtains dummies on X,Y et Z
-        columns.remove("X")
-        columns.remove("Y")
-        columns.remove("Z")
+    for img in img_list:
+        columns = columns.intersection(img.columns)
+    columns = list(columns)
 
-        # To correct input problem
-        for column in columns:
-            # some columns can be integer, so we have to use a try
-            selected[column] = selected[column].astype(str).str.strip()
+    # Concatenate the data in one file
+    selected: pd.DataFrame = pd.concat([img.get_dataframe()[columns] for img in img_list], ignore_index=True)
+
+    # We don't want to obtains dummies on X,Y et Z
+    columns.remove("X")
+    columns.remove("Y")
+    columns.remove("Z")
+
+    # To correct input problem
+    for column in columns:
+        # some columns can be integer, so we have to use a try
+        selected[column] = selected[column].astype(str).str.strip()
 
 
-        return pd.get_dummies(selected, columns=columns, prefix_sep="=")
+    return pd.get_dummies(selected, columns=columns, prefix_sep="=")
