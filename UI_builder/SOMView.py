@@ -132,7 +132,8 @@ class SOMView(QtGui.QWidget):
     def train(self):
         self.comboBox.setEnabled(False)
         self.pushButton_show.setEnabled(False)
-
+        self.pushButton_goback.setEnabled(False)
+        self.pushButton_train.setEnabled(False)
         self.pushButton_train.setText("Preparing training")
         QtGui.qApp.processEvents()
 
@@ -198,113 +199,117 @@ class SOMView(QtGui.QWidget):
 
         except ValueError:
             QtGui.QMessageBox.critical(self, "Wrong input", f"{wrong_input} is not correct")
-            return
 
-        def on_epoch_start(optimizer):
-            self.pushButton_train.setText(f"In training (epoch : {optimizer.last_epoch})")
+        else:
+            def on_epoch_start(optimizer):
+                self.pushButton_train.setText(f"In training (epoch : {optimizer.last_epoch})")
+                QtGui.qApp.processEvents()
+
+            sofm = algorithms.SOFM(
+                n_inputs=len(columns),
+
+                # In clustering application we will prefer that
+                # clusters will be updated independently from each
+                # other. For this reason we set up learning radius
+                # equal to zero
+                learning_radius=learning_radius,
+                reduce_radius_after=reduce_radius_after,
+
+                # Parameters controls learning rate for each neighbour. The further neighbour neuron from the
+                # winning neuron the smaller that learning rate for it. Learning rate scales based on the
+                # factors produced by the normal distribution with center in the place of a winning neuron and
+                # standard deviation specified as a parameter. The learning rate for the winning neuron is
+                # always equal to the value specified in the step parameter and for neighbour neurons it’s
+                # always lower.
+                std=std,
+                reduce_std_after=reduce_std_after,
+
+                # Feature grid defines shape of the output neurons. The new shape should be compatible with      #the
+                # number of outputs
+                features_grid=(self.grid_height, self.grid_width),
+
+                # Defines connection type in feature grid
+                grid_type='rect',
+
+                # Defines function that will be used to compute closest weight to the input sample
+                distance='euclid',
+
+                # Training step size or learning rate
+                step=step,
+                reduce_step_after=reduce_step_after,
+
+                # Shuffles dataset before every training epoch.
+                shuffle_data=True,
+
+                # Shows training progress in terminal
+                verbose=False,
+
+                # Signals
+                signals=on_epoch_start,
+            )
+
+            sofm.train(training_data, number_of_epochs)
+
+            self.pushButton_train.setText("Formatting the results")
             QtGui.qApp.processEvents()
 
-        sofm = algorithms.SOFM(
-            n_inputs=len(columns),
+            weight = sofm.weight
+            param_length = sofm.weight.shape[0]
+            param_width = sofm.weight.shape[1]
 
-            # In clustering application we will prefer that
-            # clusters will be updated independently from each
-            # other. For this reason we set up learning radius
-            # equal to zero
-            learning_radius=learning_radius,
-            reduce_radius_after=reduce_radius_after,
+            neurons = []
+            for j in range(param_width):
+                temp = []
+                for index in range(param_length):
+                    temp.append(weight[index, j])
+                neurons.append(temp)
 
-            # Parameters controls learning rate for each neighbour. The further neighbour neuron from the
-            # winning neuron the smaller that learning rate for it. Learning rate scales based on the
-            # factors produced by the normal distribution with center in the place of a winning neuron and
-            # standard deviation specified as a parameter. The learning rate for the winning neuron is
-            # always equal to the value specified in the step parameter and for neighbour neurons it’s
-            # always lower.
-            std=std,
-            reduce_std_after=reduce_std_after,
+            # Wipe the results
+            # self.data_neuron_index = []
 
-            # Feature grid defines shape of the output neurons. The new shape should be compatible with      #the
-            # number of outputs
-            features_grid=(self.grid_height, self.grid_width),
-
-            # Defines connection type in feature grid
-            grid_type='rect',
-
-            # Defines function that will be used to compute closest weight to the input sample
-            distance='euclid',
-
-            # Training step size or learning rate
-            step=step,
-            reduce_step_after=reduce_step_after,
-
-            # Shuffles dataset before every training epoch.
-            shuffle_data=True,
-
-            # Shows training progress in terminal
-            verbose=False,
-
-            # Signals
-            signals=on_epoch_start,
-        )
-
-        sofm.train(training_data, number_of_epochs)
-
-        self.pushButton_train.setText("Formatting the results")
-        QtGui.qApp.processEvents()
-
-        weight = sofm.weight
-        param_length = sofm.weight.shape[0]
-        param_width = sofm.weight.shape[1]
-
-        neurons = []
-        for j in range(param_width):
-            temp = []
-            for index in range(param_length):
-                temp.append(weight[index, j])
-            neurons.append(temp)
-
-        # Wipe the results
-        # self.data_neuron_index = []
-
-        self.imgs_result = {"__all__": np.zeros(shape=(self.grid_height, self.grid_width))}
-        for column in self.features_columns:
-            self.imgs_result[column] = np.zeros(shape=(self.grid_height, self.grid_width))
-
-        # Associate each date to its neuron
-        for index, data in enumerate(training_data):
-            distance_min = distance.euclidean(data, neurons[0])
-            best_neuron_index = 0
-            for neuron_index in range(len(neurons)):
-                new_distance = distance.euclidean(data, neurons[neuron_index])
-                if new_distance < distance_min:
-                    distance_min = new_distance
-                    best_neuron_index = neuron_index
-            # self.data_neuron_index.append(best_neuron_index)
-
-            # Calculate the weight of each feature
-            neuron_i = int(best_neuron_index / self.grid_width)
-            neuron_j = best_neuron_index % self.grid_width
-            self.imgs_result["__all__"][neuron_i, neuron_j] = self.imgs_result["__all__"][neuron_i, neuron_j] + 1
+            self.imgs_result = {"__all__": np.zeros(shape=(self.grid_height, self.grid_width))}
             for column in self.features_columns:
-                if self.som_input[column][index] == 1:
-                    self.imgs_result[column][neuron_i, neuron_j] = self.imgs_result[column][neuron_i, neuron_j] + 1
+                self.imgs_result[column] = np.zeros(shape=(self.grid_height, self.grid_width))
 
-        for i in range(0, self.grid_height):
-            for j in range(0, self.grid_width):
-                number_of_data_in_neuron = self.imgs_result["__all__"][i, j]
-                if number_of_data_in_neuron == 0:
-                    for column in self.features_columns:
-                        self.imgs_result[column][i, j] = 0.5
-                else:
-                    for column in self.features_columns:
-                        self.imgs_result[column][i, j] = self.imgs_result[column][i, j] / number_of_data_in_neuron
+            # Associate each date to its neuron
+            for index, data in enumerate(training_data):
+                distance_min = distance.euclidean(data, neurons[0])
+                best_neuron_index = 0
+                for neuron_index in range(len(neurons)):
+                    new_distance = distance.euclidean(data, neurons[neuron_index])
+                    if new_distance < distance_min:
+                        distance_min = new_distance
+                        best_neuron_index = neuron_index
+                # self.data_neuron_index.append(best_neuron_index)
 
-        QtGui.QMessageBox.information(self, "Training done",
-                                      f"The training is done you can visualize by clicking on the show button. "
-                                      f"(You have used the columns: {columns})")
-        self.comboBox.setEnabled(True)
-        self.pushButton_show.setEnabled(True)
-        self.pushButton_train.setText("Train")
+                # Calculate the weight of each feature
+                neuron_i = int(best_neuron_index / self.grid_width)
+                neuron_j = best_neuron_index % self.grid_width
+                self.imgs_result["__all__"][neuron_i, neuron_j] = self.imgs_result["__all__"][neuron_i, neuron_j] + 1
+                for column in self.features_columns:
+                    if self.som_input[column][index] == 1:
+                        self.imgs_result[column][neuron_i, neuron_j] = self.imgs_result[column][neuron_i, neuron_j] + 1
+
+            for i in range(0, self.grid_height):
+                for j in range(0, self.grid_width):
+                    number_of_data_in_neuron = self.imgs_result["__all__"][i, j]
+                    if number_of_data_in_neuron == 0:
+                        for column in self.features_columns:
+                            self.imgs_result[column][i, j] = 0.5
+                    else:
+                        for column in self.features_columns:
+                            self.imgs_result[column][i, j] = self.imgs_result[column][i, j] / number_of_data_in_neuron
+
+            QtGui.QMessageBox.information(self, "Training done",
+                                          f"The training is done you can visualize by clicking on the show button. "
+                                          f"(You have used the columns: {columns})")
+            self.comboBox.setEnabled(True)
+            self.pushButton_show.setEnabled(True)
+
+        finally:
+            self.pushButton_train.setEnabled(True)
+            self.pushButton_goback.setEnabled(True)
+            self.pushButton_train.setText("Train")
 
     def showmap(self):
         column_name = self.comboBox.currentText()

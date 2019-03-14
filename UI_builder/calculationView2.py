@@ -353,6 +353,9 @@ class calculationView2(QtGui.QWidget):
             "                     [0, 1, 4]   [1, 0, 1]       [0, 1, 0]  [1, 0, 1]")
 
     def run_calculation(self):
+        self.pushButton.setEnabled(False)
+        self.pushButton_2.setEnabled(False)
+
         algorithm = self.leftlist.currentItem().text()
         arguments = self.arguments_line.text()
 
@@ -472,7 +475,8 @@ class calculationView2(QtGui.QWidget):
 
                 self.popUpSaveFileResultCalculation(algorithm, result)
 
-
+        self.pushButton.setEnabled(True)
+        self.pushButton_2.setEnabled(True)
 
     def give_argument_error(self):
         QtGui.QMessageBox.warning(self, "Error", "Given argument aren't corrects.")

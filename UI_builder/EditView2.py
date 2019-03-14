@@ -12,7 +12,8 @@ from PyQt4.QtCore import pyqtSignal
 
 import sys
 from os import path
-sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
+
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from BrainMapper import *
 import clustering_components.clustering_plot as clustering_plot
 from ourLib.dataExtraction.extractor import *
@@ -27,30 +28,33 @@ except AttributeError:
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
+
+
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
+
 class Buttonpath(QtGui.QWidget):
     def __init__(self, filna, coll, parent=None):
         super(Buttonpath, self).__init__(parent=parent)
-        #self.setStyleSheet(self.stysetStyleler)
-        self.parent=parent
+        # self.setStyleSheet(self.stysetStyleler)
+        self.parent = parent
         # self.image = coll.get_img_list().get(filna)
         self.image = None
         for i in coll.get_img_list().values():
             f = i.filename.split("/")
-            file = f[len(f)-1]
-            if file==filna:
-                #print(i)
+            file = f[len(f) - 1]
+            if file == filna:
+                # print(i)
                 self.image = i
 
         hbox = QtGui.QHBoxLayout()
 
-        self.buttonp= QtGui.QPushButton("   "+filna)
-        #self.buttonp.clicked.connect(lambda: self.actionpath(filna,parent))
+        self.buttonp = QtGui.QPushButton("   " + filna)
+        # self.buttonp.clicked.connect(lambda: self.actionpath(filna,parent))
         hbox.addWidget(self.buttonp)
 
         ShowButtoncoll = QtGui.QPushButton()
@@ -62,14 +66,14 @@ class Buttonpath(QtGui.QWidget):
 
         SupprButton = QtGui.QPushButton()
         SupprButton.setText("-")
-        SupprButton.clicked.connect(lambda: self.deleteImg(coll,filna,parent))
+        SupprButton.clicked.connect(lambda: self.deleteImg(coll, filna, parent))
         SupprButton.setStatusTip("Delete this set or subset")
         SupprButton.setFixedSize(QSize(20, 20))
         hbox.addWidget(SupprButton)
 
         self.setLayout(hbox)
 
-    def showColl(self,coll,parent):
+    def showColl(self, coll, parent):
         choice = QtGui.QMessageBox()
         choice.setWindowTitle('Data representation')
         centroid_opt = QRadioButton("Use centroids as file representation")
@@ -98,35 +102,35 @@ class Buttonpath(QtGui.QWidget):
                 # for i in dict:
                 data = extract(self.image)
                 for j in range(len(data)):
-                    points.append((data[j][0],data[j][1],data[j][2]))
+                    points.append((data[j][0], data[j][1], data[j][2]))
                 clustering_plot.plot_3d(points)
             elif centroid_opt.isChecked():
                 data = image_centroid(self.image)
                 for j in range(len(data)):
-                    points.append((data[j][0],data[j][1],data[j][2]))
+                    points.append((data[j][0], data[j][1], data[j][2]))
                 clustering_plot.plot_3d(points)
 
             else:
                 pass
-                #print("There was a problem in data extraction options")
+                # print("There was a problem in data extraction options")
 
-    def deleteImg(self,coll,name,parent):
-    # -- This del_col will delete the current collection
+    def deleteImg(self, coll, name, parent):
+        # -- This del_col will delete the current collection
         global list_img
         choice = QtGui.QMessageBox.question(self, 'Delete Image',
-                                                "Are you sure you want to delete this image?",
-                                                QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
+                                            "Are you sure you want to delete this image?",
+                                            QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
 
         if choice == QtGui.QMessageBox.Yes:
-            dictcopy= dict(coll.get_img_list())
+            dictcopy = dict(coll.get_img_list())
             ##print("dic avant",coll.get_img_list().values())
             for i in dictcopy.values():
                 filname = i.filename.split("/")
                 ##print(filname)
                 ##print(name)
-                find = filname[len(filname)-1]
-                if find==name:
-                    #coll.get_img_list().remove(i)
+                find = filname[len(filname) - 1]
+                if find == name:
+                    # coll.get_img_list().remove(i)
                     ##print(coll.get_img_list().keys())
                     ##print(type(coll.get_img_list()))
                     del coll.get_img_list()[i.filename]
@@ -136,17 +140,16 @@ class Buttonpath(QtGui.QWidget):
             ##print(list_img)
             for i in reversed(range(self.parent.verticalLayout_4.count())):
                 self.parent.verticalLayout_4.itemAt(i).widget().setParent(None)
-            for i in range(0,len(list_img)):
-                #print("cc")
-                buttonpath=Buttonpath(list_img[i],coll,parent)
+            for i in range(0, len(list_img)):
+                # print("cc")
+                buttonpath = Buttonpath(list_img[i], coll, parent)
                 self.parent.verticalLayout_4.addWidget(buttonpath)
-            #self.parent.label_10.setText("")
-            #self.parent.pushButton_4.setEnabled(False)
+            # self.parent.label_10.setText("")
+            # self.parent.pushButton_4.setEnabled(False)
 
         else:
             pass
-            #print("test")
-
+            # print("test")
 
     # def actionpath(self,filna,parent):
     #     self.parent=parent
@@ -157,25 +160,25 @@ class Buttonpath(QtGui.QWidget):
 
 class CollectionAccessButton(QtGui.QWidget):
     # -- The CollectionAccessButton class is a QPushButton that call showInfos from the EditCollectionsView it knows
-    #styler = "CollectionAccessButton {background-color: white; border-bottom: 1px solid black;} " \
-             #"#CollectionAccessButton:hover {background-color : #ccff99;}"
+    # styler = "CollectionAccessButton {background-color: white; border-bottom: 1px solid black;} " \
+    # "#CollectionAccessButton:hover {background-color : #ccff99;}"
 
     def __init__(self, coll, parent=None):
         super(CollectionAccessButton, self).__init__(parent=parent)
-        #self.setStyleSheet(self.stysetStyleler)
-        self.parent=parent
+        # self.setStyleSheet(self.stysetStyleler)
+        self.parent = parent
         self.coll = coll
 
         hbox = QtGui.QHBoxLayout()
 
         self.buttonc = QtGui.QPushButton()
         self.buttonc.setText(coll.name)
-        self.buttonc.clicked.connect(lambda: self.showInfos(coll,parent))
+        self.buttonc.clicked.connect(lambda: self.showInfos(coll, parent))
         hbox.addWidget(self.buttonc)
 
         NameButtoncoll = QtGui.QPushButton()
         NameButtoncoll.setIcon(QtGui.QIcon(':ressources/app_icons_png/writing.png'))
-        NameButtoncoll.clicked.connect(lambda: self.changeNamecoll(coll,parent))
+        NameButtoncoll.clicked.connect(lambda: self.changeNamecoll(coll, parent))
         NameButtoncoll.setStatusTip("Change collection name")
         NameButtoncoll.setFixedSize(QSize(20, 20))
         hbox.addWidget(NameButtoncoll)
@@ -189,7 +192,7 @@ class CollectionAccessButton(QtGui.QWidget):
 
         IButton = QtGui.QPushButton()
         IButton.setText("+")
-        IButton.clicked.connect(lambda: self.addImage(coll,parent))
+        IButton.clicked.connect(lambda: self.addImage(coll, parent))
         IButton.setStatusTip("Add image in this collection")
         IButton.setFixedSize(QSize(20, 20))
         hbox.addWidget(IButton)
@@ -203,7 +206,7 @@ class CollectionAccessButton(QtGui.QWidget):
 
         self.setLayout(hbox)
 
-    def showColl(self,coll,parent):
+    def showColl(self, coll, parent):
         choice = QtGui.QMessageBox()
         choice.setWindowTitle('Data representation')
         centroid_opt = QRadioButton("Use centroids as file representation")
@@ -232,33 +235,32 @@ class CollectionAccessButton(QtGui.QWidget):
                 for i in dict:
                     data = extract(dict[i])
                     for j in range(len(data)):
-                        points.append((data[j][0],data[j][1],data[j][2]))
+                        points.append((data[j][0], data[j][1], data[j][2]))
                 clustering_plot.plot_3d(points)
             elif centroid_opt.isChecked():
                 dict = extract_from_collection_as_centroid(self.coll).get_extracted_data_dict()
                 for i in dict:
                     data = dict[i]
                     for j in range(len(data)):
-                        points.append((data[j][0],data[j][1],data[j][2]))
+                        points.append((data[j][0], data[j][1], data[j][2]))
                 clustering_plot.plot_3d(points)
 
             else:
                 pass
-                #print("There was a problem in data extraction options")
+                # print("There was a problem in data extraction options")
 
-
-    def del_col(self,coll,parent):
-    # -- This del_col will delete the current collection
+    def del_col(self, coll, parent):
+        # -- This del_col will delete the current collection
         global list_img
         global collshow
         choice = QtGui.QMessageBox.question(self, 'Delete Collection',
-                                                "Are you sure you want to delete this collection?",
-                                                QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
+                                            "Are you sure you want to delete this collection?",
+                                            QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
         if choice == QtGui.QMessageBox.Yes:
             set_current_coll(coll)
             delete_current_coll()
-            #self.parent.label_10.setText("")
-            #self.parent.pushButton_4.setEnabled(False)
+            # self.parent.label_10.setText("")
+            # self.parent.pushButton_4.setEnabled(False)
             for i in reversed(range(self.parent.verticalLayout_3.count())):
                 self.parent.verticalLayout_3.itemAt(i).widget().setParent(None)
             for i in reversed(range(self.parent.verticalLayout_4.count())):
@@ -267,21 +269,19 @@ class CollectionAccessButton(QtGui.QWidget):
             self.parent.label_5.setText("")
             del list_img[:]
             collshow.remove(coll)
-            #print("collshow final",collshow)
+            # print("collshow final",collshow)
             self.parent.fill_coll()
 
-
-
-
-    def changeNamecoll(self,coll,parent):
-    # -- This changeNamecoll will change the name of the current collection
+    def changeNamecoll(self, coll, parent):
+        # -- This changeNamecoll will change the name of the current collection
 
         set_current_coll(coll)
-        text, ok = QInputDialog.getText(self, 'Change name of the Collection', "Enter a new name for the collection named "+ get_current_coll().name +": ")
+        text, ok = QInputDialog.getText(self, 'Change name of the Collection',
+                                        "Enter a new name for the collection named " + get_current_coll().name + ": ")
         if str(text) != "":
             try:
                 new_ok = True
-                not_ok = ['^','[','<','>',':',';',',','?','"','*','|','/',']','+','$']
+                not_ok = ['^', '[', '<', '>', ':', ';', ',', '?', '"', '*', '|', '/', ']', '+', '$']
                 for i in not_ok:
                     if i in str(text):
                         new_ok = False
@@ -290,60 +290,63 @@ class CollectionAccessButton(QtGui.QWidget):
 
                     self.buttonc.setText(coll.name)
                     self.parent.label_4.setText(coll.name)
-                    #cur_col = get_current_coll()
-                    #self.redo(cur_col)
-                else :
-                    err = QtGui.QMessageBox.critical(self, "Error", "The new name you entered is not valid (empty, invalid caracter or already exists)")
-            except :
-                err = QtGui.QMessageBox.critical(self, "Error", "The name you entered is not valid ("+str(sys.exc_info()[0])+")")
+                    # cur_col = get_current_coll()
+                    # self.redo(cur_col)
+                else:
+                    err = QtGui.QMessageBox.critical(self, "Error",
+                                                     "The new name you entered is not valid (empty, invalid caracter or already exists)")
+            except:
+                err = QtGui.QMessageBox.critical(self, "Error",
+                                                 "The name you entered is not valid (" + str(sys.exc_info()[0]) + ")")
 
-    def showInfos(self, coll,parent):
-    # -- Reload the InfosBar with the collection named name
-        self.parent=parent
+    def showInfos(self, coll, parent):
+        # -- Reload the InfosBar with the collection named name
+        self.parent = parent
         reset_toRM()
         set_current_coll(coll)
-        #self.label_name.setText(str(col.name))
+        # self.label_name.setText(str(col.name))
         self.parent.label_4.setText(str(coll.name))
         self.parent.label_5.setText(str(coll.set_n.name))
-        if len(list_img) !=0:
+        if len(list_img) != 0:
             for i in reversed(range(self.parent.verticalLayout_4.count())):
-                    self.parent.verticalLayout_4.itemAt(i).widget().setParent(None)
+                self.parent.verticalLayout_4.itemAt(i).widget().setParent(None)
             del list_img[:]
         for i in coll.get_img_list().values():
-                filname = i.filename.split("/")
-                filna = filname[len(filname)-1]
-                if filna not in list_img:
-                    list_img.append(filna)
-                    buttonpath=Buttonpath(filna,coll,parent)
-                    self.parent.verticalLayout_4.addWidget(buttonpath)
+            filname = i.filename.split("/")
+            filna = filname[len(filname) - 1]
+            if filna not in list_img:
+                list_img.append(filna)
+                buttonpath = Buttonpath(filna, coll, parent)
+                self.parent.verticalLayout_4.addWidget(buttonpath)
 
     def addImage(self, coll, parent):
         global list_img
-        #del list_img[:]
+        # del list_img[:]
         # for i in reversed(range(self.parent.verticalLayout_4.count())):
         #     self.parent.verticalLayout_4.itemAt(i).widget().setParent(None)
-    # -- This addImage will add the images selected by the user in the current collection (ALLO THE USER TO ADD A FILE THAT ALREADY EXISTS IN THE COLLECTION)
+        # -- This addImage will add the images selected by the user in the current collection (ALLO THE USER TO ADD A FILE THAT ALREADY EXISTS IN THE COLLECTION)
         path = QFileDialog.getOpenFileNames()
         if (path != ""):
             try:
-                add_image_coll(coll,path)
-                #self.redo(get_current_coll())
+                add_image_coll(coll, path)
+                # self.redo(get_current_coll())
                 for i in coll.get_img_list().values():
-                    #print("bjr")
+                    # print("bjr")
                     filname = i.filename.split("/")
-                    filna = filname[len(filname)-1]
-                    #print("cc")
+                    filna = filname[len(filname) - 1]
+                    # print("cc")
                     if filna not in list_img:
                         list_img.append(filna)
-                        #print("cc2")
-                        buttonpath=Buttonpath(filna,coll,parent)
+                        # print("cc2")
+                        buttonpath = Buttonpath(filna, coll, parent)
                         self.parent.verticalLayout_4.addWidget(buttonpath)
             except:
-                err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. Maybe you tried to open a non-NIfTI file")
+                err = QtGui.QMessageBox.critical(self, "Error",
+                                                 "An error has occured. Maybe you tried to open a non-NIfTI file")
                 # #print (sys.exc_info()[0])
 
-class EditView2(QtGui.QWidget):
 
+class EditView2(QtGui.QWidget):
     showMain = pyqtSignal()
 
     def __init__(self):
@@ -452,7 +455,6 @@ class EditView2(QtGui.QWidget):
         self.label_6.setObjectName(_fromUtf8("label_6"))
         self.gridLayout.addWidget(self.label_6, 2, 1, 1, 2)
 
-
         self.scrollArea = QtGui.QScrollArea(self.widget_3)
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName(_fromUtf8("scrollArea"))
@@ -474,7 +476,6 @@ class EditView2(QtGui.QWidget):
         self.label_4.raise_()
         self.gridLayout_2.addWidget(self.widget_3, 1, 0, 1, 1)
         self.verticalLayout.addWidget(self.widget_2)
-
 
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
@@ -531,52 +532,48 @@ class EditView2(QtGui.QWidget):
                 for i in dict:
                     data = extract(dict[i])
                     for j in range(len(data)):
-                        points.append((data[j][0],data[j][1],data[j][2]))
+                        points.append((data[j][0], data[j][1], data[j][2]))
                 clustering_plot.plot_3d(points)
             elif centroid_opt.isChecked():
                 dict = extract_from_collection_as_centroid(self.coll).get_extracted_data_dict()
                 for i in dict:
                     data = dict[i]
                     for j in range(len(data)):
-                        points.append((data[j][0],data[j][1],data[j][2]))
+                        points.append((data[j][0], data[j][1], data[j][2]))
                 clustering_plot.plot_3d(points)
 
             else:
                 pass
-                #print("There was a problem in data extraction options")
-
-
+                # print("There was a problem in data extraction options")
 
         dict = get_current_coll().get_img_list()
         for i in dict:
             data = extract(dict[i])
-        points = [[],[],[]]
+        points = [[], [], []]
         for j in range(len(data)):
             points[0].append(data[j][0])
             points[1].append(data[j][1])
             points[2].append(data[j][2])
         clustering_plot.plot_3d(points)
 
-
-
     def fill_coll(self):
-    # -- Remove the right CollectionsAccessBar and replace it with a column fill with all the collections selected
+        # -- Remove the right CollectionsAccessBar and replace it with a column fill with all the collections selected
 
         # old = splitter1.widget(1)
         # containerVbox.removeWidget(old)
         # old.setParent(None)
         # old.deleteLater()
         colls = get_selected()
-        #labels = []
-        #print("colls",colls)
+        # labels = []
+        # print("colls",colls)
         for x in colls:
-            #labels.append(x.name)
-            topleft=CollectionAccessButton(x, self)
-        ##print(labels)
-        #topleft=CollectionsAccessBar(labels, self)
-        # topleft=
-        # for lab in labels_array :
-        #     self.parent.verticalLayout_3.addWidget(CollectionAccessButton(lab, self.parent))
+            # labels.append(x.name)
+            topleft = CollectionAccessButton(x, self)
+            ##print(labels)
+            # topleft=CollectionsAccessBar(labels, self)
+            # topleft=
+            # for lab in labels_array :
+            #     self.parent.verticalLayout_3.addWidget(CollectionAccessButton(lab, self.parent))
 
             self.verticalLayout_3.addWidget(topleft)
 
@@ -587,7 +584,7 @@ class EditView2(QtGui.QWidget):
         self.label.setText(_translate("Form", "Collection name :", None))
         self.label_2.setText(_translate("Form", "Set name :", None))
         self.label_3.setText(_translate("Form", "List of images : ", None))
-        #self.pushButton_4.setText(_translate("Form", "Show Graphic", None))
-        #self.pushButton_3.setText(_translate("Form", "Remove", None))
-        #self.pushButton_12.setText(_translate("Form", "Save changes", None))
+        # self.pushButton_4.setText(_translate("Form", "Show Graphic", None))
+        # self.pushButton_3.setText(_translate("Form", "Remove", None))
+        # self.pushButton_12.setText(_translate("Form", "Save changes", None))
         self.pushButton_8.setText(_translate("Form", "Go back", None))

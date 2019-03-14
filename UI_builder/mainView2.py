@@ -1099,7 +1099,7 @@ class MainView2(QtGui.QWidget):
             for collection in collshow:
                 for img in collection.nifimage_dict.values():
                     if isinstance(img, image.Image):
-                        if img.columns.intersection({"X", "Y", "Z", "Intensity"}):
+                        if len(img.columns.intersection({"X", "Y", "Z", "Intensity"})) < 4:
                             QtGui.QMessageBox.information(self, "Selection empty", "Calculations are possible on data "
                                                                                    "with the columns X,Y,Z,Intensity")
                             return

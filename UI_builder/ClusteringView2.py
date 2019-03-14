@@ -293,15 +293,17 @@ class ClusteringView2(QtGui.QWidget):
 
     def runSelectedClust(self, selectedMethod, param_dict):
         try:
+            self.pushButton_run.setEnabled(False)
             self.pushButton_show.setEnabled(False)
             self.pushButton_save.setEnabled(False)
             self.pushButton_export.setEnabled(False)
+            self.pushButton_back.setEnabled(False)
             self.comboBox_3.setEnabled(False)
 
             if param_dict is None:
                 QtGui.QMessageBox.critical(self, "None algorithm chosen",
                                            f"Chose an algorithm")
-                return
+                raise Exception
 
             self.columns_selected = []
             columns = self.tableWidget.selectedItems()
@@ -320,7 +322,7 @@ class ClusteringView2(QtGui.QWidget):
                                                    f"The column {columns[i].column()} is invalid. You can "
                                                    f"only cluster the columns X, Y and Z"
                                                    )
-                        return
+                        raise Exception
 
             else:
                 self.columns_selected = ['X', 'Y', 'Z']
@@ -358,7 +360,7 @@ class ClusteringView2(QtGui.QWidget):
                                                f"You asked for {range_of_cluster[1]} clusters but there is only "
                                                f"{self.number_of_points}"
                                                f"points.")
-                    return
+                    raise Exception
 
                 for n in range(range_of_cluster[0], range_of_cluster[1] + 1):
                     for i in range(i_iter):
@@ -476,8 +478,13 @@ class ClusteringView2(QtGui.QWidget):
         except UnboundLocalError:
             QtGui.QMessageBox.critical(self, "Error", "Error while clustering, verify that the parameters are corrects.")
 
+        except Exception:
+            pass
+
         finally:
             self.pushButton_run.setText("Run")
+            self.pushButton_run.setEnabled(True)
+            self.pushButton_back.setEnabled(True)
             QtGui.qApp.processEvents()
 
     def export(self):
