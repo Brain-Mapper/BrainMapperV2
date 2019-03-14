@@ -27,7 +27,7 @@ pip install C:\path\where\wheel\is\PyQt4-4.11.4-cp36-cp36m-win_amd64.whl  ( cett
 ## MacOS
 ### Install python 3
 If python3 is not already install on your computer, you need to download it. Folow this link:
-https://www.python.org/ftp/python/3.7.2/python-3.7.2-macosx10.6.pkg
+https://www.python.org/ftp/python/3.6.5/python-3.6.5-macosx10.9.pkg
 
 ### Install the dependencies
 Open a terminal in the MacOS folder.
