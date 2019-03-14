@@ -147,9 +147,6 @@ class UsableDataSet(object):
         found = False
         colls = []
         point_dict = dict()
-        template_data = load(template_mni_path)
-        template_affine = np.identity(4)
-        template_shape = template_data.shape
 
         for udcoll in self.get_usable_data_list():
             extracted_data_dictionary = udcoll.get_extracted_data_dict()
@@ -173,34 +170,15 @@ class UsableDataSet(object):
                     else:
                         found = False
 
-        print(f"point_dict.keys(): {point_dict.keys()}")
+        # print(f"point_dict.keys(): {point_dict.keys()}")
 
         for key in point_dict.keys():
             cluster_image = TempImage(point_dict[key], [key] * len(point_dict[key]), str(key))
             for c in colls:
-                print(f"c.name: {c.name}")
+                # print(f"c.name: {c.name}")
                 if key == c.name:
-                    print(f"add_image")
+                    # print(f"add_image")
                     c.add(cluster_image)
-
-        """
-        # recreate nifti image from this points
-        for key in point_dict.keys():
-            # print key
-            recreate_affine = template_affine
-            recreate_data = zeros(template_shape)
-
-            for point in point_dict[key]:
-                recreate_data[point[0], point[1], point[2]] = point[3]
-
-            recreate_image = Nifti1Image(recreate_data, recreate_affine)
-            ni_image = NifImage(key + ".nii", recreate_image)
-
-            for c in colls:
-                if (str(key) == c.name):
-                    # put nifti images into a imageCollection
-                    c.add(ni_image)
-        """
 
         for i in colls:
             new_name = str(i).split("0x")

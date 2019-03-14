@@ -472,7 +472,8 @@ class calculationView2(QtGui.QWidget):
         l = choice.layout()
         l.setContentsMargins(20, 10, 10, 20)
         l.addWidget(QLabel(
-            algorithm + " algorithm has been correctly applicated on nifti(s) file(s)\n\n\n\nDo you want save the algorithm's result as Set ?"),
+            algorithm + "algorithm has been correctly applicated on nifti(s) file(s)\n\n\n\nDo you want save the "
+                        "algorithm's result as Set ?"),
             l.rowCount() - 3, 0, 1, l.columnCount() - 2, Qt.AlignCenter)
         choice.setStandardButtons(QMessageBox.Cancel | QMessageBox.Save)
         wantToSave = choice.exec_()

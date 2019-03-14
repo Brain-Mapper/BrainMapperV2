@@ -17,11 +17,49 @@ $ python3 UI.py
 ```
 
 ## Windows
-Télécharger le fichier pyqt4 avec la version correspondante à votre version de python: https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyqt4
 
-Lancer dans un powershell la commande suivante :
-```powershell
-pip install C:\path\where\wheel\is\PyQt4-4.11.4-cp36-cp36m-win_amd64.whl  ( cette exemple est fait avec une version de pyqt4 pour python 3.6)
+### Install python
+
+You need to have python 3.6 to use this project.
+
+Open the terminal (`Windows+r` and type `cmd`) and type the following line to
+check if python is installed
+
+```
+python --version
+``` 
+
+If it is installed you should have the following result :
+
+```
+Python 3.6.7
+```
+
+If the command does not work, it means that python is not installed.
+In this case, you can download it [here](https://www.python.org/downloads/release/python-367/).
+During the install, ensure that the options "pip" and "tcl/tk" (on the screen Optional Features),
+"add Python to environment variables" (on the screen Advanced Options) are chosen.
+
+You should be able to launch the previous command in a new terminal.
+
+### Install the dependencies
+
+In the command line, install required dependencies with
+```
+pip install -r <path to>\requirement.txt
+```
+
+You also have to download pyqt4 ([here](https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyqt4), download PyQt4-4.11.4-cp36-cp36m-win_amd64.whl
+Then install it with pip
+
+```
+pip install <path to>\PyQt4‑4.11.4‑cp36‑cp36m‑win32.whl
+```
+
+For example 
+```
+pip install -r C:\Users\Me\BrainMapperV2\installation\Windows\requirement.txt
+pip install C:\Users\Aurélien\Downloads\PyQt4-4.11.4-cp36-cp36m-win_amd64.whl
 ```
 
 ## MacOS

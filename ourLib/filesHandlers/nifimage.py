@@ -11,6 +11,9 @@ class NifImage(object):
         self.filename = filename
         self.nib_image = nibabel_image
 
+        # To run the code faster
+        self.temp_file = None
+
     @classmethod
     def from_file(cls, one_filename):
         """

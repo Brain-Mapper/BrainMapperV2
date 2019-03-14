@@ -19,7 +19,7 @@ import numpy as np
 import sys
 from os import path
 from ..filesHandlers.nifimage import NifImage
-from ..filesHandlers.image import Image
+from ..filesHandlers.image import Image, TempImage
 
 if __package__ is None:
     sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
@@ -49,44 +49,51 @@ def extract(obj):
 
     if isinstance(obj, NifImage):
 
-        # Safe copy the data so you won't modify the original image data (see NifImage class)
-        # finite=True is given as an argument to replace NaN or Inf values by zeros
-        img_data = obj.get_img_data()
+        if obj.temp_file is None:
 
-        # img_data>0 returns a boolean mask the same size as the image with :
-        #     False if voxel value is not >0, True if it is
-        mask = img_data > 0
-        # img_data[img_data>0].T gives out an array with only positive values in it
+            # Safe copy the data so you won't modify the original image data (see NifImage class)
+            # finite=True is given as an argument to replace NaN or Inf values by zeros
+            img_data = obj.get_img_data()
 
-        nb_interesting_voxels = len(img_data[mask].T)
+            # img_data>0 returns a boolean mask the same size as the image with :
+            #     False if voxel value is not >0, True if it is
+            mask = img_data > 0
+            # img_data[img_data>0].T gives out an array with only positive values in it
 
-        usable_data = np.zeros(shape=(nb_interesting_voxels, 4))
+            nb_interesting_voxels = len(img_data[mask].T)
 
-        lx, ly, lz = img_data.shape  # length of the three image axis
-        c = 0  # counter for array construction
+            usable_data = np.zeros(shape=(nb_interesting_voxels, 4))
 
-        M = obj.get_affine_matrix()[:3, :3]
-        abc = obj.get_affine_matrix()[:3, 3]
+            lx, ly, lz = img_data.shape  # length of the three image axis
+            c = 0  # counter for array construction
 
-        def f(i, j, k):
-            """ Return X,Y,Z coordinates in MNI for i, j, k"""
-            return M.dot([i, j, k]) + abc
+            M = obj.get_affine_matrix()[:3, :3]
+            abc = obj.get_affine_matrix()[:3, 3]
 
-        for x in range(1, lx):
-            # If there is at least one value NOT EQUAL to zero, the other dimensions are worth exploring
-            if img_data[x].sum() > 0:
-                for y in range(1, ly):
-                    if img_data[x][y].sum() > 0:
-                        for z in range(1, lz):
-                            voxel_intensity = img_data[x][y][z]
-                            if voxel_intensity > 0:
-                                x_y_z = f(x, y, z)
-                                usable_data[c] = [x_y_z[0], x_y_z[1], x_y_z[2], voxel_intensity]
-                                c = c + 1
+            def f(i, j, k):
+                """ Return X,Y,Z coordinates in MNI for i, j, k"""
+                return M.dot([i, j, k]) + abc
 
-        obj.uncache()  # deleting safe copy of image data saves a lot of memory !
+            for x in range(1, lx):
+                # If there is at least one value NOT EQUAL to zero, the other dimensions are worth exploring
+                if img_data[x].sum() > 0:
+                    for y in range(1, ly):
+                        if img_data[x][y].sum() > 0:
+                            for z in range(1, lz):
+                                voxel_intensity = img_data[x][y][z]
+                                if voxel_intensity > 0:
+                                    x_y_z = f(x, y, z)
+                                    usable_data[c] = [x_y_z[0], x_y_z[1], x_y_z[2], voxel_intensity]
+                                    c = c + 1
 
-        return usable_data
+            obj.uncache()  # deleting safe copy of image data saves a lot of memory !
+
+            # Set temp file
+            obj.temp_file = TempImage(usable_data)
+            return usable_data
+
+        else:
+            return obj.temp_file.extract()
 
     elif isinstance(obj, Image):
         # print("extractor -> in Image")
