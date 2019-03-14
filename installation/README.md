@@ -59,8 +59,28 @@ pip install <path to>\PyQt4‑4.11.4‑cp36‑cp36m‑win32.whl
 For example 
 ```
 pip install -r C:\Users\Me\BrainMapperV2\installation\Windows\requirement.txt
-pip install C:\Users\Aurélien\Downloads\PyQt4-4.11.4-cp36-cp36m-win_amd64.whl
+pip install C:\Users\Me\Downloads\PyQt4-4.11.4-cp36-cp36m-win_amd64.whl
 ```
+
+### Launch BrainMapper
+
+In the command line, set your current directory at the root of BrainMapper
+```
+cd <path to>\BrainMapperV2
+```
+
+Start the script with python
+```
+python UI.py
+```
+
+For example
+```
+cd C:\Users\Me\BrainMapperV2
+python UI.py
+```
+
+
 
 ## MacOS
 ### Install python 3

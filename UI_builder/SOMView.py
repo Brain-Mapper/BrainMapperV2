@@ -120,6 +120,7 @@ class SOMView(QtGui.QWidget):
         self.pushButton_show.setEnabled(False)
 
         self.pushButton_train.setText("Preparing training")
+        QtGui.qApp.processEvents()
 
         # Get the columns used to make the map
         items = self.tableWidget.selectedItems()
@@ -189,6 +190,7 @@ class SOMView(QtGui.QWidget):
         sofm.train(training_data, number_of_epochs)
 
         self.pushButton_train.setText("Formatting the results")
+        QtGui.qApp.processEvents()
 
         weight = sofm.weight
         param_length = sofm.weight.shape[0]

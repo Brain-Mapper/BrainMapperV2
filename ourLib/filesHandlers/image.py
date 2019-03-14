@@ -95,7 +95,7 @@ class TempImage(Image):
         return pd.read_csv(self.file).dropna()
 
     def save(self, dest_path):
-        self.get_dataframe().to_csv(dest_path)
+        self.get_dataframe().to_csv(dest_path+".csv", index=False)
 
 
 def simple_import(file_path, current_set):

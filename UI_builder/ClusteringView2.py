@@ -211,7 +211,7 @@ class ClusteringView2(QtGui.QWidget):
     def createResultView(self, param_dict, selectedMethod):
         """ Create the result panel at the bottom of the application """
         # If there is only one iteration
-        if "i_iter" not in param_dict.keys() or param_dict["i_iter"] == "1":
+        if "i_iter" not in param_dict.keys() or param_dict["i_iter"] == "1" and len(param_dict["n_clusters"].split("-")) == 1:
             for i in reversed(range(self.verticalLayout_result.count())):
                 self.verticalLayout_result.itemAt(i).widget().setParent(None)
             self.info_panel = QtGui.QTextEdit()
@@ -306,7 +306,9 @@ class ClusteringView2(QtGui.QWidget):
         else:
             self.columns_selected = ['X', 'Y', 'Z']
 
-        print(f"selected_columns : {self.columns_selected}")
+        # print(f"selected_columns : {self.columns_selected}")
+        self.pushButton_run.setText(f"Running on {self.columns_selected}")
+        QtGui.qApp.processEvents()
 
         if selectedMethod == "DBSCAN":
             clustering_results = run_clustering(selectedMethod, param_dict, self.columns_selected)
@@ -435,6 +437,9 @@ class ClusteringView2(QtGui.QWidget):
         self.comboBox_3.setEnabled(True)
 
         self.createResultView(param_dict, selectedMethod)
+
+        self.pushButton_run.setText("Run")
+        QtGui.qApp.processEvents()
 
     def export(self):
         if self.label is not None:
