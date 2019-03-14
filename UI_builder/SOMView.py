@@ -1,28 +1,21 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'Clustering.ui'
+# Form implementation generated from reading ui file 'SOM.ui'
 #
 # Created by: PyQt4 UI code generator 4.11.4
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt4 import QtCore, QtGui
+from typing import List, Dict
 
-import numpy as np
-import pyqtgraph as pg
-import pyqtgraph.opengl as gl
-from PyQt4.Qt import QFileDialog
-from PyQt4.QtCore import Qt, QRect, pyqtSignal, QSize
-from BrainMapper import *
-
-import math
-import tkinter
-import pandas as pd
-from neupy import algorithms, utils
-from scipy.spatial import distance
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from PyQt4 import QtCore, QtGui
+from PyQt4.QtCore import Qt, pyqtSignal, QSize
+from neupy import algorithms
+from scipy.spatial import distance
 
-# Imports for the plotting
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -38,10 +31,6 @@ try:
 except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
-
-GRID_HEIGHT = 0
-GRID_WIDTH = 0
-data_neuron_index = []
 
 
 class InfoButton(QtGui.QPushButton):
@@ -64,6 +53,16 @@ class SOMView(QtGui.QWidget):
 
     def __init__(self):
         super(SOMView, self).__init__()
+        self.som_input: pd.DataFrame = None  # Input of the SOM as a Dataframe
+        self.features_columns: List[str] = None  # Columns usable for the vizualisation
+        # Som configuration
+        self.grid_height: int = None
+        self.grid_width: int = None
+        # Som results
+        self.data_neuron_index: List[int] = None  # List of association date to neuron
+        self.imgs_result: Dict[str: np.ndarray] = None  # Visualisation result
+        self.colormap_min: int = None
+        self.colormap_max: int = None
         self.setupUi(self)
 
     def fill_table(self, som_input: pd.DataFrame):
@@ -74,15 +73,22 @@ class SOMView(QtGui.QWidget):
             """
 
         self.som_input = som_input
+        self.features_columns = []
+
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("MS Shell Dlg 2"))
 
         font.setPointSize(8)
+
+        # Set the size of the widget
         self.tableWidget.setColumnCount(len(som_input.columns))
         self.tableWidget.setRowCount(len(som_input))
+
+        # Clean the comboBox
         for i in range(self.comboBox.count(), -1, -1):
             self.comboBox.removeItem(i)
 
+        # Add the column header and the elements to the comboBox
         for i, column_name in enumerate(som_input.columns):
             item = QtGui.QTableWidgetItem()
             item.setFont(font)
@@ -90,9 +96,11 @@ class SOMView(QtGui.QWidget):
             self.tableWidget.setHorizontalHeaderItem(i, item)
             item.setText(column_name)
             if column_name not in ["X", "Y", "Z"]:
+                self.features_columns.append(column_name)
                 self.comboBox.addItem(column_name)
-                # self.comboBox.setItemText(i, column_name)
         self.tableWidget.horizontalHeader().setVisible(True)
+
+        # Add the data
         for i in range(0, len(som_input)):
             for j, column_name in enumerate(som_input.columns):
                 item = QtGui.QTableWidgetItem(str(som_input.at[i, column_name]))
@@ -103,20 +111,17 @@ class SOMView(QtGui.QWidget):
         self.tableWidget.setSelectionBehavior(QtGui.QAbstractItemView.SelectColumns)
 
         # The button show has to be disable while the som has not been trained
+        self.comboBox.setEnabled(False)
         self.pushButton_show.setEnabled(False)
 
     def go_back(self):
         self.showMain.emit()
 
     def train(self):
-        self.pushButton_show.setEnabled(True)
+        self.comboBox.setEnabled(False)
+        self.pushButton_show.setEnabled(False)
 
-        global GRID_WIDTH
-        global GRID_HEIGHT
-        global data_neuron_index
-
-        # You can use the below function when testing to eliminate the randomness
-        # utils.reproducible()
+        self.pushButton_train.setText("Preparing training")
 
         # Get the columns used to make the map
         items = self.tableWidget.selectedItems()
@@ -124,16 +129,20 @@ class SOMView(QtGui.QWidget):
         columns = []
 
         if len(items) != 0:
-            for i in range(0, len(items), self.tableWidget.rowCount()):
-                if self.tableWidget.horizontalHeaderItem(items[i].column()).text() in ["X", "Y", "Z"]:
-                    columns.append(self.tableWidget.horizontalHeaderItem(items[i].column()).text())
+            for index in range(0, len(items), self.tableWidget.rowCount()):
+                if self.tableWidget.horizontalHeaderItem(items[index].column()).text() in ["X", "Y", "Z"]:
+                    columns.append(self.tableWidget.horizontalHeaderItem(items[index].column()).text())
         else:
             columns = ["X", "Y", "Z"]
 
         training_data = self.som_input[columns].values
 
-        GRID_HEIGHT = int(self.lineEdit_hauteur.text())
-        GRID_WIDTH = int(self.lineEdit_largeur.text())
+        self.grid_height = int(self.lineEdit_height.text())
+        self.grid_width = int(self.lineEdit_width.text())
+
+        def on_epoch_start(optimizer):
+            self.pushButton_train.setText(f"In training (epoch : {optimizer.last_epoch})")
+            QtGui.qApp.processEvents()
 
         sofm = algorithms.SOFM(
             n_inputs=len(columns),
@@ -143,6 +152,7 @@ class SOMView(QtGui.QWidget):
             # other. For this reason we set up learning radius
             # equal to zero
             learning_radius=float(self.lineEdit_radius.text()),
+            reduce_radius_after=float(self.lineEdit_reduce_radius_after.text()),
 
             # Parameters controls learning rate for each neighbour. The further neighbour neuron from the
             # winning neuron the smaller that learning rate for it. Learning rate scales based on the
@@ -150,11 +160,12 @@ class SOMView(QtGui.QWidget):
             # standard deviation specified as a parameter. The learning rate for the winning neuron is
             # always equal to the value specified in the step parameter and for neighbour neurons it’s
             # always lower.
-            std=float(self.lineEdit_std.text()),  # TODO : modifier
+            std=float(self.lineEdit_std.text()),
+            reduce_std_after=int(self.lineEdit_reduce_std_after.text()),
 
             # Feature grid defines shape of the output neurons. The new shape should be compatible with      #the
             # number of outputs
-            features_grid=(GRID_HEIGHT, GRID_WIDTH),
+            features_grid=(self.grid_height, self.grid_width),
 
             # Defines connection type in feature grid
             grid_type='rect',
@@ -162,24 +173,25 @@ class SOMView(QtGui.QWidget):
             # Defines function that will be used to compute closest weight to the input sample
             distance='euclid',
 
-            # Instead of generating random weights
-            # (features / cluster centers) SOFM will sample
-            # them from the data. Which means that after
-            # initialization step 3 random data samples will
-            # become cluster centers
-            # weight='sample_from_data',
-
             # Training step size or learning rate
             step=float(self.lineEdit_step.text()),
+            reduce_step_after=int(self.lineEdit_reduce_std_after.text()),
 
             # Shuffles dataset before every training epoch.
             shuffle_data=True,
 
             # Shows training progress in terminal
-            verbose=True,
+            verbose=False,
+
+            # Signals
+            signals=on_epoch_start,
         )
 
-        sofm.train(training_data, int(self.lineEdit_nbiter.text()))
+        number_of_epochs = int(self.lineEdit_nepochs.text())
+
+        sofm.train(training_data, number_of_epochs)
+
+        self.pushButton_train.setText("Formatting the results")
 
         weight = sofm.weight
         param_length = sofm.weight.shape[0]
@@ -188,50 +200,71 @@ class SOMView(QtGui.QWidget):
         neurons = []
         for j in range(param_width):
             temp = []
-            for i in range(param_length):
-                temp.append(weight[i, j])
+            for index in range(param_length):
+                temp.append(weight[index, j])
             neurons.append(temp)
 
-        data_neuron_index = []
-        for k in training_data:
-            distance_min = distance.euclidean(k, neurons[0])
+        # Wipe the results
+        # self.data_neuron_index = []
+
+        self.imgs_result = {"__all__": np.zeros(shape=(self.grid_height, self.grid_width))}
+        for column in self.features_columns:
+            self.imgs_result[column] = np.zeros(shape=(self.grid_height, self.grid_width))
+
+        # Associate each date to its neuron
+        for index, data in enumerate(training_data):
+            distance_min = distance.euclidean(data, neurons[0])
             best_neuron_index = 0
             for neuron_index in range(len(neurons)):
-                new_distance = distance.euclidean(k, neurons[neuron_index])
+                new_distance = distance.euclidean(data, neurons[neuron_index])
                 if new_distance < distance_min:
                     distance_min = new_distance
                     best_neuron_index = neuron_index
-            data_neuron_index.append(best_neuron_index)
+            # self.data_neuron_index.append(best_neuron_index)
 
-        self.pushButton_show.setEnabled(True)
+            # Calculate the weight of each feature
+            neuron_i = int(best_neuron_index / self.grid_width)
+            neuron_j = best_neuron_index % self.grid_width
+            self.imgs_result["__all__"][neuron_i, neuron_j] = self.imgs_result["__all__"][neuron_i, neuron_j] + 1
+            for column in self.features_columns:
+                if self.som_input[column][index] == 1:
+                    self.imgs_result[column][neuron_i, neuron_j] = self.imgs_result[column][neuron_i, neuron_j] + 1
+
+        for i in range(0, self.grid_height):
+            for j in range(0, self.grid_width):
+                number_of_data_in_neuron = self.imgs_result["__all__"][i, j]
+                if number_of_data_in_neuron == 0:
+                    for column in self.features_columns:
+                        self.imgs_result[column][i, j] = 0.5
+                else:
+                    for column in self.features_columns:
+                        self.imgs_result[column][i, j] = self.imgs_result[column][i, j] / number_of_data_in_neuron
+
+        # Calculate a unique colormap map
+        combined_data = np.array(list(self.imgs_result.values()))
+        self.colormap_min, self.colormap_max = 0, 1
 
         QtGui.QMessageBox.information(self, "Training done",
                                       f"The training is done you can visualize by clicking on the show button. "
                                       f"(You have used the columns: {columns})")
+        self.comboBox.setEnabled(True)
+        self.pushButton_show.setEnabled(True)
+        self.pushButton_train.setText("Train")
 
     def showmap(self):
-        global GRID_WIDTH
-        global GRID_HEIGHT
-        global data_neuron_index
-
         column_name = self.comboBox.currentText()
 
-        column_for_som = self.som_input[[column_name]].values
+        # column_for_som = self.som_input[[column_name]].values
 
-        print(f"data_neuron_index {data_neuron_index}")
+        # print(f"data_neuron_index {self.data_neuron_index}")
 
-        x = list(range(0, GRID_WIDTH))
-        y = list(range(0, GRID_HEIGHT))
+        x = list(range(0, self.grid_width))
+        y = list(range(0, self.grid_height))
 
-        img = np.zeros(shape=(GRID_HEIGHT, GRID_WIDTH))
-
-        for neuron_index, column_value in zip(data_neuron_index, column_for_som):
-            neuron_i = int(neuron_index / GRID_WIDTH)
-            neuron_j = neuron_index % GRID_WIDTH
-            img[neuron_i, neuron_j] = img[neuron_i, neuron_j] + 1 if column_value == 1 else img[neuron_i, neuron_j] - 1
+        img = self.imgs_result[column_name]
 
         fig, ax = plt.subplots()
-        im = ax.imshow(img, cmap="inferno", origin="lower")
+        im = ax.imshow(img, cmap="inferno", origin="lower", vmin=self.colormap_min, vmax=self.colormap_max)
         # Set the ticks
         ax.set_xticks(x)
         ax.set_yticks(y)
@@ -241,12 +274,10 @@ class SOMView(QtGui.QWidget):
         # Set a colorbar
         cbar = ax.figure.colorbar(im,
                                   ax=ax,
-                                  ticks=list(range(int(np.min(img)), int(np.max(img)) + 1)),
+                                  ticks=list([0, 0.25, 0.5, 0.75, 1]),
                                   orientation="horizontal")
-        cbar_legend = f"Number of points with {column_name} - number of points with {column_name.replace('=','≠')}"
+        cbar_legend = f"Number of points with {column_name}/ Number of points"
         cbar.ax.set_xlabel(cbar_legend)
-        # Add black contour
-        #ax.grid(which="minor", color="black", linestyle='-', linewidth=1)
         ax.set_title(f"SOM for {column_name}")
         fig.tight_layout()
         plt.show()
@@ -279,89 +310,140 @@ class SOMView(QtGui.QWidget):
         self.widget_param.setObjectName(_fromUtf8("widget_param"))
         self.gridLayout_5 = QtGui.QGridLayout(self.widget_param)
         self.gridLayout_5.setObjectName(_fromUtf8("gridLayout_5"))
-        self.pushButton_5 = self.help_button_height = InfoButton(self.widget_param)
+        self.label_std = QtGui.QLabel(self.widget_param)
+        self.label_std.setObjectName(_fromUtf8("label_std"))
+        self.gridLayout_5.addWidget(self.label_std, 11, 3, 1, 1)
+        self.label_step = QtGui.QLabel(self.widget_param)
+        self.label_step.setObjectName(_fromUtf8("label_step"))
+        self.gridLayout_5.addWidget(self.label_step, 6, 3, 1, 1)
+        self.label_width = QtGui.QLabel(self.widget_param)
+        self.label_width.setObjectName(_fromUtf8("label_width"))
+        self.gridLayout_5.addWidget(self.label_width, 1, 3, 1, 1)
+        self.label_radius = QtGui.QLabel(self.widget_param)
+        self.label_radius.setObjectName(_fromUtf8("label_radius"))
+        self.gridLayout_5.addWidget(self.label_radius, 8, 3, 1, 1)
+        self.label_height = QtGui.QLabel(self.widget_param)
+        self.label_height.setObjectName(_fromUtf8("label_height"))
+        self.gridLayout_5.addWidget(self.label_height, 0, 3, 1, 1)
+
+        self.pushButton_5 = InfoButton(self.widget_param)
         self.pushButton_5.setMessage("This is the learning rate.")
         self.pushButton_5.setMaximumSize(QtCore.QSize(30, 16777215))
         self.pushButton_5.setObjectName(_fromUtf8("pushButton_5"))
         self.gridLayout_5.addWidget(self.pushButton_5, 6, 0, 1, 3)
+
         self.lineEdit_step = QtGui.QLineEdit(self.widget_param)
         self.lineEdit_step.setMaximumSize(QtCore.QSize(150, 16777215))
         self.lineEdit_step.setObjectName(_fromUtf8("lineEdit_step"))
-        self.lineEdit_step.setText("0.1")
         self.gridLayout_5.addWidget(self.lineEdit_step, 6, 6, 1, 1)
-        self.pushButton_4 = self.help_button_height = InfoButton(self.widget_param)
+
+        self.pushButton_7 = InfoButton(self.widget_param)
+        self.pushButton_7.setMessage("This parameter controls learning rate for each neighbor. Learning rate scales "
+                                     "based on the factors produced by the normal distribution with center in the "
+                                     "place of a winning neuron and standard deviation specified as a parameter. The "
+                                     "learning rate for the winning neuron is always equal to the value specified in "
+                                     "the step parameter and for neighbour neurons it’s always lower.")
+        self.pushButton_7.setMaximumSize(QtCore.QSize(30, 16777215))
+        self.pushButton_7.setObjectName(_fromUtf8("pushButton_7"))
+        self.gridLayout_5.addWidget(self.pushButton_7, 11, 0, 1, 3)
+
+        self.pushButton_3 = InfoButton(self.widget_param)
+        self.pushButton_3.setMessage("Feature grid defines shape of the output neurons. Width is the width of the "
+                                     "feature grid.")
+        self.pushButton_3.setMaximumSize(QtCore.QSize(30, 16777215))
+        self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
+        self.gridLayout_5.addWidget(self.pushButton_3, 1, 0, 1, 2)
+
+        self.pushButton_6 = InfoButton(self.widget_param)
+        self.pushButton_6.setMessage("Parameter defines radius within which we consider all neurons as neighbours to "
+                                     "the winning neuron. The bigger the value the more neurons will be updated after"
+                                     " each iteration.")
+        self.pushButton_6.setMaximumSize(QtCore.QSize(30, 16777215))
+        self.pushButton_6.setObjectName(_fromUtf8("pushButton_6"))
+        self.gridLayout_5.addWidget(self.pushButton_6, 8, 0, 1, 1)
+
+        self.lineEdit_width = QtGui.QLineEdit(self.widget_param)
+        self.lineEdit_width.setMaximumSize(QtCore.QSize(150, 16777215))
+        self.lineEdit_width.setObjectName(_fromUtf8("lineEdit_width"))
+        self.gridLayout_5.addWidget(self.lineEdit_width, 1, 6, 1, 1)
+        self.lineEdit_radius = QtGui.QLineEdit(self.widget_param)
+        self.lineEdit_radius.setMaximumSize(QtCore.QSize(150, 16777215))
+        self.lineEdit_radius.setObjectName(_fromUtf8("lineEdit_radius"))
+        self.gridLayout_5.addWidget(self.lineEdit_radius, 8, 6, 1, 1)
+
+        self.pushButton_2 = InfoButton(self.widget_param)
+        self.pushButton_2.setMessage("Feature grid defines shape of the output neurons. Height is the height of the "
+                                     "feature grid.")
+        self.pushButton_2.setMaximumSize(QtCore.QSize(30, 16777215))
+        self.pushButton_2.setObjectName(_fromUtf8("pushButton_2"))
+        self.gridLayout_5.addWidget(self.pushButton_2, 0, 0, 1, 3)
+
+        self.lineEdit_height = QtGui.QLineEdit(self.widget_param)
+        self.lineEdit_height.setMaximumSize(QtCore.QSize(150, 16777215))
+        self.lineEdit_height.setObjectName(_fromUtf8("lineEdit_height"))
+        self.gridLayout_5.addWidget(self.lineEdit_height, 0, 6, 1, 1)
+        self.lineEdit_nepochs = QtGui.QLineEdit(self.widget_param)
+        self.lineEdit_nepochs.setMaximumSize(QtCore.QSize(150, 16777215))
+        self.lineEdit_nepochs.setObjectName(_fromUtf8("lineEdit_nepochs"))
+        self.gridLayout_5.addWidget(self.lineEdit_nepochs, 4, 6, 1, 1)
+        self.label_nbiter = QtGui.QLabel(self.widget_param)
+        self.label_nbiter.setObjectName(_fromUtf8("label_nbiter"))
+        self.gridLayout_5.addWidget(self.label_nbiter, 4, 3, 1, 1)
+        self.lineEdit_reduce_radius_after = QtGui.QLineEdit(self.widget_param)
+        self.lineEdit_reduce_radius_after.setObjectName(_fromUtf8("lineEdit_reduce_radius_after"))
+        self.gridLayout_5.addWidget(self.lineEdit_reduce_radius_after, 9, 6, 1, 1)
+        self.lineEdit_reduce_step_after = QtGui.QLineEdit(self.widget_param)
+        self.lineEdit_reduce_step_after.setObjectName(_fromUtf8("lineEdit_reduce_step_after"))
+        self.gridLayout_5.addWidget(self.lineEdit_reduce_step_after, 7, 6, 1, 1)
+        self.lineEdit_reduce_std_after = QtGui.QLineEdit(self.widget_param)
+        self.lineEdit_reduce_std_after.setObjectName(_fromUtf8("lineEdit_reduce_std_after"))
+        self.gridLayout_5.addWidget(self.lineEdit_reduce_std_after, 12, 6, 1, 1)
+
+        self.QPushButton_reduce_step_after_button = InfoButton(self.widget_param)
+        self.QPushButton_reduce_step_after_button.setMessage(
+            "Defines reduction rate at which parameter step will be reduced using the following formula:"
+            "\nstep = step / (1 + current_epoch / reduce_step_after)"
+        )
+        self.QPushButton_reduce_step_after_button.setMaximumSize(QtCore.QSize(30, 16777215))
+        self.QPushButton_reduce_step_after_button.setObjectName(_fromUtf8("QPushButton_reduce_step_after_button"))
+        self.gridLayout_5.addWidget(self.QPushButton_reduce_step_after_button, 7, 0, 1, 1)
+
+        self.pushButton_4 = InfoButton(self.widget_param)
         self.pushButton_4.setMessage(
             "One epoch is when an entire dataset is passed forward and backward through the neural network only once.")
         self.pushButton_4.setMaximumSize(QtCore.QSize(30, 16777215))
         self.pushButton_4.setObjectName(_fromUtf8("pushButton_4"))
-        self.gridLayout_5.addWidget(self.pushButton_4, 2, 0, 1, 1)
+        self.gridLayout_5.addWidget(self.pushButton_4, 4, 0, 1, 1)
+
+        self.QPushButton_reduce_radius_after = InfoButton(self.widget_param)
+        self.QPushButton_reduce_radius_after.setMessage(
+            "Every specified number of epochs learning_radius parameter will be reduced by 1."
+        )
+        self.QPushButton_reduce_radius_after.setMaximumSize(QtCore.QSize(30, 16777215))
+        self.QPushButton_reduce_radius_after.setObjectName(_fromUtf8("QPushButton_reduce_radius_after"))
+        self.gridLayout_5.addWidget(self.QPushButton_reduce_radius_after, 9, 0, 1, 1)
+
+        self.QPushButton_reduce_std_after = InfoButton(self.widget_param)
+        self.QPushButton_reduce_std_after.setMessage(
+            "Defines reduction rate at which parameter std will be reduced using the following formula:\n"
+            "std = std / (1 + current_epoch / reduce_std_after)")
+        self.QPushButton_reduce_std_after.setMaximumSize(QtCore.QSize(30, 16777215))
+        self.QPushButton_reduce_std_after.setObjectName(_fromUtf8("QPushButton_reduce_std_after"))
+        self.gridLayout_5.addWidget(self.QPushButton_reduce_std_after, 12, 0, 1, 1)
+
+        self.label = QtGui.QLabel(self.widget_param)
+        self.label.setObjectName(_fromUtf8("label"))
+        self.gridLayout_5.addWidget(self.label, 7, 3, 1, 1)
+        self.label_2 = QtGui.QLabel(self.widget_param)
+        self.label_2.setObjectName(_fromUtf8("label_2"))
+        self.gridLayout_5.addWidget(self.label_2, 9, 3, 1, 1)
+        self.label_3 = QtGui.QLabel(self.widget_param)
+        self.label_3.setObjectName(_fromUtf8("label_3"))
+        self.gridLayout_5.addWidget(self.label_3, 12, 3, 1, 1)
         self.lineEdit_std = QtGui.QLineEdit(self.widget_param)
         self.lineEdit_std.setMaximumSize(QtCore.QSize(150, 16777215))
         self.lineEdit_std.setObjectName(_fromUtf8("lineEdit_std"))
-        self.lineEdit_std.setText("1")
-        self.gridLayout_5.addWidget(self.lineEdit_std, 10, 6, 1, 1)
-        self.lineEdit_nbiter = QtGui.QLineEdit(self.widget_param)
-        self.lineEdit_nbiter.setMaximumSize(QtCore.QSize(150, 16777215))
-        self.lineEdit_nbiter.setObjectName(_fromUtf8("lineEdit_nbiter"))
-        self.lineEdit_nbiter.setText("10")
-        self.gridLayout_5.addWidget(self.lineEdit_nbiter, 2, 6, 1, 1)
-        self.pushButton_7 = self.help_button_height = InfoButton(self.widget_param)
-        self.pushButton_7.setMessage(
-            "This parameter controls learning rate for each neighbor. Learning rate scales based on the factors produced by the normal distribution with center in the place of a winning neuron and standard deviation specified as a parameter. The learning rate for the winning neuron is always equal to the value specified in the step parameter and for neighbour neurons it’s always lower.")
-        self.pushButton_7.setMaximumSize(QtCore.QSize(30, 16777215))
-        self.pushButton_7.setObjectName(_fromUtf8("pushButton_7"))
-        self.gridLayout_5.addWidget(self.pushButton_7, 10, 0, 1, 3)
-        self.label_nbiter = QtGui.QLabel(self.widget_param)
-        self.label_nbiter.setObjectName(_fromUtf8("label_nbiter"))
-        self.gridLayout_5.addWidget(self.label_nbiter, 2, 3, 1, 1)
-        self.lineEdit_largeur = QtGui.QLineEdit(self.widget_param)
-        self.lineEdit_largeur.setMaximumSize(QtCore.QSize(150, 16777215))
-        self.lineEdit_largeur.setObjectName(_fromUtf8("lineEdit_largeur"))
-        self.lineEdit_largeur.setText("20")
-        self.gridLayout_5.addWidget(self.lineEdit_largeur, 1, 6, 1, 1)
-        self.lineEdit_hauteur = QtGui.QLineEdit(self.widget_param)
-        self.lineEdit_hauteur.setMaximumSize(QtCore.QSize(150, 16777215))
-        self.lineEdit_hauteur.setObjectName(_fromUtf8("lineEdit_hauteur"))
-        self.lineEdit_hauteur.setText("20")
-        self.gridLayout_5.addWidget(self.lineEdit_hauteur, 0, 6, 1, 1)
-        self.pushButton_3 = self.help_button_height = InfoButton(self.widget_param)
-        self.pushButton_3.setMessage(
-            "Feature grid defines shape of the output neurons. Width is the width of the feature grid.")
-        self.pushButton_3.setMaximumSize(QtCore.QSize(30, 16777215))
-        self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
-        self.gridLayout_5.addWidget(self.pushButton_3, 1, 0, 1, 2)
-        self.pushButton_2 = self.help_button_height = InfoButton(self.widget_param)
-        self.pushButton_2.setMessage(
-            "Feature grid defines shape of the output neurons. Height is the height of the feature grid.")
-        self.pushButton_2.setMaximumSize(QtCore.QSize(30, 16777215))
-        self.pushButton_2.setObjectName(_fromUtf8("pushButton_2"))
-        self.gridLayout_5.addWidget(self.pushButton_2, 0, 0, 1, 3)
-        self.pushButton_6 = self.help_button_height = InfoButton(self.widget_param)
-        self.pushButton_6.setMessage(
-            "Parameter defines radius within which we consider all neurons as neighbours to the winning neuron. The bigger the value the more neurons will be updated after each iteration.")
-        self.pushButton_6.setMaximumSize(QtCore.QSize(30, 16777215))
-        self.pushButton_6.setObjectName(_fromUtf8("pushButton_6"))
-        self.gridLayout_5.addWidget(self.pushButton_6, 7, 0, 1, 1)
-        self.lineEdit_radius = QtGui.QLineEdit(self.widget_param)
-        self.lineEdit_radius.setMaximumSize(QtCore.QSize(150, 16777215))
-        self.lineEdit_radius.setObjectName(_fromUtf8("lineEdit_radius"))
-        self.lineEdit_radius.setText("2")
-        self.gridLayout_5.addWidget(self.lineEdit_radius, 7, 6, 1, 1)
-        self.label_radius = QtGui.QLabel(self.widget_param)
-        self.label_radius.setObjectName(_fromUtf8("label_radius"))
-        self.gridLayout_5.addWidget(self.label_radius, 7, 3, 1, 1)
-        self.label_std = QtGui.QLabel(self.widget_param)
-        self.label_std.setObjectName(_fromUtf8("label_std"))
-        self.gridLayout_5.addWidget(self.label_std, 10, 3, 1, 3)
-        self.label_step = QtGui.QLabel(self.widget_param)
-        self.label_step.setObjectName(_fromUtf8("label_step"))
-        self.gridLayout_5.addWidget(self.label_step, 6, 3, 1, 1, )
-        self.label_largeur = QtGui.QLabel(self.widget_param)
-        self.label_largeur.setObjectName(_fromUtf8("label_largeur"))
-        self.gridLayout_5.addWidget(self.label_largeur, 1, 3, 1, 1)
-        self.label_hauteur = QtGui.QLabel(self.widget_param)
-        self.label_hauteur.setObjectName(_fromUtf8("label_hauteur"))
-        self.gridLayout_5.addWidget(self.label_hauteur, 0, 3, 1, 1)
+        self.gridLayout_5.addWidget(self.lineEdit_std, 11, 6, 1, 1)
         self.gridLayout_4.addWidget(self.widget_param, 1, 0, 1, 1)
         self.gridLayout.addWidget(self.widget_param_global, 0, 0, 2, 1)
         self.widget_button = QtGui.QWidget(Form)
@@ -375,7 +457,6 @@ class SOMView(QtGui.QWidget):
         self.pushButton_train.setFont(font)
         self.pushButton_train.setStyleSheet(_fromUtf8("background-color: rgb(209, 209, 209);"))
         self.pushButton_train.setObjectName(_fromUtf8("pushButton_train"))
-        self.pushButton_train.clicked.connect(self.train)
         self.gridLayout_2.addWidget(self.pushButton_train, 0, 0, 1, 1)
         self.comboBox = QtGui.QComboBox(self.widget_button)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
@@ -401,7 +482,6 @@ class SOMView(QtGui.QWidget):
         self.pushButton_show.setFont(font)
         self.pushButton_show.setStyleSheet(_fromUtf8("background-color: rgb(209, 209, 209);"))
         self.pushButton_show.setObjectName(_fromUtf8("pushButton_show"))
-        self.pushButton_show.clicked.connect(self.showmap)
         self.gridLayout_2.addWidget(self.pushButton_show, 0, 2, 1, 1)
         self.pushButton_goback = QtGui.QPushButton(self.widget_button)
         font = QtGui.QFont()
@@ -410,7 +490,6 @@ class SOMView(QtGui.QWidget):
         self.pushButton_goback.setStyleSheet(_fromUtf8("background-color: rgb(209, 209, 209);"))
         self.pushButton_goback.setObjectName(_fromUtf8("pushButton_goback"))
         self.gridLayout_2.addWidget(self.pushButton_goback, 0, 3, 1, 1)
-        self.pushButton_goback.clicked.connect(self.go_back)
         self.gridLayout.addWidget(self.widget_button, 1, 1, 1, 1)
         self.widget_table = QtGui.QWidget(Form)
         self.widget_table.setObjectName(_fromUtf8("widget_table"))
@@ -436,6 +515,21 @@ class SOMView(QtGui.QWidget):
         self.gridLayout_3.addWidget(self.tableWidget, 1, 0, 1, 1)
         self.gridLayout.addWidget(self.widget_table, 0, 1, 1, 1)
 
+        # default value for the lineEdit
+        self.lineEdit_height.setText("30")
+        self.lineEdit_width.setText("6")
+        self.lineEdit_nepochs.setText("100")
+        self.lineEdit_step.setText("0.1")
+        self.lineEdit_reduce_step_after.setText("100")
+        self.lineEdit_radius.setText("1")
+        self.lineEdit_reduce_radius_after.setText("100")
+        self.lineEdit_std.setText("1")
+        self.lineEdit_reduce_std_after.setText("100")
+
+        # button interaction
+        self.pushButton_train.clicked.connect(self.train)
+        self.pushButton_goback.clicked.connect(self.go_back)
+        self.pushButton_show.clicked.connect(self.showmap)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -443,18 +537,24 @@ class SOMView(QtGui.QWidget):
     def retranslateUi(self, Form):
         Form.setWindowTitle(_translate("Form", "Form", None))
         self.label_param.setText(_translate("Form", "Parameters", None))
-        self.pushButton_5.setText(_translate("Form", "?", None))
-        self.pushButton_4.setText(_translate("Form", "?", None))
-        self.pushButton_7.setText(_translate("Form", "?", None))
-        self.label_nbiter.setText(_translate("Form", "Epochs", None))
-        self.pushButton_3.setText(_translate("Form", "?", None))
-        self.pushButton_2.setText(_translate("Form", "?", None))
-        self.pushButton_6.setText(_translate("Form", "?", None))
-        self.label_radius.setText(_translate("Form", "Radius", None))
         self.label_std.setText(_translate("Form", "Std", None))
         self.label_step.setText(_translate("Form", "Step", None))
-        self.label_largeur.setText(_translate("Form", "Width", None))
-        self.label_hauteur.setText(_translate("Form", "Height", None))
+        self.label_width.setText(_translate("Form", "Width", None))
+        self.label_radius.setText(_translate("Form", "Radius", None))
+        self.label_height.setText(_translate("Form", "Height", None))
+        self.pushButton_5.setText(_translate("Form", "?", None))
+        self.pushButton_7.setText(_translate("Form", "?", None))
+        self.pushButton_3.setText(_translate("Form", "?", None))
+        self.pushButton_6.setText(_translate("Form", "?", None))
+        self.pushButton_2.setText(_translate("Form", "?", None))
+        self.label_nbiter.setText(_translate("Form", "Epochs", None))
+        self.QPushButton_reduce_step_after_button.setText(_translate("Form", "?", None))
+        self.pushButton_4.setText(_translate("Form", "?", None))
+        self.QPushButton_reduce_radius_after.setText(_translate("Form", "?", None))
+        self.QPushButton_reduce_std_after.setText(_translate("Form", "?", None))
+        self.label.setText(_translate("Form", "Reduce_step_after", None))
+        self.label_2.setText(_translate("Form", "Reduce_radius_after", None))
+        self.label_3.setText(_translate("Form", "Reduce_std_after", None))
         self.pushButton_train.setText(_translate("Form", "Train", None))
         self.pushButton_show.setText(_translate("Form", "Show", None))
         self.pushButton_goback.setText(_translate("Form", "Go back", None))

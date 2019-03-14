@@ -41,36 +41,6 @@ class ExportView(QtGui.QWidget):
         self.initExportView()
 
     def initExportView(self):
-        # global containerVbox
-        # # - Horizontal box for go back home button
-        # buttonsBox = QtGui.QHBoxLayout()
-        # buttonsBox.addStretch(1)
-        #
-        # goHomeButton = QtGui.QPushButton('Go back')
-        # goHomeButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/home-2.png'))
-        # goHomeButton.setStatusTip("Return to main page")
-        # goHomeButton.clicked.connect(self.showMain.emit)  # When go back home button is clicked, change central views
-        #
-        #
-        #
-        # runExportButton = QtGui.QPushButton('Run')
-        # runExportButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/play.png'))
-        # runExportButton.setToolTip("Run the export")
-        # runExportButton.clicked.connect(lambda: self.export('test', 'test'))
-        #
-        # buttonsBox.addWidget(runExportButton)
-        # buttonsBox.addWidget(goHomeButton)
-        #
-        # hbox = QtGui.QHBoxLayout()
-        # bottom = QtGui.QFrame()
-        # bottom.setFrameShape(QtGui.QFrame.StyledPanel)
-        #
-        # containerVbox = QtGui.QVBoxLayout()
-        # containerVbox.addLayout(buttonsBox)
-        # containerVbox.addLayout(hbox)
-        #
-        # self.setLayout(containerVbox)
-
         filename = QtGui.QLabel('File name')
         directory = QtGui.QLabel('Directory')
 

@@ -31,6 +31,10 @@
            <li><small><a href="index.html#installation">1.2 BrainMapper installation</a></small></li>
               <ul>
                 <li><small><a href="index.html#windows">1.2.1 Windows</a></small></li>
+                  <ul>
+                      <li><small><a href="index.html#executable">1.2.1.1 Executable file</a></small></li>
+                      <li><small><a href="index.html#install_windows">1.2.1.2 Installation</a></small></li>
+                  </ul>
                 <li><small><a href="index.html#mac">1.2.2 OSX/Mac</a></small></li>
                 <li><small><a href="index.html#ubuntu">1.2.3 Ubuntu/GNU/Linux</a></small></li>
                 <li><small><a href="index.html#dependancies">1.2.4 Dependencies</a></small></li>
@@ -187,29 +191,42 @@
     <div id="Global_presentation">
       <h1> Global presentation </h1>
 
-<!--
-      BrainMapper is the product of a 2-year collaboration between the Central Hospital of Nancy, France (CHRU in french) and Computer Science and Engineering students at TELECOM Nancy<br/><br/>
+      <p>
+        During the year 2017-2018, an industrial project carried by TELECOM Nancy's students led to the creation of a first version of the software BrainMapper.
+        This is the result of a 2-year collaboration between the Central Hospital of Nancy, France (CHRU in french) and computer science.
+      </p>
 
-      The aim of this project was to simplify the treatment chain of neurosurgeon Dr. Fabien Rech, who had to use several librairies, software and methods to extract interesting data from NIfTI files.<br/>
-      The workchain of NIfTI processing and information extraction carried out by Dr. Rech for his thesis work was the following one :
+      <p>
+        The aim of this software is to help the understanding of the brain mecanisms threw the use of AI algorithms.
+      </p>
+
+      <p>
+        BrainMapper simplifies the treatment chain used by neurosurgeons.
+        Before BrainMapper, they had to use several librairies, software and methods to extract interesting data from NIfTI files.
+        <br>
+        The workchain of NIfTI processing and information extraction carried out by neurosurgeons was the following one :
+      </p>
+
       <div style="padding-left: 24%; padding-top:3%; padding-bottom:3%">
-       <img src="imgs/index/chaine.jpg" style="width:60%">
+        <img src="imgs/index/chaine.jpg" style="width:60%">
      </div>
+
+     <p>
+       The goal was to simplify this workchain and offer the possibility to manage NIfTI, extract the interesting data from them to use it for calculations and clustering algorithms.
+       The workchain with BrainMapper is the next one :
+     </p>
 
      <div style="padding-left: 24%; padding-top:3%; padding-bottom:3%">
        <img src="imgs/index/schema.png" style="width:65%">
      </div>
 
-      Our aim was to simplify this workchain and offer the possibility to manage NIfTI, extract the interesting data from them to use it for calculations and clustering algorithms
-      <br/><br/>
-
-    -->
       <h2 id="usecase">1.1 Software usecase</h2>
-<!--
-      This software is written in Python. Its user interface is written in PyQt 4.<br>
-      It can be used to create several sets and image collections associated with brain responses or patients, that will contain different images, in the NIfTI format and standards.
+
+      BrainMapper can be used to create several sets and image collections associated to brain responses or patients, that will contain different images,
+      in the NIfTI format and standards.
       The user can then extract data from the loaded NIfTI files to perform basic calculations or apply clustering algorithms to this data.<br>
-      Calculations and clustering results can be exported as NIfTI or CSV files, as well as the original NIfTI files. Data can be imported as well as NIfTI or Excel files and the user can specify
+      Calculations and clustering results can be exported as NIfTI or CSV files, as well as the original NIfTI files.
+      Data can be imported as well as NIfTI or Excel files and the user can specify
        a workspace directory from which files will be automatically imported.
        <div style="padding-left: 12%; padding-top:3%; padding-bottom:3%">
          <div class="alert alert-info" role="alert">
@@ -248,12 +265,11 @@
           Our software can open compressed NIfTI formats ('.nii.gz').
        </div>
       </div>
--->
 
       <h2 id="installation">1.2 BrainMapper installation</h2>
 
       <p>
-        <em>BrainMapper</em> is written in <b>Python 3.6</b>. In this section, we present a tutorial to use BrainMapper on your computer.
+        <em>BrainMapper</em> is written in Python 3.6 and its user interface is written in PyQt 4. In this section, we present a tutorial to use BrainMapper on your computer.
       </p>
 
       <p>If you are not familiar with informatics, we recommend running BrainMapper on Windows or Linux.
@@ -262,7 +278,20 @@
 
       <p>To begin an installation, you have to go in the installation folder.</p>
 
-      <h3 id="windows">1.1.1 Windows </h3>
+      <h3 id="windows">1.2.1 Windows </h3>
+
+      <h4 id="executable">1.2.1.1 Executable file</h4>
+
+      <p>
+        An Windows executable file has been created.This one allows you to launch BrainMapper without having to install Python libraries and dependencies.
+      </p>
+
+      <p>To use it, you have to go in the Windows folder and to select the executable file. BrainMapper is launching and you can use it.</p>
+
+
+      <h4 id="install_windows">1.2.1.2 Installation </h4>
+
+      <!-- TODO:  -->
       <!--      <ul>
          <li>Install Miniconda package manager for <b>Windows and Python 2.7</b>: <a href=https://conda.io/miniconda.html>Download the installer here</a>. </li>
             When installing, tick the option <b><em>"Add Anaconda to my PATH variable".</em></b>
@@ -300,27 +329,124 @@
 
         <h3 id="mac">1.2.2 OSX/Mac</h3>
 
+        <h4>Python installation</h4>
+
         <p>
           If python3 is not already install on your computer, you need to download it.
           To download the installer, click
           <a href="https://www.python.org/ftp/python/3.7.2/python-3.7.2-macosx10.6.pkg" target="_blank" style="color : #5577ee">here</a>
         </p>
 
+        <h4>Python paths</h4>
+
         <p>
           To install the dependencies, open a terminal in the MacOS folder.
           For the installation, you will need to note the folders where python3 and python3 dependencies are installed :
           <br><br>
-          <b><i>Python3 folder :</i></b>
+          <b><i>_Python3 folder_:</i></b>
           <br>
           ```shell
           <br>
           $ which python3
           <br>
           ```
+          <br><br>
+          For exemple if you get /usr/bin/python3, python3 folder is /urs/bin/.
+          <br><br>
+        </p>
 
+        <p>
+          <b><i>_Dependencies folder_ :</i></b>
+          <br>
+          ```shell
+          <br>
+          $ echo `pip3 show pip | grep "Location" | grep -oE "[^ ]+$"`
+          <br>
+          ```
+          <br>
+          (for exemple /usr/lib/python3/dist-packages)
+          <br><br>
+          Then install Qt4 (brew is needed):
+          <br>
+          ```shell
+          <br>
+          $ brew install qt@4
+          <br>
+          ```
+        </p>
+
+          <h4>Sip installation</h4>
+          <p>
+          ```shell
+          <br>
+          $ curl -L -O https://sourceforge.net/projects/pyqt/files/sip/sip-4.19.13/sip-4.19.13.tar.gz
+          <br>
+          $ tar -xvf sip-4.19.13.tar.gz
+          <br>
+          $ cd sip-4.19.13
+          <br>
+          $ python3 configure.py -b ../temp_sip -v ../temp_sip -d ../temp_sip -e ../temp_sip
+          <br>
+          $ make install
+          <br>
+          $ cp sip.so <i>Dependencies folder</i>
+          <br>
+          $ cp -r sip-4.19.13.dist-info <i>Dependencies folder</i>
+          <br>
+          $ cd ..
+          <br>
+          ```
+        </p>
+
+          <h4>PyQt4 installation</h4>
+          <p>
+          ```shell
+          <br>
+          $ curl -L -O https://sourceforge.net/projects/pyqt/files/PyQt4/PyQt-4.12/PyQt4_gpl_mac-4.12.tar.gz
+          <br>
+          $ tar -xvf PyQt4_gpl_mac-4.12.tar.gz
+          <br>
+          $ QMAKESPEC=unsupported/macx-clang-libc++
+          <br>
+          $ cd PyQt4_gpl_mac-4.12
+          <br>
+          $ python3 configure-ng.py --sip ../temp_sip/sip --no-stubs --bindir <i>Python3 folder</i>  --destdir <i>Dependencies folder</i> --sip-incdir=../temp_sip
+          <br>
+          $ make install
+          <br>
+          $ cd ..
+          <br>
+          ```
+          </p>
+
+          <h4>Other dependencies installation</h4>
+          <p>
+          ```shell
+          <br>
+          $ python3 -m pip install -r requirement.txt
+          <br>
+          $ python3 -m pip install scipy==1.1.0
+          <br>
+          $ python3 -m pip install tensorflow==1.5.0
+          <br>
+          ```
+        </p>
+
+        <h4>Launching BrainMapper</h4>
+
+        <p>
+          Then, you can launch BrainMapper with the following command from the root folder:
+          <br><br>
+          ```shell
+          <br>
+          $ python3 UI.py
+          <br>
+          ```
         </p>
 
         <h3 id="ubuntu">1.2.3 Ubuntu/GNU/Linux</h3>
+
+        <h4>Intallation</h4>
 
         <p>
           To install the dependencies, you have to go in the Linux folder and to launch the installation script with the following instructions :
@@ -334,6 +460,8 @@
           ```
         </p>
 
+        <h4>Launching BrainMapper</h4>
+
         <p>
           Then you can launch BrainMapper with the following command from the root folder :
           <br><br>
@@ -344,33 +472,7 @@
           ```
         </p>
 
-        Now, you can use BrainMapper.
-  <!--
-          <ul>
-          <li>Open a terminal and install all dependencies with the following commands :</li>
-          <div style="padding-left: 1%; padding-top:1%; padding-bottom:1%">
-            <div class="command">
-              sudo apt-get install python-qt4<br>
-              sudo python2 -m pip install nibabel<br>
-              sudo python2 -m pip install -U numpy<br>
-              sudo python2 -m pip install -U scikit-learn<br>
-              sudo python2 -m pip install pyqtgraph<br>
-              sudo python2 -m pip install pyopengl<br>
-            </div>
-          </div>
-          <li>Clone the repository or download a .zip file from this project's <a href="https://github.com/Brain-Mapper/brainMapper" target="_blank">GitHub repository</a>
-            and unzip it in a folder of your choice.</li>
-          <li>Create a <em>.sh</em> file next to the extracted folder that contains the following commands : </li>
-          <div style="padding-left: 1%; padding-top:1%; padding-bottom:1%">
-            <div class="command">
-              cd brainMapper-master/UI<br>
-              python brainMapper_UI.py<br>
-            </div>
-          </div>
-          <br>
-          <li>Create a shorcut to this <em>.sh</em> file and place it where you want to : this file will be the application's "launcher"</em></li>
-        </ul>
--->
+        <p>Now, you can use BrainMapper.</p>
 
       <h3 id="dependancies">1.2.4 Dependencies </h3>
 
