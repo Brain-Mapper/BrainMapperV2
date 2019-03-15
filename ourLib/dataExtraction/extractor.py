@@ -24,7 +24,7 @@ from ..filesHandlers.image import Image, TempImage
 if __package__ is None:
     sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
     from ourLib.dataExtraction.usable_data import UsableDataCollection, UsableDataSet
-    from deprecated_files.calculations import image_centroid
+    from ourLib.calculations2  import image_centroid
 else:
     from ..dataExtraction.usable_data import UsableDataCollection, UsableDataSet
 
@@ -156,7 +156,7 @@ def extract_from_collection_as_centroid(a_nifti_imgcoll_obj):
     :return: A UsableDataCollection instance
     """
     # Import function that calculates the centroid of a NifImage instance is here to avoid circular imports
-    from deprecated_files.calculations import image_centroid
+    from ourLib.calculations2 import image_centroid
     collection_usable_data = UsableDataCollection(a_nifti_imgcoll_obj.get_name())
     # For each NifImage istance in the collection, extract data and stack results
     img_list = a_nifti_imgcoll_obj.get_img_list()
