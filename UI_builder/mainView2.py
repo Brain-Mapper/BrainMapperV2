@@ -779,7 +779,8 @@ class MainView2(QtGui.QWidget):
 
     def checkselected(self):
         for i in range(0, self.verticalLayout_image_collections_show.rowCount()):
-            self.verticalLayout_image_collections_show.itemAt(i).widget().setChecked(self.checkBox.isChecked())
+            if  self.verticalLayout_image_collections_show.itemAt(i) is not None:
+                self.verticalLayout_image_collections_show.itemAt(i).widget().setChecked(self.checkBox.isChecked())
 
     def checkimportedall(self):
         imported = self.treeWidget.topLevelItem(0)
