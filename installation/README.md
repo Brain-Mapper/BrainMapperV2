@@ -120,6 +120,7 @@ $ tar -xvf sip-4.19.13.tar.gz
 $ cd sip-4.19.13
 $ python3 configure.py -b ../temp_sip -v ../temp_sip -d ../temp_sip -e ../temp_sip
 $ make install
+$ cd ../temp_sip
 $ cp sip.so <Dependencies folder>
 $ cp -r sip-4.19.13.dist-info <Dependencies folder>
 $ cd ..
