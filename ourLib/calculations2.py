@@ -12,13 +12,13 @@
 #       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 import warnings
 
+import nibabel
+import numpy as np
 from scipy import ndimage
 
 from ourLib.dataExtraction.extractor import extract
-from ourLib.filesHandlers.image import Image, CSVImage
+from ourLib.filesHandlers.image import CSVImage
 from ourLib.filesHandlers.nifimage import NifImage
-import numpy as np
-import nibabel
 
 # Size of an image in MNI format
 X_MNI = 197

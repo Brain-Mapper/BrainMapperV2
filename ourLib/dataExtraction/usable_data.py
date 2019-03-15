@@ -17,19 +17,15 @@
 import sys
 
 import numpy as np
-from numpy import zeros
-from nibabel import Nifti1Image, load
 
 # from BrainMapper import globalSets
 
 if __package__ is None:
     sys.path.append(sys.path.dirname(sys.path.dirname(sys.path.abspath(__file__))))
     from ourLib.filesHandlers.imagecollection import ImageCollection
-    from ourLib.filesHandlers.nifimage import NifImage
     from ourLib.filesHandlers.image import TempImage
     from ourLib.filesHandlers.set import Set
 else:
-    from ..filesHandlers.nifimage import NifImage
     from ourLib.filesHandlers.image import TempImage
     from ..filesHandlers.imagecollection import ImageCollection
     from ..filesHandlers.set import Set

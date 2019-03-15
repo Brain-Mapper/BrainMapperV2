@@ -11,16 +11,14 @@
 #       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
 #       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
-import sys
 import importlib
+import sys
 
 importlib.reload(sys)
-#sys.setdefaultencoding('utf8') pas besoin ??
-from nibabel import Nifti1Image,load
+# sys.setdefaultencoding('utf8') pas besoin ??
+from nibabel import Nifti1Image, load
 from numpy import zeros
-import numpy as np
 from csv import reader as csv_reader
-import time
 from ourLib.filesHandlers.imagecollection import ImageCollection
 from ourLib.filesHandlers.nifimage import NifImage
 
@@ -44,9 +42,9 @@ def simple_import(csv_file_path, template_mni_path, currentSet):
     # For french language, encode to latin1 ->
     # to be able to take files with special characters of french in their file path
     # -- Tested this, works on GNULinux but not on Windows, so taken off --
-    #filename = csv_file_path.toLatin1().data()
+    # filename = csv_file_path.toLatin1().data()
     filename = csv_file_path
-    #file = open(filename, "rb")     #encoding='ISO-8859-1')
+    # file = open(filename, "rb")     #encoding='ISO-8859-1')
     file = open(filename, "r")
 
     simple_header = [
@@ -79,12 +77,12 @@ def simple_import(csv_file_path, template_mni_path, currentSet):
 
         template_data = load(template_mni_path)
         template_affine = template_data.affine
-        #template_data.set_qform(template_affine, code='mni')
+        # template_data.set_qform(template_affine, code='mni')
         template_shape = template_data.shape
 
         # part for a simple import
         if row == simple_header:
-            #print('Simple import')
+            # print('Simple import')
             point_dict = dict()
 
             coll = ImageCollection("default", currentSet)
@@ -120,7 +118,7 @@ def simple_import(csv_file_path, template_mni_path, currentSet):
 
         # pat for clustering import
         elif row == clustering_header:
-            #print('Clustering import')
+            # print('Clustering import')
             point_dict = dict()
 
             coll = ImageCollection("default", currentSet)
@@ -150,14 +148,15 @@ def simple_import(csv_file_path, template_mni_path, currentSet):
                             recreate_data[int(x_y_z[0]), int(x_y_z[1]), int(x_y_z[2])] = point[3]
 
                         recreate_image = Nifti1Image(recreate_data, recreate_affine)
-                        #recreate_image = Nifti1Image(recreate_data)
+                        # recreate_image = Nifti1Image(recreate_data)
                         ni_image = NifImage("Cluster_" + key + ".csv", recreate_image)
 
                         # put nifti images into a imageCollection
                         coll.add(ni_image)
 
         else:
-            #print('Please use a valid csv file')
+            # print('Please use a valid csv file')
+            pass
 
     finally:
 
@@ -165,7 +164,7 @@ def simple_import(csv_file_path, template_mni_path, currentSet):
     return coll
 
 
-def mni_to_voxel(points:list, affine) -> list:
+def mni_to_voxel(points: list, affine) -> list:
     """
     data : [x,y,z]
     affine : affine matrix
@@ -175,5 +174,3 @@ def mni_to_voxel(points:list, affine) -> list:
     x_y_z = [points[0], points[1], points[2]]
     x_y_z = x_y_z - deltas
     return x_y_z
-
-    

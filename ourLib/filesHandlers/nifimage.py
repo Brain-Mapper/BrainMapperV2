@@ -2,6 +2,7 @@ import os
 import numpy as np
 import nibabel as nib
 
+
 class NifImage(object):
     """
     A custom structure for representing NifTI files in the application
@@ -35,7 +36,7 @@ class NifImage(object):
             new_filename {[type]} -- [description]
         """
         self.filename = new_filename
-    
+
     def get_affine_matrix(self):
         """
         Returns the affine matrix of the nifti image. Use it to put the coordinates in MNI coordinates.

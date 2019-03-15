@@ -12,32 +12,30 @@
 #       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
 
-from PyQt4 import QtGui
-from PyQt4.Qt import *
-from PyQt4.QtCore import pyqtSignal,QCoreApplication
-from PyQt4 import QtCore
-
 import sys
 from os import path
-sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
+
+from PyQt4 import QtCore
+from PyQt4 import QtGui
+from PyQt4.Qt import *
+from PyQt4.QtCore import pyqtSignal
+
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from BrainMapper import *
 
-import pyqtgraph as pg
 import pyqtgraph.opengl as gl
 
-import UI_builder.resources
-import re
 
 class ImageBar(QtGui.QWidget):
     # -- The ImageBar class will display all info for a given image
-    def __init__(self, im, parent = None):
-        super(ImageBar, self).__init__(parent = parent)
+    def __init__(self, im, parent=None):
+        super(ImageBar, self).__init__(parent=parent)
         rec = QApplication.desktop().availableGeometry()
         mainwind_h = rec.height()
         self.im = im
         filname = self.im.filename.split("/")
-        filna = filname[len(filname)-1]
-        self.label = QtGui.QLabel("   "+filna)
+        filna = filname[len(filname) - 1]
+        self.label = QtGui.QLabel("   " + filna)
         self.label.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByMouse | QtCore.Qt.TextSelectableByMouse)
         self.label.setToolTip(self.im.filename)
         self.label.setFixedWidth(420)
@@ -54,14 +52,14 @@ class ImageBar(QtGui.QWidget):
         showButton.clicked.connect(self.show)
         showButton.setFixedWidth(110)
 
-        hbox=QtGui.QHBoxLayout()
+        hbox = QtGui.QHBoxLayout()
         hbox.addWidget(self.label)
         hbox.addWidget(self.removeButton)
         hbox.addWidget(showButton)
         self.setLayout(hbox)
 
     def remove(self):
-    # -- This remove will allow the user to select the image and add it into the toRM list. If he save his changes, the iimage will be deleted and the ImageBar too
+        # -- This remove will allow the user to select the image and add it into the toRM list. If he save his changes, the iimage will be deleted and the ImageBar too
         add_toRM(self.im)
         self.label.setStyleSheet('color : red')
         self.removeButton.setText("Re Add")
@@ -69,7 +67,7 @@ class ImageBar(QtGui.QWidget):
         self.removeButton.setStatusTip("Re add image into collection")
 
     def readd(self):
-    # -- This readd will cancel the choices made with remove
+        # -- This readd will cancel the choices made with remove
         rm_toRM(self.im)
         self.label.setStyleSheet('')
         self.removeButton.setText("Remove")
@@ -77,25 +75,25 @@ class ImageBar(QtGui.QWidget):
         self.removeButton.setStatusTip("Remove image from collection")
 
     def do(self):
-    # -- THis do will choose the function to call (remove or readd)
-        if(self.removeButton.text() == "Remove"):
+        # -- THis do will choose the function to call (remove or readd)
+        if (self.removeButton.text() == "Remove"):
             self.remove()
         else:
             self.readd()
 
     def show(self):
-    # -- this show will display the image below
-        self.parent().parent().parent().parent().img_show=self.im.filename
+        # -- this show will display the image below
+        self.parent().parent().parent().parent().img_show = self.im.filename
         self.parent().parent().parent().parent().parent().parent().parent().parent().parent().updateVizuView(self.im)
         self.parent().parent().parent().parent().redo(get_current_coll())
 
 
 class InfosBar(QtGui.QWidget):
     # -- The InfosBar class will display all info for the current collection
-    def __init__(self, parent = None):
-    # -- This init creates all the objects we need
-        super(InfosBar, self).__init__(parent = parent)
-        self.img_show="None"
+    def __init__(self, parent=None):
+        # -- This init creates all the objects we need
+        super(InfosBar, self).__init__(parent=parent)
+        self.img_show = "None"
         self.vbox = QtGui.QVBoxLayout()
         self.group = QtGui.QGroupBox()
         rec = QApplication.desktop().availableGeometry()
@@ -106,15 +104,14 @@ class InfosBar(QtGui.QWidget):
         self.scroll = QtGui.QScrollArea()
         self.scroll.setWidget(self.group)
         self.scroll.setWidgetResizable(True)
-        self.scroll.setFixedHeight(mainwind_h*0.5)
+        self.scroll.setFixedHeight(mainwind_h * 0.5)
 
-        self.hbox=QtGui.QHBoxLayout()
+        self.hbox = QtGui.QHBoxLayout()
         self.hbox.addWidget(self.scroll)
 
-
-    def redo(self,coll):
-    # -- This redo will reload all the info for the current collection and create an ImageBar for each image in the collection
-        if coll != None :
+    def redo(self, coll):
+        # -- This redo will reload all the info for the current collection and create an ImageBar for each image in the collection
+        if coll is not None:
             set_current_coll(coll)
             self.hbox.removeWidget(self.scroll)
             self.scroll.setParent(None)
@@ -122,13 +119,13 @@ class InfosBar(QtGui.QWidget):
             self.scroll = QtGui.QScrollArea()
             self.group = QtGui.QGroupBox()
             self.vbox = QtGui.QVBoxLayout()
-            label_name = QtGui.QLabel("Collection's name : "+ str(coll.name))
+            label_name = QtGui.QLabel("Collection's name : " + str(coll.name))
             label_name.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByMouse | QtCore.Qt.TextSelectableByMouse)
-            label_set = QtGui.QLabel("Set's name \t : "+ str(coll.set_n.name))
+            label_set = QtGui.QLabel("Set's name \t : " + str(coll.set_n.name))
             label_set.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByMouse | QtCore.Qt.TextSelectableByMouse)
             list_images = "List of images :"
             label2_name = QtGui.QLabel(list_images)
-            img_shown = QtGui.QLabel("Image shown below : "+str(self.img_show))
+            img_shown = QtGui.QLabel("Image shown below : " + str(self.img_show))
             self.vbox.addWidget(label_name)
             self.vbox.addWidget(label_set)
             self.vbox.addWidget(img_shown)
@@ -155,13 +152,13 @@ class InfosBar(QtGui.QWidget):
             AddButton = QtGui.QPushButton('Add new Image(s)')
             AddButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/up-arrow.png'))
             AddButton.setStatusTip("Add some new images in the current collection")
-            AddButton.clicked.connect(lambda : self.addImage(coll))
+            AddButton.clicked.connect(lambda: self.addImage(coll))
             self.buttons.addWidget(AddButton)
 
             RmButton = QtGui.QPushButton('Delete Collection')
             RmButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/trash.png'))
             RmButton.setStatusTip("Delete the current collection")
-            RmButton.clicked.connect(lambda : self.del_col(coll))
+            RmButton.clicked.connect(lambda: self.del_col(coll))
             self.buttons.addWidget(RmButton)
 
             self.group_buttons.setLayout(self.buttons)
@@ -170,7 +167,7 @@ class InfosBar(QtGui.QWidget):
 
             self.scroll.setWidget(self.group)
             self.scroll.setWidgetResizable(True)
-            self.scroll.setFixedHeight(self.parent().frameGeometry().height()*0.9)
+            self.scroll.setFixedHeight(self.parent().frameGeometry().height() * 0.9)
             self.hbox.addWidget(self.scroll)
             self.setLayout(self.hbox)
         else:
@@ -181,25 +178,25 @@ class InfosBar(QtGui.QWidget):
             self.group = QtGui.QGroupBox()
             self.vbox = QtGui.QVBoxLayout()
             self.scroll.setWidgetResizable(True)
-            self.scroll.setMinimumHeight(self.parent().frameGeometry().height()*0.9)
+            self.scroll.setMinimumHeight(self.parent().frameGeometry().height() * 0.9)
             self.hbox.addWidget(self.scroll)
             self.setLayout(self.hbox)
 
     def addImage(self, coll):
-    # -- This addImage will add the images selected by the user in the current collection (ALLO THE USER TO ADD A FILE THAT ALREADY EXISTS IN THE COLLECTION)
+        # -- This addImage will add the images selected by the user in the current collection (ALLO THE USER TO ADD A FILE THAT ALREADY EXISTS IN THE COLLECTION)
         path = QFileDialog.getOpenFileNames()
         if (path != ""):
             try:
-                add_image_coll(coll,path)
+                add_image_coll(coll, path)
                 self.redo(get_current_coll())
             except:
-                err = QtGui.QMessageBox.critical(self, "Error", "An error has occured. Maybe you tried to open a non-NIfTI file")
-                #print (sys.exc_info()[0])
-
+                err = QtGui.QMessageBox.critical(self, "Error",
+                                                 "An error has occured. Maybe you tried to open a non-NIfTI file")
+                # print (sys.exc_info()[0])
 
     def save(self):
-    # -- This save will save the changes made by the user (remove all the images selected in toRM)
-        if(len(get_toRM())>0):
+        # -- This save will save the changes made by the user (remove all the images selected in toRM)
+        if (len(get_toRM()) > 0):
             choice = QtGui.QMessageBox.question(self, 'Save changes',
                                                 "Are you sure you want to save your modifications? This is irreversible.",
                                                 QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
@@ -210,12 +207,13 @@ class InfosBar(QtGui.QWidget):
             info = QtGui.QMessageBox.information(self, "Info", "There's nothing to save!")
 
     def changeName(self):
-    # -- This changeName will change the name of the current collection
-        text, ok = QInputDialog.getText(self, 'Change name of the Collection', "Enter a new name for the collection named "+ get_current_coll().name +": ")
+        # -- This changeName will change the name of the current collection
+        text, ok = QInputDialog.getText(self, 'Change name of the Collection',
+                                        "Enter a new name for the collection named " + get_current_coll().name + ": ")
         if str(text) != "":
             try:
                 new_ok = True
-                not_ok = ['^','[','<','>',':',';',',','?','"','*','|','/',']','+','$']
+                not_ok = ['^', '[', '<', '>', ':', ';', ',', '?', '"', '*', '|', '/', ']', '+', '$']
                 for i in not_ok:
                     if i in str(text):
                         new_ok = False
@@ -224,20 +222,22 @@ class InfosBar(QtGui.QWidget):
                     cur_col = get_current_coll()
                     self.redo(cur_col)
                     self.parent().parent().parent().parent().parent().fill_coll()
-                else :
-                    err = QtGui.QMessageBox.critical(self, "Error", "The new name you entered is not valid (empty, invalid caracter or already exists)")
-            except :
-                err = QtGui.QMessageBox.critical(self, "Error", "The name you entered is not valid ("+str(sys.exc_info()[0])+")")
+                else:
+                    err = QtGui.QMessageBox.critical(self, "Error",
+                                                     "The new name you entered is not valid (empty, invalid caracter or already exists)")
+            except:
+                err = QtGui.QMessageBox.critical(self, "Error",
+                                                 "The name you entered is not valid (" + str(sys.exc_info()[0]) + ")")
 
-    def del_col(self,coll):
-    # -- This del_col will delete the current collection
+    def del_col(self, coll):
+        # -- This del_col will delete the current collection
         choice = QtGui.QMessageBox.question(self, 'Delete Collection',
-                                                "Are you sure you want to delete this collection?",
-                                                QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
+                                            "Are you sure you want to delete this collection?",
+                                            QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
         if choice == QtGui.QMessageBox.Yes:
             delete_current_coll()
             self.redo(None)
-            self.parent().parent().parent().parent().parent().showMain.emit() #We show the main when a collection is deleted
+            self.parent().parent().parent().parent().parent().showMain.emit()  # We show the main when a collection is deleted
 
 
 class CollectionAccessButton(QtGui.QPushButton):
@@ -248,14 +248,15 @@ class CollectionAccessButton(QtGui.QPushButton):
     def __init__(self, label, parent=None):
         super(CollectionAccessButton, self).__init__(label, parent=parent)
         self.setStyleSheet(self.styler)
-        self.clicked.connect(lambda : self.parent().parent().parent().parent().parent().parent().parent().showInfos(label))
+        self.clicked.connect(
+            lambda: self.parent().parent().parent().parent().parent().parent().parent().showInfos(label))
 
 
 class CollectionsAccessBar(QtGui.QWidget):
     # -- The CollectionsAccessBar class exists to define the right list of collections selected by the user in the main view
     # -- It creates all the CollectionAccessButton for each collection
     def __init__(self, labels_array, parent):
-    # -- This init creates all the objects we need
+        # -- This init creates all the objects we need
         super(CollectionsAccessBar, self).__init__(parent=parent)
 
         group = QtGui.QGroupBox()
@@ -263,20 +264,21 @@ class CollectionsAccessBar(QtGui.QWidget):
         access_bar_title = QtGui.QLabel("Selected Image Collections")
         vbox.addWidget(access_bar_title)
 
-        for lab in labels_array :
+        for lab in labels_array:
             vbox.addWidget(CollectionAccessButton(lab, self))
 
         vbox.addStretch(1)
         group.setLayout(vbox)
 
-        hbox=QtGui.QHBoxLayout()
+        hbox = QtGui.QHBoxLayout()
         hbox.addWidget(group)
 
         self.setLayout(hbox)
         rec = QApplication.desktop().availableGeometry()
-        mainwind_h = rec.height()/1.4
-        mainwind_w = rec.width()/1.5
-        self.setMaximumSize(QSize(mainwind_w/4.5, mainwind_h))
+        mainwind_h = rec.height() / 1.4
+        mainwind_w = rec.width() / 1.5
+        self.setMaximumSize(QSize(mainwind_w / 4.5, mainwind_h))
+
 
 class EditCollectionsView(QtGui.QWidget):
     # -- ! ATTRIBUTES SHARED by EVERY class instance ! --
@@ -293,7 +295,7 @@ class EditCollectionsView(QtGui.QWidget):
         self.initEditCollectionsView()
 
     def initEditCollectionsView(self):
-    # -- This init creates all the objects we need
+        # -- This init creates all the objects we need
 
         global splitter1, containerVbox, splitter2
         # - Horizontal box for go back home button
@@ -311,7 +313,7 @@ class EditCollectionsView(QtGui.QWidget):
         bottom = gl.GLViewWidget()
 
         splitter1 = QtGui.QSplitter(Qt.Horizontal)
-        topleft=CollectionsAccessBar(['1','2'],self)
+        topleft = CollectionsAccessBar(['1', '2'], self)
 
         scroll = QtGui.QScrollArea()
         scroll.setWidget(splitter1)
@@ -322,10 +324,9 @@ class EditCollectionsView(QtGui.QWidget):
         splitter1.addWidget(topleft)
         splitter2 = QtGui.QSplitter(Qt.Vertical)
 
-
         splitter2.addWidget(scroll)
         splitter2.addWidget(bottom)
-        splitter2.setSizes([self.frameGeometry().height()*0.65, self.frameGeometry().height()*0.35])
+        splitter2.setSizes([self.frameGeometry().height() * 0.65, self.frameGeometry().height() * 0.35])
 
         hbox.addWidget(splitter2)
 
@@ -336,7 +337,7 @@ class EditCollectionsView(QtGui.QWidget):
         self.setLayout(containerVbox)
 
     def fill_coll(self):
-    # -- Remove the right CollectionsAccessBar and replace it with a column fill with all the collections selected
+        # -- Remove the right CollectionsAccessBar and replace it with a column fill with all the collections selected
         old = splitter1.widget(1)
         containerVbox.removeWidget(old)
         old.setParent(None)
@@ -345,11 +346,11 @@ class EditCollectionsView(QtGui.QWidget):
         labels = []
         for x in colls:
             labels.append(x.name)
-        topleft=CollectionsAccessBar(labels, self)
+        topleft = CollectionsAccessBar(labels, self)
         splitter1.addWidget(topleft)
 
     def showInfos(self, name):
-    # -- Reload the InfosBar with the collection named name
+        # -- Reload the InfosBar with the collection named name
         reset_toRM()
         col = get_selected_from_name(name)
         set_current_coll(col)
@@ -359,12 +360,12 @@ class EditCollectionsView(QtGui.QWidget):
         old.setParent(None)
         bottom = gl.GLViewWidget()
         splitter2.addWidget(bottom)
-        splitter2.setSizes([self.frameGeometry().height()*0.65, self.frameGeometry().height()*0.35])
+        splitter2.setSizes([self.frameGeometry().height() * 0.65, self.frameGeometry().height() * 0.35])
 
     def go_back(self):
-    # -- When the user wants to return to the main view, we reinit the edit view
+        # -- When the user wants to return to the main view, we reinit the edit view
         self.infos = InfosBar()
-        topleft=CollectionsAccessBar(['1','2'],self)
+        topleft = CollectionsAccessBar(['1', '2'], self)
         old_info = splitter1.widget(0)
         old_left = splitter1.widget(1)
         containerVbox.removeWidget(old_info)
@@ -382,13 +383,13 @@ class EditCollectionsView(QtGui.QWidget):
         self.showMain.emit()
 
     def updateVizuView(self, img):
-    # -- Update the vizu at the bottom of the screen for the image img
+        # -- Update the vizu at the bottom of the screen for the image img
         old = splitter2.widget(1)
         containerVbox.removeWidget(old)
         old.setParent(None)
         bottom = gl.GLViewWidget()
         splitter2.addWidget(bottom)
-        splitter2.setSizes([self.frameGeometry().height()*0.35, self.frameGeometry().height()*0.65])
+        splitter2.setSizes([self.frameGeometry().height() * 0.35, self.frameGeometry().height() * 0.65])
         bottom.orbit(256, 256)
         bottom.setCameraPosition(0, 0, 0)
         bottom.opts['distance'] = 200
@@ -399,5 +400,5 @@ class EditCollectionsView(QtGui.QWidget):
         bottom.addItem(g)
         d2 = img.get_img_data()
         v = gl.GLVolumeItem(d2, sliceDensity=1, smooth=False, glOptions='translucent')
-        v.translate(-d2.shape[0]/2, -d2.shape[1]/2, -150)
+        v.translate(-d2.shape[0] / 2, -d2.shape[1] / 2, -150)
         bottom.addItem(v)

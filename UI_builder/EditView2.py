@@ -18,7 +18,7 @@ from BrainMapper import *
 import clustering_components.clustering_plot as clustering_plot
 from ourLib.dataExtraction.extractor import *
 from ourLib.dataExtraction.usable_data import *
-from deprecated_files.calculations import *
+from ourLib.calculations2 import image_centroid
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8

@@ -6,23 +6,23 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt4 import QtCore, QtGui
+from copy import deepcopy
+from typing import List
 
+from PyQt4 import QtCore
 from PyQt4.Qt import QFileDialog
-from PyQt4.QtCore import Qt, QRect
-# Imports for the plotting
+from PyQt4.QtCore import Qt
 
+import BrainMapper
+import clustering_components.clustering_plot as clustering_plot
 import ourLib.ExcelExport.excelExport as ee
 from clustering_components.clustering_paramspace import ParameterAndScriptStack
+from clustering_components.clustering_plot import get_color
 # View components' import
 from clustering_components.clustering_results import ClusteringResultsPopUp
 from clustering_components.clustering_topbar import *
-from clustering_components.clustering_plot import get_color
-import clustering_components.clustering_plot as clustering_plot
-import BrainMapper
-from typing import List
 
-from copy import deepcopy
+# Imports for the plotting
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -92,7 +92,7 @@ class ClusteringView2(QtGui.QWidget):
     def fill_table(self, usable_dataset_instance):
         """
         Fills this custom table with the data of a UsableDataSet obtained after data extraction
-        :param a_usable_dataset_instance: see UsableData for more details
+        :param usable_dataset_instance:
         :return: Nothing"""
 
         self.tableWidget.setRowCount(usable_dataset_instance.get_row_num())
@@ -124,6 +124,7 @@ class ClusteringView2(QtGui.QWidget):
     def fill_clust_labels(self, assigned_labels_array, tableWidget):
         """
         Fill the 'Assigned cluster' column once we have the clustering labels result
+        :param tableWidget:
         :param assigned_labels_array:
         :return:
         """
@@ -401,7 +402,8 @@ class ClusteringView2(QtGui.QWidget):
                                 , self.the_best_iteration["score"]):
                             self.the_best_iteration["iteration"] = index
                             self.the_best_iteration["silhouette_score"] = clustering_results["silhouette_score"]
-                            self.the_best_iteration["calinski_harabaz_score"] = clustering_results["calinski_harabaz_score"]
+                            self.the_best_iteration["calinski_harabaz_score"] = clustering_results[
+                                "calinski_harabaz_score"]
                             self.the_best_iteration["davies_bouldin_score"] = clustering_results["davies_bouldin_score"]
                             self.the_best_iteration["score"] = clustering_results[score_keys[param_dict["score"]]]
                             self.the_best_iteration["n_clusters"] = clustering_results["n"]
@@ -419,7 +421,8 @@ class ClusteringView2(QtGui.QWidget):
                         self.history_iterations[index]["silhouette_score"] = clustering_results["silhouette_score"]
                         self.history_iterations[index]["calinski_harabaz_score"] = clustering_results[
                             "calinski_harabaz_score"]
-                        self.history_iterations[index]["davies_bouldin_score"] = clustering_results["davies_bouldin_score"]
+                        self.history_iterations[index]["davies_bouldin_score"] = clustering_results[
+                            "davies_bouldin_score"]
 
                         # Fuzzy partition coefficient
                         if "fpc" in clustering_results.keys():
@@ -433,8 +436,6 @@ class ClusteringView2(QtGui.QWidget):
                             self.history_iterations[index]['hac'] = clustering_results['hac']
                         else:
                             self.history_iterations[index]['hac'] = None
-
-
 
                 self.n_selected = self.the_best_iteration["n_clusters"] if self.the_best_iteration[
                                                                                "n_clusters"] is not None else None
@@ -473,10 +474,12 @@ class ClusteringView2(QtGui.QWidget):
             self.createResultView(param_dict, selectedMethod)
 
         except ValueError:
-            QtGui.QMessageBox.critical(self, "Error", "Error while clustering, verify that the parameters are corrects.")
+            QtGui.QMessageBox.critical(self, "Error",
+                                       "Error while clustering, verify that the parameters are corrects.")
 
         except UnboundLocalError:
-            QtGui.QMessageBox.critical(self, "Error", "Error while clustering, verify that the parameters are corrects.")
+            QtGui.QMessageBox.critical(self, "Error",
+                                       "Error while clustering, verify that the parameters are corrects.")
 
         except Exception:
             pass
@@ -495,7 +498,7 @@ class ClusteringView2(QtGui.QWidget):
             QtGui.QMessageBox.information(self, "Run Clustering before", "No cluster affectation")
 
     def save(self):
-        #print("save -> self.label", self.label)
+        # print("save -> self.label", self.label)
         if self.label is not None:
             makeClusterResultSet(get_current_usableDataset(), self.label)
             QtGui.QMessageBox.information(self, "Results saved!",

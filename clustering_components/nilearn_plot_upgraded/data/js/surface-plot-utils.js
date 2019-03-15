@@ -21,7 +21,7 @@ function decodeBase64(encoded, dtype) {
     let decoded = new arrayType(
         raw.length / arrayType.BYTES_PER_ELEMENT);
     for (let i = 0, off = 0; i !== decoded.length;
-        i++, off += arrayType.BYTES_PER_ELEMENT) {
+         i++, off += arrayType.BYTES_PER_ELEMENT) {
         decoded[i] = view[getter](off, true);
     }
     return decoded;
@@ -34,7 +34,7 @@ function getAxisConfig() {
         ticks: '',
         title: '',
         showticklabels: false,
-            zeroline: false,
+        zeroline: false,
         showspikes: false,
         spikesides: false
     };
@@ -74,24 +74,36 @@ function getCamera(plotDivId, viewSelectId) {
         }
     }
     let cameras = {
-        "left": {eye: {x: -1.7, y: 0, z: 0},
-                    up: {x: 0, y: 0, z: 1},
-                    center: {x: 0, y: 0, z: 0}},
-        "right": {eye: {x: 1.7, y: 0, z: 0},
-                    up: {x: 0, y: 0, z: 1},
-                    center: {x: 0, y: 0, z: 0}},
-        "top": {eye: {x: 0, y: 0, z: 1.7},
-                up: {x: 0, y: 1, z: 0},
-                center: {x: 0, y: 0, z: 0}},
-        "bottom": {eye: {x: 0, y: 0, z: -1.7},
-                    up: {x: 0, y: 1, z: 0},
-                    center: {x: 0, y: 0, z: 0}},
-        "front": {eye: {x: 0, y: 1.7, z: 0},
-                    up: {x: 0, y: 0, z: 1},
-                    center: {x: 0, y: 0, z: 0}},
-        "back": {eye: {x: 0, y: -1.7, z: 0},
-                    up: {x: 0, y: 0, z: 1},
-                    center: {x: 0, y: 0, z: 0}},
+        "left": {
+            eye: {x: -1.7, y: 0, z: 0},
+            up: {x: 0, y: 0, z: 1},
+            center: {x: 0, y: 0, z: 0}
+        },
+        "right": {
+            eye: {x: 1.7, y: 0, z: 0},
+            up: {x: 0, y: 0, z: 1},
+            center: {x: 0, y: 0, z: 0}
+        },
+        "top": {
+            eye: {x: 0, y: 0, z: 1.7},
+            up: {x: 0, y: 1, z: 0},
+            center: {x: 0, y: 0, z: 0}
+        },
+        "bottom": {
+            eye: {x: 0, y: 0, z: -1.7},
+            up: {x: 0, y: 1, z: 0},
+            center: {x: 0, y: 0, z: 0}
+        },
+        "front": {
+            eye: {x: 0, y: 1.7, z: 0},
+            up: {x: 0, y: 0, z: 1},
+            center: {x: 0, y: 0, z: 0}
+        },
+        "back": {
+            eye: {x: 0, y: -1.7, z: 0},
+            up: {x: 0, y: 0, z: 1},
+            center: {x: 0, y: 0, z: 0}
+        },
     };
 
     return cameras[view];
@@ -104,14 +116,14 @@ function getLayout(plotDivId, viewSelectId, blackBg) {
     let axisConfig = getAxisConfig();
 
     let height = Math.min($(window).outerHeight() * .9,
-                            $(window).width() * 2 / 3);
+        $(window).width() * 2 / 3);
     let width = height * 3 / 2;
 
     let layout = {
         height: height, width: width,
-        margin: {l:0, r:0, b:0, t:0, pad:0},
+        margin: {l: 0, r: 0, b: 0, t: 0, pad: 0},
         hovermode: false,
-        paper_bgcolor: blackBg ? '#000': '#fff',
+        paper_bgcolor: blackBg ? '#000' : '#fff',
         axis_bgcolor: '#333',
         scene: {
             camera: camera,
@@ -153,7 +165,7 @@ function addColorbar(colorscale, cmin, cmax, divId, layout, config) {
 }
 
 
-function decodeHemisphere(surfaceInfo, surface, hemisphere){
+function decodeHemisphere(surfaceInfo, surface, hemisphere) {
 
     let info = surfaceInfo[surface + "_" + hemisphere];
 

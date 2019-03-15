@@ -3,12 +3,13 @@
 
 <head>
     <title>3D plot</title>
-    <meta charset="UTF-8" /> INSERT_JS_LIBRARIES_HERE
+    <meta charset="UTF-8"/>
+    INSERT_JS_LIBRARIES_HERE
     <script>
-        var connectomeInfo = INSERT_CONNECTOME_JSON_HERE;
-        var data = [];
+        const connectomeInfo = INSERT_CONNECTOME_JSON_HERE;
+        const data = [];
 
-        function getOpacity(){
+        function getOpacity() {
             let opacity = $("#opacity-range").val();
             return opacity == 100 ? 1 : opacity / 300;
         }
@@ -34,7 +35,7 @@
             for (let hemisphere of ["left", "right"]) {
                 makePlot("pial", hemisphere, "connectome-plot");
             }
-            if(connectomeInfo["connectome"]["markers_only"]){
+            if (connectomeInfo["connectome"]["markers_only"]) {
 
             }
         }
@@ -44,15 +45,15 @@
             data[0]["opacity"] = opacity;
             data[1]["opacity"] = opacity;
             Plotly.react("connectome-plot", data,
-                         getLayout("connectome-plot", "select-view", false),
-                         getConfig());
+                getLayout("connectome-plot", "select-view", false),
+                getConfig());
         }
 
-        function surfaceRelayout(){
+        function surfaceRelayout() {
             return updateLayout("connectome-plot", "select-view", false);
         }
 
-        function addMarkers(){
+        function addMarkers() {
             // Add markers for the points
             let info = connectomeInfo["connectome"];
             for (let attribute of ["con_x", "con_y", "con_z"]) {
@@ -64,7 +65,7 @@
             Plotly.plot('connectome-plot', [{
                 type: 'scatter3d',
                 mode: 'markers',
-                name : "points",
+                name: "points",
                 x: info["con_x"],
                 y: info["con_y"],
                 z: info["con_z"],
@@ -76,10 +77,10 @@
                 }
             }]);
             // Add markers for the centers
-            
+
             if ("_centers_con_x" in info) {
-                for (let attribute of ["centers_con_x", "centers_con_y", "centers_con_z"]){
-                    if (!(attribute in info)){
+                for (let attribute of ["centers_con_x", "centers_con_y", "centers_con_z"]) {
+                    if (!(attribute in info)) {
                         info[attribute] = Array.from(decodeBase64(
                             info["_" + attribute], "float32"
                         ));
@@ -101,10 +102,10 @@
                 }]);
             }
 
-            if ("_noise_con_x" in info){
+            if ("_noise_con_x" in info) {
                 // Add markers for the noises
-                for (let attribute of ["noise_con_x", "noise_con_y","noise_con_z"]){
-                    if (!(attribute in info)){
+                for (let attribute of ["noise_con_x", "noise_con_y", "noise_con_z"]) {
+                    if (!(attribute in info)) {
                         info[attribute] = Array.from(decodeBase64(
                             info["_" + attribute], "float32"
                         ));
@@ -128,11 +129,11 @@
     </script>
     <script>
         $(document).ready(
-            function() {
+            function () {
                 addPlot();
                 addMarkers();
                 $("#select-view").change(surfaceRelayout);
-                $("#connectome-plot").mouseup(function() {
+                $("#connectome-plot").mouseup(function () {
                     $("#select-view").val("custom");
                 });
                 $(window).resize(surfaceRelayout);
@@ -144,17 +145,17 @@
 
 <body>
 
-    <div id="connectome-plot"></div>
-    <select id="select-view">
-        <option value="left">view: Left</option>
-        <option value="right">view: Right</option>
-        <option value="front">view: Front</option>
-        <option value="back">view: Back</option>
-        <option value="top">view: Top</option>
-        <option value="bottom">view: Bottom</option>
-        <option value="custom">view: -</option>
-    </select>
-    <input id="opacity-range" type="range" min="0" max="100" value="30"></input>
+<div id="connectome-plot"></div>
+<select id="select-view">
+    <option value="left">view: Left</option>
+    <option value="right">view: Right</option>
+    <option value="front">view: Front</option>
+    <option value="back">view: Back</option>
+    <option value="top">view: Top</option>
+    <option value="bottom">view: Bottom</option>
+    <option value="custom">view: -</option>
+</select>
+<input id="opacity-range" type="range" min="0" max="100" value="30"/>
 
 </body>
 

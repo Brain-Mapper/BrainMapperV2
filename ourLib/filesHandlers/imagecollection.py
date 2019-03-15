@@ -24,6 +24,7 @@ class ImageCollection(object):
     """
     A custom structure to keep several NifImage objects and other relevant information
     """
+
     def __init__(self, name, set_n):
         # It's better to have a dictionary, to associate an ID (here, just a name)
         # and the NIfTI Image instance

@@ -1,4 +1,3 @@
-
 import numpy as np
 import nibabel as nib
 import matplotlib.pyplot as plt
@@ -30,7 +29,6 @@ try:
 finally:
 
     file.close()
-
 
 recreate_image = nib.Nifti1Image(recreate_data, recreate_affine)
 

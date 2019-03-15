@@ -95,7 +95,7 @@ class TempImage(Image):
         return pd.read_csv(self.file).dropna()
 
     def save(self, dest_path):
-        self.get_dataframe().to_csv(dest_path+".csv", index=False)
+        self.get_dataframe().to_csv(dest_path + ".csv", index=False)
 
 
 def simple_import(file_path, current_set):
@@ -150,6 +150,5 @@ def som_preparation(img_list: List[Image]) -> pd.DataFrame:
     for column in columns:
         # some columns can be integer, so we have to use a try
         selected[column] = selected[column].astype(str).str.strip()
-
 
     return pd.get_dummies(selected, columns=columns, prefix_sep="=")

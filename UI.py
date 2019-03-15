@@ -13,6 +13,7 @@ from UI_builder.SOMView import SOMView
 
 from multiprocessing import freeze_support
 
+
 if __name__ == '__main__':
     if __package__ is None:
         import sys
@@ -24,6 +25,7 @@ if __name__ == '__main__':
         from ..BrainMapper import *
 
 import BrainMapper
+
 
 class Help(QMainWindow):
     def __init__(self):
@@ -308,7 +310,7 @@ class UI(QtGui.QMainWindow):
     def fromWorkspace(self):
         folder_path = str(QFileDialog.getExistingDirectory())
         test = general_workspace_import_control(folder_path)
-        #print('passage')
+        # print('passage')
         temp = []
         # #print test
         if test is None:

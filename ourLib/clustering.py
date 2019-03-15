@@ -23,7 +23,7 @@ import random
 import math
 import skfuzzy as fuzz
 
-RANDMAX = 2**32 - 1
+RANDMAX = 2 ** 32 - 1
 
 COLUMNS_INDEX = {
     'X': 0,
@@ -94,8 +94,8 @@ def perform_kmedoids(param_dict, points, columns_selected):
     points_formatted = format_ndarray(points, columns_selected)
     distances_matrix_pairwise = compute_distances(points, param_dict['metric'])
     clustering_labels, clustering_medoids_index = kmedoids_cluster(str(param_dict["init"]), points_formatted,
-                                                             distances_matrix_pairwise,
-                                                             int(param_dict["n_clusters"]))
+                                                                   distances_matrix_pairwise,
+                                                                   int(param_dict["n_clusters"]))
 
     # Reformat centers to be in 3D
     centers = []
@@ -110,7 +110,7 @@ def perform_kmedoids(param_dict, points, columns_selected):
 
 def perform_FuzzyCMeans(param_dict, points, columns_selected):
     points = format_ndarray(points, columns_selected)
-    #print("perform_FuzzyCMeans -> n_clusters : {}".format(int(param_dict["n_clusters"])))
+    # print("perform_FuzzyCMeans -> n_clusters : {}".format(int(param_dict["n_clusters"])))
 
     number_of_columns = len(columns_selected)
 
@@ -168,6 +168,8 @@ def compute_distances(data_matrix, distance, normalize=False):
 def kmedoids_cluster(init_mode, data_matrix, distances, k=3):
     """
     Perform kmedoids clustering
+    :param init_mode:
+    :param data_matrix:
     :param distances: The symmetric matrix of distances between data points
     :param k: number of clusters
     :return: array of cluster labels and latest medoids
@@ -183,7 +185,7 @@ def kmedoids_cluster(init_mode, data_matrix, distances, k=3):
         curr_medoids[c] = np.array(data_matrix[index])
         c = c + 1
 
-    #print("First curr_medoids_index", curr_medoids_index)
+    # print("First curr_medoids_index", curr_medoids_index)
 
     old_medoids_index = np.array([-1] * k)
     new_medoids_index = np.array([-1] * k)
@@ -328,7 +330,8 @@ def compute_mean_silhouette(X, predicted_labels, metric='euclidean'):
     :return: float between -1 and +1
     """
     X_filtered, predicted_labels = filter(X, predicted_labels)
-    return silhouette_score(X_filtered, labels=predicted_labels, metric=metric)
+    with np.errstate(divide='ignore', invalid='ignore'):
+        return silhouette_score(X_filtered, labels=predicted_labels, metric=metric)
 
 
 def compute_samples_silhouette(X, predicted_labels, metric='euclidean'):
@@ -351,7 +354,8 @@ def compute_calinski_habaraz(X, predicted_labels):
     :return:
     """
     X_filtered, predicted_labels = filter(X, predicted_labels)
-    return calinski_harabaz_score(X_filtered, labels=predicted_labels)
+    with np.errstate(divide='ignore', invalid='ignore'):
+        return calinski_harabaz_score(X_filtered, labels=predicted_labels)
 
 
 def compute_db(X, predicted_labels):
@@ -363,7 +367,8 @@ def compute_db(X, predicted_labels):
     """
 
     X_filtered, predicted_labels = filter(X, predicted_labels)
-    return davies_bouldin_score(X_filtered, labels=predicted_labels)
+    with np.errstate(divide='ignore', invalid='ignore'):
+        return davies_bouldin_score(X_filtered, labels=predicted_labels)
 
 
 def compute_s(i, x, centroids, labels, cluster_number):

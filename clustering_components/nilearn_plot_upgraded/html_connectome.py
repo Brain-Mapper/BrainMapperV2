@@ -1,16 +1,16 @@
 import json
+
 import numpy as np
-from scipy import sparse
 from nilearn import datasets
-from . import cm
 
 from .js_plotting_utils import (add_js_lib, HTMLDocument, mesh_to_plotly,
-                                encode, colorscale, get_html_template,
+                                encode, get_html_template,
                                 to_color_strings)
 
 # symbols used for the nilearn plot
 SYMBOLS = ["circle", "square", "diamond", "x"]  # "diamond-open","circle-open","square-open"
 SYMBOLS_NUMBER = len(SYMBOLS)
+
 
 class ConnectomeView(HTMLDocument):
     pass

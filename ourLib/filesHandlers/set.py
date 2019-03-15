@@ -51,13 +51,13 @@ class Set(object):
             name{string} -- name of the new subset.
         """
         if name not in self.subset_dict.keys():
-            self.subset_dict[name] = Set(name,0,position_arbre)
-            #print("t")
+            self.subset_dict[name] = Set(name, 0, position_arbre)
+            # print("t")
             self.subset_dict[name].setParent(self)
-            #print("t1")
+            # print("t1")
             return self.subset_dict[name]
         else:
-            #print('The Subset name : %s already exist' % name)
+            # print('The Subset name : %s already exist' % name)
             return None
 
     def add_empty_collection(self, name, set_name):
@@ -72,7 +72,7 @@ class Set(object):
         if name not in self.collection_dict.keys():
             self.collection_dict[name] = ImageCollection(name, set_name)
         else:
-            #print('The Image Collection name : %s already exist' % name)
+            # print('The Image Collection name : %s already exist' % name)
             pass
 
     def add_subset(self, subset):
@@ -86,7 +86,7 @@ class Set(object):
         if subset.get_name not in self.subset_dict.keys():
             self.subset_dict[subset.get_name()] = subset
         else:
-            #print('The Subset name : %s already exist' % subset.get_name)
+            # print('The Subset name : %s already exist' % subset.get_name)
             pass
 
     def add_collection(self, collection):
@@ -100,7 +100,7 @@ class Set(object):
         if collection.get_name() not in self.collection_dict.keys():
             self.collection_dict[collection.get_name()] = collection
         else:
-            #print('The Image Collection name : %s already exist' % collection.get_name)
+            # print('The Image Collection name : %s already exist' % collection.get_name)
             pass
 
     def batch_add_subset(self, subsets_array):
@@ -141,7 +141,7 @@ class Set(object):
         """
         del self.collection_dict[name]
 
-    def batch_remove_subset(self,subsets_array):
+    def batch_remove_subset(self, subsets_array):
         """
         Method to remove several subset using remove subset_method.
 
@@ -151,7 +151,7 @@ class Set(object):
         for subset in subsets_array:
             self.remove_subset(subset)
 
-    def batch_remove_collection(self,collection_array):
+    def batch_remove_collection(self, collection_array):
         """
         Method to remove several subset using remove collection_method.
 
@@ -214,7 +214,7 @@ class Set(object):
 
     # TODO remove all the hidden file
     @classmethod
-    def generate_from_folder(cls, set,  folder_path):
+    def generate_from_folder(cls, set, folder_path):
         """
         Method to build the all structure from a folder.
 
@@ -242,12 +242,12 @@ class Set(object):
                             if sub_item != '.DS_Store':
                                 set.collection_dict[item].add(NifImage.from_file(os.path.join(item_path, sub_item)))
 
-    def set_name(self,name):
+    def set_name(self, name):
         self.name = name
 
-    def get_sub_set(self,name):
+    def get_sub_set(self, name):
         for i in self.subset_dict.values():
-            if(i.name == name):
+            if (i.name == name):
                 return i
         return None
 
@@ -257,7 +257,7 @@ class Set(object):
     def renameCollinSet(self, coll, name):
         collecs = self.collection_dict
         for i in collecs.values():
-            if(i == coll):
+            if (i == coll):
                 self.remove_collection(i.name)
                 new_col = coll.set_name(name)
                 self.add_collection(coll)
@@ -290,14 +290,13 @@ class Set(object):
         return recursive_scan_of_subsets([], self)
 
     def getPosition(self):
-        p = []
-        p.append(self.position)
+        p = [self.position]
         parent = self.parent
-        while parent!= None:
-            #print(parent.name)
+        while parent is not None:
+            # print(parent.name)
             p.append(parent.position)
             parent = parent.parent
         p.append(0)
         p.reverse()
-        #print(p)
+        # print(p)
         return p

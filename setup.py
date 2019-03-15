@@ -3,10 +3,9 @@
 # Python 3
 
 import sys
-from cx_Freeze import setup, Executable
-from os import path
 
 import cx_Freeze.hooks
+from cx_Freeze import setup, Executable
 
 
 def hack(finder, module):
@@ -68,12 +67,13 @@ zip_exclude_packages = []
 if sys.platform == "win32":
     includes += ["OpenGL.platform.win32"]
     includefiles += ["mkl_intel_thread.dll"]
+"""
 elif sys.platform == "linux2":
     includes += ["OpenGL.platform.glx"]
     includefiles += [(matplotlib.get_data_path(), "mpl-data")]
 else:
     includes += ["OpenGL.platform.darwin"]
-
+"""
 # pour que les bibliotheques binaires de /usr/lib soient recopiees aussi sous Linux
 binpathincludes = []
 if sys.platform == "win32":

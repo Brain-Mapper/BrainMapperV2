@@ -10,6 +10,7 @@ import tempfile
 import warnings
 import subprocess
 import weakref
+
 try:
     from html import escape  # Unavailable in Py2
 except ImportError:  # Can be removed once we EOL Py2 support for NiLearn
@@ -19,7 +20,9 @@ import matplotlib as mpl
 import numpy as np
 from matplotlib import cm as mpl_cm
 
+# noinspection PyProtectedMember
 from nilearn._utils.extmath import fast_abs_percentile
+# noinspection PyProtectedMember
 from nilearn._utils.param_validation import check_threshold
 from nilearn import surface
 
@@ -47,7 +50,7 @@ def add_js_lib(html, embed_js=True):
     else:
         with open(os.path.join(js_dir, 'jquery.min.js')) as f:
             jquery = f.read()
-        with open(os.path.join(js_dir, 'plotly-latest.min.js')) as f: #-gl3d
+        with open(os.path.join(js_dir, 'plotly-latest.min.js')) as f:  # -gl3d
             plotly = f.read()
         js_lib = """
         <script>{}</script>
@@ -186,7 +189,7 @@ class HTMLDocument(object):
         if not os.path.isfile(self._temp_file):
             return
         os.remove(self._temp_file)
-        #print('removed {}'.format(self._temp_file))
+        # print('removed {}'.format(self._temp_file))
         self._temp_file = None
 
 

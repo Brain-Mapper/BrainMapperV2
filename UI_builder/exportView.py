@@ -11,14 +11,12 @@
 #       Raphaël AGATHON - Maxime CLUCHLAGUE - Graziella HUSSON - Valentina ZELAYA
 #       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
+import sys
+from os import path
+
 from PyQt4 import QtGui
 from PyQt4.Qt import *
-from PyQt4.QtCore import pyqtSignal, QCoreApplication
-from PyQt4 import QtCore
-
-import sys
-import os
-from os import path
+from PyQt4.QtCore import pyqtSignal
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 import ourLib.ExcelExport.excelExport as ee

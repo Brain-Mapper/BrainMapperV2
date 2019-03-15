@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+import sys
+from datetime import *
+from os import path
+
 # Form implementation generated from reading ui file 'mainView.ui'
 #
 # Created by: PyQt4 UI code generator 4.12.1
@@ -10,15 +14,10 @@ from PyQt4 import QtCore, QtGui
 from PyQt4.Qt import *
 from PyQt4.QtCore import pyqtSignal
 
-from datetime import *
-import sys
-from os import path
-
 import ourLib.calculations2 as calculations
 
 sys.path.append(path.dirname(path.dirname(path.dirname(path.abspath(__file__)))))
 from BrainMapper import *
-import UI_builder.resources
 import ourLib.ExcelExport.excelExport as ee
 import ourLib.filesHandlers.image as im
 import time
@@ -276,7 +275,7 @@ class SetButton(QtGui.QWidget):
                         trouve = True
                     else:
                         i = i + 1
-                if trouve == True:
+                if trouve:
                     self.image_zone.itemAt(i).widget().setParent(None)
                 trouve = False
                 i = 0
@@ -343,7 +342,7 @@ class SetButton(QtGui.QWidget):
                         new_ok = False
                 if new_ok and not exists_set(str(text)):
                     rm_set(self.my_set)
-                    if (self.my_set.getParent() != None):  # if its a subset
+                    if (self.my_set.getParent() is not None):  # if its a subset
                         self.my_set.getParent().remove_subset(self.my_set.get_name())
                         self.my_set.set_name(str(text))
                         self.my_set.getParent().add_subset(self.my_set)
@@ -357,7 +356,7 @@ class SetButton(QtGui.QWidget):
                     listes = self.my_set.get_all_nifti_set_and_subset()
                     for i in reversed(range(self.image_zone.count())):
                         for elem in listes:
-                            if self.image_zone.itemAt(i) != None:
+                            if self.image_zone.itemAt(i) is not None:
                                 if self.image_zone.itemAt(i).widget().coll.name == elem.get_name():
                                     collbutton = self.image_zone.itemAt(i).widget()
                                     collbutton.setname = str(text)
@@ -370,7 +369,7 @@ class SetButton(QtGui.QWidget):
 
                     for i in reversed(range(self.selected_zone.count())):
                         for elem in listes:
-                            if self.selected_zone.itemAt(i) != None:
+                            if self.selected_zone.itemAt(i) is not None:
                                 if self.selected_zone.itemAt(i).widget().coll.name == elem.get_name():
                                     selectedbutton = self.selected_zone.itemAt(i).widget()
                                     selectedbutton.setname = str(text)
@@ -484,7 +483,7 @@ class SetButton(QtGui.QWidget):
                             p.removeChild(it.value())
                     it += 1
             elif indice_racine == 0:
-                if self.my_set.getParent() != None:
+                if self.my_set.getParent() is not None:
                     for i in range(0, len(position_arbre) - 1):
                         # ##print("position_arbre avant", position_arbre)
                         p = p.child(position_arbre[0])
@@ -508,7 +507,7 @@ class SetButton(QtGui.QWidget):
 
             listes = self.my_set.get_all_nifti_set_and_subset()
 
-            if self.my_set.getParent() != None:
+            if self.my_set.getParent() is not None:
                 self.my_set.getParent().remove_subset(self.my_set.name)
                 indice_a_modif = len(position_arbre)
                 ##print("indice_a_modif", indice_a_modif)
@@ -532,13 +531,13 @@ class SetButton(QtGui.QWidget):
             # ##print("listes",listes)
             for i in reversed(range(self.image_zone.count())):
                 for elem in listes:
-                    if self.image_zone.itemAt(i) != None:
+                    if self.image_zone.itemAt(i) is not None:
                         if self.image_zone.itemAt(i).widget().coll.name == elem.get_name():
                             self.image_zone.itemAt(i).widget().setParent(None)
 
             for i in reversed(range(self.selected_zone.count())):
                 for elem in listes:
-                    if self.selected_zone.itemAt(i) != None:
+                    if self.selected_zone.itemAt(i) is not None:
                         # ##print('name',self.selected_zone.itemAt(i).widget().coll.name)
                         if self.selected_zone.itemAt(i).widget().coll.name == elem.get_name():
                             self.selected_zone.itemAt(i).widget().setParent(None)

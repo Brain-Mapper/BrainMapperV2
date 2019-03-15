@@ -262,7 +262,7 @@ def get_color(distinct_labels: list, in_int: bool = False) -> dict:
     color_dict = {}
     if -1 in distinct_labels:
         number_of_clusters = number_of_clusters - 1
-        if in_int == False:
+        if not in_int:
             color_dict[-1] = (1, 0, 0, 1)
         else:
             color_dict[-1] = (255, 0, 0, 1)

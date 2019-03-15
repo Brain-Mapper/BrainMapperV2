@@ -191,7 +191,7 @@ class calculationView2(QtGui.QWidget):
                 "Addition all the images in input."
             )
             self.textBrowser_2.setText("[5, 4, 0]     [0, 4, 0]    [5, 8, 0]\n[0, 0, 3] + [0, 7, 4] = [0, 7, 7]\n[1, "
-            "1, 2]     [3, 0, 0]    [4, 1, 2]")
+                                       "1, 2]     [3, 0, 0]    [4, 1, 2]")
 
         elif item == "division":
             self.argument_name.setText("Coefficient")
@@ -201,7 +201,7 @@ class calculationView2(QtGui.QWidget):
                 "Addition all the images in input, and then divide all the intensity by the coefficient."
             )
             self.textBrowser_2.setText("[  6,   4,  0]           [3, 2, 0]\n[  0,   0,  4] / 2 = [0, 0, 2]\n[10, "
-            "10, 2]           [5, 5, 1]")
+                                       "10, 2]           [5, 5, 1]")
 
         elif item == "linear combination":
             self.argument_name.setText("Coefficients")
@@ -209,7 +209,7 @@ class calculationView2(QtGui.QWidget):
             self.set_arguments_editable(True, basic_coefficients)
             filenames = []
             for i, name in enumerate(self.get_images_names()):
-                filenames.append(str(i)+": "+name)
+                filenames.append(str(i) + ": " + name)
             self.textBrowser.setText(
                 "Result: a unique image\n"
                 "Addition all the images in input, but each image having all its intensity multiplied by the "
@@ -218,8 +218,8 @@ class calculationView2(QtGui.QWidget):
                 + "\n\t".join(filenames)
             )
             self.textBrowser_2.setText("[0, 1, 0]           [0, 0, 0]           [0, 0, 1]           [0, 2, 3]\n"
-            "[1, 0, 1] * 2 + [0, 1, 1] * 1 + [1, 0, 0] * 3 = [5, 1, 3]\n"
-            "[0, 0, 0]           [1, 0, 0]           [0, 1, 1]           [1, 3, 3]")
+                                       "[1, 0, 1] * 2 + [0, 1, 1] * 1 + [1, 0, 0] * 3 = [5, 1, 3]\n"
+                                       "[0, 0, 0]           [1, 0, 0]           [0, 1, 1]           [1, 3, 3]")
 
         elif item == "mean":
             self.argument_name.setText("No argument")
@@ -228,9 +228,10 @@ class calculationView2(QtGui.QWidget):
                 "Result: a unique image\n"
                 "Addition all the images in input, and then divide all the intensity by the number of images."
             )
-            self.textBrowser_2.setText("            [0, 3, 0]     [0, 0, 0]    [0, 0, 3]        [0, 3, 0]     [0, 0, 0]    [0, 0, 3]             [0, 1, 1]\n"
-            "Mean([2, 0, 1] + [0, 9, 1] + [1, 0, 4]) = ( [2, 0, 1] + [0, 9, 1] + [1, 0, 4] ) / 3 = [1, 3, 2]\n"
-            "            [0, 5, 0]     [9, 0, 3]    [0, 4, 3]        [0, 5, 0]     [9, 0, 3]    [0, 4, 3]             [3, 3, 2]")
+            self.textBrowser_2.setText(
+                "            [0, 3, 0]     [0, 0, 0]    [0, 0, 3]        [0, 3, 0]     [0, 0, 0]    [0, 0, 3]             [0, 1, 1]\n"
+                "Mean([2, 0, 1] + [0, 9, 1] + [1, 0, 4]) = ( [2, 0, 1] + [0, 9, 1] + [1, 0, 4] ) / 3 = [1, 3, 2]\n"
+                "            [0, 5, 0]     [9, 0, 3]    [0, 4, 3]        [0, 5, 0]     [9, 0, 3]    [0, 4, 3]             [3, 3, 2]")
 
         elif item == "multiplication":
             self.argument_name.setText("Coefficient")
@@ -239,8 +240,9 @@ class calculationView2(QtGui.QWidget):
                 "Result: a unique image\n"
                 "Addition all the images in input, and then multiply all the intensity by a coefficient"
             )
-            self.textBrowser_2.setText("[  6,   4,  0]           [12,   8,  0]\n[  0,   0,  4] * 2 = [  0,   0,  8]\n[10, "
-            "10, 2]           [20, 20, 4]")
+            self.textBrowser_2.setText(
+                "[  6,   4,  0]           [12,   8,  0]\n[  0,   0,  4] * 2 = [  0,   0,  8]\n[10, "
+                "10, 2]           [20, 20, 4]")
 
         elif item == "and":
             self.argument_name.setText("No argument")
@@ -251,9 +253,10 @@ class calculationView2(QtGui.QWidget):
                 "is superior to 0, this voxel is considered as true. The result is a unique image where each voxel"
                 "is the intersection of voxels from the input images. "
             )
-            self.textBrowser_2.setText("[5, 0, 0]        [2, 0, 2]     [ True, False, False]        [ True, False, True]      [ 1, 0, 0]\n"
-            "[0, 3, 0] OR [0, 0, 0] = [ False, True, False] OR [ False, False, False] = [ 0, 0, 0]\n"
-            "[0, 0, 4]        [1, 0, 1]     [ False, False, True]        [ True, False, True]      [ 0, 0, 1]")
+            self.textBrowser_2.setText(
+                "[5, 0, 0]        [2, 0, 2]     [ True, False, False]        [ True, False, True]      [ 1, 0, 0]\n"
+                "[0, 3, 0] OR [0, 0, 0] = [ False, True, False] OR [ False, False, False] = [ 0, 0, 0]\n"
+                "[0, 0, 4]        [1, 0, 1]     [ False, False, True]        [ True, False, True]      [ 0, 0, 1]")
 
         elif item == "or":
             self.argument_name.setText("No argument")
@@ -264,9 +267,10 @@ class calculationView2(QtGui.QWidget):
                 "is superior to 0, this voxel is considered as true. The result is a unique image where each voxel"
                 "is the union of voxels from the input images."
             )
-            self.textBrowser_2.setText("[5, 0, 0]        [2, 0, 2]     [ True, False, False]        [ True, False, True]      [ 1, 0, 1]\n"
-            "[0, 3, 0] OR [0, 0, 0] = [ False, True, False] OR [ False, False, False] = [ 0, 1, 0]\n"
-            "[0, 0, 4]        [1, 0, 1]     [ False, False, True]        [ True, False, True]      [ 1, 0, 1]")
+            self.textBrowser_2.setText(
+                "[5, 0, 0]        [2, 0, 2]     [ True, False, False]        [ True, False, True]      [ 1, 0, 1]\n"
+                "[0, 3, 0] OR [0, 0, 0] = [ False, True, False] OR [ False, False, False] = [ 0, 1, 0]\n"
+                "[0, 0, 4]        [1, 0, 1]     [ False, False, True]        [ True, False, True]      [ 1, 0, 1]")
 
         elif item == "closing":
             self.argument_name.setText("Number of iterations")
@@ -279,11 +283,11 @@ class calculationView2(QtGui.QWidget):
                 "morphological noise removal. Opening removes small objects, while closing removes small holes."
             )
             self.textBrowser_2.setText("                [0,1,0,0,0,0,0,0]      [0,1,0,0,0,0,0,0]  \n"
-            "                [0,0,1,0,1,0,0,0]      [0,0,1,1,1,0,0,0]  \n"
-            "Closing([0,0,0,1,1,1,0,0]) = [0,0,0,1,1,1,0,0]  \n"
-            "                [0,0,1,1,1,1,1,0]      [0,0,1,1,1,1,1,0]  \n"
-            "                [0,0,0,1,1,1,0,0]      [0,0,0,1,1,1,0,0]  \n"
-            )
+                                       "                [0,0,1,0,1,0,0,0]      [0,0,1,1,1,0,0,0]  \n"
+                                       "Closing([0,0,0,1,1,1,0,0]) = [0,0,0,1,1,1,0,0]  \n"
+                                       "                [0,0,1,1,1,1,1,0]      [0,0,1,1,1,1,1,0]  \n"
+                                       "                [0,0,0,1,1,1,0,0]      [0,0,0,1,1,1,0,0]  \n"
+                                       )
 
         elif item == "dilation":
             self.argument_name.setText("Number of iterations")
@@ -296,11 +300,11 @@ class calculationView2(QtGui.QWidget):
                 "expanding the shapes contained in the input image."
             )
             self.textBrowser_2.setText("                 [0,1,0,0,0,0,0,0]      [1,1,1,0,0,0,0,0]  \n"
-            "                 [0,0,1,0,1,0,0,0]      [0,1,1,1,1,1,0,0]  \n"
-            "Dilation([0,0,0,1,1,1,0,0]) = [0,0,1,1,1,1,1,0]  \n"
-            "                 [0,0,1,1,1,1,1,0]      [0,1,1,1,1,1,1,1]  \n"
-            "                 [0,0,0,1,1,1,0,0]      [0,0,1,1,1,1,1,0]  \n"
-            )
+                                       "                 [0,0,1,0,1,0,0,0]      [0,1,1,1,1,1,0,0]  \n"
+                                       "Dilation([0,0,0,1,1,1,0,0]) = [0,0,1,1,1,1,1,0]  \n"
+                                       "                 [0,0,1,1,1,1,1,0]      [0,1,1,1,1,1,1,1]  \n"
+                                       "                 [0,0,0,1,1,1,0,0]      [0,0,1,1,1,1,1,0]  \n"
+                                       )
 
         elif item == "erosion":
             self.argument_name.setText("Number of iterations")
@@ -313,11 +317,11 @@ class calculationView2(QtGui.QWidget):
                 "complete lattices."
             )
             self.textBrowser_2.setText("                [0,1,0,0,0,0,0,0]      [0,0,0,0,0,0,0,0]  \n"
-            "                [0,0,1,0,1,0,0,0]      [0,0,0,0,0,0,0,0]  \n"
-            "Erosion([0,0,0,1,1,1,0,0]) = [0,0,0,0,1,0,0,0]  \n"
-            "                [0,0,1,1,1,1,1,0]      [0,0,0,1,1,1,0,0]  \n"
-            "                [0,0,0,1,1,1,0,0]      [0,0,0,0,1,0,0,0]  \n"
-            )
+                                       "                [0,0,1,0,1,0,0,0]      [0,0,0,0,0,0,0,0]  \n"
+                                       "Erosion([0,0,0,1,1,1,0,0]) = [0,0,0,0,1,0,0,0]  \n"
+                                       "                [0,0,1,1,1,1,1,0]      [0,0,0,1,1,1,0,0]  \n"
+                                       "                [0,0,0,1,1,1,0,0]      [0,0,0,0,1,0,0,0]  \n"
+                                       )
 
         elif item == "opening":
             self.argument_name.setText("Number of iterations")
@@ -331,11 +335,11 @@ class calculationView2(QtGui.QWidget):
                 "completely after erosion applied."
             )
             self.textBrowser_2.setText("                  [0,1,0,0,0,0,0,0]      [0,0,0,0,0,0,0,0]  \n"
-            "                  [0,0,1,0,1,0,0,0]      [0,0,0,0,0,0,0,0]  \n"
-            "Opening([0,0,0,1,1,1,0,0]) = [0,0,0,1,1,1,0,0]  \n"
-            "                  [0,0,1,1,1,1,1,0]      [0,0,1,1,1,1,1,0]  \n"
-            "                  [0,0,0,1,1,1,0,0]      [0,0,0,1,1,1,0,0]  \n"
-            )
+                                       "                  [0,0,1,0,1,0,0,0]      [0,0,0,0,0,0,0,0]  \n"
+                                       "Opening([0,0,0,1,1,1,0,0]) = [0,0,0,1,1,1,0,0]  \n"
+                                       "                  [0,0,1,1,1,1,1,0]      [0,0,1,1,1,1,1,0]  \n"
+                                       "                  [0,0,0,1,1,1,0,0]      [0,0,0,1,1,1,0,0]  \n"
+                                       )
 
         elif item == "threshold":
             self.argument_name.setText("min,max")
@@ -349,8 +353,8 @@ class calculationView2(QtGui.QWidget):
                 "infinite respectively."
             )
             self.textBrowser_2.setText("                     [-5, 1, 0]  [2, 0, 2]       [0, 1, 0]  [0, 0, 0]\n"
-            "threshold([-1, 3, 0], [1, 1, 0]) = ([0, 0, 0], [1, 1, 0]) avec min = 0 et max = 1\n"
-            "                     [0, 1, 4]   [1, 0, 1]       [0, 1, 0]  [1, 0, 1]")
+                                       "threshold([-1, 3, 0], [1, 1, 0]) = ([0, 0, 0], [1, 1, 0]) avec min = 0 et max = 1\n"
+                                       "                     [0, 1, 4]   [1, 0, 1]       [0, 1, 0]  [1, 0, 1]")
 
     def run_calculation(self):
         self.pushButton.setEnabled(False)
@@ -469,7 +473,7 @@ class calculationView2(QtGui.QWidget):
             else:
                 self.console.setText("Calculation running")
                 QtGui.qApp.processEvents()
-                result = BrainMapper.calcul.threshold_operation(img_selected, threshold_min, threshold_max )
+                result = BrainMapper.calcul.threshold_operation(img_selected, threshold_min, threshold_max)
                 self.console.setText("Calculation successul")
                 QtGui.qApp.processEvents()
 
@@ -542,4 +546,5 @@ class calculationView2(QtGui.QWidget):
                 coll.add(ni_image)
             setCalculation.add_collection(coll)
             BrainMapper.makeCalculResultSet(setCalculation)
-            self.console.setText(self.console.toPlainText()+"\n \nA new set has been created with the name: %s" %(setCalculation.get_name()) )
+            self.console.setText(self.console.toPlainText() + "\n \nA new set has been created with the name: %s" % (
+                setCalculation.get_name()))

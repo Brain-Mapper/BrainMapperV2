@@ -12,7 +12,6 @@
 #       Marie ADLER - Aurélien BENOIT - Thomas GRASSELLINI - Lucie MARTIN
 
 import os
-from typing import List
 
 from qtconsole.qt import QtGui
 
