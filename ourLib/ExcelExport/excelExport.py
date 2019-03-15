@@ -13,7 +13,7 @@
 
 import os
 
-from qtconsole.qt import QtGui
+from PyQt4 import QtGui
 
 
 def export_control(name, path):
