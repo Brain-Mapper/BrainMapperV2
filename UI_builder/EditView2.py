@@ -58,7 +58,7 @@ class Buttonpath(QtGui.QWidget):
         hbox.addWidget(self.buttonp)
 
         ShowButtoncoll = QtGui.QPushButton()
-        ShowButtoncoll.setIcon(QtGui.QIcon(':ressources/app_icons_png/eye.png'))
+        ShowButtoncoll.setIcon(QtGui.QIcon('ressources/app_icons_png/eye.png'))
         ShowButtoncoll.clicked.connect(lambda: self.showColl(coll, parent))
         ShowButtoncoll.setStatusTip("Show graphic of the entire set")
         ShowButtoncoll.setFixedSize(QSize(20, 20))
@@ -177,14 +177,14 @@ class CollectionAccessButton(QtGui.QWidget):
         hbox.addWidget(self.buttonc)
 
         NameButtoncoll = QtGui.QPushButton()
-        NameButtoncoll.setIcon(QtGui.QIcon(':ressources/app_icons_png/writing.png'))
+        NameButtoncoll.setIcon(QtGui.QIcon('ressources/app_icons_png/writing.png'))
         NameButtoncoll.clicked.connect(lambda: self.changeNamecoll(coll, parent))
         NameButtoncoll.setStatusTip("Change collection name")
         NameButtoncoll.setFixedSize(QSize(20, 20))
         hbox.addWidget(NameButtoncoll)
 
         ShowButtoncoll = QtGui.QPushButton()
-        ShowButtoncoll.setIcon(QtGui.QIcon(':ressources/app_icons_png/eye.png'))
+        ShowButtoncoll.setIcon(QtGui.QIcon('ressources/app_icons_png/eye.png'))
         ShowButtoncoll.clicked.connect(lambda: self.showColl(coll, parent))
         ShowButtoncoll.setStatusTip("Show graphic of the entire set")
         ShowButtoncoll.setFixedSize(QSize(20, 20))

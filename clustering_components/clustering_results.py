@@ -244,7 +244,7 @@ class ClusteringResultsPopUp(QtGui.QWidget):
     def export_as_textfile(self):
         browser = QtGui.QMessageBox()
         browser.setWindowTitle('Export Validation Indexes as text file')
-        # browser.setIcon(QtGui.QMessageBox_Icon(":ressources/logo.png"))
+        # browser.setIcon(QtGui.QMessageBox_Icon("ressources/logo.png"))
 
         l = browser.layout()
         l.setContentsMargins(20, 0, 0, 20)

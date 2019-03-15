@@ -31,7 +31,7 @@ class Help(QMainWindow):
     def __init__(self):
         super(QMainWindow, self).__init__()
         self.setWindowTitle('Help')
-        self.setWindowIcon(QtGui.QIcon(':ressources/help.png'))
+        self.setWindowIcon(QtGui.QIcon('ressources/help.png'))
         self.setFixedSize(465, 235)
         centralwidget = QWidget(self)
         horizontalLayoutWidget = QWidget(centralwidget)
@@ -39,7 +39,7 @@ class Help(QMainWindow):
         horizontalLayout = QHBoxLayout(horizontalLayoutWidget);
 
         label = QLabel(horizontalLayoutWidget)
-        pixmap = QPixmap(':ressources/logo.png')
+        pixmap = QPixmap('ressources/logo.png')
         label.setPixmap(pixmap)
         label.resize(pixmap.width(), pixmap.height())
         label.move(10, 10)
@@ -227,7 +227,7 @@ class UI(QtGui.QMainWindow):
         # self.setGeometry(300, 200, screenWidth / 1.5, screenHeight / 1.4)
         self.setGeometry(300, 200, 500, 200)
         self.setWindowTitle('BrainMapper')
-        self.setWindowIcon(QtGui.QIcon(':ressources/logo.png'))
+        self.setWindowIcon(QtGui.QIcon('ressources/logo.png'))
 
         menubar = self.menuBar()  # menu bar
         # ACTIONS AVAILABLE FOR MENUS

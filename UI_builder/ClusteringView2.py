@@ -77,7 +77,7 @@ class ClusteringView2(QtGui.QWidget):
         self.clust_chooser = None
         self.table_displayer = None
 
-        self.results_popup = ClusteringResultsPopUp(':ressources/logo.png', ':ressources/app_icons_png/file-1.png')
+        self.results_popup = ClusteringResultsPopUp('ressources/logo.png', 'ressources/app_icons_png/file-1.png')
 
         self.label: List[int] = None
         self.centroids: List[List[float]] = None

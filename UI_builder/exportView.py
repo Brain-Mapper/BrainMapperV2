@@ -46,12 +46,12 @@ class ExportView(QtGui.QWidget):
         self.directoryEdit = QtGui.QLineEdit('')
 
         goHomeButton = QtGui.QPushButton('Go back')
-        goHomeButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/home-2.png'))
+        goHomeButton.setIcon(QtGui.QIcon('ressources/app_icons_png/home-2.png'))
         goHomeButton.setStatusTip("Return to main page")
         goHomeButton.clicked.connect(self.showMain.emit)  # When go back home button is clicked, change central views
 
         runExportButton = QtGui.QPushButton('Run')
-        runExportButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/play.png'))
+        runExportButton.setIcon(QtGui.QIcon('ressources/app_icons_png/play.png'))
         runExportButton.setStatusTip("Run the export")
         runExportButton.clicked.connect(
             lambda: ee.export(self.fileNameEdit.text(), self.directoryEdit.text(), self.export_usable_dataset))

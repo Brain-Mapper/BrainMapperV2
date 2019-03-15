@@ -167,7 +167,7 @@ class SetButton(QtGui.QWidget):
         hbox.addWidget(SupprButton)
 
         NameButton = QtGui.QPushButton()
-        NameButton.setIcon(QtGui.QIcon(':ressources/app_icons_png/writing.png'))
+        NameButton.setIcon(QtGui.QIcon('ressources/app_icons_png/writing.png'))
         NameButton.clicked.connect(self.changeName)
         NameButton.setStatusTip("Change Set Name")
         NameButton.setFixedSize(QSize(20, 20))
