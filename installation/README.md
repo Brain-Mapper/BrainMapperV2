@@ -1,5 +1,6 @@
 # How to install BrainMapper
 If you are not familiar with informatics, we recommend running BrainMapper on Windows or Linux. Since the installation procedure is not automated for MacOS, you may need to adapt the instructions to your own environment.
+If the installation doesn't work, we recommend to use the virtual environment method described bellow.
 
 ## Linux
 ### Install the dependencies
@@ -27,7 +28,7 @@ check if python is installed
 
 ```
 python --version
-``` 
+```
 
 If it is installed you should have the following result :
 
@@ -56,7 +57,7 @@ Then install it with pip
 pip install <path to>\PyQt4‑4.11.4‑cp36‑cp36m‑win32.whl
 ```
 
-For example 
+For example
 ```
 pip install -r C:\Users\Me\BrainMapperV2\installation\Windows\requirement.txt
 pip install C:\Users\Me\Downloads\PyQt4-4.11.4-cp36-cp36m-win_amd64.whl
@@ -83,6 +84,7 @@ python UI.py
 
 
 ## MacOS
+
 ### Install python 3
 If python3 is not already install on your computer, you need to download it. Folow this link:
 https://www.python.org/ftp/python/3.6.5/python-3.6.5-macosx10.9.pkg
@@ -152,3 +154,16 @@ Then you can launch BrainMapper with the following command from the root folder:
 ```shell
 $ python3 UI.py
 ```
+
+## Virtual environment
+First you need to download the VirtualBox software on your computer :
+MacOS : https://download.virtualbox.org/virtualbox/6.0.4/VirtualBox-6.0.4-128413-OSX.dmg
+Windows : https://download.virtualbox.org/virtualbox/6.0.4/VirtualBox-6.0.4-128413-Win.exe
+Linux : https://download.virtualbox.org/virtualbox/6.0.4/virtualbox-6.0_6.0.4-128413~Ubuntu~bionic_amd64.deb
+(other Linux distributions : https://www.virtualbox.org/wiki/Linux_Downloads)
+Open VirtualBox and click on the "File" menu.
+![Tuto](images/tuto1.png?raw=true "File -> import appliance")
+Click on import appliance and chose BrainMapper.ova. Click on next.
+After the import, you can change the setings or leave the default ones.
+Then you just have to start the machine selected by clicking on the "Start" button.
+The password of the machine is : BrainMapper
