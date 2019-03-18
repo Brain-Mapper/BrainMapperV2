@@ -166,4 +166,4 @@ Open VirtualBox and click on the "File" menu.
 Click on import appliance and chose BrainMapper.ova. Click on next.  
 After the import, you can change the setings or leave the default ones.  
 Then you just have to start the machine selected by clicking on the "Start" button.  
-The password of the machine is : BrainMapper   
+The password of the machine is : brainmapper   
