@@ -25,8 +25,18 @@
             <p class="toc_title">Contents - Self-organizing map</p>
             <a href="index.html" style="color : #5577ee"> Go back to home page </a>
             <ul class="toc_list">
-          	   <li><a href="#61"><strong>6.1. TEST</strong></a></li>
+          	   <li><a href="#61"><strong>6.1. Self-organizing maps</strong></a></li>
+                <ul>
+                   <li><a href="#611">6.1.1. What are self-organizing maps ?</a></li>
+                   <li><a href="#612">6.1.2. Aim </a></li>
+                </ul>
 
+               <li><a href="#62"><strong>6.2. Self-organizing maps in BrainMapper</strong></a></li>
+                <ul>
+                   <li><a href="#621">6.2.1 Parameters</a></li>
+                   <li><a href="#622">6.2.2 Training</a></li>
+                   <li><a href="#623">6.2.3 Graphs</a></li>
+                 </ul>
 
 
               </ul>
@@ -37,9 +47,93 @@
         <div id="Calculations">
           <h1>Self-organizing map</h1>
 
-            <h2 id="61">6.1. TEST</h2>
+            <h2 id="61">6.1. Self-organizing maps</h2>
 
+              <h3 id="611">6.1.1. What are self-organizing maps ?</h3>
 
+              <h3 id="612">6.1.2. Aim</h3>
+
+            <h2 id="62">6.2. Self-organizing maps in BrainMapper</h2>
+
+            <p>
+              To use the self-organizing maps in BrainMapper, you have to import a CSV or an Excel file in the main windows
+              and then to select the button "SOM".
+            </p>
+
+            <p>
+              <img src="imgs/som/import_data.png" style="width:80%">
+            </p>
+
+              <h3 id="621">6.2.1. Parameters</h3>
+
+              <p>
+                In the SOM windows, you can choose many paramters before training the maps.
+              </p>
+
+              <p>
+                <img src="imgs/som/param.png" style="width:80%">
+              </p>
+
+              <p>
+                You can also select data columns for the self-organizing maps.
+                In the following example, we select the columns X and Y.
+              </p>
+
+              <p>
+                <img src="imgs/som/param_col.png" style="width:80%">
+              </p>
+
+              <div style="padding-left: 12%; padding-top:3%; padding-bottom:3%">
+                <div class="alert note-info" role="alert">
+                  <h5 style="color:#306499;">NOTE</h5>
+                  You can train the maps on the coordinates (X, Y, Z) or on others columns.
+                  In the previous example, you could have selected the type or the subtype.
+                </div>
+              </div>
+
+              <h3 id="622">6.2.2. Training</h3>
+
+              <p>
+                Once you have chosen the parameters, you can launch the training.
+                To do, you have to select the button "Train".
+              </p>
+
+              <p>
+                <img src="imgs/som/train.png" style="width:80%">
+              </p>
+
+              <p>
+                When the training is finished, a new windows will appear to announce the end of the training.
+              </p>
+
+              <p>
+                <img src="imgs/som/end_som.png" style="width:80%">
+              </p>
+
+              <div style="padding-left: 12%; padding-top:3%; padding-bottom:3%">
+                <div class="alert note-info" role="alert">
+                  <h5 style="color:#306499;">NOTE</h5>
+                  The training can be quite long.
+                </div>
+              </div>
+
+              <h3 id="623">6.2.3. Graphs</h3>
+
+              <p>
+                After the training, you can choose which graph you want to display and diplay it.
+              </p>
+
+              <p>
+                <img src="imgs/som/answer.png" style="width:80%">
+              </p>
+
+              <p>
+                In the following example, we choose to diplay the answer type.
+              </p>
+
+              <p>
+                <img src="imgs/som/maps.png" style="width:50%">
+              </p>
 
         </div>
       </div>
