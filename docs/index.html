@@ -83,7 +83,7 @@
                    <li><a href="clustering.html#kmedoids">3.2.2 KMedoids</a></li>
                    <li><a href="clustering.html#agglo">3.2.3 Agglomerative Clustering</a></li>
                    <li><a href="clustering.html#dbscan">3.2.4 DBscan</a></li>
-                   <li><a href="clustering.html#fuzzyCmeans">3.2.3 Fuzzy Cmeans</a></li>
+                   <li><a href="clustering.html#fuzzyCmeans">3.2.5 Fuzzy Cmeans</a></li>
                  </ul>
 
                <li><a href="clustering.html#clust_results"> 3.3 Clustering results</a></li>
@@ -138,15 +138,15 @@
               	<li><a href="calculations.html#43">4.3. List of implemented calcul</a></li>
 		              <ul>
               		<li><a href="calculations.html#431"><small>4.3.1. Addition</small></a></li>
-			            <li><a href="calculations.html#432"><small>4.3.2. Boolean Intersection</small></a></li>
-              		<li><a href="calculations.html#433"><small>4.3.3. Boolean Union</small></a></li>
-            			<li><a href="calculations.html#434"><small>4.3.4. Centroid</small></a></li>
-            			<li><a href="calculations.html#435"><small>4.3.5. Closing</small></a></li>
-            			<li><a href="calculations.html#436"><small>4.3.6. Dilatation</small></a></li>
-            			<li><a href="calculations.html#437"><small>4.3.7. Entropy</small></a></li>
-            			<li><a href="calculations.html#438"><small>4.3.8. Erosion</small></a></li>
-            			<li><a href="calculations.html#439"><small>4.3.9. Mean</small></a></li>
-            			<li><a href="calculations.html#4310"><small>4.3.10. Normalization</small></a></li>
+			            <li><a href="calculations.html#432"><small>4.3.2. Division</small></a></li>
+              		<li><a href="calculations.html#433"><small>4.3.3. Linear combination</small></a></li>
+            			<li><a href="calculations.html#434"><small>4.3.4. Mean</small></a></li>
+            			<li><a href="calculations.html#435"><small>4.3.5. Multiplication</small></a></li>
+            			<li><a href="calculations.html#436"><small>4.3.6. And</small></a></li>
+            			<li><a href="calculations.html#437"><small>4.3.7. Or</small></a></li>
+            			<li><a href="calculations.html#438"><small>4.3.8. Closing</small></a></li>
+            			<li><a href="calculations.html#439"><small>4.3.9. Dilation</small></a></li>
+            			<li><a href="calculations.html#4310"><small>4.3.10. Erosion</small></a></li>
             			<li><a href="calculations.html#4311"><small>4.3.11. Opening</small></a></li>
             			<li><a href="calculations.html#4312"><small>4.3.12. Threshold</small></a></li>
               	  </ul>
@@ -156,8 +156,7 @@
             			<li><a href="calculations.html#441"><small>4.4.1. Load and select a set of nifti collection</small></a></li>
             			<li><a href="calculations.html#442"><small>4.4.2. Select a calculation and the parameters</small></a></li>
               		<li><a href="calculations.html#443"><small>4.4.3. Execute the algorithm and save it in the calculation tab</small></a></li>
-                	<li><a href="calculations.html#444"><small>4.4.4. Have an overview of the results in the Edit view</small></a></li>
-                  </ul>
+                </ul>
 
                   </ul>
 
@@ -168,6 +167,7 @@
         			 <ul>
       				 <li><a href="import_export.html#what"><small>5.1.1 What is it?</small></a></li>
       				 <li><a href="import_export.html#export_workspace"><small>5.1.2 Export a workspace</small></a></li>
+      				 <li><a href="import_export.html#import_workspace"><small>5.1.3 Import a workspace</small></a></li>
                 </ul>
 
              <li><a href="import_export.html#export">5.2 Export an Image Collection</a></li>
@@ -180,8 +180,20 @@
            <li><a href="som.html"><strong>6 Self-organizing map</strong></a></li>
 
             <ul>
-             <li><a href="som.html#61">6.1 TEST</a></li>
-            </ul>
+             <li><a href="som.html#61">6.1 Self-organizing maps</a></li>
+
+        			 <ul>
+      				 <li><a href="som.html#611"><small>6.1.1. What are self-organizing maps ?</small></a></li>
+      				 <li><a href="som.html#612"><small>6.1.2 Aim</small></a></li>
+                </ul>
+
+             <li><a href="som.html#62">6.2 6.1.1. Self-organizing in BrainMapper</a></li>
+        			 <ul>
+      				 <li><a href="som.html#621"><small>6.2.1 Parameters</small></a></li>
+      				 <li><a href="som.html#622"><small>6.2.2 Training</small></a></li>
+      				 <li><a href="som.html#623"><small>6.2.3 Graphs</small></a></li>
+              </ul>
+           </ul>
 
         	</ul>
     	</div>
@@ -223,48 +235,31 @@
       <h2 id="usecase">1.1 Software usecase</h2>
 
       BrainMapper can be used to create several sets and image collections associated to brain responses or patients, that will contain different images,
-      in the NIfTI format and standards.
-      The user can then extract data from the loaded NIfTI files to perform basic calculations or apply clustering algorithms to this data.<br>
-      Calculations and clustering results can be exported as NIfTI or CSV files, as well as the original NIfTI files.
+      in the NIfTI format and standards (Excel, CSV).
+      The user can then extract data from the loaded NIfTI files to perform basic calculations or apply clustering algorithms or self-organizing maps to this data.<br>
+      Calculations and clustering results can be exported as NIfTI, Excel or CSV files, as well as the original NIfTI files.
       Data can be imported as well as NIfTI or Excel files and the user can specify
        a workspace directory from which files will be automatically imported.
-       <div style="padding-left: 12%; padding-top:3%; padding-bottom:3%">
-         <div class="alert alert-info" role="alert">
-         <h5 style="color:#f66;">WARNING</h5>
-         <b>This software was designed for the processing of binary NIfTI files, i.e. NIfTI files where voxels have an intensity either equal to zero or equal to 1.</b>
-         <br><br>
-         Data extraction is still quite naive : our algorithms extract all points that have an intensity value greater than zero. Thus, if you have NIfTI files with the MNI template
-         still as a background and your selected regions, our software will extract a list containing all coordinates that have an intensity value other than zero.<br><br>
 
-         We are currently working on a version of the software that allows the user to specifiy a threshold for data extraction but for now, it will be best to use only binary NIfTI files.
-         Otherwise, extraction time and performance may hinder the utility of the software
-       </div>
-      </div>
 
       Thus, the current version of this software allows the user to : <br>
       <ul>
-        <li><b>Open</b> NIfTI files (<em><b>'.nii'</b></em> or in compressed format <em><b>'.nii.gz'</b></em>) or .csv files or Excel files and put them in
-          <b>Sets</b>, which are associated with a brain response and <b>Image Collections</b>, associated mostly to patients </li>
+        <li><b>Open</b> NIfTI files (<em><b>'.nii'</b></em> or in compressed format <em><b>'.nii.gz'</b></em>) or CSV files ()<em><b>'.csv'</b></em>) or Excel files
+          ()<em><b>'.xlsx'</b></em>) and put them in <b>Sets</b>, which are associated with a brain response and <b>Image Collections</b>, associated mostly to patients </li>
         <li>Import and export the workspace from/into a directory, whose structure will reflect that of the application (set folders, image collections subfolders...) </li>
         <li>Edit the content of sets and image collections (change their names, add or delete an image collection or a set)</li>
         <li>Visualize in a 3D graph the contents of a NIfTI image from the edition page </li>
-        <li>Select several image collections, across all sets, containing the images to which calculations and clustering algorithms will be applied </li>
+        <li>Select several image collections, across all sets, containing the images to which calculations, clustering algorithms and self-organizing maps will be applied </li>
         <li>Perform several calculations on selected NIfTI files</li>
         <li>Extract data from selected NIfTI files and perform clustering methods on this data (KMeans, KMedoids, AgglomerativeClustering, DBscan, Fuzzy CMeans)</li>
-        <li>Visualize clusters in a 3D graphic, on cross sections, the silhouette graphic or a dendogramm through graphical representations in clustering page</li>
-        <li>Calculate <em><b>internal validation indexes</b></em> for clustering results, such as Silhouettes, Mean Silhouette, Calinski-Habaraz score and Davis-Boulin index</li>
+        <li>Visualize clusters in a 3D graphic, on cross sections, on glass cross sections, the silhouette graphic or a dendogramm through graphical representations in clustering page</li>
+        <li>Calculate <em><b>internal validation indexes</b></em> for clustering results, such as Mean Silhouette, Calinski-Habaraz score and Davis-Boulin index</li>
         <li>Save clustering and calculation results as sets and image collections within the application</li>
         <li>Export clustering assignments data table as a CSV file</li>
         <li>Export whole image collections or sets as NIfTI files</li>
+        <li>Use self-organizing maps on Excel or CSV files</li>
 
       </ul>
-
-      <div style="padding-left: 12%; padding-top:3%; padding-bottom:3%">
-         <div class="alert note-info" role="alert">
-         <h5 style="color:#306499;">INFORMATION</h5>
-          Our software can open compressed NIfTI formats ('.nii.gz').
-       </div>
-      </div>
 
       <h2 id="installation">1.2 BrainMapper installation</h2>
 
@@ -291,53 +286,101 @@
 
       <h4 id="install_windows">1.2.1.2 Installation </h4>
 
-      <!-- TODO:  -->
-      <!--      <ul>
-         <li>Install Miniconda package manager for <b>Windows and Python 2.7</b>: <a href=https://conda.io/miniconda.html>Download the installer here</a>. </li>
-            When installing, tick the option <b><em>"Add Anaconda to my PATH variable".</em></b>
-            <br><br>
+      <h5>Python installation</h5>
 
-         <li> In a Powershell terminal, type the following commands :</li>
-           <div style="padding-left: 1%; padding-top:1%; padding-bottom:1%">
-             <div class="command">
-                conda install python=2.7<br>
-                activate root<br>
-                conda install -c anaconda pyqt=4.11.4<br>
-                conda install numpy<br>
-                conda install scikit-learn<br>
-                conda install pyqtgraph<br>
-                conda install pyopengl<br>
-                conda install -c conda-forge nibabel<br>
-              </div>
-            </div>
-            <br>
-          <li>Download the .zip project on the <a href="https://github.com/TELECOMNancy/brainMapper" target="_blank">GitHub repository</a>. </li>
-          Decompress it, and create a .bat file (be careful with file extensions on Windows, sometimes a .txt will be added and you cannot see it.). <br>
-          <br>
-          <li>In the .bat file put in the following commands </li>
-          <div style="padding-left: 1%; padding-top:1%; padding-bottom:1%">
-            <div class="command">
-                cd brainMapper-master/UI<br>
-                python UI.py<br>
-            </div>
-          </div>
-          This file has to be in the same folder than the decompressed .zip. <br>
-          Finally, create a .bat shortcut (right click, 'Create shorcut') and put it on your Desktop : when you click on it, <b><em>brainMapper</em></b> will launch .
+      <p>
+      You need to have python 3.6 to use this project.
+      <br>
+      Open the terminal (`Windows+r` and type `cmd`) and type the following line to
+      check if python is installed
+      <br>
+      ```<br>
+      python --version <br>
+      ```
+      </p>
+      <p>
+      If it is installed you should have the following result :
+      <br>
+      ```<br>
+      Python 3.6.7 <br>
+      ```<br>
+      </p>
+
+      <p>
+      If the command does not work, it means that python is not installed.
+      In this case, you can download it (<a href="https://www.python.org/downloads/release/python-367/" target="_blank" style="color : #5577ee">here</a>).
+      During the install, ensure that the options "pip" and "tcl/tk" (on the screen Optional Features),
+      "add Python to environment variables" (on the screen Advanced Options) are chosen.
+      <br><br>
+      You should be able to launch the previous command in a new terminal.
+      </p>
 
 
-      -->
+      <h5>Dependencies installation</h5>
+
+      <p>
+      In the command line, install required dependencies with
+      <br>
+      ```
+      <br>
+      pip install -r <path to>\requirement.txt
+      <br>
+      ```
+      </p>
+
+      <p>
+      You also have to download pyqt4 (<a href="https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyqt4" target="_blank" style="color : #5577ee">here</a>), download PyQt4-4.11.4-cp36-cp36m-win_amd64.whl
+      Then install it with pip <br>
+      <br>
+      ```<br>
+      pip install <path to>\PyQt4‑4.11.4‑cp36‑cp36m‑win32.whl <br>
+      ```<br>
+      </p>
+
+      <p>
+      For example : <br>
+      ```<br>
+      pip install -r C:\Users\Me\BrainMapperV2\installation\Windows\requirement.txt <br>
+      pip install C:\Users\Me\Downloads\PyQt4-4.11.4-cp36-cp36m-win_amd64.whl <br>
+      <br>
+      ```
+      </p>
+
+      <h5>Launching BrainMapper</h5>
+
+      <p>
+      In the command line, set your current directory at the root of BrainMapper <br>
+      ``` <br>
+      cd <i>path to</i>\BrainMapperV2 <br>
+      ```
+      </p>
+
+      <p>
+      Start the script with python <br>
+      ``` <br>
+      python UI.py <br>
+      ```
+      </p>
+
+      <p>
+      For example : <br>
+      ``` <br>
+      cd C:\Users\Me\BrainMapperV2 <br>
+      python UI.py <br>
+      ```
+      </p>
 
         <h3 id="mac">1.2.2 OSX/Mac</h3>
 
-        <h4>Python installation</h4>
+        <h5>Python installation</h5>
 
         <p>
           If python3 is not already install on your computer, you need to download it.
           To download the installer, click
-          <a href="https://www.python.org/ftp/python/3.7.2/python-3.7.2-macosx10.6.pkg" target="_blank" style="color : #5577ee">here</a>
+          <a href="https://www.python.org/ftp/python/3.6.5/python-3.6.5-macosx10.9.pkg" target="_blank" style="color : #5577ee">here</a>
         </p>
 
-        <h4>Python paths</h4>
+        <h5>Python paths</h5>
 
         <p>
           To install the dependencies, open a terminal in the MacOS folder.
@@ -345,10 +388,8 @@
           <br><br>
           <b><i>_Python3 folder_:</i></b>
           <br>
-          ```shell
-          <br>
-          $ which python3
-          <br>
+          ```shell <br>
+          $ which python3 <br>
           ```
           <br><br>
           For exemple if you get /usr/bin/python3, python3 folder is /urs/bin/.
@@ -365,17 +406,21 @@
           ```
           <br>
           (for exemple /usr/lib/python3/dist-packages)
-          <br><br>
+          <br> <br>
+          Install brew following the official website clicking
+          <a href="https://brew.sh/" target="_blank" style="color : #5577ee">here</a>
+          <br>
+          <br>
           Then install Qt4 (brew is needed):
           <br>
-          ```shell
-          <br>
-          $ brew install qt@4
-          <br>
+          ```<br>
+          $ brew tap cartr/qt4 <br>
+          $ brew tap-pin cartr/qt4 <br>
+          $ brew install qt@4 <br>
           ```
         </p>
 
-          <h4>Sip installation</h4>
+          <h5>Sip installation</h5>
           <p>
           ```shell
           <br>
@@ -389,6 +434,8 @@
           <br>
           $ make install
           <br>
+          $ cd ../temp_sip
+          <br>
           $ cp sip.so <i>Dependencies folder</i>
           <br>
           $ cp -r sip-4.19.13.dist-info <i>Dependencies folder</i>
@@ -398,28 +445,20 @@
           ```
         </p>
 
-          <h4>PyQt4 installation</h4>
+          <h5>PyQt4 installation</h5>
           <p>
-          ```shell
-          <br>
-          $ curl -L -O https://sourceforge.net/projects/pyqt/files/PyQt4/PyQt-4.12/PyQt4_gpl_mac-4.12.tar.gz
-          <br>
-          $ tar -xvf PyQt4_gpl_mac-4.12.tar.gz
-          <br>
-          $ QMAKESPEC=unsupported/macx-clang-libc++
-          <br>
-          $ cd PyQt4_gpl_mac-4.12
-          <br>
-          $ python3 configure-ng.py --sip ../temp_sip/sip --no-stubs --bindir <i>Python3 folder</i>  --destdir <i>Dependencies folder</i> --sip-incdir=../temp_sip
-          <br>
-          $ make install
-          <br>
-          $ cd ..
-          <br>
+          ```shell <br>
+          $ curl -L -O https://sourceforge.net/projects/pyqt/files/PyQt4/PyQt-4.12/PyQt4_gpl_mac-4.12.tar.gz <br>
+          $ tar -xvf PyQt4_gpl_mac-4.12.tar.gz <br>
+          $ QMAKESPEC=unsupported/macx-clang-libc++ <br>
+          $ cd PyQt4_gpl_mac-4.12 <br>
+          $ python3 configure-ng.py --sip ../temp_sip/sip --no-stubs --bindir <i>Python3 folder</i>  --destdir <i>Dependencies folder</i> --sip-incdir=../temp_sip <br>
+          $ make install <br>
+          $ cd .. <br>
           ```
           </p>
 
-          <h4>Other dependencies installation</h4>
+          <h5>Other dependencies installation</h5>
           <p>
           ```shell
           <br>
@@ -432,7 +471,7 @@
           ```
         </p>
 
-        <h4>Launching BrainMapper</h4>
+        <h5>Launching BrainMapper</h5>
 
         <p>
           Then, you can launch BrainMapper with the following command from the root folder:
@@ -446,7 +485,7 @@
 
         <h3 id="ubuntu">1.2.3 Ubuntu/GNU/Linux</h3>
 
-        <h4>Intallation</h4>
+        <h5>Intallation</h5>
 
         <p>
           To install the dependencies, you have to go in the Linux folder and to launch the installation script with the following instructions :
@@ -460,7 +499,7 @@
           ```
         </p>
 
-        <h4>Launching BrainMapper</h4>
+        <h5>Launching BrainMapper</h5>
 
         <p>
           Then you can launch BrainMapper with the following command from the root folder :
@@ -496,7 +535,7 @@
 
     </div>
   </div>
-</div
+</div>
 
 
 	<footer class="w3-container w3-dark-grey w3-padding-32 w3-margin-top">

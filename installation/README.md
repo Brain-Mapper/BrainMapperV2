@@ -27,7 +27,7 @@ check if python is installed
 
 ```
 python --version
-``` 
+```
 
 If it is installed you should have the following result :
 
@@ -56,7 +56,7 @@ Then install it with pip
 pip install <path to>\PyQt4‑4.11.4‑cp36‑cp36m‑win32.whl
 ```
 
-For example 
+For example
 ```
 pip install -r C:\Users\Me\BrainMapperV2\installation\Windows\requirement.txt
 pip install C:\Users\Me\Downloads\PyQt4-4.11.4-cp36-cp36m-win_amd64.whl

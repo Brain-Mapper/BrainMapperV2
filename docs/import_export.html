@@ -29,6 +29,7 @@
         	    <ul>
         		      <li><a href="#what">5.1.1 What is it?</a></li>
         		      <li><a href="#export_workspace">5.1.2 Export a workspace</a></li>
+        		      <li><a href="#import_workspace">5.1.3 Import a workspace</a></li>
         	      </ul>
         	   <li><a href="#export"><strong>5.2 Export an Image Collection</strong></a></li>
         	    <ul>
@@ -63,26 +64,36 @@
         	<img src="imgs/import_export/ws.png" style="width:80%">
       </p>
 
-<!-- TODO
-			<h3 id="import_workspace">5.1.2 Import workspace</h3>
-			<p>
-				To import your workspace, you have to respect the structure shown in <a href="#what">the previous section</a>. Select the button "Workspace" in the menu. Then click on "Import workspace".
-			</p>
-			<p> Then, choose a directory. This directory will be the root of your workspace. That mean all the data (sets, and image collections) will be in it, directly. For an example, see <a href="#what">the previous section</a> image.
-			</p>
-			<p>
-				To avoid any loss of data, a check will be made. If an error occurs, your workspace does not meet one of the following prerequisites:
-				<ul>
-        		      <li>Our workspace does not respect the structure. To fix it, please read <a href="#what">the previous section</a> to understand why your structure is not correct.</li>
-					  <li>Some sets or subsets have the same name (in your workspace OR between your workspace and the current state of the software). To fix it, please check your sets names.</li>
-					  <li>Some image collection have the same name (in your workspace OR between your workspace and the current state of the software). To fix it, please check your image collections names.</li>
-        	      </ul>
-			</p>
-    -->
+
+
 			<h3 id="export_workspace">5.1.2 Export a workspace</h3>
 			<p>
 				To export your workspace, select the button "Workspace" in the menu. Then click on "Save workspace" and select a directory where the workspace will be saved.
 			</p>
+
+      <p>
+        For example, if you have the following workspace, you can exported.
+      </p>
+      <p>
+        <img src="imgs/import_export/ws2.png" style="width:80%">
+      </p>
+
+      <p>
+        To do, you have to select "Save workspace" in "Workspace".
+        Then you can create a folder "Workspace" like in the following example and select "Ouvrir" (or "Open" in english).
+      </p>
+
+      <p>
+        <img src="imgs/import_export/ws_export.png" style="width:80%">
+      </p>
+
+      <p>
+        After this exportation, you will have your exported workspace in the folder "Workspace" (for our example).
+      </p>
+
+      <p>
+        <img src="imgs/import_export/ws_exported.png" style="width:80%">
+      </p>
 
       <div style="padding-left: 12%; padding-top:3%; padding-bottom:3%">
         <div class="alert alert-info" role="alert">
@@ -95,12 +106,52 @@
 				One you saved your workspace, you can exit the software.
 			</p>
 
-      <!-- TODO
+
       <p>You will be able to import it again later, in another instance of the software. If you re-import it in the same instance, then you will have an error. That's because all your data is already in the software (and name the same way), even if you changed some things in it.</p>
-    -->
+
       <p>
 				We recommand to save your work when you are done and load your workspace when you come back at it, with another instance of the software.
 			</p>
+
+      <h3 id="import_workspace">5.1.3 Import workspace</h3>
+			<p>
+				To import your workspace, you have to select the button "Workspace" in the menu and then to click on "Import workspace".
+			</p>
+			<p> Then, choose a directory. This directory will be the root of your workspace. That mean all the data (sets, and image collections) will be in it, directly.
+			</p>
+
+      <p>
+        If we get back the example used in the previous part, you must select "Import workspace" in "Workspace".
+        Then, you have to choose which workspace you want to import.
+        In the previous example, the workspace has been exported in the folder "Workspace".
+        So you just have to open this folder, like in the following image.
+      </p>
+
+      <p>
+        <img src="imgs/import_export/ws_export.png" style="width:80%">
+      </p>
+
+      <p>
+        Then, in the BrainMapper main view, you will have this following setup.
+      </p>
+
+      <p>
+        <img src="imgs/import_export/ws_imported.png" style="width:80%">
+      </p>
+
+      <div style="padding-left: 12%; padding-top:3%; padding-bottom:3%">
+        <div class="alert alert-info" role="alert">
+        <h5 style="color:#f66;">WARNING</h5>
+        <p>
+          To avoid any loss of data, a check will be made. If an error occurs, your workspace does not meet one of the following prerequisites:
+  				<ul>
+  					  <li>Some sets or subsets have the same name (in your workspace OR between your workspace and the current state of the software). To fix it, please check your sets names.</li>
+  					  <li>Some image collection have the same name (in your workspace OR between your workspace and the current state of the software). To fix it, please check your image collections names.</li>
+          </ul>
+        </p>
+        </div>
+      </div>
+
 			<h2 id="export">5.2 Export an Image Collection</h2>
       <p>
 				To export your selected image collection, select the button "Export data" in the main page of the software. This operation let you choose between the export to NIfTI and the export to CSV. The pop-up shown remember you the number of image collection and NIfTI image selected.
