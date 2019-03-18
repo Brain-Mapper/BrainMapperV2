@@ -156,7 +156,7 @@ $ python3 UI.py
 ```
 
 ## Virtual environment
-First you need to download the VirtualBox software on your computer :
+First you need to download the VirtualBox software on your computer :  
 MacOS : https://download.virtualbox.org/virtualbox/6.0.4/VirtualBox-6.0.4-128413-OSX.dmg  
 Windows : https://download.virtualbox.org/virtualbox/6.0.4/VirtualBox-6.0.4-128413-Win.exe  
 Linux : https://download.virtualbox.org/virtualbox/6.0.4/virtualbox-6.0_6.0.4-128413~Ubuntu~bionic_amd64.deb  
