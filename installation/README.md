@@ -1,5 +1,6 @@
 # How to install BrainMapper
 If you are not familiar with informatics, we recommend running BrainMapper on Windows or Linux. Since the installation procedure is not automated for MacOS, you may need to adapt the instructions to your own environment.
+If the installation doesn't work, we recommend to use the virtual environment method described bellow.
 
 ## Linux
 ### Install the dependencies
@@ -20,7 +21,7 @@ $ python3 UI.py
 
 ### Install python
 
-You need to have python 3.6 to use this project.
+You need to have python 3.6 to use this project.  
 
 Open the terminal (`Windows+r` and type `cmd`) and type the following line to
 check if python is installed
@@ -35,7 +36,7 @@ If it is installed you should have the following result :
 Python 3.6.7
 ```
 
-If the command does not work, it means that python is not installed.
+If the command does not work, it means that python is not installed.  
 In this case, you can download it [here](https://www.python.org/downloads/release/python-367/).
 During the install, ensure that the options "pip" and "tcl/tk" (on the screen Optional Features),
 "add Python to environment variables" (on the screen Advanced Options) are chosen.
@@ -83,13 +84,14 @@ python UI.py
 
 
 ## MacOS
+
 ### Install python 3
-If python3 is not already install on your computer, you need to download it. Folow this link:
+If python3 is not already install on your computer, you need to download it. Folow this link:  
 https://www.python.org/ftp/python/3.6.5/python-3.6.5-macosx10.9.pkg
 
 ### Install the dependencies
-Open a terminal in the MacOS folder.
-For the installation you will need to note the folders where python3 and python3 dependencies are installed :
+Open a terminal in the MacOS folder.  
+For the installation you will need to note the folders where python3 and python3 dependencies are installed :  
 
 _Python3 folder_ :
 ```shell
@@ -152,3 +154,16 @@ Then you can launch BrainMapper with the following command from the root folder:
 ```shell
 $ python3 UI.py
 ```
+
+## Virtual environment
+First you need to download the VirtualBox software on your computer :  
+MacOS : https://download.virtualbox.org/virtualbox/6.0.4/VirtualBox-6.0.4-128413-OSX.dmg  
+Windows : https://download.virtualbox.org/virtualbox/6.0.4/VirtualBox-6.0.4-128413-Win.exe  
+Linux : https://download.virtualbox.org/virtualbox/6.0.4/virtualbox-6.0_6.0.4-128413~Ubuntu~bionic_amd64.deb  
+(other Linux distributions : https://www.virtualbox.org/wiki/Linux_Downloads)  
+Open VirtualBox and click on the "File" menu.  
+![Tuto](images/tuto1.png?raw=true "File -> import appliance")  
+Click on import appliance and chose BrainMapper.ova. Click on next.  
+After the import, you can change the setings or leave the default ones.  
+Then you just have to start the machine selected by clicking on the "Start" button.  
+The password of the machine is : brainmapper   
