@@ -49,16 +49,38 @@
 
             <h2 id="61">6.1. Self-organizing maps</h2>
 
-              <h3 id="611">6.1.1. What are self-organizing maps ?</h3>
+              <h3 id="611">6.1.1. What are the self-organizing maps ?</h3>
+
+              <p>
+                The self-organizing maps (also called the SOM) are a neuronal group linked to their neighbourhood.
+              </p>
 
               <h3 id="612">6.1.2. Aim</h3>
+
+              <p>
+                The aim of those maps is to find a new space representing data.
+              </p>
 
             <h2 id="62">6.2. Self-organizing maps in BrainMapper</h2>
 
             <p>
-              To use the self-organizing maps in BrainMapper, you have to import a CSV or an Excel file in the main windows
+              To use the self-organizing maps in BrainMapper, you have to import one or more CSV or Excel file(s) in the main windows
               and then to select the button "SOM".
             </p>
+
+            <p>
+                Those files must have a header in the first row, the coordinates (X, Y, Z) and at least one other feature.
+                You can also use the set obtained from a clustering.
+            </p>
+
+            <div style="padding-left: 12%; padding-top:3%; padding-bottom:3%">
+              <div class="alert alert-info" role="alert">
+              <h5 style="color:#f66;">WARNING</h5>
+              <p>If you use CSV file, the name of the columns could be modified because of the encoding.
+                 So it is better to not use accents and specials characters</p>
+            </div>
+            </div>
+
 
             <p>
               <img src="imgs/som/import_data.png" style="width:80%">
@@ -91,6 +113,10 @@
                 </div>
               </div>
 
+              <p>
+              If you want more details about a parameter, you can select the button "?" next to the parameter.
+              </p>
+
               <h3 id="622">6.2.2. Training</h3>
 
               <p>
@@ -120,7 +146,7 @@
               <h3 id="623">6.2.3. Graphs</h3>
 
               <p>
-                After the training, you can choose which graph you want to display and diplay it.
+                After the training, you can choose which graph you want to display and diplay it clicking on "Show".
               </p>
 
               <p>
