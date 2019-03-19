@@ -86,7 +86,7 @@ class Help(QMainWindow):
         self.show()
 
     def openUrl(self, url):
-        url = QtCore.QUrl('https://telecomnancy.github.io/BrainMapperV2/')
+        url = QtCore.QUrl('https://brain-mapper.github.io/BrainMapperV2/')
         if not QtGui.QDesktopServices.openUrl(url):
             QtGui.QMessageBox.warning(self, 'Open Url', 'Could not open url')
 
