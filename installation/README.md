@@ -156,7 +156,9 @@ $ python3 UI.py
 ```
 
 ## Virtual environment
-First you need to download the VirtualBox software on your computer :  
+First dowload the virtual environment file folowing this link : https://drive.google.com/a/esial.net/file/d/1gIkC73_cNlArcYdlXNclHnopTxJc7uxj/view?usp=sharing  
+
+Then you need to download the VirtualBox software on your computer :  
 MacOS : https://download.virtualbox.org/virtualbox/6.0.4/VirtualBox-6.0.4-128413-OSX.dmg  
 Windows : https://download.virtualbox.org/virtualbox/6.0.4/VirtualBox-6.0.4-128413-Win.exe  
 Linux : https://download.virtualbox.org/virtualbox/6.0.4/virtualbox-6.0_6.0.4-128413~Ubuntu~bionic_amd64.deb  
@@ -166,4 +168,5 @@ Open VirtualBox and click on the "File" menu.
 Click on import appliance and chose BrainMapper.ova. Click on next.  
 After the import, you can change the setings or leave the default ones.  
 Then you just have to start the machine selected by clicking on the "Start" button.  
-The password of the machine is : brainmapper   
+The password of the machine is : brainmapper  
+To launch the softawe BrainMapper, double click on the "Start.sh" file on the desktop.
